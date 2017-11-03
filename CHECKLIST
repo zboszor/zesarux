@@ -55,7 +55,7 @@ Drivers audio:
 -probar realvideo spectrum
 -probar realvideo zx80/81
 -probar realvideo z88
--probar snoweffect de 48k, 128k, con juegos y con tapes/spectrum/tests/snow_effect.tap. Las que son de pentagon, hacer hotswap a 128 y activar contended memory
+-probar snoweffect de 48k, 128k, con juegos y con extras/media/spectrum/tests/snow_effect.tap. Las que son de pentagon, hacer hotswap a 128 y activar contended memory
 -probar simular pantalla zx81 en spectrum
 -probar desactivar colores pantalla spectrum
 -probar modos hi-res zx81: hrg, chr$128, udg, wrx, otros hi-res. probar xtricator, pacman 
@@ -128,6 +128,7 @@ paginacion, se pone pantalla en negro
 -probar waveform, tambien en drivers no graficos como curses, aa, etc
 -probar ay player. Con versiones 00,01,02,3. Probar Spectrum y CPC
 -probar paleta gris, roja, verde, azul, inverso, etc. tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
+-ver paletas de colores
 -probar ClckFreq.p de zx81
 -probar expansiones de ram de zx80/81
 -probar a generar algun error y que aparezca en menu
@@ -195,7 +196,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar F4 (pantalla a speech) en Spectrum (con texto normal y graficos), Z88, ZX81 (con y sin rainbow, y con texto normal y con graficos->4 combinaciones). ZX80
 -probar funcion Find. probar buscar pokes
 -probar poke: manual (48 y 128, zxuno) y pok file (tanto buenos como corrupt, longline, desde snap_tests/)
--probar ram refresh junto con tapes/spectrum/tests/memoryrefresh.tap
+-probar ram refresh junto con extras/media/spectrum/tests/memoryrefresh.tap
 -probar opcion para desactivar paging en ram/rom
 -probar cpu transaction log
 -probar demos beeper
