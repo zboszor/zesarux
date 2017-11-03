@@ -1454,6 +1454,8 @@ Etc...
 *** Menu  ***
 
 
+-AY piano pero que vaya mostrando las notas en scroll, y quiza guardando notas en archivo de texto?
+
 -Paso a paso cuando hay condición de debug activa no deja salir (en menú) : ocurre porque sale y al momento salta 
 breakpoint y vuelve a entrar. Es normal->opcion para poder salir de ahi aun con breakpoint activo? tiene sentido?
 
