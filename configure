@@ -1173,10 +1173,10 @@ cpu.o: cpu.c cpu.h scrnull.h scrstdout.h scrsimpletext.h operaciones.h debug.h c
 core_spectrum.o: core_spectrum.c core_spectrum.h cpu.h debug.h tape.h audio.h screen.h ay38912.h operaciones.h snap.h timer.h menu.h chardetect.h compileoptions.h contend.h ula.h utils.h realjoystick.h divmmc.h divide.h diviface.h timex.h zxuno.h prism.h snap_rzx.h superupgrade.h
 	\$(CC) \$(CFLAGS) -c core_spectrum.c
 
-core_zx8081.o: core_zx8081.c core_zx8081.h cpu.h debug.h tape.h audio.h screen.h ay38912.h operaciones.h snap.h zx8081.h timer.h menu.h chardetect.h compileoptions.h contend.h snap_zx8081.h utils.h realjoystick.h
+core_zx8081.o: core_zx8081.c core_zx8081.h cpu.h debug.h tape.h audio.h screen.h ay38912.h operaciones.h snap.h zx8081.h timer.h menu.h chardetect.h compileoptions.h contend.h snap_zx8081.h utils.h realjoystick.h ula.h
 	\$(CC) \$(CFLAGS) -c core_zx8081.c
 
-core_ace.o: core_ace.c core_ace.h cpu.h debug.h tape.h audio.h screen.h ay38912.h operaciones.h snap.h jupiterace.h timer.h menu.h chardetect.h compileoptions.h contend.h snap_zx8081.h utils.h realjoystick.h
+core_ace.o: core_ace.c core_ace.h cpu.h debug.h tape.h audio.h screen.h ay38912.h operaciones.h snap.h jupiterace.h timer.h menu.h chardetect.h compileoptions.h contend.h snap_zx8081.h utils.h realjoystick.h ula.h
 	\$(CC) \$(CFLAGS) -c core_ace.c
 
 core_ql.o: core_ql.c core_ql.h cpu.h debug.h tape.h audio.h screen.h ay38912.h operaciones.h snap.h timer.h menu.h chardetect.h compileoptions.h contend.h snap_zx8081.h utils.h realjoystick.h ula.h

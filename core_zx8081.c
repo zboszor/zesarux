@@ -44,6 +44,7 @@
 #include "utils.h"
 #include "realjoystick.h"
 #include "chardetect.h"
+#include "ula.h"
 
 void init_zx8081_scanline_y_x(int y,int x,int ancho)
 {
@@ -361,6 +362,15 @@ void cpu_core_loop_zx8081(void)
 
 
 				if (debug_registers) scr_debug_registers();
+
+                                //Hacer esto aun en esta maquina porque ese parpadeo tambien se usa en menu (cursor parpadeante)
+                                contador_parpadeo--;
+                                //printf ("Parpadeo: %d estado: %d\n",contador_parpadeo,estado_parpadeo.v);
+                                if (!contador_parpadeo) {
+                                        contador_parpadeo=16;
+                                        estado_parpadeo.v ^=1;
+                                }
+
 
 
 				if (!interrupcion_timer_generada.v) {
