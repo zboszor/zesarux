@@ -18012,10 +18012,12 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 					"but the saving routine sees im1 by default, so, saving from a real spectrum or another emulator "
 					"instead ZEsarUX will only work if the cpu is in IM1 mode (and not IM2)");
 
+		/* De momento desactivado
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_spritefinder,NULL,"Spritefinder: %s",
 					(spritefinder_enabled.v ? "Yes" : "No") );
 		}
+		*/
 
 
                 menu_add_item_menu(array_menu_debug_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);

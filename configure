@@ -1368,7 +1368,7 @@ dandanator.o: dandanator.c dandanator.h cpu.h debug.h utils.h operaciones.h ula.
 kartusho.o: kartusho.c kartusho.h cpu.h debug.h utils.h operaciones.h ula.h
 	\$(CC) \$(CFLAGS) -c kartusho.c
 
-spritefinder.o: spritefinder.c spritefinder.h cpu.h debug.h utils.h operaciones.h ula.h
+spritefinder.o: spritefinder.c spritefinder.h cpu.h debug.h utils.h operaciones.h ula.h screen.h
 	\$(CC) \$(CFLAGS) -c spritefinder.c
 
 multiface.o: multiface.c multiface.h cpu.h debug.h utils.h operaciones.h
