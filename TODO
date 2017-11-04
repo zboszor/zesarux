@@ -1831,6 +1831,7 @@ me gusta tener el menu encima de misma ventana del emulador, quiza podria ser un
 -Otros componentes mas extraños, como "descubrir" puntuaciones actuales en un juego u otros parámetros,
 como descubrir rutinas de pintado de sprites
 *rutinas de pintado de sprites: quiza detectar cambios en pantalla al pulsar teclas. y ver desde donde se realizan esos cambios en pantalla
+* de momento hay algo preliminar: ver spritefinder
 
 
 -Joystick en Mac,Win
