@@ -87,6 +87,7 @@
 #include "esxdos_handler.h"
 #include "tsconf.h"
 #include "kartusho.h"
+#include "spritefinder.h"
 
 
 #if defined(__APPLE__)
@@ -17852,6 +17853,12 @@ int menu_debug_view_basic_cond(void)
 	return 1;
 }
 
+void menu_debug_spritefinder(MENU_ITEM_PARAMETERS)
+{
+	if (spritefinder_enabled.v) spritefinder_disable();
+	else spritefinder_enable();
+}
+
 //menu debug settings
 void menu_debug_settings(MENU_ITEM_PARAMETERS)
 {
@@ -18004,6 +18011,11 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 					"so, a saved program can be run on a real spectrum or another emulator, "
 					"but the saving routine sees im1 by default, so, saving from a real spectrum or another emulator "
 					"instead ZEsarUX will only work if the cpu is in IM1 mode (and not IM2)");
+
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_spritefinder,NULL,"Spritefinder: %s",
+					(spritefinder_enabled.v ? "Yes" : "No") );
+		}
 
 
                 menu_add_item_menu(array_menu_debug_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
