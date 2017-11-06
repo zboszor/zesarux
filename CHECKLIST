@@ -48,7 +48,7 @@ Drivers audio:
 -probar vofile. Con spectrum (border on, border off, ulaplus, spectra, timex), zx80/81 (border on, border off), z88. Con xwindows, curses, stdout y simpletext: en estos drivers probar tanto spectrum, zx81, y z88
 -probar todas maquinas, una por una 
 -probar juegos varios de zx80,zx81, spectrum, aquellos que hacen efectos especiales hi-res, etc
--probar juegos zx81 multipart
+-probar juegos zx81 multipart: wrx/voyage , wrx/blockbuster
 -probar particularidades Inves: 64 kb ram, OUT ula AND RAM (border color, snow in border, no sound), no contended memory, colour ula delay, interrupt starts at video display (not at the top of the border), interrupt escribe en direccion I*256+R valor 255. Puerto ficticio para hacer visible RAM baja, requiere hardware debug ports , se puede probar con inves-switch-lowram.tap. Ver RAM baja con view hexdump. Probar con musica Lemmings
 -probar hotswap maquina
 -probar custom rom desde menu y desde linea de comandos. probar todas roms
@@ -74,9 +74,9 @@ Drivers audio:
 -probar any flag loading cintas, con copiador
 -probar archivos zip, tar, rar, gz
 -probar cambiando rutas a sox, unzip, etc...
--probar carga binaria smp,wav,rwa en spectrum
--probar carga binaria smp,wav,rwa en zx80
--probar carga binaria smp,wav,rwa en zx81: con audio real, con save desde basic y aofile (wav y rwa), con rutina de conversion de .p a rwa en real tape
+-probar carga binaria (tape) smp,wav,rwa en spectrum
+-probar carga binaria (tape) smp,wav,rwa en zx80
+-probar carga binaria (tape) smp,wav,rwa en zx81: con audio real, con save desde basic y aofile (wav y rwa), con rutina de conversion de .p a rwa en real tape
 -probar carga realtape : spectrum: smp,wav,rwa,tap,tzx (tzx normal y turbo). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa,p
 -probar linea comandos: --tape, --realtape, --snap, --slotcard, --outtape
 -probar fallback de cinta standard a real tape, juegos: dracula tzx, Death Wish 3 (Erbe - Serie Leyenda).tzx  (DeathWish3(IBSA).tzx.zip), mortadelo y filemon II, Rambo. Parece que silent service si se mete como standard tape no detecta como cargador
