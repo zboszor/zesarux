@@ -8554,7 +8554,22 @@ int util_write_pbm_file(char *archivo, int ancho, int alto, int ppb, z80_byte *s
 }
 
 
+void util_truncate_file(char *filename)
+{
 
+	debug_printf(VERBOSE_INFO,"Truncating file %s",filename);
+
+	FILE *ptr_destino;
+	ptr_destino=fopen(filename,"wb");
+
+  	if (ptr_destino==NULL) {
+    		debug_printf (VERBOSE_ERR,"Error truncating file");
+    		return;
+    	}
+
+    	fclose(ptr_destino);
+
+}
 
 
 //Retorna tamanyo de zona y actualiza puntero a memoria indicada

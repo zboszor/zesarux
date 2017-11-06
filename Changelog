@@ -22,6 +22,7 @@ Added feature "memory zone" to ZRCP and all menus that inspect memory (debug, di
 Added boot logo
 Added Antonio Villena's "Kartusho" cartridge interface
 Added setting to allow to load a .sna snapshot file without changing the current machine type
+Added setting to allow to truncate a tap file when selecting it as tape out file
 
 Moved folders: docs, media, snap_tests to a "ZEsarUX-extras" package. These folders have been separated from the emulator main distributed file, and the main download have been reduced to 5 MB aprox. The git repository still holds all the files (extras have been moved to folder "extras"), but maybe in the future I will remove them also from the repo.
 Moved mmc/ide files location to extras/media/disk_images folder

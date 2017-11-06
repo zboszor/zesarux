@@ -549,6 +549,8 @@ extern int util_parse_commands_argvc(char *texto, char *parm_argv[], int maximo)
 
 extern int get_machine_id_by_name(char *machine_name);
 
+extern void util_truncate_file(char *filename);
+
 extern int util_write_pbm_file(char *archivo, int ancho, int alto, int ppb, z80_byte *source);
 
 extern int get_file_type_from_stat(struct stat *f);

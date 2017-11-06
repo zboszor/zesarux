@@ -1476,7 +1476,17 @@ estamos en full ram en zxuno, vamos a la direccion donde empieza propiamente la 
 
 Este JR NZ deberia aparecer como 20004
 
--conversor archivos
+-Menú utilidades archivos
+
+Ver archivos
+Borrar
+Renombrar
+Crear/truncar
+Mover 
+Duplicar
+Crear carpeta
+Convertir archivo
+->como asignar teclas a acciones? desactivar hotkeys de acceso a archivos? o simplemente enter y luego se escoge accion? o numeros? ...
 
 -Archivos recientes. Solo para smartload ?
 

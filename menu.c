@@ -275,6 +275,7 @@ void menu_desactiva_cuadrado(void);
 void menu_establece_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_byte color);
 int menu_confirm_yesno(char *texto_ventana);
 int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior);
+int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior);
 
 void menu_espera_tecla(void);
 void menu_espera_tecla_timeout_tooltip(void);
@@ -14948,10 +14949,29 @@ void menu_tape_out_open(MENU_ITEM_PARAMETERS)
 
                 if (stat(tape_out_open_file, &buf_stat)==0) {
 
-                        if (menu_confirm_yesno_texto("File exists",mensaje_existe)==0) {
-				tape_out_file=NULL;
-				tap_out_close();
-				return;
+                	if (MACHINE_IS_ZX8081) {
+                        	if (menu_confirm_yesno_texto("File exists",mensaje_existe)==0) {
+					tape_out_file=NULL;
+					tap_out_close();
+					return;
+				}
+			}
+
+			else {
+				int opcion=menu_ask_no_append_truncate_texto("File exists","What do you want?");
+				//printf ("opcion: %d\n",opcion);
+
+				//Cancel
+				if (opcion==0) {
+					tape_out_file=NULL;
+					tap_out_close();
+					return;
+				}
+
+				//Truncate
+				if (opcion==2) {
+					util_truncate_file(tape_out_open_file);
+				}
 			}
 
                 }
@@ -22378,6 +22398,61 @@ int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior)
 
 
 }
+
+
+//Retorna 0=Cancel, 1=Append, 2=Truncate
+int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior)
+{
+
+	
+
+        cls_menu_overlay();
+
+        menu_espera_no_tecla();
+
+
+	menu_item *array_menu_ask_no_append_truncate;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+	//Siempre indicamos el Cancel
+	int ask_no_append_truncate_opcion_seleccionada=1;
+        do {
+
+		menu_add_item_menu_inicial_format(&array_menu_ask_no_append_truncate,MENU_OPCION_SEPARADOR,NULL,NULL,texto_interior);
+
+                menu_add_item_menu_format(array_menu_ask_no_append_truncate,MENU_OPCION_NORMAL,NULL,NULL,"~~Cancel");
+		menu_add_item_menu_shortcut(array_menu_ask_no_append_truncate,'c');
+
+                menu_add_item_menu_format(array_menu_ask_no_append_truncate,MENU_OPCION_NORMAL,NULL,NULL,"~~Append");
+		menu_add_item_menu_shortcut(array_menu_ask_no_append_truncate,'a');
+
+                menu_add_item_menu_format(array_menu_ask_no_append_truncate,MENU_OPCION_NORMAL,NULL,NULL,"~~Truncate");
+                menu_add_item_menu_shortcut(array_menu_ask_no_append_truncate,'t');
+
+                //separador adicional para que quede mas grande la ventana y mas mono
+                menu_add_item_menu_format(array_menu_ask_no_append_truncate,MENU_OPCION_SEPARADOR,NULL,NULL," ");
+
+
+
+                retorno_menu=menu_dibuja_menu(&ask_no_append_truncate_opcion_seleccionada,&item_seleccionado,array_menu_ask_no_append_truncate,texto_ventana);
+
+                cls_menu_overlay();
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+			//if (ask_no_append_truncate_opcion_seleccionada==1) return 1;
+			//else return 0;
+                        return ask_no_append_truncate_opcion_seleccionada-1; //0=Cancel, 1=Append, 2=Truncate
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+	return 0;
+
+
+}
+
 
 void menu_generic_message_format(char *titulo, const char * texto_format , ...)
 {
