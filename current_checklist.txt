@@ -42,7 +42,7 @@ ok * mac os x, con opengl y sin
 * windows mingw, con y sin pthreads
 * windows cygwin
 
--probar aofile raw y wav
+-probar aofile wav
 -probar con --disable-sndfile
 -probar vofile. Con spectrum (border on, border off, ulaplus, spectra, timex), zx80/81 (border on, border off), z88. Con xwindows, curses, stdout y simpletext: en estos drivers probar tanto spectrum, zx81, y z88
 -probar todas maquinas, una por una 
@@ -52,12 +52,11 @@ ok * mac os x, con opengl y sin
 -probar cintas. Cargar cinta con formato tap, tzx. Grabar cinta con comando save en tap, tzx, p, o
 -probar a guardar snapshots versiones anteriores (1, 2, 3, 4, 5 y 6) y cargar en ZEsarUX versiones viejas y ZXSpectr
 -probar any flag loading cintas, con copiador
--probar archivos zip, tar, rar, gz
--probar cambiando rutas a sox, unzip, etc...
--probar carga realtape : spectrum: smp,wav,rwa,tap,tzx (tzx normal y turbo). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa,p
+-probar archivos tar, rar
+-probar carga realtape : spectrum: smp,wav,rwa,tap,tzx (tzx normal ). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa,p
 -probar linea comandos: --tape, --realtape, --snap, --slotcard, --outtape
 
--probar verbose 3, 4, debugregisters
+-probar verbose 4, debugregisters
 -probar desactivando border, con y sin realvideo, en spectrum y zx8081
 -probar efectos border: btime, overscan, vectron, BorderTrix, Hercules, dark star (cuando te matan), aqua plane, paperboy, super wonder boy (pausa), thelosttapesofalbion0 (pausa), rotatrix, shock megademo, KnightsDemonsDX. en modos 128, 48k e inves.
 -probar desactivando ssl
@@ -79,14 +78,11 @@ nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencio
 nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar fire (y no al mover)
 -probar debugger, step over interrupt
 -probar breakpoint condicionales (=,<,> y con registros indirectos (hl), con and or xor)  
--probar desactivar breakpoints con espacio
 -probar todas opciones de menu en general
 -probar fallback de drivers graficos y de sonido
--probar --verbose 0 y que no aparezca ningun mensaje por consola...
 -probar footer y cpu uso, temperatura, cinta carga, printing, etc. en xwindows, sdl, fbdev, cocoa, curses. con y sin border. en spectrum, zx80/81 y z88
 -probar custom configuration file, con snap_tests/test_autoconfig.tap  (y hay snap_tests/test_autoconfig.tap.config) y snap_tests/test_autoconfig.p (y hay snap_tests/test_autoconfig.p.config)
 
--probar smartload. probar deteccion de tipo tzx (standard o turbo) en quickload
 -probar autoload & autosave
 -probar diferentes joysticks: kempston (inves y no-inves), cursor, fuller, etc. autofire
 
@@ -108,8 +104,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 
 -probar emulator speed
 -probar turbo mode. manual y en zxuno, prism, chloe y tbblue
--probar top speed, con threads y sin threads
--probar accelerate loaders
+probado en mac-probar top speed, con threads y sin threads
 
 -keymaps en xwindows y sdl para z88, cpc, chloe, sam, ql, ...
 
@@ -125,8 +120,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -Probar TSConf
 -Probar Chrome
 
--probar textos splash en cambio de modo de video por ejemplo
--probar usar extension de archivo no conocida y ver que avisa
 -probar activando funciones de captura de segmentation fault y forzando fallo
 -probar cpu_panic. desde dentro del emulador y antes de entrar (por ejemplo cuando no encuentra una rom)
 -probar en general mayoria de cintas, snaps y eproms incluidas
