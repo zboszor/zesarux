@@ -18053,8 +18053,12 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		//menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_file_viewer,NULL,"Fi~~le viewer");
 		//menu_add_item_menu_shortcut(array_menu_debug_settings,'l');
 
-		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_file_utils,NULL,"File ~~utils");
+		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_file_utils,NULL,"File ~~utilities");
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'u');
+		menu_add_item_menu_tooltip(array_menu_debug_settings,"Some file utilities. NOTE: Shortcuts must be chosen pressing Shift+Key");
+		menu_add_item_menu_ayuda(array_menu_debug_settings,"Some file utilities.\nNOTE: Shortcuts in file utilities must be chosen by pressing Shift+Key, "
+							"I mean, shortcuts are in capital letters to differentiate from quick selecting a file, so for example, "
+							"to view a file you must press Shift+v");
 		
 
 
@@ -25028,7 +25032,15 @@ void menu_filesel_print_legend(void)
 {
 	menu_escribe_linea_opcion(FILESEL_POS_LEYENDA,-1,1,"TAB: Changes section");
 	if (menu_filesel_show_utils.v) {
-		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"View Truncate Delete");
+		//Forzar a mostrar atajos
+		z80_bit antes_menu_writing_inverse_color;
+		antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+		menu_writing_inverse_color.v=1;
+
+		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~View ~~Truncate ~~Delete m~~Kdir");
+
+		//Restaurar comportamiento mostrar atajos
+		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 	}
 }
 
@@ -26043,13 +26055,31 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 									//Delete
 									if (tecla=='D') {
-										if (menu_confirm_yesno_texto("Delete","Sure?")) unlink(file_utils_file_selected);
+										if (menu_confirm_yesno_texto("Delete","Sure?")) {
+											util_delete(file_utils_file_selected);
+											//unlink(file_utils_file_selected);
+											releer_directorio=1;
+										}
+
 									}
 								}
 							}
 
 							
 						}
+
+						//Mkdir
+						if (tecla=='K') {
+							char string_carpeta[200];
+							string_carpeta[0]=0;
+							menu_ventana_scanf("Folder name",string_carpeta,200);
+							if (string_carpeta[0]) {
+								menu_filesel_mkdir(string_carpeta);
+								releer_directorio=1;
+							}
+						}
+			
+						
 
 						//Redibujar ventana
 						//releer_directorio=1;

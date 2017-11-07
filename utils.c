@@ -8988,3 +8988,8 @@ int machine_get_next_available_memory_zone(int zone)
   } while (1);
 
 }
+
+void util_delete(char *filename)
+{
+	unlink(filename);
+}

@@ -571,4 +571,6 @@ extern unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite);
 extern void machine_get_memory_zone_name(int zone, char *name);
 extern int machine_get_next_available_memory_zone(int zone);
 
+extern void util_delete(char *filename);
+
 #endif
