@@ -25999,21 +25999,25 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							}
 
 							else {
+								//Enter. No es directorio ni archivo comprimido
+								//Si estan las file utils, enter no hace nada
+								if (menu_filesel_show_utils.v==0) { 
 
-					                        cls_menu_overlay();
-        	                                        	menu_espera_no_tecla();
+					                        	cls_menu_overlay();
+        	                                        		menu_espera_no_tecla();
 
-								//unimos directorio y nombre archivo
-								getcwd(archivo,PATH_MAX);
-								sprintf(&archivo[strlen(archivo)],"/%s",item_seleccionado->d_name);
+									//unimos directorio y nombre archivo
+									getcwd(archivo,PATH_MAX);
+									sprintf(&archivo[strlen(archivo)],"/%s",item_seleccionado->d_name);
 
-								menu_filesel_chdir(filesel_directorio_inicial);
-								menu_filesel_free_mem();
+									menu_filesel_chdir(filesel_directorio_inicial);
+									menu_filesel_free_mem();
 
-								return menu_avisa_si_extension_no_habitual(filtros,archivo);
+									return menu_avisa_si_extension_no_habitual(filtros,archivo);
 
-								//Volver con OK
-								//return 1;
+									//Volver con OK
+									//return 1;
+								}
 							}
 
 						}
