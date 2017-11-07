@@ -488,6 +488,9 @@ int filesel_zona_pantalla;
 //nombre completo (nombre+path)del archivo seleccionado
 char filesel_nombre_archivo_seleccionado[PATH_MAX];
 
+//Si mostrar en filesel utilidades de archivos
+z80_bit menu_filesel_show_utils={0};
+
 
 void menu_add_item_menu_inicial(menu_item **m,char *texto,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo);
 void menu_add_item_menu_inicial_format(menu_item **p,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo,const char * format , ...);
@@ -646,7 +649,9 @@ char snapshot_save_file[PATH_MAX];
 char binary_file_load[PATH_MAX]="";
 char binary_file_save[PATH_MAX];
 
-char file_viewer_file_name[PATH_MAX]="";
+//char file_viewer_file_name[PATH_MAX]="";
+
+char file_utils_file_name[PATH_MAX]="";
 
 char *quickfile=NULL;
 //quickload seleccionada. quickfile apuntara aqui
@@ -17590,7 +17595,7 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 }
 
 
-
+/*
 void menu_debug_file_viewer(MENU_ITEM_PARAMETERS)
 {
 
@@ -17631,6 +17636,57 @@ void menu_debug_file_viewer(MENU_ITEM_PARAMETERS)
 
 						cls_menu_overlay();
 						menu_file_viewer_read_file("File view",file_viewer_file_name);
+				}
+
+    }
+
+
+
+}
+*/
+
+void menu_debug_file_utils(MENU_ITEM_PARAMETERS)
+{
+
+
+	int ret=1;
+
+	while (ret!=0) {
+			char *filtros[2];
+
+			filtros[0]="";
+			filtros[1]=0;
+
+
+        //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
+
+
+        //Obtenemos ultimo directorio visitado
+        if (file_utils_file_name[0]!=0) {
+                char directorio[PATH_MAX];
+                util_get_dir(file_utils_file_name,directorio);
+                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+                //cambiamos a ese directorio, siempre que no sea nulo
+                if (directorio[0]!=0) {
+                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+                        menu_filesel_chdir(directorio);
+                }
+        }
+
+        menu_filesel_show_utils.v=1;
+        ret=menu_filesel("File utilities",filtros,file_utils_file_name);
+        menu_filesel_show_utils.v=0;
+
+        //volvemos a directorio inicial
+        menu_filesel_chdir(directorio_actual);
+
+        if (ret==1) {
+
+						cls_menu_overlay();
+						//menu_file_utils_read_file("File view",file_utils_file_name);
 				}
 
     }
@@ -17994,8 +18050,12 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_save_binary,NULL,"S~~ave binary block");
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'a');
 
-		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_file_viewer,NULL,"Fi~~le viewer");
-		menu_add_item_menu_shortcut(array_menu_debug_settings,'l');
+		//menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_file_viewer,NULL,"Fi~~le viewer");
+		//menu_add_item_menu_shortcut(array_menu_debug_settings,'l');
+
+		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_file_utils,NULL,"File ~~utils");
+		menu_add_item_menu_shortcut(array_menu_debug_settings,'u');
+		
 
 
 		if (!CPU_IS_MOTOROLA) {
@@ -24906,6 +24966,10 @@ void reset_splash_text(void)
 
 void menu_filesel_print_filters(char *filtros[])
 {
+
+
+	if (menu_filesel_show_utils.v) return; //Si hay utilidades activas, no mostrar filtros
+
 	//texto para mostrar filtros. darle bastante margen aunque no quepa en pantalla
 	char buffer_filtros[200];
 
@@ -24963,6 +25027,9 @@ void menu_filesel_print_filters(char *filtros[])
 void menu_filesel_print_legend(void)
 {
 	menu_escribe_linea_opcion(FILESEL_POS_LEYENDA,-1,1,"TAB: Changes section");
+	if (menu_filesel_show_utils.v) {
+		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"View Truncate Delete");
+	}
 }
 
 filesel_item *menu_get_filesel_item(int index)
@@ -25522,6 +25589,11 @@ int si_mouse_zona_archivos(void)
 	return 0;
 }
 
+void menu_filesel_print_text_contents(void)
+{
+	menu_escribe_texto_ventana(1,2,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Directory Contents:");
+}
+
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
 //Si sale con ESC, devuelve en menu_filesel_last_directory_seen ultimo directorio
@@ -25561,7 +25633,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
         filtros_todos_archivos[0]="";
         filtros_todos_archivos[1]=0;
 
-	menu_escribe_texto_ventana(1,2,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Directory Contents:");
+	//menu_escribe_texto_ventana(1,2,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Directory Contents:");
+	menu_filesel_print_text_contents();
 	filesel_filtros=filtros;
 
 	filesel_item *item_seleccionado;
@@ -25783,7 +25856,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 					case 15:
 					//tabulador
 						menu_reset_counters_tecla_repeticion();
-						filesel_zona_pantalla=2;
+						if (menu_filesel_show_utils.v==0) filesel_zona_pantalla=2;
+						else filesel_zona_pantalla=0; //Si hay utils, cursor se va arriba
 					break;
 
 					//ESC
@@ -25937,6 +26011,55 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//entre a y z y numeros
 				if ( (tecla>='a' && tecla<='z') || (tecla>='0' && tecla<='9') ) {
 					menu_filesel_localiza_letra(tecla);
+				}
+
+				//Si esta filesel, opciones en mayusculas
+				if (menu_filesel_show_utils.v) {
+					
+					if ( (tecla>='A' && tecla<='Z') ) {
+						menu_reset_counters_tecla_repeticion();
+						
+						//Comun para acciones que usan archivo seleccionado
+						if (tecla=='V' || tecla=='T' || tecla=='D') {
+							
+							//Obtener nombre del archivo al que se apunta
+							char file_utils_file_selected[PATH_MAX]="";
+							item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
+							if (item_seleccionado!=NULL) {
+								//Esto pasa en las carpetas vacias, como /home en Mac OS
+								//Si no es directorio
+								if (get_file_type(item_seleccionado->d_type,item_seleccionado->d_name)!=2) {
+									//unimos directorio y nombre archivo
+									getcwd(file_utils_file_selected,PATH_MAX);
+									sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);
+									
+									//Visor de archivos
+									if (tecla=='V') menu_file_viewer_read_file("File view",file_utils_file_selected);
+
+									//Truncate
+									if (tecla=='T') {
+										if (menu_confirm_yesno_texto("Truncate","Sure?")) util_truncate_file(file_utils_file_selected);
+									}
+
+									//Delete
+									if (tecla=='D') {
+										if (menu_confirm_yesno_texto("Delete","Sure?")) unlink(file_utils_file_selected);
+									}
+								}
+							}
+
+							
+						}
+
+						//Redibujar ventana
+						//releer_directorio=1;
+						menu_dibuja_ventana(FILESEL_X,FILESEL_Y,FILESEL_ANCHO,FILESEL_ALTO,titulo);
+						menu_filesel_print_filters(filesel_filtros);
+						menu_filesel_print_legend();
+
+						menu_filesel_print_text_contents();
+					}
+					
 				}
 
 				//menu_espera_no_tecla();
