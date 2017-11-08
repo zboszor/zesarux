@@ -26033,6 +26033,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				if (menu_filesel_show_utils.v) {
 					
 					if ( (tecla>='A' && tecla<='Z') ) {
+						menu_espera_no_tecla();
+						//TODO: Si no se pone espera_no_tecla,
+						//al aparecer menu de, por ejemplo truncate, el texto se fusiona con el fondo de manera casi transparente,
+						//como si no borrase el putpixel cache
+						//esto también sucede en otras partes del código del menú pero no se por que es
+
 						menu_reset_counters_tecla_repeticion();
 						
 						//Comun para acciones que usan archivo seleccionado

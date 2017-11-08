@@ -105,8 +105,19 @@ render de sprites / tiles se hace de momento al final de cada frame de pantalla 
 Quizá haver función que mediante una string de entrada (quizá misma que command line) que pueda:
 -establecer valor
 -conmutar valor, en el caso de variables 0/1
-
 Luego se podrá usar en el futuro para nuevos settings de menú y command line, y automáticamente desde ZRCP 
+
+
+1. can i please have a checksum function in zrcp, e.g. "checksum 0000h 3fffh"
+http://zxnet.co.uk/spectrum/roms/
+
+2. additionally, for the get-visualmem-xxx commands, could you please add start address & length/end address params?
+Mark Hutchings  
+
+
+
+
+-por que se entrecorta sonido al mover ratón con menu abierto? quizá por culpa de mensajes verbose?
 
 -Puertos debug zx81. Ver hilo sinclairzxworld
 
