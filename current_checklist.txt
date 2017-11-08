@@ -75,7 +75,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -falta joystick probar on screen keyboard, con F8 y con joystick
 -probar realjoystick. probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent
 -probar cambio driver audio desde menu
--probar easter egg
 -probar rutinas autodeteccion caracteres: algunos de sslfunctions, otro no listado (como Spiderman o masters of the universe), hobbit (usa dos rutinas de caracteres). probar con stdout y xwindows, sdl, etc. probar --enableprintchartrap y --disableprintchartrap en stdout y xwindows
 -probar speech: texto a speech linux, mac os, windows. ruta a --textspeechprogram relativa y absoluta
 -probar speech en stdout
