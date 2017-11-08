@@ -3094,7 +3094,7 @@ int util_write_configfile(void)
   }
 
 
-  if (input_file_keyboard_name!=NULL)         ADD_STRING_CONFIG,"--keyboardspoolfile \"%s\"",input_file_keyboard_name);
+  if (input_file_keyboard_name!=NULL && input_file_keyboard_inserted.v)         ADD_STRING_CONFIG,"--keyboardspoolfile \"%s\"",input_file_keyboard_name);
                                               ADD_STRING_CONFIG,"--joystickemulated \"%s\"",joystick_texto[joystick_emulation]);
 
   if (remote_protocol_enabled.v)              ADD_STRING_CONFIG,"--enable-remoteprotocol");

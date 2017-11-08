@@ -142,7 +142,7 @@ paginacion, se pone pantalla en negro
 -probar menu de stdout
 -probar cargar/grabar pantalla en spectrum 48, 128, +2a, zxuno
 -probar cargar/grabar archivo binario. probar cargar binario desde linea comandos
--probar spool file: en spectrum 48k, 128k, zx80, zx81, z88, con modo turbo y sin
+-probar spool file: en spectrum 48k, 128k, zx80, zx81, z88, con modo turbo y sin. usar script txt_to_basic_lines.sh
 -probar archivo de configuracion, probar comillas en archivo configuracion (simples y dobles : por ejemplo : --joystickkeyev Up 't' (esto poniendo joystick a none para que se envie solo la t) o  --joystickemulated "Sinclair 2"). probar grabado archivo config
 -probar lightgun, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con juegos y testlightgun.zx
 nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencion del boton de fire

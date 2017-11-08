@@ -55,24 +55,17 @@ ok * mac os x, con opengl y sin
 -probar carga realtape : spectrum: smp,wav,rwa,tap,tzx (tzx normal ). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa,p
 -probar linea comandos: --tape, --realtape, --snap, --slotcard, --outtape
 
--probar desactivando border, con y sin realvideo, en spectrum y zx8081
--probar efectos border: btime, overscan, vectron, BorderTrix, Hercules, dark star (cuando te matan), aqua plane, paperboy, super wonder boy (pausa), thelosttapesofalbion0 (pausa), rotatrix, shock megademo, KnightsDemonsDX. en modos 128, 48k e inves.
--probar desactivando ssl
 -probar activando ssl
 -probar azerty. se puede probar pulsando guion o cedilla
--probar desactivando contended memory en compilacion
 
--probar visualmem, tambien en drivers no graficos como curses, aa, etc
--probar waveform, tambien en drivers no graficos como curses, aa, etc
+-falta probar en drivers texto probar visualmem, tambien en drivers no graficos como curses, aa, etc
+-falta probar en drivers texto probar waveform, tambien en drivers no graficos como curses, aa, etc
 
--probar GUI styles: opcion normal, seleccionada, no disponible, no disponible seleccionada, pixel (audio waveform, visual mem, view sprites) en: driver grafico, en caca y en curses
+-falta probar en drivers texto probar GUI styles: opcion normal, seleccionada, no disponible, no disponible seleccionada, pixel (audio waveform, visual mem, view sprites) en: driver grafico, en caca y en curses
 -probar menu de stdout
--probar cargar/grabar pantalla en spectrum 48, 128, +2a, zxuno
--probar cargar/grabar archivo binario. probar cargar binario desde linea comandos
--probar spool file: en spectrum 48k, 128k, zx80, zx81, z88, con modo turbo y sin
--probar lightgun, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con juegos y testlightgun.zx
+-solo cocoa probar lightgun, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con juegos y testlightgun.zx
 nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencion del boton de fire
--probar kempston mouse, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con demo kempston, art studio
+-solo cocoa probar kempston mouse, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con demo kempston, art studio
 nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar fire (y no al mover)
 -probar debugger, step over interrupt
 -probar breakpoint condicionales (=,<,> y con registros indirectos (hl), con and or xor)  
