@@ -68,6 +68,8 @@ probado lo siguiente:
 
 --- Cosas para la version 5.2
 
+-en speech de mac, en english, al enviar opcion "yes/no", la "No" dice: "No. N"->eso lo traduce como "Number N"
+
 -util z80 moto poke pokea en motorola pero sin protección de escritura en rom
 
 -ver si texto memory zone puede ser >15. hay alguna zona de memoria que queda cortada
