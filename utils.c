@@ -8621,6 +8621,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 	size=65536;
       }
 
+      if (MACHINE_IS_SAM) {
+	size=512*1024; //512 kb para simplificar->siempre el maximo
+      }
+ 
 
     break;
 
@@ -8660,6 +8664,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 
       if (MACHINE_IS_CPC_464) {
         size=32768;
+      }
+
+      if (MACHINE_IS_SAM) {
+	size=32768;
       }
 
 
@@ -8785,6 +8793,11 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
 
       if (MACHINE_IS_INVES) {
 	p=&memoria_spectrum[address];
+      }
+
+      if (MACHINE_IS_SAM) {
+	z80_byte *start=sam_ram_memory[0];
+        p=&start[address]; 
       }
 
 
