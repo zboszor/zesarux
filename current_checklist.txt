@@ -92,7 +92,6 @@ probado en mac-probar top speed, con threads y sin threads
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS
 -Probar demos Pentagon
 -Probar TSConf
--Probar Chrome
 
 -probar activando funciones de captura de segmentation fault y forzando fallo
 -probar cpu_panic. desde dentro del emulador y antes de entrar (por ejemplo cuando no encuentra una rom)

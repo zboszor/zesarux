@@ -1369,6 +1369,7 @@ void gestionar_autoload_spectrum(void)
 
 			case 6:
 			case 21:
+            case 22:
 				//Para maquina 128k
 				//si en rom0
 				actual_rom=get_actual_rom_128k();
