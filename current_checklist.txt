@@ -86,9 +86,7 @@ probado en mac-probar top speed, con threads y sin threads
 -probar Chloe 140, 280. Tests, carga trap, grabar tap, chloe keyboard
 -probar Timex. Tests, carga trap, grabar tap
 -Probar Prism: extras/media/spectrum/prism/allvideotests.tap. Tests de chloe. Failsafe mode. Modos lineales de video extras/media/spectrum/prism/linear_modes/
--Probar TBBlue
 -Probar Amstrad cpc. Todas teclas
--Probar Sam Coupe. Todas teclas. Probar atomlite
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS
 -Probar demos Pentagon
 -Probar TSConf
