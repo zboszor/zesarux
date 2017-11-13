@@ -7112,6 +7112,8 @@ menu_writing_inverse_color.v=1;
 			if (view_sprites_tbblue) {
 				strcpy(buffer_primera_linea, "~~Memptr ~~Q~~A:Size");
 				strcpy(buffer_segunda_linea, "~~Inverse ~~Hardware");
+				//Y linea paleta borrarla (30 espacios)
+				sprintf(buffer_tercera_linea,"                              ");
 			}
 			else {
 				sprintf(buffer_primera_linea,"~~Memptr In~~c+%d ~~O~~P~~Q~~A:Size ~~BPP",view_sprite_incremento);
@@ -7130,28 +7132,37 @@ menu_writing_inverse_color.v=1;
 
 
 
-		char textoshow[33];
+		//Mostrar zona memoria
+		if (!view_sprites_tbblue) {
+			char textoshow[33];
 
-		char memory_zone_text[64]; //espacio temporal mas grande por si acaso
-		if (menu_debug_show_memory_zones==0) {
-			sprintf (memory_zone_text,"Z: Mem zone (mapped memory)");
+			char memory_zone_text[64]; //espacio temporal mas grande por si acaso
+			if (menu_debug_show_memory_zones==0) {
+				sprintf (memory_zone_text,"Z: Mem zone (mapped memory)");
+			}
+			else {
+				//printf ("Info zona %d\n",menu_debug_memory_zone);
+				char buffer_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
+				//int readwrite;
+				machine_get_memory_zone_name(menu_debug_memory_zone,buffer_name);
+				sprintf (memory_zone_text,"Z: Mem zone (%d %s)",menu_debug_memory_zone,buffer_name);
+				//printf ("size: %X\n",menu_debug_memory_zone_size);
+				//printf ("Despues zona %d\n",menu_debug_memory_zone);
+			}
+
+			//truncar texto a 32 por si acaso
+			memory_zone_text[32]=0;
+			menu_escribe_linea_opcion(linea++,-1,1,memory_zone_text);
+
+			sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
+			menu_escribe_linea_opcion(linea++,-1,1,textoshow);
 		}
+
 		else {
-			//printf ("Info zona %d\n",menu_debug_memory_zone);
-			char buffer_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
-			//int readwrite;
-			machine_get_memory_zone_name(menu_debug_memory_zone,buffer_name);
-			sprintf (memory_zone_text,"Z: Mem zone (%d %s)",menu_debug_memory_zone,buffer_name);
-			//printf ("size: %X\n",menu_debug_memory_zone_size);
-			//printf ("Despues zona %d\n",menu_debug_memory_zone);
+			//Borrar las dos lineas estas de mem zone en caso de sprites tbblue (30 espacios)
+			menu_escribe_linea_opcion(linea++,-1,1,"                              ");
+			menu_escribe_linea_opcion(linea++,-1,1,"                              ");
 		}
-
-		//truncar texto a 32 por si acaso
-		memory_zone_text[32]=0;
-		menu_escribe_linea_opcion(linea++,-1,1,memory_zone_text);
-
-		sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
-		menu_escribe_linea_opcion(linea++,-1,1,textoshow);
 
 
 
