@@ -65,6 +65,7 @@ FA_USE_HEADER   equ             %01000000                       ; Use +3DOS head
 #define ESXDOS_RST8_FA_CLOSE      0x00
 
 #define ESXDOS_RST8_DISK_READ 0x81
+#define ESXDOS_RST8_DISK_IOCTL 0x83
 #define ESXDOS_RST8_M_GETSETDRV   0x89
 #define ESXDOS_RST8_F_OPEN      0x9a
 #define ESXDOS_RST8_F_CLOSE      0x9b

@@ -1385,6 +1385,18 @@ void esxdos_handler_begin_handling_commands(void)
 			esxdos_handler_return_call();
 		break;
 
+		/*case ESXDOS_RST8_DISK_IOCTL:
+			//Ni idea de que hace esto
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Unimplemented ESXDOS_RST8_DISK_IOCTL. Return ok. PC=%XH",reg_pc);
+		//desconocida. salta al hacer "list" en tr-dos con una imagen trd montada
+			esxdos_handler_run_normal_rst8();
+			
+			//reg_a=0xff; //???
+			//poke_byte_no_time(0x2382,0x81);
+			esxdos_handler_no_error_uncarry();
+			esxdos_handler_return_call();
+		break;*/
+
 
 
 		default:
