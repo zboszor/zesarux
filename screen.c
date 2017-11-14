@@ -205,13 +205,13 @@ const int spectrum_colortable_original[16] =
 {
 
 0x000000,  //negro
-0x0000CD,  //azul
-0xCD0000,  //rojo
-0xCD00CD,  //magenta
-0x00CD00,  //verde
-0x00CDCD,  //cyan
-0xCDCD00,  //amarillo
-0xCDCDCD,  //blanco
+0x0000C0,  //azul
+0xC00000,  //rojo
+0xC000C0,  //magenta
+0x00C000,  //verde
+0x00C0C0,  //cyan
+0xC0C000,  //amarillo
+0xC0C0C0,  //blanco
 
 0x000000,
 0x0000FF,
@@ -10301,13 +10301,13 @@ reserved and may have unpredictable results in future versions of the QL hardwar
 						//Temp convertir a color spectrum
 /*
 0x000000,  //negro
-0x0000CD,  //azul
-0xCD0000,  //rojo
-0xCD00CD,  //magenta
-0x00CD00,  //verde
-0x00CDCD,  //cyan
-0xCDCD00,  //amarillo
-0xCDCDCD,  //blanco
+0x0000C0,  //azul
+0xC00000,  //rojo
+0xC000C0,  //magenta
+0x00C000,  //verde
+0x00C0C0,  //cyan
+0xC0C000,  //amarillo
+0xC0C0C0,  //blanco
 */
 
 								color1=green*4+red*2+blue;	// GRB
