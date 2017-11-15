@@ -45,7 +45,6 @@ ok * mac os x, con opengl y sin
 -probar con --disable-sndfile
 -probar vofile. Con spectrum (border on, border off, ulaplus, spectra, timex), zx80/81 (border on, border off), z88. Con xwindows, curses, stdout y simpletext: en estos drivers probar tanto spectrum, zx81, y z88
 -probar todas maquinas, una por una 
--probar juegos varios de zx80,zx81, spectrum, aquellos que hacen efectos especiales hi-res, etc
 -probar custom rom desde menu y desde linea de comandos. probar todas roms
 -probar snaps de spectrum, zx80, zx81, z88. Cargar y grabar. .zx, .o, .p, .z80, solo carga: .z81, .sna. En grabar, generar los mismos p** que hay en snap_tests/ en una carpeta temporal y luego probar a cargarlos (desde zesarux, fuse y eightyone). Probar snaps grabados en otros emuladores: Fuse, Eightyone, etc. 
 -probar cintas. Cargar cinta con formato tap, tzx. Grabar cinta con comando save en tap, tzx, p, o
