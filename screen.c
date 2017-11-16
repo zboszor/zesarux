@@ -1456,8 +1456,8 @@ void scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(int modo)
 										if (modo==1) { //16c
                 	    color=screen[puntero++];
 											//printf ("color: %d\n",color);
-	        						scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color (tsconf_return_cram_palette_offset()+(color>>4)&0xF) );
-											scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color&0xF) );
+	        						scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color (tsconf_return_cram_palette_offset()+( (color>>4)&0xF) ) );
+											scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+ (color&0xF) ) );
 										}
 
 										if (modo==2) { //256c
@@ -1494,8 +1494,8 @@ void scr_tsconf_refresca_pantalla_zxmode_no_rainbow(void)
 	if (border_enabled.v) {
 		//ver si hay que refrescar border
 		if (modificado_border.v) {
-			int color;
-			color=out_254 & 7;
+			//int color;
+			//color=out_254 & 7;
 
 			//screen_prism_refresca_no_rainbow_border(color);
 			scr_refresca_border_tsconf_cont();
@@ -1668,7 +1668,8 @@ void screen_tsconf_refresca_text_mode(void)
 
 	z80_int puntero_orig=puntero;
 
-	z80_byte caracter,caracter_text;
+	z80_byte caracter;
+	//z80_byte caracter_text;
 
 
 
@@ -1692,7 +1693,7 @@ void screen_tsconf_refresca_text_mode(void)
 
 		puntero++;
 
-		caracter_text=caracter;
+		//caracter_text=caracter;
 		//if (caracter<32 || caracter>127) caracter_text='.';
 		//printf ("%c",caracter_text);
 
@@ -1830,7 +1831,7 @@ void temp_sprite_xy_putsprite_putpixel(z80_int *puntero,z80_int color,int salto_
 	*puntero=color_final;
 }
 
-void temp_sprite_xy_putsprite_origen_relleno(int x,int y,int ancho, int alto, int tnum_x, int tnum_y,z80_byte spal,z80_byte *sprite_origen)
+void temp_sprite_xy_putsprite_origen_relleno(int x,int y,int ancho, int alto, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen)
 {
 int ancho_linea=256; //512 pixeles a 4bpp
 
@@ -1895,7 +1896,7 @@ int ancho_linea=256; //512 pixeles a 4bpp
 
 
 
-void temp_sprite_xy_putsprite_origen(int x,int y,int ancho, int alto, int tnum_x, int tnum_y,z80_byte spal,z80_byte *sprite_origen)
+void temp_sprite_xy_putsprite_origen(int x,int y,int ancho, int alto, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen)
 {
 
                 //int direccion=tsconf_af_ports[0x19]>>3;
@@ -6371,7 +6372,8 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
 		//z80_int puntero_orig=puntero;
 
-		z80_byte caracter,caracter_text;
+		z80_byte caracter;
+		//z80_byte caracter_text;
 
 		z80_bit inverse;
 
@@ -6392,7 +6394,7 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
                 puntero++;
 
-                caracter_text=caracter;
+                //caracter_text=caracter;
                 //if (caracter<32 || caracter>127) caracter_text='.';
                 //printf ("%c",caracter_text);
 
@@ -10212,7 +10214,8 @@ Bit	Purpose
 	int total_ancho;
 	int x,y;
 
-	unsigned int color1, color2;
+	unsigned int color1;
+	//unsigned int color2;
 
 	z80_byte green,red,blue;
 
@@ -10343,7 +10346,7 @@ reserved and may have unpredictable results in future versions of the QL hardwar
 
 					if (video_mode==0) {
 
-							color2=0;
+							//color2=0;
 							int npixel;
 							//byte_leido_h=15;
 							//byte_leido_l=0;

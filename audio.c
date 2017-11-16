@@ -1125,8 +1125,8 @@ int audio_ay_player_load(char *filename)
 	audio_ay_player_mem=malloc(total_mem);
 	if (audio_ay_player_mem==NULL) cpu_panic("Error allocating memory for ay file");
 
-	z80_byte *puntero_lectura;
-	puntero_lectura=audio_ay_player_mem;
+	//z80_byte *puntero_lectura;
+	//puntero_lectura=audio_ay_player_mem;
 
 
 	      int leidos=fread(audio_ay_player_mem,1,total_mem,ptr_ayfile);

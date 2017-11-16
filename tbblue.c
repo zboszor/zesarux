@@ -2697,7 +2697,7 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 
         int color=0;
-        int fila;
+        //int fila;
 
         z80_byte attribute;
         //z80_byte bright,flash;
@@ -2733,7 +2733,7 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 */
 
 
-        fila=scanline_copia/8;
+        //fila=scanline_copia/8;
         //dir_atributo=6144+(fila*32);
 
 
@@ -2896,9 +2896,11 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 			get_pixel_color_tbblue(attribute,&ink,&paper);
 			
 
-			int cambiada_tinta,cambiada_paper;
+			//int cambiada_tinta;
+			//int cambiada_paper;
 
-			cambiada_tinta=cambiada_paper=0;
+			//cambiada_tinta=0;
+			//cambiada_paper=0;
 
                         for (bit=0;bit<8;bit++) {
 

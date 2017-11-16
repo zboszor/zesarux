@@ -1307,8 +1307,8 @@ char *debug_breakpoint_condition_loop_find_op(char *cadena_entrada,char **final_
 	char *inicio_cadena,*final_cadena;
 
 	//solo para debug esto
-	char *orig_operador_leido;
-	orig_operador_leido=operador_leido;
+	//char *orig_operador_leido;
+	//orig_operador_leido=operador_leido;
 
 
 	int i;
@@ -2121,9 +2121,9 @@ int debug_nested_find_free_id(debug_nested_function_element *e)
 
 debug_nested_function_element *debug_nested_find_last(debug_nested_function_element *e)
 {
-	debug_nested_function_element *last;
+	//debug_nested_function_element *last;
 
-	last=e;
+	//last=e;
 
 	while (e->next!=NULL) {
 		if (e->next!=NULL) e=e->next;

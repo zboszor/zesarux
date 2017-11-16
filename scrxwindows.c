@@ -2074,7 +2074,8 @@ int xdisplay_end (void)
 {
   xdisplay_destroy_image();
   /* Free the allocated GC */
-  if( gc ) XFreeGC( dpy, gc ); gc = 0;
+  if( gc ) XFreeGC( dpy, gc ); 
+  gc = 0;
 
   XDestroyWindow(dpy,ventana);
   XCloseDisplay(dpy);
