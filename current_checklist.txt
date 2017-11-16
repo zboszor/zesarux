@@ -1,6 +1,7 @@
 *Bateria de pruebas actual
-
+ 
 -probar rendimiento cpu (benchmark*txt). con ao null vo null y ao null vo x11, sin memptr,sin visualmem, sin cpustats
+->probado linux
 
 Drivers video:
 -probar drivers video xwindows, sdl, fbdev, curses, aa, caca, stdout, simpletext, null. desde dentro de xwindows y desde consola de texto real
