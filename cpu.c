@@ -5697,7 +5697,7 @@ void print_funny_message(void)
 	//printf ("random: %d\n",randomize_noise[0]);
 
 	//mensajes random de broma
-	#define MAX_RANDOM_FUNNY_MESSAGES 9
+	#define MAX_RANDOM_FUNNY_MESSAGES 17
 	char *random_funny_messajes[MAX_RANDOM_FUNNY_MESSAGES]={
 		"Detected SoundBlaster at A220 I5 D1 T2",
 		"DOS/4GW Protected Mode Run-time  Version 1.97",		//2
@@ -5708,6 +5708,14 @@ void print_funny_message(void)
 		"Uncompressing Linux... done, booting the kernel",
 		"PhoenixBIOS 4.0 Release 6.0",											//8
 		"301-Keyboard not detected. Press F1 to continue",
+		"Error: IRQL NOT LESS OR EQUAL",   //10
+		"R Tape loading error, 0:1",
+		"Software Failure. Press left mouse button to continue. Guru Meditation #00000004.000AAC0",
+		"RAMTOP no good",
+		"   < Sistema preparado >   ",
+		"Sorry, a system error ocurred. unimplemented trap",
+		"Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(179,2)",
+		"Invalid MSX-DOS call"
 	};
 
 
