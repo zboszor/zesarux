@@ -33,6 +33,8 @@ Drivers audio:
 ***usar testsound.sh
 ***en dsp, si no se tiene dsp real, se puede probar con aoss (que se oye entrecortado continuo) o en cygwin (que distorsiona)
 
+ok coreaudio, null
+
 -probar targets:
 ok * linux 32 bits
 * linux 64 bits
@@ -95,5 +97,4 @@ pruebas Z88:
 -tarjeta hibrida ram+eprom: insertar la de actualizacion a oz 4.7 a ver si la reconoce y si reconoce RAM
 -grabar snaps con eproms y flash en diferentes slots
 -probar en menus tarjetas de aplicaciones, archivos, desconocidas
--probar sonido normal beeper (teclas, juegos, etc) y 3200 hz snap_tests/test3200z88.zx
 
