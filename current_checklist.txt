@@ -34,7 +34,8 @@ Drivers audio:
 ***en dsp, si no se tiene dsp real, se puede probar con aoss (que se oye entrecortado continuo) o en cygwin (que distorsiona)
 
 ok coreaudio, null
-ok todos linux con pthreads, excepto sdl2
+ok todos linux con pthreads
+FALTA todos linux sin pthreads incluido SDL2
 
 -probar targets:
 ok * linux 32 bits
