@@ -40,6 +40,12 @@
 	#include <sndfile.h>
 #endif
 
+
+//Si se usa audio sdl2. para workaround con el detector de silencio, que genera zumbido con sdl2
+//Esta a 0 inicialmente. Si se usa sdl2, se pondra a 1, y ya no se pondra a 0 hasta no salir del emulador
+//esto solo afecta si cambiamos driver audio en caliente de sdl2 a otro, no saltara el detector de silencio
+int audio_using_sdl2=0;
+
 char *audio_buffer_one;
 char *audio_buffer_two;
 char audio_buffer_oneandtwo[AUDIO_BUFFER_SIZE*2];
@@ -450,6 +456,7 @@ void envio_audio(void)
 	//Incrementar si conviene y avisar con mensaje por debug cuando se llega al maximo
 	if (silence_detection_counter!=SILENCE_DETECTION_MAX) {
 		silence_detection_counter++;
+		if (audio_using_sdl2) silence_detection_counter=0; //workaround para que no salte detector con sdl2
         	if (silence_detection_counter==SILENCE_DETECTION_MAX) debug_printf(VERBOSE_DEBUG,"Silence detected");
 	}
 

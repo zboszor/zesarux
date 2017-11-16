@@ -210,5 +210,7 @@ extern z80_bit beeper_enabled;
 
 extern void audiodac_mix(void);
 
+extern int audio_using_sdl2;
+
 
 #endif
