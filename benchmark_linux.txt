@@ -307,3 +307,25 @@
         //sin memptr,sin visualmem, sin cpustats
         //con contended memory
         //128k, ao null, vo x11, zoom 1, over128.z80, 41% cpu aprox en pc
+
+
+
+	//Pruebas 16 Noviembre 2017
+        //sin rainbow
+        //sin memptr,sin visualmem, sin cpustats
+        //con contended memory
+        //con pthreads
+        //48k, ao null, vo null, 8% cpu aprox en pc
+
+        //Pruebas 16 Noviembre 2017
+        //sin rainbow
+        //sin memptr,sin visualmem, sin cpustats
+        //con contended memory
+        //48k, ao null, vo x11, zoom 1, 20% cpu aprox en pc
+
+        //Pruebas 16 Noviembre 2017
+        //con rainbow
+        //sin memptr,sin visualmem, sin cpustats
+        //con contended memory
+        //128k, ao null, vo x11, zoom 1, over128.z80, 47% cpu aprox en pc
+
