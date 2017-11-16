@@ -265,3 +265,4 @@ and
 ALT a ( ALT is awkard, it returns 255 plus the character code, so you should see on screen two values, 255 then 97 when you press this combination)
 
 -cargar manualmente juegos en memoria mediante load binary
+-cargar lbytes mediante emulacion de microdrive&floppy
