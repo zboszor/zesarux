@@ -68,6 +68,8 @@ probado lo siguiente:
 
 --- Cosas para la version 5.2
 
+-detector de silencio en sdl2, en 48k, genera zumbido
+
 -en speech de mac, en english, al enviar opcion "yes/no", la "No" dice: "No. N"->eso lo traduce como "Number N"
 
 -util z80 moto poke pokea en motorola pero sin protección de escritura en rom

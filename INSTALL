@@ -38,7 +38,7 @@ The rest is optional. Complete list of features:
 * x11 (on Linux/Raspberry): needs x11libs, x11extlibs, xf86vidmode, xxf86vm
 * x11 (on Mac OS X): needs XQuartz
 * cocoa (on Mac OS X): Compiling supported using XCode.
-* sdl 1.2 (on Linux/Raspberry): needs sdllib-1.2
+* sdl 1.2 (on Linux/Raspberry): needs sdllib-1.2. SDL2 is experimental
 * caca: cacalib
 * aa: aalib
 * curses: curses-dev
