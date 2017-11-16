@@ -8624,6 +8624,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       if (MACHINE_IS_SAM) {
 	size=512*1024; //512 kb para simplificar->siempre el maximo
       }
+
+      if (MACHINE_IS_Z88) {
+      	size=0; //Solo zona memoria de 4 mb en caso de z88
+      }
  
 
     break;
@@ -8668,6 +8672,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 
       if (MACHINE_IS_SAM) {
 	size=32768;
+      }
+
+      if (MACHINE_IS_Z88) {
+      	size=0; //Solo zona memoria de 4 mb en caso de z88
       }
 
 
@@ -8731,6 +8739,13 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         if (superupgrade_enabled.v) {
           size=SUPERUPGRADE_ROM_SIZE;
         }
+    break;
+
+
+    case 10:
+    	if (MACHINE_IS_Z88) {
+    		size=4*1024*1024; //Zona entera de los 4 MB
+    	}
     break;
 
   }
@@ -8881,6 +8896,12 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
       }
     break;
 
+    case 10:
+    	if (MACHINE_IS_Z88) {
+    		p=&memoria_spectrum[address];
+    	}
+    break;
+
 
 
   }
@@ -8975,6 +8996,13 @@ void machine_get_memory_zone_name(int zone, char *name)
 		           //123456789012345
                 strcpy(name,"Superupgr. rom");
         }
+    break;
+
+
+    case 10:
+    	if (MACHINE_IS_Z88) {
+    		strcpy(name,"Full 4 MB");
+    	}
     break;
 
 
