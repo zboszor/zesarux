@@ -21,13 +21,15 @@
 
 -Is the only emulator for machines: ZX-Uno, Chloe 140/280, Prism, TBBlue and Chrome
 
--Almost perfect emulation of timing of all machine models
+-Almost perfect emulation of timing of all Spectrum machines
 
 -Supports undocumented Z80 flags, features, and MEMPTR register
 
 -Supports idle bus port, contended memory, ULA early/late timings
 
--Supports Motorola CPU 68008
+-Supports Motorola CPU 68008 (Sinclair QL)
+
+-Supports SC/MP CPU - INS8060 (MK14)
 
 -Supports Pentagon timing
 
@@ -69,9 +71,9 @@
 
 -Handles RZX playback 
 
--Handles DCK Timex dock cartridges
-
 -Emulates Multiface One, 128 and Three
+
+-Handles DCK Timex dock cartridges
 
 -Emulates ZX Spectrum MMC Interfaces: ZXMMC, DivMMC
 
