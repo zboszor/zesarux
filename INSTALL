@@ -27,6 +27,7 @@ On Raspberry:
 * alsa
 * video support is provided by Framebuffer driver (fbdev), but you can also try to compile using X11, SDL or another video driver
 * sdl 1.2 is recommended, to use sdl audio. SDL audio works better than alsa. You can install sdl libraries with: apt-get install libsdl1.2-dev
+SDL2 is experimental
 
 I recommend minimum Raspberry Pi 2. Raspberri Pi 1 is a bit slow for ZEsarUX, but you can run at normal Spectrum speed by setting overclock on the Pi and 
 having Real Video setting disabled
@@ -48,7 +49,7 @@ The rest is optional. Complete list of features:
 * OSS (dsp) (on Linux/Raspberry): needs soundcard includes. Usually included on Linux systems
 * alsa (on Linux/Raspberry): needs alsalibs
 * pulse (on Linux/Raspberry): needs pulselibs
-* sdl (on Linux/Raspberry): needs sdllib
+* sdl 1.2 (on Linux/Raspberry): needs sdllib. SDL2 is experimental
 * coreaudio (on Mac OS X): Compiling supported using XCode. 
 
 -Audio output to file
