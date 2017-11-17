@@ -154,7 +154,7 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar breakpoint condicionales (=,<,> y con registros indirectos (hl), con and or xor)  
 -probar desactivar breakpoints con espacio
 -probar watches
--probar remote command protocol ZRCP
+-probar remote command protocol ZRCP, en linux, mac y windows
 -probar zxi ports con extras/media/spectrum/tests/zesarux-zxi-ports.tap , extras/media/spectrum/tests/hardwaredebugport.tap
 -probar rzx files con extras/media/spectrum/rzx
 -probar todas opciones de menu en general
