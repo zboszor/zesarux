@@ -2154,7 +2154,7 @@ void temp_dice_modos_sprites_etc(void)
 	//Decir una vez por segundo los modos activos
 	temp_dice_modos_sprites_etc_conta++;
 	if (temp_dice_modos_sprites_etc_conta%50) return;
-	printf ("tsconfig: %02XH ",tsconfig);
+	//printf ("tsconfig: %02XH ",tsconfig);
 
 	int haytiles=0;
 

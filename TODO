@@ -68,8 +68,12 @@ probado lo siguiente:
 
 --- Cosas para la version 5.2
 
+-ESC no lo lee en curses?? se queda pillado. sera algo del debian 9. Quiza hacer alternativa con < como aa
+
 -detector de silencio en sdl2, en 48k, genera zumbido en Linux
 ver de momento workaround audio_using_sdl2
+
+-exit-emulator de ZRCP no parece funcionar en Mac, pero en Linux si
 
 -en speech de mac, en english, al enviar opcion "yes/no", la "No" dice: "No. N"->eso lo traduce como "Number N"
 
