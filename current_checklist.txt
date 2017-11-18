@@ -1,7 +1,7 @@
 *Bateria de pruebas actual
  
 -probar rendimiento cpu (benchmark*txt). con ao null vo null y ao null vo x11, sin memptr,sin visualmem, sin cpustats
-->probado linux
+->falta raspberry
 
 Drivers video:
 -probar drivers video xwindows, sdl, fbdev, curses, aa, caca, stdout, simpletext, null. desde dentro de xwindows y desde consola de texto real
@@ -42,7 +42,6 @@ ok * mac os x, con opengl y sin
 -probar linea comandos: --tape, --realtape, --snap, --slotcard, --outtape
 
 -probar activando ssl
--probar azerty. se puede probar pulsando guion o cedilla
 
 -falta probar en drivers texto probar visualmem, tambien en drivers no graficos como curses, aa, etc
 -falta probar en drivers texto probar waveform, tambien en drivers no graficos como curses, aa, etc
@@ -65,11 +64,10 @@ ok mac -probar speech en stdout
 probado en mac-probar top speed, con threads y sin threads
 
 -keymaps en xwindows y sdl para z88, cpc, chloe, sam, ql, ...
+ok xwindows
 
--probar Jupiter Ace. centipede (chip ay) y valkyr (speaker y chip ay). cargar y grabar ace. cargar wav
--probar Chloe 140, 280. Tests, carga trap, grabar tap, chloe keyboard
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS
--Probar TSConf
+-Probar TSConf. Agregar demos
 
 -probar activando funciones de captura de segmentation fault y forzando fallo
 -probar cpu_panic. desde dentro del emulador y antes de entrar (por ejemplo cuando no encuentra una rom)

@@ -158,7 +158,7 @@ void load_spg_snapshot(char *filename)
 
   				case 0x02:
             debug_printf(VERBOSE_DEBUG,"Uncompressing block type 2 (hrust). Size: %d Page: %d Offset: %d",size,page,offs);
-            printf("Uncompressing block type 2 (hrust). Size: %d Page: %d Offset: %d\n",size,page,offs);
+            //printf("Uncompressing block type 2 (hrust). Size: %d Page: %d Offset: %d\n",size,page,offs);
   					dehrust(zxram, data, size);
   					break;
   			}

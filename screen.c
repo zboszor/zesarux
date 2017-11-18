@@ -1791,7 +1791,7 @@ void temp_dice_dir_graficos(z80_byte registro)
                 int direccion=tsconf_af_ports[registro]>>3;
                 direccion=direccion & 31;
                 direccion=direccion << 17;
-                printf ("%06XH -",direccion);
+                //printf ("%06XH -",direccion);
 }
 
 void temp_sprite_xy(int x,int y,z80_int color)
@@ -1856,7 +1856,7 @@ int ancho_linea=256; //512 pixeles a 4bpp
 /*
        //Ver si pixel se sale de limites
         if (x>=tsconf_current_pixel_width || y>=tsconf_current_pixel_height) {
-                printf ("fuera de limites\n");
+                //printf ("fuera de limites\n");
                 return;
         }
         //tsconf_current_pixel_width=360;
@@ -1932,7 +1932,7 @@ void temp_sprite_xy_putsprite_origen(int x,int y,int ancho, int alto, int tnum_x
 /*
        //Ver si pixel se sale de limites
         if (x>=tsconf_current_pixel_width || y>=tsconf_current_pixel_height) {
-                printf ("fuera de limites\n");
+                //printf ("fuera de limites\n");
                 return;
         }
         //tsconf_current_pixel_width=360;
@@ -2160,39 +2160,39 @@ void temp_dice_modos_sprites_etc(void)
 
 
         if (tsconfig&32) {
-                printf ("Tile layer 0 enable- ");
+                //printf ("Tile layer 0 enable- ");
                 temp_dice_dir_graficos(0x17);
 		haytiles=1;
         }
 
         if (tsconfig&64) {
-                printf ("Tile layer 1 enable- ");
+                //printf ("Tile layer 1 enable- ");
                 temp_dice_dir_graficos(0x18);
 		haytiles=1;
         }
 
        if (tsconfig&128) {
-                printf ("Sprite layers enable ");
+                //printf ("Sprite layers enable ");
                 temp_dice_dir_graficos(0x19);
         }
 
 
-	if (tsconfig&8) printf ("Tiles with number 1 display enable- ");
-	if (tsconfig&4) printf ("Tiles with number 0 display enable- ");
-	if (tsconfig&1) printf ("TSU graphics always 360x288- ");
+	//if (tsconfig&8) printf ("Tiles with number 1 display enable- ");
+	//if (tsconfig&4) printf ("Tiles with number 0 display enable- ");
+	//if (tsconfig&1) printf ("TSU graphics always 360x288- ");
 
 
-        if (tsconf_af_ports[0]&32) printf ("nogfx- ");
+        //if (tsconf_af_ports[0]&32) printf ("nogfx- ");
 
 	//Decir donde Tile map page
 	if (haytiles) {
 	        int direccion=tsconf_af_ports[0x16];
 	        direccion=direccion << 14;
-        	printf ("Tile map page: %06XH - ",direccion);
+        	//printf ("Tile map page: %06XH - ",direccion);
 	}
 	
 
-	printf ("\n");
+	//printf ("\n");
 
 }
 

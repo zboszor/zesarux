@@ -133,3 +133,25 @@
         //128k, ao null, vo cocoa, zoom 1, frameskip 0, over128.z80, 24% cpu. con cocoa-gl:igual
         //128k, ao null, vo xwindows, zoom 1, frameskip 0, over128.z80, 16% cpu
 
+
+
+        //Pruebas 18 Noviembre 2017
+        //sin rainbow
+        //sin memptr,sin visualmem, sin cpustats
+        //con contended memory
+        //con pthreads
+        //48k, ao null, vo null, 5% cpu
+
+        //Pruebas 18 Noviembre 2017
+        //sin rainbow
+        //sin memptr,sin visualmem, sin cpustats
+        //con contended memory
+        //48k, ao null, vo cocoa, zoom 1, 18% cpu
+        //->con cocoa-gl: 10%
+
+        //Pruebas 18 Noviembre 2017
+        //con rainbow
+        //sin memptr,sin visualmem, sin cpustats
+        //con contended memory
+        //128k, ao null, vo cocoa, zoom 1, frameskip 0, over128.z80, 26% cpu. con cocoa-gl: 18%
+        //128k, ao null, vo xwindows, zoom 1, frameskip 0, over128.z80, 17% cpu
