@@ -1312,7 +1312,7 @@ void instruccion_ed_137 ()
 void instruccion_ed_138 ()
 {
         if (MACHINE_IS_TBBLUE) {
-                //push NN        ED 8A LO HI   4+4+3+3  push 16bit immidiate value
+                //push NN        ED 8A LO HI   4+4+3+3+3+3 (3+3 for read, 3+3 for write)  push 16bit immediate value
                 z80_int value=0;
                 value |= lee_byte_pc();
                 value |= (lee_byte_pc()<<8);
