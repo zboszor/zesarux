@@ -324,7 +324,7 @@ browser para flash. primer archivo es de “truco”
 
 -blue display en aalib no se ve nada
 
--fadeout en aalib muy lento 
+-fadeout en aalib muy lento. de momento desactivamos
 
 -mac os x: tecla borrar en curses no va. Parece que es codigo 127 pero solo en mac...hay que probarlo mas para saber que no haya otra tecla que tambien genere 127
 

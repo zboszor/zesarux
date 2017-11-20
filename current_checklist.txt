@@ -26,6 +26,8 @@ Drivers video:
 ok cocoagl
 ok cocoa
 
+ok threads:xwindows,sdl,caca
+
 -probar targets:
 ok * linux 32 bits
 * linux 64 bits

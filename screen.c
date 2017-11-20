@@ -7964,6 +7964,9 @@ void scr_fadeout(void)
 	if (!strcmp(scr_driver_name,"simpletext"))  return;
 	if (!strcmp(scr_driver_name,"null"))  return;
 
+	//en aalib va muy lento y no se por que. no hacerlo
+	if (!strcmp(scr_driver_name,"aa"))  return;
+
 	//Si tiene gigascreen, quitar, sino hace un efecto extranyo
 	disable_gigascreen();
 	disable_interlace();
