@@ -125,7 +125,7 @@ struct s_tbblue_extended_string_opcode {
   int sumar_longitud;
 };
 
-#define TOTAL_TBBLUE_EXTENDED_OPCODES 18
+#define TOTAL_TBBLUE_EXTENDED_OPCODES 20
 
 struct s_tbblue_extended_string_opcode tbblue_extended_string_opcode[TOTAL_TBBLUE_EXTENDED_OPCODES]={
 	{"SWAPNIB",0x23,0},
@@ -145,7 +145,9 @@ struct s_tbblue_extended_string_opcode tbblue_extended_string_opcode[TOTAL_TBBLU
   {"SUB DEHL,A",0x3C,0}, 
   {"SUB DEHL,BC",0x3D,0}, 
   {"PUSH NN",0x8A,2},
-	{"POPX",0x8B,0}
+  {"POPX",0x8B,0},
+  {"NEXTREG N,N",0x91,2},
+  {"NEXTREG N,A",0x92,1}
 };
 
 void debugger_handle_extended_tbblue_opcodes(char *buffer, unsigned int address, int *sumar_longitud)

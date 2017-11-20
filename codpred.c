@@ -1311,15 +1311,14 @@ void instruccion_ed_137 ()
 void instruccion_ed_138 ()
 {
         if (MACHINE_IS_TBBLUE) {
-                //push NN        ED 8A LO HI   4+4+3+3+3+3  push 16bit immidiate value
+                //push NN        ED 8A LO HI   4+4+3+3  push 16bit immidiate value
                 z80_int value=0;
                 value |= lee_byte_pc();
                 value |= (lee_byte_pc()<<8);
                 push_valor( value );
         }
 
-        else
-        invalid_opcode_ed("ED138");
+        else invalid_opcode_ed("ED138");
 }
 
 void instruccion_ed_139 ()
@@ -1361,12 +1360,29 @@ void instruccion_ed_144 ()
 
 void instruccion_ed_145 ()
 {
-        invalid_opcode_ed("ED145");
+	if (MACHINE_IS_TBBLUE) {
+                //nextreg reg,val   ED 91 reg,val   Set a NEXT register (like doing out($243b),reg then out($253b),val )
+		z80_byte registro=lee_byte_pc();
+		z80_byte valor=lee_byte_pc();
+
+		tbblue_set_register_port(registro);
+		tbblue_set_value_port(valor);
+                //if (puerto==TBBLUE_REGISTER_PORT) tbblue_set_register_port(value);
+                //if (puerto==TBBLUE_VALUE_PORT) tbblue_set_value_port(value);
+        }
+        else invalid_opcode_ed("ED145");
 }
 
 void instruccion_ed_146 ()
 {
-        invalid_opcode_ed("ED146");
+	if (MACHINE_IS_TBBLUE) {
+                //nextreg reg,a     ED 92 reg       Set a NEXT register using A (like doing out($243b),reg then out($253b),A )
+		z80_byte registro=lee_byte_pc();
+
+                tbblue_set_register_port(registro);
+                tbblue_set_value_port(reg_a);
+        }
+        else invalid_opcode_ed("ED146");
 }
 
 void instruccion_ed_147 ()
