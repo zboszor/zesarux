@@ -63,7 +63,9 @@ probado lo siguiente:
 
 
 
---- Cosas para la version 5.2
+--- Cosas para la version 6.1
+
+-tsconf con fbdev y real video hace parpadeo el menu
 
 -ESC no lo lee en curses?? se queda pillado. sera algo del debian 9. Quiza hacer alternativa con < como aa
 

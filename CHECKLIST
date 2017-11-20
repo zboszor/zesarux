@@ -18,6 +18,7 @@ Drivers video:
 **probar desactivando footer
 **en curses, aa, caca, stdout, simpletext probar juegos para ver que tal "emula" los graficos
 **en curses, aa, caca, stdout, simpletext probar realvideo
+**en aa, caca probar mensajes debug
 **en stdout, probar con modo traprst16 y modo autoredraw
 **en fbdev, probar tambien con --no-use-ttyfbdev y --no-use-ttyrawfbdev y --decimal-full-scale-fbdev
 
