@@ -36,9 +36,6 @@ The format of each table entry is as follows:
 
 
 
--tsconf
-*Agregar algún juego o demo de tsconf a extras
-
 
 probar fbdev -blanco y negro con menu sin multitask acabar de hacer otros drivers: fbdev, sdl, sdl2,.... 
 
