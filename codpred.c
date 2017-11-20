@@ -25,6 +25,7 @@
 
 #include "contend.h"
 #include "zxuno.h"
+#include "tbblue.h"
 
 void invalid_opcode_ed(char *s)
 {
