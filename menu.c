@@ -24690,7 +24690,10 @@ void menu_inicio(void)
 
 void set_splash_zesarux_logo_put_space(int x,int y)
 {
-	putchar_menu_overlay(x,y,' ',7,0);
+	if (!strcmp(scr_driver_name,"aa")) {
+		putchar_menu_overlay(x,y,'X',7,0);
+	}
+	else putchar_menu_overlay(x,y,' ',7,0);
 }
 
 
@@ -24705,30 +24708,6 @@ void set_splash_zesarux_logo_cuadrado(int x,int y)
 
 
 
-/*
-
-        //y las franjas de color
-        if (ESTILO_GUI_MUESTRA_RAINBOW) {
-                //en el caso de drivers completos, hacerlo real
-                if (si_complete_video_driver() ) {
-                        putchar_menu_overlay(x+ancho-6,y,128,2+8,ESTILO_GUI_PAPEL_TITULO);
-                        putchar_menu_overlay(x+ancho-5,y,128,6+8,2+8);
-                        putchar_menu_overlay(x+ancho-4,y,128,4+8,6+8);
-                        putchar_menu_overlay(x+ancho-3,y,128,5+8,4+8);
-                        putchar_menu_overlay(x+ancho-2,y,128,ESTILO_GUI_PAPEL_TITULO,5+8);
-                }
-
-                //en caso de curses o caca, hacerlo con lineas de colores
-                if (!strcmp(scr_driver_name,"curses") || !strcmp(scr_driver_name,"caca") ) {
-                        putchar_menu_overlay(x+ancho-6,y,'/',2+8,ESTILO_GUI_PAPEL_TITULO);
-                        putchar_menu_overlay(x+ancho-5,y,'/',6+8,ESTILO_GUI_PAPEL_TITULO);
-                        putchar_menu_overlay(x+ancho-4,y,'/',4+8,ESTILO_GUI_PAPEL_TITULO);
-                        putchar_menu_overlay(x+ancho-3,y,'/',5+8,ESTILO_GUI_PAPEL_TITULO);
-                }
-        }
-
-
-*/
 
 void set_splash_zesarux_franja_color(int x,int y,int tinta, int papel)
 {
