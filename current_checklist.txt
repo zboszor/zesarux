@@ -19,7 +19,6 @@ ok -probar todas maquinas, una por una
 -probar cintas. Cargar cinta con formato tap, tzx. Grabar cinta con comando save en tap, tzx, p, o
 -probar a guardar snapshots versiones anteriores (1, 2, 3, 4, 5 y 6) y cargar en ZEsarUX versiones viejas y ZXSpectr
 -probar carga realtape : spectrum: smp,wav,rwa,tap,tzx (tzx normal ). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa,p
--probar linea comandos: --tape, --realtape, --snap, --slotcard, --outtape
 
 -falta probar en drivers texto probar visualmem, tambien en drivers no graficos como curses, aa, etc
 -falta probar en drivers texto probar waveform, tambien en drivers no graficos como curses, aa, etc
