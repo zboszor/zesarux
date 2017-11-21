@@ -267,15 +267,18 @@ z80_byte *get_base_mem_pantalla_continue(void)
 	}
 
 
-	//temp
 	//esto no seria necesario. lo hacemos solo porque de momento el real video al activarlo peta con cpc porque entra aqui, y si no metemos esto, genera cpu_panic
-	//TODO
+	//tambien hace falta para que no pete automatic redraw en stdout
 	if (MACHINE_IS_CPC) {
 		return cpc_ram_mem_table[0];
 	}
 
 	if (MACHINE_IS_SAM) {
 		return sam_ram_memory[0];
+	}
+
+	if (MACHINE_IS_MK14) {
+		return memoria_spectrum;
 	}
 
 	cpu_panic("get_base_mem_pantalla on this machine has no sense");
