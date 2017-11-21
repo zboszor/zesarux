@@ -281,6 +281,10 @@ z80_byte *get_base_mem_pantalla_continue(void)
 		return memoria_spectrum;
 	}
 
+	if (MACHINE_IS_QL) {
+		return memoria_spectrum;
+	}
+
 	cpu_panic("get_base_mem_pantalla on this machine has no sense");
 
 	//aunque aqui no se llega, lo hacemos para que no se queje el compilador
