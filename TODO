@@ -67,6 +67,8 @@ probado lo siguiente:
 
 -tsconf con fbdev y real video hace parpadeo el menu
 
+-mk14 en fbdev hace parpadeo el menu
+
 -sdl2 en linux no deja redimensionar ventana con raton
 
 -ESC no lo lee en curses?? se queda pillado. sera algo del debian 9. Quiza hacer alternativa con < como aa

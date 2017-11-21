@@ -3,26 +3,6 @@
 -probar rendimiento cpu (benchmark*txt). con ao null vo null y ao null vo x11, sin memptr,sin visualmem, sin cpustats
 ->falta raspberry
 
-Drivers video:
--probar drivers video xwindows, sdl, fbdev, curses, aa, caca, stdout, simpletext, null. desde dentro de xwindows y desde consola de texto real
-*por cada driver (incluido null) y con y sin pthreads:
-**probar redimensionar ventana
-**probar cambio zoom desde menu
-**probar fullscreen en aquellos que lo soportan: xwindows, fbdev, sdl, cocoa
-**probar todas maquinas. probar teclas mayus, ctrl, alt. en z88 mayus izq, der, ctrl, alt, f1, f2, f3
-**probar ocultar raton
-**probar desactivando border
-**probar desactivando footer
-**en curses, aa, caca, stdout, simpletext probar juegos para ver que tal "emula" los graficos
-**en curses, aa, caca, stdout, simpletext probar realvideo
-**en stdout, probar con modo traprst16 y modo autoredraw
-**en fbdev, probar tambien con --no-use-ttyfbdev y --no-use-ttyrawfbdev y --decimal-full-scale-fbdev
-
--probar desactivando xextensions en configure con --disable-xext
--probar desactivando algun driver de video en compilacion, como x11, y ver que funcionan los otros
-
-ok threads:xwindows,sdl,caca,aa,curses,fbdev,sdl2,simpletext,stdout,null
-
 -probar targets:
 ok * linux 32 bits
 * linux 64 bits
