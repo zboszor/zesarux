@@ -20,24 +20,9 @@ ok -probar todas maquinas, una por una
 -probar a guardar snapshots versiones anteriores (1, 2, 3, 4, 5 y 6) y cargar en ZEsarUX versiones viejas y ZXSpectr
 -probar carga realtape : spectrum: smp,wav,rwa,tap,tzx (tzx normal ). zx80: smp,wav,rwa,o. zx81: smp,wav,rwa,p
 
--falta probar en drivers texto probar visualmem, tambien en drivers no graficos como curses, aa, etc
--falta probar en drivers texto probar waveform, tambien en drivers no graficos como curses, aa, etc
-
--falta probar en drivers texto probar GUI styles: opcion normal, seleccionada, no disponible, no disponible seleccionada, pixel (audio waveform, visual mem, view sprites) en: driver grafico, en caca y en curses
--solo cocoa probar lightgun, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con juegos y testlightgun.zx
-nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencion del boton de fire
--solo cocoa probar kempston mouse, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con demo kempston, art studio
-nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar fire (y no al mover)
 -probar todas opciones de menu en general
 -probar fallback de drivers graficos y de sonido
 -probar footer y cpu uso, temperatura, cinta carga, printing, etc. en xwindows, sdl, fbdev, cocoa, curses. con y sin border. en spectrum, zx80/81 y z88
-
--falta joystick probar on screen keyboard, con F8 y con joystick
--probar realjoystick. probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent
-
-ok mac -probar speech: texto a speech linux, mac os, windows. ruta a --textspeechprogram relativa y absoluta
-ok mac -probar speech en stdout
-probado en mac-probar top speed, con threads y sin threads
 
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS
 
