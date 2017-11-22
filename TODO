@@ -65,6 +65,8 @@ probado lo siguiente:
 
 --- Cosas para la version 6.1
 
+-fallback de video y/o audio no lo hace si se especifica --vo .... o --ao ...... cosa que normalmente ya estara en el .zesaruxrc y por tanto no se hara fallback
+
 -tsconf con fbdev y real video hace parpadeo el menu
 
 -mk14 en fbdev hace parpadeo el menu
