@@ -11,13 +11,9 @@ ok * mac os x, con opengl y sin
 * windows mingw, con y sin pthreads
 * windows cygwin
 
--probar snaps de spectrum, zx80, zx81, z88. Cargar y grabar. .zx, .o, .p, .z80, solo carga: .z81, .sna. En grabar, generar los mismos p** que hay en snap_tests/ en una carpeta temporal y luego probar a cargarlos (desde zesarux, fuse y eightyone). Probar snaps grabados en otros emuladores: Fuse, Eightyone, etc. 
--probar a guardar snapshots versiones anteriores (1, 2, 3, 4, 5 y 6) y cargar en ZEsarUX versiones viejas y ZXSpectr
-
 -probar todas opciones de menu en general
--probar footer y cpu uso, temperatura, cinta carga, printing, etc. en xwindows, sdl, fbdev, cocoa, curses. con y sin border. en spectrum, zx80/81 y z88
+falta rpi -probar footer y cpu uso, temperatura, cinta carga, printing, etc. en xwindows, sdl, fbdev, cocoa, curses. con y sin border. en spectrum, zx80/81 y z88
 
--probar activando funciones de captura de segmentation fault y forzando fallo
 -probar instalando en ruta concreta y ejecutando desde alli
 -probar generando archivo binario y probar a ejecutar, e instalar. 
 -probar generando archivo source y probar a compilar e instalar cambiando prefix
