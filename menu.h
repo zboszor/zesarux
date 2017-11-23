@@ -60,7 +60,7 @@ struct s_overlay_screen {
 
 typedef struct s_overlay_screen overlay_screen;
 
-#define MAX_F_FUNCTIONS 16
+#define MAX_F_FUNCTIONS 17
 
 enum defined_f_function_ids {
 	//reset, hard-reset, nmi, open menu, ocr, smartload, osd keyboard, exitemulator.
@@ -77,8 +77,9 @@ enum defined_f_function_ids {
 	F_FUNCION_SAVEBINARY,
 	F_FUNCION_OSDKEYBOARD,
 	F_FUNCION_RELOADMMC,
-	F_FUNCION_DEBUGCPU,
-	F_FUNCION_PAUSE,      //15
+	F_FUNCION_REINSERTTAPE,
+	F_FUNCION_DEBUGCPU,   //15
+	F_FUNCION_PAUSE,      
  	F_FUNCION_EXITEMULATOR
 };
 

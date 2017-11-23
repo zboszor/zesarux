@@ -144,6 +144,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"SaveBinary",F_FUNCION_SAVEBINARY},
 	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD},
 	{"ReloadMMC",F_FUNCION_RELOADMMC},
+	{"ReinsertTape",F_FUNCION_REINSERTTAPE},
 	{"DebugCPU",F_FUNCION_DEBUGCPU},
 	{"Pause",F_FUNCION_PAUSE},
 	{"ExitEmulator",F_FUNCION_EXITEMULATOR}
@@ -14526,6 +14527,28 @@ void menu_tape_input_insert(MENU_ITEM_PARAMETERS)
 	}
 }
 
+//Esto de momento solo se llama desde una tecla F. Lo pongo aqui para que este cerca de las condiciones y acciones de insert
+void menu_reinsert_tape(void)
+{
+
+	debug_printf(VERBOSE_DEBUG,"Running reinsert tape");
+
+	if (!menu_tape_input_insert_cond() ) {
+		debug_printf(VERBOSE_DEBUG,"No tape inserted to reinsert");
+		return;
+	}
+
+	//Si esta insertada, expulsar
+	if ((tape_loadsave_inserted & TAPE_LOAD_INSERTED)) {
+		debug_printf(VERBOSE_DEBUG,"Ejecting tape");
+		tap_close();
+	}
+
+	//E insertar
+	debug_printf(VERBOSE_DEBUG,"Inserting tape");
+	tap_open();
+}
+
 //truncar el nombre del archivo a un maximo
 //si origen es NULL, poner en destino cadena vacia
 void menu_tape_settings_trunc_name(char *orig,char *dest,int max)
@@ -24428,6 +24451,10 @@ void menu_process_f_functions(void)
 			mmc_read_file_to_memory();
 		break;
 
+		case F_FUNCION_REINSERTTAPE:
+			menu_reinsert_tape();
+		break;
+
 		case F_FUNCION_DEBUGCPU:
 			menu_debug_registers(0);
 		break;
@@ -24447,10 +24474,7 @@ void menu_process_f_functions(void)
 		break;
 
 
-/*
-		F_FUNCION_OPENMENU,
-		F_FUNCION_OCR,
-		*/
+
 	}
 
 }
