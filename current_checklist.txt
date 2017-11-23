@@ -8,7 +8,7 @@ ok * linux 32 bits
 * linux 64 bits
 * raspberry. y activando extensiones raspberry
 ok * mac os x, con opengl y sin
-* windows mingw, con y sin pthreads
+ok * windows mingw, con y sin pthreads
 * windows cygwin
 
 -probar todas opciones de menu en general
