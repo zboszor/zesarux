@@ -65,6 +65,10 @@ probado lo siguiente:
 
 --- Cosas para la version 6.1
 
+-Intentar reproducir click inicial metiendo pausa expresamente. E intentar que solo haga ajuste de buffer cuando haya algo en dicho buffer 
+
+-Uso el debugger del Spectaculator y el del SpecEmu. Echo de menos es algo que he visto en el emulador SimCoupé y es una representación de la posición de pantalla que la ULA está refrescando cuando ejecutas un programa paso a paso
+
 -fallback de video y/o audio no lo hace si se especifica --vo .... o --ao ...... cosa que normalmente ya estara en el .zesaruxrc y por tanto no se hara fallback
 
 -tsconf con fbdev y real video hace parpadeo el menu
@@ -74,6 +78,9 @@ probado lo siguiente:
 -sdl2 en linux no deja redimensionar ventana con raton
 
 -ESC no lo lee en curses?? se queda pillado. sera algo del debian 9. Quiza hacer alternativa con < como aa
+
+-tbblue mmu y divmmc:
+As far as I understand, writing to the MMU takes precedence over divmmc.  Writing to ports 0x1FFD, 0x7FFD and 0xDFFD overwrites the MMUs values, but I'm not using those.  It's the programers responsibility to set mmu0/1 back to 255 if they wish to use divmmc.
 
 -detector de silencio en sdl2, en 48k, genera zumbido en Linux
 ver de momento workaround audio_using_sdl2

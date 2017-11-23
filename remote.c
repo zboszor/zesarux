@@ -2154,7 +2154,7 @@ void easter_egg_star_wars(void)
                             "So, this could be my first demo for the Speccy, but this demo does not run on a real Speccy, "
                             "it runs from the inside of the emulator, this is not a Spectrum binary program. \n"
 
-                            "You may notice every pixel in this demo can have its own color, and I have a total of 4868 colours, which are the total "
+                            "You may notice every pixel in this demo can have its own color, and I can use here the total "
                             "palette colours of the emulator.\n"
                             "This demo have two planes, one background with the rainbow stripes and one foreground, with the scroller. "
                             "I can also do some fast and curious effects like this:\n\n");
