@@ -65,6 +65,10 @@ probado lo siguiente:
 
 --- Cosas para la version 6.1
 
+-si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5. luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
+
+-en mac, con driver no cocoagl, hace una especie de parpadeo abajo en el footer a veces
+
 -Intentar reproducir click inicial metiendo pausa expresamente. E intentar que solo haga ajuste de buffer cuando haya algo en dicho buffer 
 
 -Uso el debugger del Spectaculator y el del SpecEmu. Echo de menos es algo que he visto en el emulador SimCoupé y es una representación de la posición de pantalla que la ULA está refrescando cuando ejecutas un programa paso a paso

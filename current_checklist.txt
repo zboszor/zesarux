@@ -5,8 +5,8 @@
 
 -probar targets:
 ok * linux 32 bits
-* linux 64 bits
-* raspberry. y activando extensiones raspberry
+ok * linux 64 bits
+ok * raspberry. y activando extensiones raspberry
 ok * mac os x, con opengl y sin
 ok * windows mingw, con y sin pthreads
 * windows cygwin
