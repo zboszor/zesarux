@@ -116,7 +116,7 @@ You may try to run from the current dir, without installing, with:
 ./zesarux
 
 On raspberry the recommended way is:
-./zesarux --disableborder --zoom 1 --fullscreen --vo fbdev --ao sdl
+./zesarux --disableborder --zoom 1 --fullscreen --vo fbdev --ao sdl --no-detect-realvideo
 
 
 ---------------
