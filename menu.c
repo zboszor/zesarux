@@ -20374,7 +20374,8 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_tooltip(array_menu_display_settings,"Autodetect the need to enable Real Video");
                         menu_add_item_menu_ayuda(array_menu_display_settings,"This option detects whenever is needed to enable Real Video. "
                                         "On Spectrum, it detects the reading of idle bus or repeated border changes. "
-                                        "On ZX80/81, it detects the I register on a non-normal value when executing video display"
+                                        "On ZX80/81, it detects the I register on a non-normal value when executing video display. "
+					"On all machines, it also detects when loading a real tape. "
                                         );
                 }
 
@@ -23250,7 +23251,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_tooltip(array_menu_settings_display,"Autodetect the need to enable Real Video");
                         menu_add_item_menu_ayuda(array_menu_settings_display,"This option detects whenever is needed to enable Real Video. "
                                         "On Spectrum, it detects the reading of idle bus or repeated border changes. "
-                                        "On ZX80/81, it detects the I register on a non-normal value when executing video display"
+                                        "On ZX80/81, it detects the I register on a non-normal value when executing video display. "
+					"On all machines, it also detects when loading a real tape. "
                                         );
                 }
 

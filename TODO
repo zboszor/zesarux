@@ -65,6 +65,20 @@ probado lo siguiente:
 
 --- Cosas para la version 6.1
 
+Menú utilidades archivos
+
+Ver archivos
+Borrar
+Renombrar
+Crear/truncar
+Mover 
+Duplicar
+Crear carpeta
+Convertir archivo
+
+
+-It would be interesting if an emulator could provide FIFOs or shared memory that the host operating system could read/write to that were made available to the emulated machine.
+
 -si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5. luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
 
 -en mac, con driver no cocoagl, hace una especie de parpadeo abajo en el footer a veces

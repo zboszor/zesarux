@@ -1,7 +1,7 @@
 ZEsarUX - ZX Second-Emulator And Released for UniX 
 
 
-It's a ZX Machines Emulator for Unix, including:
+It's a ZX Machines Emulator for Unix, including all the Sinclar computers:
 
 -MK14
 -ZX80
@@ -9,6 +9,9 @@ It's a ZX Machines Emulator for Unix, including:
 -ZX Spectrum
 -QL
 -Z88
+
+And also:
+
 -Timex TS 2068
 -Sam Coupe
 -Pentagon 
@@ -24,7 +27,7 @@ It's a ZX Machines Emulator for Unix, including:
 ZEsarUX source code and binaries are distributed under GNU GPL license. 
 ZEsarUX also includes third-party roms, media, programs and games NOT covered by this license.
 
-This is my second spectrum emulator after ZXSpectr
+This is my second ZX Spectrum emulator after ZXSpectr
 http://sourceforge.net/projects/zxspectr/
 
 I recommend you to read FEATURES, INSTALL and HISTORY files, as well as other documents in this emulator.
@@ -38,4 +41,6 @@ Copyright 1998-2002 Karl Stenerud. All rights reserved. Distributed under MIT Li
 
 Includes National Semiconductor SC/MP CPU Emulator
 Copyright 2017 Miodrag Milanovic. Distributed under BSD-3 License, you may read it on the LICENSE_SCMP_CORE
+
+
 

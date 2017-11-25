@@ -1,5 +1,21 @@
 This file tells how to install ZEsarUX on Unix systems: Linux, Mac OS X, Raspberry.
 Windows related information is on file INSTALLWINDOWS
+Other versions provided by 3rd party:
+Arch Linux:
+https://aur.archlinux.org/packages/zesarux/
+
+Retropie/EmulationStation
+http://emulationstation.org/
+
+Open Pandora
+https://repo.openpandora.org/?page=detail&app=zesarux
+
+PocketCHIP
+https://bbs.nextthing.co/t/tutorial-zesarux-8-bit-computer-emulator/8532
+
+MorhpOS: can be compiled using a provided patch
+
+---
 
 * Requirements
 

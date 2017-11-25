@@ -1914,7 +1914,8 @@ void realtape_insert(void)
 	//En ZX80,81, se vean las franjas de carga en toda la pantalla
 
 	//Aun asi esto solo es un motivo estetico, se puede desactivar realvideo y la carga funcionara igualmente
-	enable_rainbow();
+	//Solo si autodetect real video esta activo
+	if (autodetect_rainbow.v) enable_rainbow();
 
 
         if (noautoload.v==0) {

@@ -105,3 +105,21 @@
         //sin memptr,sin visualmem, sin cpustats
         //con contended memory
         //128k, ao null, vo fbdev, zoom 1, frameskip 3, over128.z80, 88% cpu
+
+
+        //Pruebas 25 Noviembre 2017
+        //Raspberry 1 con maximo overclock
+        //sin memptr,sin visualmem, sin cpustats
+        //con contended memory
+        //con pthreads
+        //48k, ao null, vo null, 57% cpu
+
+        //sin rainbow
+        //sin memptr,sin visualmem, sin cpustats
+        //con contended memory
+        //48k, ao null, vo fbdev, zoom 1, frameskip 1,  74% cpu
+
+        //con rainbow
+        //sin memptr,sin visualmem, sin cpustats
+        //con contended memory
+        //128k, ao null, vo fbdev, zoom 1, frameskip 3, over128.z80, 88% cpu
