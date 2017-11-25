@@ -37,9 +37,6 @@ The format of each table entry is as follows:
 
 
 
-probar fbdev -blanco y negro con menu sin multitask acabar de hacer otros drivers: fbdev, sdl, sdl2,.... 
-
-
 IMPORTANTE: ruido al iniciar emulador, no siempre, debido al agregar rutina de autoresize audio puntero
 Quiza solo permitir cuando hayan pasado unos segundos desde el inicio del emulador
 
