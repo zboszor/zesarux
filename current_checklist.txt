@@ -1,15 +1,8 @@
 *Bateria de pruebas actual
  
 -probar targets:
-ok * linux 32 bits
-ok * linux 64 bits
-ok * raspberry. y activando extensiones raspberry
-ok * mac os x, con opengl y sin
-ok * windows mingw, con y sin pthreads
 * windows cygwin
 
--probar todas opciones de menu en general
-falta rpi -probar footer y cpu uso, temperatura, cinta carga, printing, etc. en xwindows, sdl, fbdev, cocoa, curses. con y sin border. en spectrum, zx80/81 y z88
 
 -probar instalando en ruta concreta y ejecutando desde alli
 -probar generando archivo binario y probar a ejecutar, e instalar. 
