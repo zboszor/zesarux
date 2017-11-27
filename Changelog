@@ -1,7 +1,7 @@
 Version 6.0. 27 November 2017 - Gunfright edition
 
-Added machine Chrome (Italian ZX Spectrum Clone)
 Added machine ZX-Evolution TS-Conf
+Added machine Chrome (Italian ZX Spectrum Clone)
 Added machine MK14
 Added lots of new ZEsarUX remote commands (ZRCP). See ZRCP help to know them
 Added Visualmem, Poke, Find, Save binary menus also for Sinclair QL
@@ -11,9 +11,9 @@ Added menu to find and set lives in games
 Added menu to view color palettes
 Added actions commands to breakpoints, so you can run some actions when a breakpoint is fired
 Added up to three AY Chips
+Added emulation of other DAC chips appart from Specdrum: Covox, etc
 Added Antonio Villena's "Kartusho" cartridge interface
 Added quicksave function
-Added emulation of other DAC chips appart from Specdrum: Covox, etc
 Added setting to set 256kb or 512kb on Spectrum 128k machines
 Added setting to set F keys (F1, F2, etc) to run different actions: reset, nmi, exit emulator, etc
 Added TBBlue features: Sprite chip, Layer2, RTC clock for esxdos, 2 MB RAM, new 8kb block MMU, 9-bit palette, lores mode, layer priorities, partial Next Z80 opcodes (see extras/docs/tbblue/new_opcodes.txt to know which are emulated)
@@ -45,7 +45,7 @@ Improved QL emulation: experimental support of LBYTES command, added QL root dir
 Improved Sprite Viewer: Save sprite, TBBlue sprite viewer, inverse sprite, set bpp (8,4,2,1), set palette
 Improved stdout driver. Now can show ansi colours
 Improved messages windows. Can now find text using f and n
-Improved footer. Host CPU % usage on footer is not enabled by default to avoid confussion with emulated CPU speed. You can enable it with a setting. Host CPU % usage is not show on Windows.
+Improved footer. Host CPU % usage on footer is not enabled by default to avoid confussion with emulated CPU speed. You can enable it with a setting. Host CPU % usage is not shown on Windows.
 Improved Visual Mem:
 *showing also read memory and opcode execution visual mem
 *it has a counter (0-255) to see how many times an address has been read/executed
