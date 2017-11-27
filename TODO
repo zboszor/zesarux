@@ -31,10 +31,7 @@ The format of each table entry is as follows:
 -- Fin estado funciones microdrive QL
 
 
--cosas para la version 5.1
-
-
-
+--- Cosas para la version 6.1
 
 
 IMPORTANTE: ruido al iniciar emulador, no siempre, debido al agregar rutina de autoresize audio puntero
@@ -48,19 +45,8 @@ probado lo siguiente:
 
 -Quizá resetear puntero escritura latencia siempre que carga, graba, etc
 
+-Intentar reproducir click inicial metiendo pausa expresamente. E intentar que solo haga ajuste de buffer cuando haya algo en dicho buffer 
 
----Fin cosas para version 5.1
-
-
-
-
-
-
-
-
-
-
---- Cosas para la version 6.1
 
 
 -debe guardar configuraciones de joystick teclas a eventos, a teclas etc en zesaruxrc
@@ -82,8 +68,6 @@ Convertir archivo
 -si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5. luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
 
 -en mac, con driver no cocoagl, hace una especie de parpadeo abajo en el footer a veces
-
--Intentar reproducir click inicial metiendo pausa expresamente. E intentar que solo haga ajuste de buffer cuando haya algo en dicho buffer 
 
 -Uso el debugger del Spectaculator y el del SpecEmu. Echo de menos es algo que he visto en el emulador SimCoupé y es una representación de la posición de pantalla que la ULA está refrescando cuando ejecutas un programa paso a paso
 
@@ -152,7 +136,6 @@ http://zxnet.co.uk/spectrum/roms/
 
 2. additionally, for the get-visualmem-xxx commands, could you please add start address & length/end address params?
 Mark Hutchings  
-
 
 
 
@@ -272,7 +255,7 @@ y ademas, la funcion de debug_dump_nested_functions ya controla esos casos y no 
 
 
 
---- Fin cosas para version 5.2
+--- Fin cosas para version 6.1
 
 
 

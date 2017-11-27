@@ -24,14 +24,14 @@
 
 #include "compileoptions.h"
 
-//#define EMULATOR_VERSION "6.0"
+#define EMULATOR_VERSION "6.0"
 
-#define EMULATOR_VERSION "6.0-RC"
+//#define EMULATOR_VERSION "6.0-RC"
 //#define EMULATOR_VERSION "6.0-SN"
 //#define SNAPSHOT_VERSION
 
-#define EMULATOR_DATE "30 October 2017"
-#define EMULATOR_SHORT_DATE "30/10/2017"
+#define EMULATOR_DATE "27 November 2017"
+#define EMULATOR_SHORT_DATE "27/11/2017"
 #define EMULATOR_EDITION_NAME "Gunfright edition"
 
 //8 bits

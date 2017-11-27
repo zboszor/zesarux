@@ -11,7 +11,7 @@ Cambiar version en macos/apptemplate/Contents/Info.plist, tag CFBundleVersion
 En changelog, decir qué comandos nuevos de ZRCP, haciendo diff con version anterior
 
 * desactivar simulador joystick
-* desactivar tecla F7 de scrxwindows.c, scrcocoa.m de simulador de joystick
+* vigilar tecla F7 de scrxwindows.c, scrcocoa.m de simulador de joystick que no este asociada al simulador
 * Actualizar features, segun lo agregado a Changelog
 * vigilar funciones F de pruebas en xwindows, desactivar las que sean de pruebas
 
