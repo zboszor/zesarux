@@ -68,8 +68,8 @@ Y subir el zip a sourceforge
 
 ** Linux 
 Generar estos dos binarios de Linux:
-ZEsarUX_bin-version-debian8_x32.tar.gz 
-ZEsarUX_bin-version-debian8_x64.tar.gz 
+ZEsarUX_linux-version-debian8_x32.tar.gz 
+ZEsarUX_linux-version-debian8_x64.tar.gz 
 con comandos:
 export CFLAGS=-O2
 export LDFLAGS=-O2
@@ -81,7 +81,7 @@ make bintargz
 
 ** Raspbian
 Generar este binario de Raspbian:
-ZEsarUX_bin-version-raspbian8.tar.gz 
+ZEsarUX_rpi-version-raspbian8.tar.gz 
 (Habilita extensiones raspberry, drivers video: fbdev, curses, y drivers audio: alsa, sdl, dsp. )
 con comandos:
 export CFLAGS=-O2
