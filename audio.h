@@ -212,5 +212,7 @@ extern void audiodac_mix(void);
 
 extern int audio_using_sdl2;
 
+extern z80_bit silence_detector_setting;
+
 
 #endif

@@ -52,6 +52,9 @@ char audio_buffer_oneandtwo[AUDIO_BUFFER_SIZE*2];
 
 char *audio_driver_name;
 
+
+z80_bit silence_detector_setting={0};
+
 //Rutinas de audio
 int (*audio_init) (void);
 int (*audio_thread_finish) (void);
@@ -457,7 +460,10 @@ void envio_audio(void)
 	if (silence_detection_counter!=SILENCE_DETECTION_MAX) {
 		silence_detection_counter++;
 		if (audio_using_sdl2) silence_detection_counter=0; //workaround para que no salte detector con sdl2
-        	if (silence_detection_counter==SILENCE_DETECTION_MAX) debug_printf(VERBOSE_DEBUG,"Silence detected");
+
+		if (silence_detector_setting.v==0) silence_detection_counter=0;
+        	
+		if (silence_detection_counter==SILENCE_DETECTION_MAX) debug_printf(VERBOSE_DEBUG,"Silence detected");
 	}
 
 	//para aumentar buffer sonido

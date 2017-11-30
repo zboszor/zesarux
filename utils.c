@@ -2922,6 +2922,12 @@ int util_write_configfile(void)
   if (ay_speech_enabled.v==0)                 ADD_STRING_CONFIG,"--disableayspeech");
   if (ay_envelopes_enabled.v==0)              ADD_STRING_CONFIG,"--disableenvelopes");
   if (audio_noreset_audiobuffer_full.v)       ADD_STRING_CONFIG,"--noreset-audiobuffer-full");
+
+
+  if (silence_detector_setting.v)	      ADD_STRING_CONFIG,"--enable-silencedetector");
+  else 					      ADD_STRING_CONFIG,"--disable-silencedetector");
+
+
   if (border_enabled.v==0)                    ADD_STRING_CONFIG,"--disableborder");
   if (mouse_pointer_shown.v==0)               ADD_STRING_CONFIG,"--hidemousepointer");
   if (mouse_menu_disabled.v)                  ADD_STRING_CONFIG,"--disablemenumouse");

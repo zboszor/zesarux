@@ -1,5 +1,7 @@
 Version 6.1. 30 November 2017 - xxxx edition
 
+Improved sound: Silence detector does not activate on pthreads versions
+
 Version 6.0. 27 November 2017 - Gunfright edition
 
 Added machine ZX-Evolution TS-Conf

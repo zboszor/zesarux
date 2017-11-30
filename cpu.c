@@ -1234,6 +1234,15 @@ printf (
 		"--noreset-audiobuffer-full Do not reset audio buffer when it's full. By default it does reset the buffer when full, it helps reducing latency\n"
 
 
+#ifdef USE_PTHREADS
+		"--enable-silencedetector   Enable silence detector. Silence detector is disabled by default as this is a pthreads version\n"
+		"--disable-silencedetector  Disable silence detector. Silence detector is disabled by default as this is a pthreads version\n"
+#else 
+		"--enable-silencedetector   Enable silence detector. Silence detector is enabled by default as this is a no-pthreads version\n"
+		"--disable-silencedetector  Disable silence detector. Silence detector is enabled by default as this is a no-pthreads version\n"		
+#endif
+
+
 #ifdef COMPILE_ALSA
 		"--alsaperiodsize n         Alsa audio periodsize multiplier (2 or 4). Default 2. Lower values reduce latency but can increase cpu usage\n"
 
@@ -5335,6 +5344,16 @@ void parse_cmdline_options(void) {
 				audio_noreset_audiobuffer_full.v=1;
 			}
 
+			//--enable-silencedetector
+
+			else if (!strcmp(argv[puntero_parametro],"--enable-silencedetector")) {
+				silence_detector_setting.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--disable-silencedetector")) {
+				silence_detector_setting.v=0;
+			}
+
 
 #ifdef COMPILE_ALSA
 			else if (!strcmp(argv[puntero_parametro],"--alsaperiodsize")) {
@@ -5814,6 +5833,13 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 	input_file_keyboard_send_pause.v=1;
 
 
+#ifdef USE_PTHREADS
+	silence_detector_setting.v=0;
+#else
+	silence_detector_setting.v=1;
+#endif
+
+
 	scr_z88_cpc_load_keymap=NULL;
 
 
@@ -6052,6 +6078,9 @@ init_randomize_noise_value();
 #else
 		debug_printf (VERBOSE_INFO,"Not using phtreads");
 #endif
+
+	if (silence_detector_setting.v) debug_printf (VERBOSE_INFO,"Enabling Silence Detector");
+	else debug_printf (VERBOSE_INFO,"Disabling Silence Detector");
 
 
 	debug_printf (VERBOSE_INFO,"Initializing Machine");
