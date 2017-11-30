@@ -24,15 +24,15 @@
 
 #include "compileoptions.h"
 
-#define EMULATOR_VERSION "6.0"
+//#define EMULATOR_VERSION "6.1"
 
-//#define EMULATOR_VERSION "6.0-RC"
-//#define EMULATOR_VERSION "6.0-SN"
-//#define SNAPSHOT_VERSION
+//#define EMULATOR_VERSION "6.1-RC"
+#define EMULATOR_VERSION "6.1-SN"
+#define SNAPSHOT_VERSION
 
-#define EMULATOR_DATE "27 November 2017"
-#define EMULATOR_SHORT_DATE "27/11/2017"
-#define EMULATOR_EDITION_NAME "Gunfright edition"
+#define EMULATOR_DATE "30 November 2017"
+#define EMULATOR_SHORT_DATE "30/11/2017"
+#define EMULATOR_EDITION_NAME "xxxx edition"
 
 //8 bits
 typedef unsigned char z80_byte;
