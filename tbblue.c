@@ -1301,7 +1301,7 @@ Nuevo oct 2017:
 	int i,indice;
 
 	//Los 8 KB de la fpga ROM estan al final
-	tbblue_fpga_rom=&memoria_spectrum[1024*1024];
+	tbblue_fpga_rom=&memoria_spectrum[2*1024*1024];
 
 	//224 Paginas RAM spectrum 512k
 	for (i=0;i<TBBLUE_MAX_SRAM_8KB_BLOCKS;i++) {

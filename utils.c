@@ -8608,7 +8608,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       }
 
       if (MACHINE_IS_TBBLUE) {
-        size=1024*1024;
+        size=2*1024*1024; //Retornamos siempre zona memoria 2 MB
       }
 
       if (MACHINE_IS_TSCONF) {
