@@ -14,7 +14,12 @@ run_test()
 		echo "Result OK"
 		rm -f $TEMPFILE
 	else
-		echo "Error"
+		echo "!!!!!!!!!!!!!!!!!!!!"
+		echo "!!!!!!!!!!!!!!!!!!!!"
+		echo "ERROR"
+		echo "!!!!!!!!!!!!!!!!!!!!"
+		echo "!!!!!!!!!!!!!!!!!!!!"
+		echo
 		sleep 5
 		echo "Output:"
 		echo
@@ -26,10 +31,10 @@ run_test()
 }
 
 echo "TBBlue MMU test"
-run_test ./zesarux --noconfigfile --hardware-debug-ports --exit-after 30 --machine tbblue --vo stdout --mmc-file tbblue.mmc --enable-mmc --enable-divmmc-ports extras/media/spectrum/tbblue/testmmu.tap 
+run_test ./zesarux --noconfigfile --hardware-debug-ports --exit-after 60 --machine tbblue --vo stdout --mmc-file tbblue.mmc --enable-mmc --enable-divmmc-ports extras/media/spectrum/tbblue/testmmu.tap 
 
 
 echo "TBBlue MMU test 2 (rom space)"
-run_test ./zesarux --noconfigfile --hardware-debug-ports --exit-after 30 --machine tbblue --vo stdout --mmc-file tbblue.mmc --enable-mmc --enable-divmmc-ports extras/media/spectrum/tbblue/test_mmu_low/testing-mmu-low.tap
+run_test ./zesarux --noconfigfile --hardware-debug-ports --exit-after 60 --machine tbblue --vo stdout --mmc-file tbblue.mmc --enable-mmc --enable-divmmc-ports extras/media/spectrum/tbblue/test_mmu_low/testing-mmu-low.tap
 
 #RESULT: OK
