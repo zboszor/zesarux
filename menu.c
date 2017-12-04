@@ -24034,6 +24034,18 @@ void menu_settings_config_file_save_on_exit(MENU_ITEM_PARAMETERS)
 	else save_configuration_file_on_exit.v=1;
 }
 
+void menu_settings_config_file_show(MENU_ITEM_PARAMETERS)
+{
+                          char configfile[PATH_MAX];
+
+                                if (util_get_configfile_name(configfile)==0)  {
+					menu_warn_message("Unknown configuration file");
+                                }
+	else {
+		menu_file_viewer_read_file("Config file",configfile);
+	}
+}
+
 
 //menu config_file settings
 void menu_settings_config_file(MENU_ITEM_PARAMETERS)
@@ -24056,6 +24068,12 @@ void menu_settings_config_file(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_settings_config_file,'a');
 		menu_add_item_menu_tooltip(array_menu_settings_config_file,"Auto save configuration on exit emulator");
 		menu_add_item_menu_ayuda(array_menu_settings_config_file,"Auto save configuration on exit emulator and overwrite it. Note: not all settings are saved");
+
+
+		menu_add_item_menu_format(array_menu_settings_config_file,MENU_OPCION_NORMAL,menu_settings_config_file_show,NULL,"~~View config file");
+		menu_add_item_menu_shortcut(array_menu_settings_config_file,'v');
+		menu_add_item_menu_tooltip(array_menu_settings_config_file,"View configuration file");
+		menu_add_item_menu_ayuda(array_menu_settings_config_file,"View configuration file");
 
 
 
