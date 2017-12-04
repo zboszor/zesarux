@@ -657,6 +657,15 @@ void timer_check_interrupt(void)
 				superupgrade_flush_flash_to_disk();
 
 
+				//salir del emulador despues de x segundos
+				if (exit_emulator_after_seconds) {
+					exit_emulator_after_seconds_counter++;
+					if (exit_emulator_after_seconds_counter>=exit_emulator_after_seconds) {
+						debug_printf(VERBOSE_INFO,"Exiting emulator after %d seconds",exit_emulator_after_seconds);
+						end_emulator();
+					}
+				}
+
 
                         }
 

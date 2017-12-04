@@ -417,4 +417,10 @@ extern char *string_machines_list_description;
 
 extern void set_menu_gui_zoom(void);
 
+
+extern int exit_emulator_after_seconds;
+
+extern int exit_emulator_after_seconds_counter;
+
+
 #endif

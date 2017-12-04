@@ -552,6 +552,14 @@ int z88_cpc_keymap_type=0;
 //Modo turbo. 1=normal. 2=7 Mhz, 3=14 Mhz, etc
 int cpu_turbo_speed=1;
 
+
+
+
+//Si se sale del emulador despues de X segundos. A 0 para desactivarlo
+int exit_emulator_after_seconds=0;
+
+int exit_emulator_after_seconds_counter=0;
+
 void cpu_set_turbo_speed(void)
 {
 
@@ -1598,6 +1606,7 @@ printf (
 		"--saveconf-on-exit         Always save configuration when exiting emulator\n"
 		"--helpcustomconfig         Show help for autoconfig files\n"
 		"--quickexit                Exit emulator quickly: no yes/no confirmation and no fadeout\n"
+		"--exit-after n             Exit emulator after n seconds\n"
 
 
 		"\n\n"
@@ -5667,6 +5676,17 @@ void parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--quickexit")) {
 				quickexit.v=1;
 			}
+
+
+	                 else if (!strcmp(argv[puntero_parametro],"--exit-after")) {
+                         	siguiente_parametro_argumento();
+	                         int valor=atoi(argv[puntero_parametro]);
+				if (valor<=0) {
+					printf ("Invalid value %d for setting --exit-after\n",valor);
+                                 	exit(1);
+				}
+				exit_emulator_after_seconds=valor;
+                         }
 
 
 
