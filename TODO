@@ -47,7 +47,7 @@ probado lo siguiente:
 
 -Intentar reproducir click inicial metiendo pausa expresamente. E intentar que solo haga ajuste de buffer cuando haya algo en dicho buffer 
 
-
+-menu test joystick. botones, acciones etc
 
 -debe guardar configuraciones de joystick teclas a eventos, a teclas etc en zesaruxrc
 
