@@ -2334,7 +2334,6 @@ void tbblue_set_value_port(z80_byte value)
 		case 80:
 		case 81:
 			//tbblue_set_rom_page_no_255(tbblue_last_register-80);
-			//tbblue_set_rom_page(AAA)
 			tbblue_set_memory_pages();
 		break;
 
@@ -2344,9 +2343,8 @@ void tbblue_set_value_port(z80_byte value)
 		case 85:
 		case 86:
 		case 87:
-			//TODO: Quiza cambiar la llamada por tbblue_set_memory_pages(); ???
-			tbblue_set_memory_pages();
 			//tbblue_set_ram_page(tbblue_last_register-80);
+			tbblue_set_memory_pages();
 		break;
 
 	}
