@@ -3,6 +3,7 @@ Version 6.1. 30 November 2017 - xxxx edition
 Improved sound: Silence detector does not activate on pthreads versions
 Fixed TBBlue MMU when using segment 0000-3FFFH
 Added setting to exit emulator after a number of seconds (--exit-after)
+Added setting to show changelog when updating emulator version
 
 Version 6.0. 27 November 2017 - Gunfright edition
 

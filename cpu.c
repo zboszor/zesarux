@@ -560,6 +560,9 @@ int exit_emulator_after_seconds=0;
 
 int exit_emulator_after_seconds_counter=0;
 
+
+char last_version_string[255]="";
+
 void cpu_set_turbo_speed(void)
 {
 
@@ -1607,6 +1610,7 @@ printf (
 		"--helpcustomconfig         Show help for autoconfig files\n"
 		"--quickexit                Exit emulator quickly: no yes/no confirmation and no fadeout\n"
 		"--exit-after n             Exit emulator after n seconds\n"
+		"--last-version s           String which identifies last version run. Usually doesnt need to change it, used to show the start popup of the new version changes\n"
 
 
 		"\n\n"
@@ -5688,6 +5692,11 @@ void parse_cmdline_options(void) {
 				exit_emulator_after_seconds=valor;
                          }
 
+			else if (!strcmp(argv[puntero_parametro],"--last-version")) {
+				siguiente_parametro_argumento();
+				strcpy(last_version_string,argv[puntero_parametro]);
+			}	
+
 
 
 
@@ -6328,6 +6337,15 @@ struct sched_param sparam;
 		        breakpoints_enable();
 		}
 
+	}
+
+
+	//Si la version actual es mas nueva que la anterior, eso solo si el autoguardado de config esta activado
+	if (save_configuration_file_on_exit.v) {
+		if (strcmp(last_version_string,EMULATOR_VERSION)) {  //Si son diferentes
+			menu_event_new_version_show_changes.v=1;
+			menu_abierto=1;
+		}
 	}
 
 

@@ -254,6 +254,8 @@ z80_bit menu_button_exit_emulator={0};
 
 z80_bit menu_event_drag_drop={0};
 
+z80_bit menu_event_new_version_show_changes={0};
+
 z80_bit menu_button_f_function={0};
 
 int menu_button_f_function_index;
@@ -24688,6 +24690,14 @@ void menu_inicio(void)
 		menu_process_f_functions();
 
 		menu_muestra_pending_error_message(); //Si se genera un error derivado de funcion F
+		cls_menu_overlay();
+	}
+
+	else if (menu_event_new_version_show_changes.v) {
+		menu_event_new_version_show_changes.v=0;
+		menu_generic_message_format("Updated version","Please take a look at the changes");
+		menu_about_changelog(0);
+
 		cls_menu_overlay();
 	}
 

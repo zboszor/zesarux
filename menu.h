@@ -203,6 +203,7 @@ extern z80_bit menu_button_osdkeyboard;
 extern z80_bit menu_button_osdkeyboard_return;
 extern z80_bit menu_button_exit_emulator;
 extern z80_bit menu_event_drag_drop;
+extern z80_bit menu_event_new_version_show_changes;
 //extern char menu_event_drag_drop_file[PATH_MAX];
 extern z80_bit menu_event_remote_protocol_enterstep;
 extern z80_bit menu_button_f_function;
