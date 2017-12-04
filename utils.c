@@ -3091,7 +3091,9 @@ int util_write_configfile(void)
   if (force_confirm_yes.v)                    ADD_STRING_CONFIG,"--forceconfirmyes");
                                               ADD_STRING_CONFIG,"--gui-style \"%s\"",definiciones_estilos_gui[estilo_gui_activo].nombre_estilo);
 
-					      ADD_STRING_CONFIG,"--last-version \"%s\"",EMULATOR_VERSION);
+					      ADD_STRING_CONFIG,"--last-version \"%s\"",BUILDNUMBER);
+
+  if (do_no_show_changelog_when_update.v)     ADD_STRING_CONFIG,"--no-show-changelog");
 
 
   for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) {
