@@ -2794,7 +2794,7 @@ int util_get_configfile_name(char *configfile)
 
 //Devuelve 1 si ok
 //0 si error
-int util_create_sample_configfile(void)
+int util_create_sample_configfile(int additional)
 {
 
 char configfile[PATH_MAX];
@@ -2835,6 +2835,15 @@ if (util_get_configfile_name(configfile)==0)  {
     ;
 
   fwrite(sample_config, 1, strlen(sample_config), ptr_configfile);
+
+  if (additional)  {
+	char *sample_config_additional="--saveconf-on-exit"
+	    "\n"
+	    "\n"
+	;
+
+	fwrite(sample_config_additional, 1, strlen(sample_config_additional), ptr_configfile);
+   }
 
 
               fclose(ptr_configfile);
@@ -2883,7 +2892,7 @@ int util_write_configfile(void)
 
   //Creamos archivo de configuracion de ejemplo y agregamos settings aparte
 
-  if (util_create_sample_configfile()==0) {
+  if (util_create_sample_configfile(0)==0) {
     debug_printf(VERBOSE_ERR,"Cannot write configuration file");
     return 0;
   }
@@ -3161,7 +3170,7 @@ int configfile_read(char *mem)
 	if (!si_existe_archivo(configfile)) {
 		printf("Configuration file %s not found\nCreating a new one\n",configfile);
 
-    if (util_create_sample_configfile()==0) return 0;
+    if (util_create_sample_configfile(1)==0) return 0;
 
 	}
 
