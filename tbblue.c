@@ -1501,7 +1501,7 @@ void tbblue_mem_page_ram_rom(void)
 	}
 }
 
-z80_byte tbblue_mem_get_ram_page(void)
+z80_byte disabled_tbblue_mem_get_ram_page(void)
 {
 
 	//printf ("Valor 32765: %d\n",puerto_32765);
@@ -1570,7 +1570,8 @@ void tbblue_set_memory_pages(void)
 	z80_byte maquina=(tbblue_registers[3])&7;
 
 	int romram_page;
-	int ram_page,rom_page;
+	//int ram_page;
+	int rom_page;
 	int indice;
 
 	//Por defecto
@@ -1584,6 +1585,8 @@ void tbblue_set_memory_pages(void)
 		10 = ZX 128K
 		11 = ZX +2/+3e
 	*/
+
+	z80_byte contend_page_high_segment=tbblue_registers[86]/2;
 
 	switch (maquina) {
 		case 1:
@@ -1619,9 +1622,9 @@ void tbblue_set_memory_pages(void)
                         tbblue_set_ram_page(4);
 			tbblue_set_ram_page(5);
 
-			ram_page=tbblue_mem_get_ram_page();
-			tbblue_registers[80+6]=ram_page*2;
-			tbblue_registers[80+7]=ram_page*2+1;
+			//ram_page=tbblue_mem_get_ram_page();
+			//tbblue_registers[80+6]=ram_page*2;
+			//tbblue_registers[80+7]=ram_page*2+1;
 
 
                         tbblue_set_ram_page(6);
@@ -1633,7 +1636,7 @@ void tbblue_set_memory_pages(void)
 		        contend_pages_actual[0]=0;
 		        contend_pages_actual[1]=contend_pages_128k_p2a[5];
 		        contend_pages_actual[2]=contend_pages_128k_p2a[2];
-		        contend_pages_actual[3]=contend_pages_128k_p2a[ram_page];
+		        contend_pages_actual[3]=contend_pages_128k_p2a[contend_page_high_segment];
 
 
 		break;
@@ -1679,16 +1682,16 @@ void tbblue_set_memory_pages(void)
                         	tbblue_set_ram_page(4);
 				tbblue_set_ram_page(5);
 
-                        	ram_page=tbblue_mem_get_ram_page();
-				tbblue_registers[80+6]=ram_page*2;
-				tbblue_registers[80+7]=ram_page*2+1;
+                        	//ram_page=tbblue_mem_get_ram_page();
+				//tbblue_registers[80+6]=ram_page*2;
+				//tbblue_registers[80+7]=ram_page*2+1;
                         	tbblue_set_ram_page(6);
 				tbblue_set_ram_page(7);
 
 		        	contend_pages_actual[0]=0;
 		        	contend_pages_actual[1]=contend_pages_128k_p2a[5];
 		        	contend_pages_actual[2]=contend_pages_128k_p2a[2];
-		        	contend_pages_actual[3]=contend_pages_128k_p2a[ram_page];
+		        	contend_pages_actual[3]=contend_pages_128k_p2a[contend_page_high_segment];
 
 
 			}
@@ -1706,9 +1709,9 @@ void tbblue_set_memory_pages(void)
                         tbblue_set_ram_page(4);
 			tbblue_set_ram_page(5);
 
-			ram_page=tbblue_mem_get_ram_page();
-			tbblue_registers[80+6]=ram_page*2;
-			tbblue_registers[80+7]=ram_page*2+1;
+			//ram_page=tbblue_mem_get_ram_page();
+			//tbblue_registers[80+6]=ram_page*2;
+			//tbblue_registers[80+7]=ram_page*2+1;
                         tbblue_set_ram_page(6);
 			tbblue_set_ram_page(7);
 
@@ -1717,7 +1720,7 @@ void tbblue_set_memory_pages(void)
 		        contend_pages_actual[0]=0;
 		        contend_pages_actual[1]=contend_pages_128k_p2a[5];
 		        contend_pages_actual[2]=contend_pages_128k_p2a[2];
-		        contend_pages_actual[3]=contend_pages_128k_p2a[ram_page];
+		        contend_pages_actual[3]=contend_pages_128k_p2a[contend_page_high_segment];
 
 
 		break;
@@ -2342,8 +2345,8 @@ void tbblue_set_value_port(z80_byte value)
 		case 86:
 		case 87:
 			//TODO: Quiza cambiar la llamada por tbblue_set_memory_pages(); ???
-			//tbblue_set_memory_pages();
-			tbblue_set_ram_page(tbblue_last_register-80);
+			tbblue_set_memory_pages();
+			//tbblue_set_ram_page(tbblue_last_register-80);
 		break;
 
 	}
