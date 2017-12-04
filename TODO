@@ -196,8 +196,6 @@ https://github.com/charlierobson/ZXpand-Vitamins/wiki/ZXpand---Online-Manual
 http://forum.tslabs.info/viewtopic.php?f=12&t=157 
 -Comandos ZRCP obtener datos sprites tsconf
 
--Quizá texto de “what’s new” cuando se inicie una versión nueva una vez. Pero esto necesita que config file este en auto guardado 
-
 
 -teclas F11-F15 para fbdev
 teclas F en general en fbdev driver no raw

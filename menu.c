@@ -6061,6 +6061,16 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				if (debug_core_lanzado_inter.v && (remote_debug_settings&32)) {
 					debug_run_until_return_interrupt();
 				}
+
+
+				//Prueba a refrescar pantalla a cada instruccion, con modo scanline
+				/*if (MACHINE_IS_SPECTRUM) {
+					//copiamos contenido linea y border a buffer rainbow
+					if (rainbow_enabled.v==1) {
+						screen_store_scanline_rainbow_solo_border();
+						screen_store_scanline_rainbow_solo_display();
+					}
+				}*/
 			}
 
 			if (menu_breakpoint_exception.v) {
