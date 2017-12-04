@@ -375,6 +375,12 @@ z80_byte diviface_poke_byte(z80_int dir,z80_byte valor)
 
 
 
+z80_byte diviface_peek_byte_to_internal_memory(z80_int dir)
+{
+	//printf ("returning diviface internal memory address from diviface_peek_byte_no_time %XH\n",dir);
+	z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
+	return *puntero;
+}
 
 z80_byte diviface_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 {
@@ -387,9 +393,10 @@ z80_byte diviface_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 	else {
 
 		if (dir<16384) {
+			return diviface_peek_byte_to_internal_memory(dir);
 			//printf ("returning diviface internal memory address from diviface_peek_byte_no_time %XH\n",dir);
-      z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
-      return *puntero;
+      //z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
+      //return *puntero;
     }
 
 		else return valor_leido;
@@ -408,9 +415,10 @@ z80_byte diviface_peek_byte(z80_int dir,z80_byte value GCC_UNUSED)
 
 	else {
   	if (dir<16384) {
+		return diviface_peek_byte_to_internal_memory(dir);
 		//printf ("returning diviface internal memory address from diviface_peek_byte %XH\n",dir);
-      z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
-      return *puntero;
+      //z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
+      //return *puntero;
     }
 
 		else return valor_leido;
