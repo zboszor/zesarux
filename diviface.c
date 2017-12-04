@@ -312,6 +312,14 @@ reached:
 
 }
 
+z80_byte diviface_return_tbblue_mmu_segment(z80_int dir)
+{
+        int segmento=dir/8192;
+        z80_byte reg_mmu_value=tbblue_registers[80+segmento];
+        return reg_mmu_value;
+}
+
+
 //Rutinas propias
 
 //Si hay que hacer poke a memoria interna.
@@ -326,6 +334,16 @@ void diviface_poke_byte_to_internal_memory(z80_int dir,z80_byte valor)
   }
 
   else {
+
+	//Si la mmu del tbblue esta alterando esta zona de memoria
+	if (MACHINE_IS_TBBLUE && dir<16384) {
+		//Despues de salir de esta funcion siempre llama a escritura de memoria de la capa que haya por debajo
+		//Por tanto solo hay que determinar si la memoria divmmc se debe escribir (valor en MMU 255),
+		//Y si no se debe, simplemente hacer return de aqui
+	        z80_byte reg_mmu_value=diviface_return_tbblue_mmu_segment(dir);
+                if (reg_mmu_value!=255) return;
+	}
+
 		//Si poke a eprom o ram 3 read only.
 
   	if (dir<8192) {
@@ -373,12 +391,6 @@ z80_byte diviface_poke_byte(z80_int dir,z80_byte valor)
 	return 0;
 }
 
-z80_byte diviface_return_tbblue_mmu_segment(z80_int dir)
-{
-	int segmento=dir/8192;
-	z80_byte reg_mmu_value=tbblue_registers[80+segmento];
-	return reg_mmu_value;
-}
 
 z80_byte *diviface_return_tbblue_memory_pointer(z80_int dir)
 {
