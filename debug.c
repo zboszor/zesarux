@@ -3241,7 +3241,7 @@ void debug_get_ioports(char *stats_buffer)
   								sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
 
   								int index_ioport;
-  								for (index_ioport=0;index_ioport<87;index_ioport++) {
+  								for (index_ioport=0;index_ioport<99;index_ioport++) {
   									//sprintf (buf_linea,"%02X : %02X \n",index_ioport,tbblue_registers[index_ioport]);
   									sprintf (buf_linea,"%02X : %02X \n",index_ioport,tbblue_get_value_port_register(index_ioport) );
   									sprintf (&stats_buffer[index_buffer],"%s",buf_linea);
@@ -4535,13 +4535,32 @@ typedef struct s_debug_memory_segment debug_memory_segment;
 
       	if (diviface_enabled.v) {
       		if ( !   ( (diviface_control_register&128)==0 && diviface_paginacion_automatica_activa.v==0) )  {
-      			strcpy(segmentos[0].longname,"Diviface");
-			strcpy(segmentos[0].shortname,"DIV");	
 
-			//En maquinas de 8 segmentos, bloque 1 es 8192-16383
-			if (segmentos_totales==8) {
-			      	strcpy(segmentos[1].longname,"Diviface");
-				strcpy(segmentos[1].shortname,"DIV");		
+
+			//Caso tbblue
+			int div_segment_zero=1;
+			int div_segment_one=1;
+
+			if (MACHINE_IS_TBBLUE) {
+				if (!(debug_paginas_memoria_mapeadas[0] & DEBUG_PAGINA_MAP_ES_ROM)) div_segment_zero=0;
+				if (!(debug_paginas_memoria_mapeadas[1] & DEBUG_PAGINA_MAP_ES_ROM)) div_segment_one=0;
+			}
+
+			if (div_segment_zero) {
+
+	      			strcpy(segmentos[0].longname,"Diviface");
+				strcpy(segmentos[0].shortname,"DIV");	
+
+			}
+
+			if (div_segment_one) {
+
+				//En maquinas de 8 segmentos, bloque 1 es 8192-16383
+				if (segmentos_totales==8) {
+				      	strcpy(segmentos[1].longname,"Diviface");
+					strcpy(segmentos[1].shortname,"DIV");		
+				}
+
 			}
       		}
       	}
