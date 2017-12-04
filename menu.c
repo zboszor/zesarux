@@ -24713,7 +24713,7 @@ void menu_inicio(void)
 
 	else if (menu_event_new_version_show_changes.v) {
 		menu_event_new_version_show_changes.v=0;
-		menu_generic_message_format("Updated version","Please take a look at the changes");
+		menu_generic_message_format("Updated version","You have updated ZEsarUX :)\nPlease take a look at the changes:");
 		menu_about_changelog(0);
 
 		cls_menu_overlay();
