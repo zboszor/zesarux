@@ -2342,6 +2342,7 @@ void tbblue_set_value_port(z80_byte value)
 		case 86:
 		case 87:
 			//TODO: Quiza cambiar la llamada por tbblue_set_memory_pages(); ???
+			//tbblue_set_memory_pages();
 			tbblue_set_ram_page(tbblue_last_register-80);
 		break;
 
