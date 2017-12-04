@@ -2330,7 +2330,9 @@ void tbblue_set_value_port(z80_byte value)
 		//MMU
 		case 80:
 		case 81:
-			tbblue_set_rom_page_no_255(tbblue_last_register-80);
+			//tbblue_set_rom_page_no_255(tbblue_last_register-80);
+			//tbblue_set_rom_page(AAA)
+			tbblue_set_memory_pages();
 		break;
 
 		case 82:
@@ -2339,6 +2341,7 @@ void tbblue_set_value_port(z80_byte value)
 		case 85:
 		case 86:
 		case 87:
+			//TODO: Quiza cambiar la llamada por tbblue_set_memory_pages(); ???
 			tbblue_set_ram_page(tbblue_last_register-80);
 		break;
 
@@ -3039,4 +3042,26 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 }
 
+
+
+
+z80_byte return_tbblue_mmu_segment(z80_int dir)
+{
+        int segmento=dir/8192;
+        z80_byte reg_mmu_value=tbblue_registers[80+segmento];
+        return reg_mmu_value;
+}
+
+
+//Si la zona de 0-16383 es escribible por mmu (registro 80/81 contiene no 255)
+int tbblue_is_writable_segment_mmu_rom_space(z80_int dir)
+{
+	//En maquina en config mode no tiene sentido
+	z80_byte maquina=(tbblue_registers[3])&7;
+	if (maquina==0) return 0;
+
+	z80_byte mmu_value=return_tbblue_mmu_segment(dir);
+	if (mmu_value!=255) return 1;
+	else return 0;
+}
 

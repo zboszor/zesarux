@@ -146,4 +146,8 @@ extern int tbblue_get_current_ram(void);
 
 extern z80_byte tbblue_extra_512kb_blocks;
 
+extern z80_byte return_tbblue_mmu_segment(z80_int dir);
+
+extern int tbblue_is_writable_segment_mmu_rom_space(z80_int dir);
+
 #endif

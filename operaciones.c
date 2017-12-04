@@ -1878,10 +1878,13 @@ set_visualmembuffer(dir);
 			//printf ("Escribiendo layer 2 direccion %d valor %d offset %d region %d\n",dir,valor,offset,region);
 		}
 
-		//Proteccion ROM
-		if (dir<16384 && tbblue_low_segment_writable.v==0) {
-			//printf ("No se puede escribir en la rom. Dir=%d PC=%d\n",dir,reg_pc);
-			return;
+		//Si se puede escribir en espacio ROM (0-16383)
+		if (dir<16384) {
+			if (tbblue_low_segment_writable.v==0) {
+				//Aqui puede pasar que por MMU si se permita (registro 80/81 a valor no 255)
+				//printf ("No se puede escribir en la rom. Dir=%d PC=%d\n",dir,reg_pc);
+				if (!tbblue_is_writable_segment_mmu_rom_space(dir) ) return;
+			}
 		}
 
 		//if (dir<16384) printf ("Writing on tbblue rom address %XH value %XH\n",dir,valor);
