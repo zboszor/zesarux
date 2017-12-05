@@ -11767,6 +11767,47 @@ void menu_hardware_realjoystick_test_reset_last_values(void)
 }
 
 
+//Llena string de texto con barras =====|===== segun si valor es entre -32767  y 32768
+//Valor 0:      -----|-----
+//Valor 32767:  -----|=====
+//Valor -32767: =====|-----
+//limite_barras dice cuantas barras muestra hacia la derecha o izquierda
+void menu_hardware_realjoystick_test_fill_bars(int valor,char *string,int limite_barras)
+{
+	//Limitar valor entre -32767 y 32767
+	if (valor>32767) valor=32767;
+	if (valor<-32767) valor=-32767;
+
+	//Cuantas barras hay que hacer
+	int barras=(valor*limite_barras)/32767;
+
+	if (barras<0) barras=-barras;
+
+	//String inicial
+	int i;
+	for (i=0;i<limite_barras;i++) {
+		string[i]='-';
+		string[i+limite_barras+1]='-';
+	}
+
+	//Medio
+	string[i]='|';
+
+	//Final
+	string[i+limite_barras+1]=0;
+
+
+	//Y ahora llenar hacia la izquierda o derecha
+	int signo=+1;
+	if (valor<0) signo=-1;
+	int indice=limite_barras+signo; //Nos posicionamos a la derecha o izquierda de la barra central
+	for (;barras;barras--) {
+		string[indice]='=';
+		indice +=signo;
+	}
+
+}
+
 void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 {
 
@@ -11844,8 +11885,16 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 			if (realjoystick_last_button>=0) {
 
 				char buffer_type[40];
-				if (realjoystick_last_type==JS_EVENT_BUTTON) strcpy(buffer_type,"Button");
-				else if (realjoystick_last_type==JS_EVENT_AXIS) strcpy(buffer_type,"Axis");
+#define LONGITUD_BARRAS 6
+				char fill_bars[(LONGITUD_BARRAS*2)+2];
+				fill_bars[0]=0;
+				if (realjoystick_last_type==JS_EVENT_BUTTON) {
+					strcpy(buffer_type,"Button");
+				}
+				else if (realjoystick_last_type==JS_EVENT_AXIS) {
+					strcpy(buffer_type,"Axis");
+					menu_hardware_realjoystick_test_fill_bars(realjoystick_last_value,fill_bars,LONGITUD_BARRAS);
+				}
 				else strcpy(buffer_type,"Unknown");
 
 				sprintf (buffer_texto_medio,"Button: %d",realjoystick_last_button);
@@ -11865,8 +11914,9 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 				else {
 					strcpy(buffer_event,"None");
 				}
+
 	
-				sprintf (buffer_texto_medio,"Value: %d",realjoystick_last_value);
+				sprintf (buffer_texto_medio,"Value: %6d %s",realjoystick_last_value,fill_bars);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
 
 				sprintf (buffer_texto_medio,"Index: %d Event: %s",realjoystick_last_index,buffer_event);
