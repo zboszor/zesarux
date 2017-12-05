@@ -316,14 +316,22 @@ void screen_show_panic_screen(void)
 	int xmax;
 	int ymax;
 
-	if (MACHINE_IS_Z88) {
+	/*if (MACHINE_IS_Z88) {
 		xmax=screen_get_emulated_display_width_no_zoom();
 		ymax=screen_get_emulated_display_height_no_zoom();
 	}
 	else {
 		xmax=256;
 		ymax=192;
-	}
+	}*/
+	z80_bit antes_border;
+	antes_border.v=border_enabled.v;
+	border_enabled.v=0;
+	xmax=screen_get_emulated_display_width_no_zoom_border_en();
+	ymax=screen_get_emulated_display_height_no_zoom_border_en();
+	border_enabled.v=antes_border.v;
+	//printf ("Filling colour bars up to %dX%d\n",xmax,ymax);
+	
 
         for (x=0;x<xmax;x++) {
                 for (y=0;y<ymax;y++) {
