@@ -341,7 +341,7 @@ void cpu_panic_printf_mensaje(char *mensaje)
 
 	char buffer[1024];
 
-        printf ("\n\n Kernel panic: %s \n",mensaje);
+        printf ("\n\n ZEsarUX panic: %s \n",mensaje);
         print_registers(buffer);
         printf ("%s\n",buffer);
 
@@ -386,7 +386,7 @@ void cpu_panic(char *mensaje)
 			screen_show_panic_screen();
 
 
-			screen_print(0,0,7,1,"Kernel panic:");
+			screen_print(0,0,7,1,"ZEsarUX panic:");
 			screen_print(0,1,7,1,mensaje);
 
 			print_registers(buffer);
