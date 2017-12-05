@@ -24,6 +24,42 @@
 
 #include "cpu.h"
 
+
+#include "compileoptions.h"
+
+
+#ifdef USE_LINUXREALJOYSTICK
+        //Es un linux con soporte realjoystick
+
+        #include <linux/joystick.h>
+
+#else
+        //No es linux con soporte realjoystick
+        //En este caso definimos los tipos de datos usados para que no pete al compilar
+        //Luego en el init detectamos esto y devuelve que no hay soporte joystick
+
+
+        #define JS_EVENT_BUTTON         0x01    /* button pressed/released */
+        #define JS_EVENT_AXIS           0x02    /* joystick moved */
+        #define JS_EVENT_INIT           0x80    /* initial state of device */
+
+
+typedef unsigned int __u32;
+typedef short __s16;
+typedef unsigned char __u8;
+
+        struct js_event {
+                __u32 time;     /* event timestamp in milliseconds */
+                __s16 value;    /* value */
+                __u8 type;      /* event type */
+                __u8 number;    /* axis/button number */
+        };
+
+
+#endif
+
+
+
 extern int realjoystick_read_event(int *button,int *type,int *value);
 extern int realjoystick_init(void);
 extern void realjoystick_main(void);

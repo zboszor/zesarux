@@ -11761,6 +11761,12 @@ void menu_hardware_realjoystick_event(MENU_ITEM_PARAMETERS)
 #define REALJOYSTICK_TEST_ALTO 15
 
 
+void menu_hardware_realjoystick_test_reset_last_values(void)
+{
+	realjoystick_last_button=realjoystick_last_type=realjoystick_last_value=realjoystick_last_index=-1;
+}
+
+
 void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 {
 
@@ -11768,7 +11774,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
         menu_dibuja_ventana(REALJOYSTICK_TEST_X,REALJOYSTICK_TEST_Y-1,REALJOYSTICK_TEST_ANCHO,REALJOYSTICK_TEST_ALTO+3,"Joystick test");
 
         //Damos un margen para escribir texto de tecla y valores average
-                menu_escribe_linea_opcion(0,-1,1,"S: Change wave Shape");
+                //menu_escribe_linea_opcion(0,-1,1,"S: Change wave Shape");
 
 
         z80_byte acumulado;
@@ -11783,6 +11789,8 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
                                 valor_contador_segundo_anterior=contador_segundo;
 
+	menu_hardware_realjoystick_test_reset_last_values();
+
 
         do {
 
@@ -11795,7 +11803,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
                         char buffer_texto_medio[40];
 
-			int linea=1;
+			int linea=0;
                         /*sprintf (buffer_texto_medio,"Av.: %d Min: %d Max: %d",
                                 menu_audio_draw_sound_wave_valor_medio,menu_audio_draw_sound_wave_valor_min,menu_audio_draw_sound_wave_valor_max);
                         menu_escribe_linea_opcion(1,-1,1,buffer_texto_medio);
@@ -11804,12 +11812,34 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
                         menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);*/
 
 			//int realjoystick_last_button,realjoystick_last_type,realjoystick_last_value,realjoystick_last_index;
-			sprintf (buffer_texto_medio,"but: %d type: %d val: %d",realjoystick_last_button,realjoystick_last_type,realjoystick_last_value);
-			menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
 
-			sprintf (buffer_texto_medio,"ind: %d",realjoystick_last_index);
-			menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+			if (realjoystick_last_button>=0) {
 
+				char buffer_type[40];
+				if (realjoystick_last_type==JS_EVENT_BUTTON) strcpy(buffer_type,"Button");
+				else if (realjoystick_last_type==JS_EVENT_AXIS) strcpy(buffer_type,"Axis");
+				else strcpy(buffer_type,"Unknown");
+
+				sprintf (buffer_texto_medio,"Button: %d Type: %d (%s)",realjoystick_last_button,realjoystick_last_type,buffer_type);
+				menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+
+
+
+				//type JS_EVENT_BUTTON, JS_EVENT_AXIS
+
+
+				char buffer_event[40];
+				if (realjoystick_last_index>=0 && realjoystick_last_index<MAX_EVENTS_JOYSTICK) {
+					strcpy(buffer_event,realjoystick_event_names[realjoystick_last_index]);
+				}
+				else {
+					strcpy(buffer_event,"None");
+				}
+	
+				sprintf (buffer_texto_medio,"Value: %d Index: %d Event: %s",realjoystick_last_value,realjoystick_last_index,buffer_event);
+				menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+
+			}
                 }
 menu_cpu_core_loop();
                 acumulado=menu_da_todas_teclas();
