@@ -1000,6 +1000,8 @@ void realjoystick_main(void)
 			int index=-1;
 			do {
 			index=realjoystick_find_event(index+1,button,type,value);
+			//realjoystick_last_index=index;
+			//printf ("last index: %d\n",realjoystick_last_index);
 			if (index>=0) {
 				debug_printf (VERBOSE_DEBUG,"Event found on index: %d",index);
 

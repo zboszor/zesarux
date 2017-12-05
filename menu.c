@@ -11756,9 +11756,9 @@ void menu_hardware_realjoystick_event(MENU_ITEM_PARAMETERS)
 
 
 #define REALJOYSTICK_TEST_X 1
-#define REALJOYSTICK_TEST_Y 3
+#define REALJOYSTICK_TEST_Y 8
 #define REALJOYSTICK_TEST_ANCHO 30
-#define REALJOYSTICK_TEST_ALTO 15
+#define REALJOYSTICK_TEST_ALTO 6
 
 
 void menu_hardware_realjoystick_test_reset_last_values(void)
@@ -11778,6 +11778,9 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 
         z80_byte acumulado;
+
+
+	int realjoystick_ultimo_indice=-1; //ultimo indice leido
 
 
 
@@ -11804,14 +11807,9 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
                         char buffer_texto_medio[40];
 
 			int linea=0;
-                        /*sprintf (buffer_texto_medio,"Av.: %d Min: %d Max: %d",
-                                menu_audio_draw_sound_wave_valor_medio,menu_audio_draw_sound_wave_valor_min,menu_audio_draw_sound_wave_valor_max);
-                        menu_escribe_linea_opcion(1,-1,1,buffer_texto_medio);
-                        sprintf (buffer_texto_medio,"Average freq: %d Hz (%s)",
-                                menu_audio_draw_sound_wave_frecuencia_aproximada,get_note_name(menu_audio_draw_sound_wave_frecuencia_aproximada));
-                        menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);*/
-
 			//int realjoystick_last_button,realjoystick_last_type,realjoystick_last_value,realjoystick_last_index;
+				menu_escribe_linea_opcion(linea++,-1,1,"Last joystick button/axis:");
+				linea++;
 
 			if (realjoystick_last_button>=0) {
 
@@ -11820,9 +11818,11 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 				else if (realjoystick_last_type==JS_EVENT_AXIS) strcpy(buffer_type,"Axis");
 				else strcpy(buffer_type,"Unknown");
 
-				sprintf (buffer_texto_medio,"Button: %d Type: %d (%s)",realjoystick_last_button,realjoystick_last_type,buffer_type);
+				sprintf (buffer_texto_medio,"Button: %d",realjoystick_last_button);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
 
+				sprintf (buffer_texto_medio,"Type: %d (%s)",realjoystick_last_type,buffer_type);
+				menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
 
 
 				//type JS_EVENT_BUTTON, JS_EVENT_AXIS
@@ -11836,8 +11836,16 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 					strcpy(buffer_event,"None");
 				}
 	
-				sprintf (buffer_texto_medio,"Value: %d Index: %d Event: %s",realjoystick_last_value,realjoystick_last_index,buffer_event);
+				sprintf (buffer_texto_medio,"Value: %d",realjoystick_last_value);
 				menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+
+				sprintf (buffer_texto_medio,"Index: %d Event: %s",realjoystick_last_index,buffer_event);
+				menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+
+
+				//realjoystick_ultimo_indice=-1;
+				menu_hardware_realjoystick_test_reset_last_values();
+
 
 			}
                 }
