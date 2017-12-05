@@ -45,7 +45,8 @@ probado lo siguiente:
 
 -Quizá resetear puntero escritura latencia siempre que carga, graba, etc
 
--pantalla kernel panic que funcione en todas  las maquinas y con realvideo activo o desactivado
+-pantalla kernel panic que funcione en todas  las maquinas y con realvideo activo o desactivado. en tsconf se ve especialmente mal,
+deberia verse bien, pues se usan funciones de putchar igual que en menu. si realvideo, no se ve el texto que queda en border. con real video, se ve esa parte pero no mucho mas
 
 -Intentar reproducir click inicial metiendo pausa expresamente. E intentar que solo haga ajuste de buffer cuando haya algo en dicho buffer 
 
