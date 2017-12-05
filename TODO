@@ -45,6 +45,8 @@ probado lo siguiente:
 
 -Quizá resetear puntero escritura latencia siempre que carga, graba, etc
 
+-pantalla kernel panic que funcione en todas  las maquinas y con realvideo activo o desactivado
+
 -Intentar reproducir click inicial metiendo pausa expresamente. E intentar que solo haga ajuste de buffer cuando haya algo en dicho buffer 
 
 -menu test joystick. botones, acciones etc
