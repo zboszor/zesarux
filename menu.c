@@ -11755,6 +11755,107 @@ void menu_hardware_realjoystick_event(MENU_ITEM_PARAMETERS)
 }
 
 
+#define REALJOYSTICK_TEST_X 1
+#define REALJOYSTICK_TEST_Y 3
+#define REALJOYSTICK_TEST_ANCHO 30
+#define REALJOYSTICK_TEST_ALTO 15
+
+
+void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
+{
+
+        menu_espera_no_tecla();
+        menu_dibuja_ventana(REALJOYSTICK_TEST_X,REALJOYSTICK_TEST_Y-1,REALJOYSTICK_TEST_ANCHO,REALJOYSTICK_TEST_ALTO+3,"Joystick test");
+
+        //Damos un margen para escribir texto de tecla y valores average
+                menu_escribe_linea_opcion(0,-1,1,"S: Change wave Shape");
+
+
+        z80_byte acumulado;
+
+
+
+        //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de onda + texto
+        //set_menu_overlay_function(menu_audio_draw_sound_wave);
+
+                                int valor_contador_segundo_anterior;
+
+                                valor_contador_segundo_anterior=contador_segundo;
+
+
+        do {
+
+                //esto hara ejecutar esto 2 veces por segundo
+                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+                                                                if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+                                                                        valor_contador_segundo_anterior=contador_segundo;
+                                                                        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+                       if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+
+                        char buffer_texto_medio[40];
+
+			int linea=1;
+                        /*sprintf (buffer_texto_medio,"Av.: %d Min: %d Max: %d",
+                                menu_audio_draw_sound_wave_valor_medio,menu_audio_draw_sound_wave_valor_min,menu_audio_draw_sound_wave_valor_max);
+                        menu_escribe_linea_opcion(1,-1,1,buffer_texto_medio);
+                        sprintf (buffer_texto_medio,"Average freq: %d Hz (%s)",
+                                menu_audio_draw_sound_wave_frecuencia_aproximada,get_note_name(menu_audio_draw_sound_wave_frecuencia_aproximada));
+                        menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);*/
+
+			//int realjoystick_last_button,realjoystick_last_type,realjoystick_last_value,realjoystick_last_index;
+			sprintf (buffer_texto_medio,"but: %d type: %d val: %d",realjoystick_last_button,realjoystick_last_type,realjoystick_last_value);
+			menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+
+			sprintf (buffer_texto_medio,"ind: %d",realjoystick_last_index);
+			menu_escribe_linea_opcion(linea++,-1,1,buffer_texto_medio);
+
+                }
+menu_cpu_core_loop();
+                acumulado=menu_da_todas_teclas();
+
+                                                                //si no hay multitarea, esperar tecla y salir
+                                                                if (menu_multitarea==0) {
+                                                                                                menu_espera_tecla();
+
+                                                                                                acumulado=0;
+                                                                }
+
+
+                        //Hay tecla pulsada
+                        if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
+                                int tecla=menu_get_pressed_key();
+                                                                                                                                //printf ("tecla: %c\n",tecla);
+                                                                                                                                //if (tecla=='s') {
+                                                                                                                                //        menu_sound_wave_llena ^=1;
+                                                                                                                                //        menu_espera_no_tecla();
+                                                                                                                                //        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                                                                                                                //}
+
+                                                                                                                                //Si tecla no es ESC, no salir
+                                                                                                                                if (tecla!=2) {
+                                                                                                                                        acumulado = MENU_PUERTO_TECLADO_NINGUNA;
+                                                                                                                                }
+
+                                                                                                }
+
+
+
+
+
+
+
+        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
+
+       //restauramos modo normal de texto de menu
+       //set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+        cls_menu_overlay();
+
+}
+
+
 void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_hardware_realjoystick;
@@ -11773,6 +11874,11 @@ void menu_hardware_realjoystick(MENU_ITEM_PARAMETERS)
 
                 menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Define which press key generate every button/movement of the joystick");
                 menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Define which press key generate every button/movement of the joystick");
+
+
+		menu_add_item_menu_format(array_menu_hardware_realjoystick,MENU_OPCION_NORMAL,menu_hardware_realjoystick_test,NULL,"Test joystick");
+		menu_add_item_menu_tooltip(array_menu_hardware_realjoystick,"Test joystick buttons");
+		menu_add_item_menu_ayuda(array_menu_hardware_realjoystick,"Test joystick buttons");
 
 
 

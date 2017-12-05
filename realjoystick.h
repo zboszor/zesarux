@@ -105,5 +105,7 @@ extern int realjoystick_set_button_key(char *text_button,char *text_key);
 
 extern int realjoystick_set_event_key(char *text_event,char *text_key);
 
+extern int realjoystick_last_button,realjoystick_last_type,realjoystick_last_value,realjoystick_last_index;
+
 
 #endif

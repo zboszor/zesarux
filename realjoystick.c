@@ -1004,6 +1004,10 @@ void realjoystick_set_reset_action(int index,int value)
 
 }
 
+
+//Variables leidas desde menu para el comprobador de joystick
+int realjoystick_last_button,realjoystick_last_type,realjoystick_last_value,realjoystick_last_index;
+
 //lectura de evento de joystick y conversion a movimiento de joystick spectrum
 void realjoystick_main(void)
 {
@@ -1017,12 +1021,18 @@ void realjoystick_main(void)
 		//eventos de init no hacerles caso, de momento
 		if ( (type&JS_EVENT_INIT)!=JS_EVENT_INIT) {
 
+			realjoystick_last_button=button;
+			realjoystick_last_type=type;
+			realjoystick_last_value=value;
+			
+
 			//buscamos el evento
 			int index=-1;
 			do {
 			index=realjoystick_find_event(index+1,button,type,value);
+			realjoystick_last_index=index;
 			if (index>=0) {
-				debug_printf (VERBOSE_DEBUG,"evento encontrado en indice: %d",index);
+				debug_printf (VERBOSE_DEBUG,"Event found on index: %d",index);
 
 
 				//ver tipo boton normal
