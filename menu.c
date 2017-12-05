@@ -11794,15 +11794,41 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 	menu_hardware_realjoystick_test_reset_last_values();
 
+	int salir_por_boton=0;
+
 
         do {
 
-                //esto hara ejecutar esto 2 veces por segundo
-                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
-                                                                if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+		menu_cpu_core_loop();
+                acumulado=menu_da_todas_teclas();
+
+		//si no hay multitarea, pausitar
+		if (menu_multitarea==0) {
+			usleep(20000); //20 ms
+		//	menu_espera_tecla();
+		//	acumulado=0;
+		}
+
+                //esto hara ejecutar esto 10 veces por segundo
+                //if ( (contador_segundo%100) == 0 || menu_multitarea==0) {
+		//
+		//
+
+		//Si es evento de salir, forzar el mostrar la info y luego salir
+		if (realjoystick_last_button>=0 && realjoystick_last_index==REALJOYSTICK_EVENT_ESC_MENU) {
+			//printf ("Salir por boton\n");
+			salir_por_boton=1;
+		}
+
+                                                                if ( ((contador_segundo%100) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0 || salir_por_boton) {
                                                                         valor_contador_segundo_anterior=contador_segundo;
                                                                         //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
                        if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+
+
+
+
+
 
                         char buffer_texto_medio[40];
 
@@ -11810,6 +11836,10 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 			//int realjoystick_last_button,realjoystick_last_type,realjoystick_last_value,realjoystick_last_index;
 				menu_escribe_linea_opcion(linea++,-1,1,"Last joystick button/axis:");
 				linea++;
+
+
+
+
 
 			if (realjoystick_last_button>=0) {
 
@@ -11849,38 +11879,27 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 			}
                 }
-menu_cpu_core_loop();
-                acumulado=menu_da_todas_teclas();
-
-                                                                //si no hay multitarea, esperar tecla y salir
-                                                                if (menu_multitarea==0) {
-                                                                                                menu_espera_tecla();
-
-                                                                                                acumulado=0;
-                                                                }
-
 
                         //Hay tecla pulsada
                         if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
                                 int tecla=menu_get_pressed_key();
-                                                                                                                                //printf ("tecla: %c\n",tecla);
-                                                                                                                                //if (tecla=='s') {
-                                                                                                                                //        menu_sound_wave_llena ^=1;
-                                                                                                                                //        menu_espera_no_tecla();
-                                                                                                                                //        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                                                                                                                                //}
 
-                                                                                                                                //Si tecla no es ESC, no salir
-                                                                                                                                if (tecla!=2) {
-                                                                                                                                        acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-                                                                                                                                }
-
-                                                                                                }
+                                                                                                                                
+				//Si tecla no es ESC, no salir
+                                
+				if (tecla!=2) {
+					acumulado = MENU_PUERTO_TECLADO_NINGUNA;
+				}
 
 
-
-
-
+				//Si ha salido por boton de joystick, esperar evento
+				if (salir_por_boton) {
+                       			if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+					menu_espera_no_tecla();
+				}
+				
+                                                                        
+			}
 
 
         } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
