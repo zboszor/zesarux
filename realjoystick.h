@@ -83,9 +83,11 @@ extern z80_bit realjoystick_disabled;
 #define REALJOYSTICK_EVENT_NUMBERACTION 10
 #define REALJOYSTICK_EVENT_AUX1 11
 #define REALJOYSTICK_EVENT_AUX2 12
+#define REALJOYSTICK_EVENT_AUX3 13
+#define REALJOYSTICK_EVENT_AUX4 14
 
 //este valor es el numero de ultimo REALJOYSTICK_EVENT_XX +1
-#define MAX_EVENTS_JOYSTICK 13
+#define MAX_EVENTS_JOYSTICK 15
 
 extern char *realjoystick_event_names[];
 

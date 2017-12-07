@@ -448,7 +448,9 @@ char *realjoystick_event_names[]={
 	"NumSelect",
 	"NumAction",
 	"Aux1",
-	"Aux2"
+	"Aux2",
+	"Aux3",
+	"Aux4"
 };
 
 void realjoystick_print_event_keys(void)
