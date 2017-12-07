@@ -13847,6 +13847,8 @@ void menu_onscreen_keyboard_dibuja_cursor_aux(char *s,int x,int y,int escursor)
 
 	//Forzar que siempre suene en speech
 	menu_speech_tecla_pulsada=0;
+
+
 	menu_textspeech_send_text(textospeech);
 }
 
@@ -14108,7 +14110,14 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 			linea++;
 		}
 
+		//No quiero que envie ni "Stick" ni "Send" a speech
+		z80_bit old_textspeech_also_send_menu;
+		old_textspeech_also_send_menu.v=textspeech_also_send_menu.v;
+		textspeech_also_send_menu.v=0;
 		menu_escribe_linea_opcion(linea++,-1,1,"Stick Send");
+		//Restaurar parametro speech
+		textspeech_also_send_menu.v=old_textspeech_also_send_menu.v;
+
 
 		menu_onscreen_keyboard_dibuja_teclas_activas();
 
