@@ -289,10 +289,10 @@ extern void set_charset(void);
 #define ESTILO_GUI_TINTA_SELECCIONADO (definiciones_estilos_gui[estilo_gui_activo].tinta_seleccionado)
 
 
-#define ESTILO_GUI_PAPEL_NO_DISPONIBLE (definiciones_estilos_gui[estilo_gui_activo].papel_no_disponible);
-#define ESTILO_GUI_TINTA_NO_DISPONIBLE (definiciones_estilos_gui[estilo_gui_activo].tinta_no_disponible);
-#define ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE (definiciones_estilos_gui[estilo_gui_activo].papel_seleccionado_no_disponible);
-#define ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE (definiciones_estilos_gui[estilo_gui_activo].tinta_seleccionado_no_disponible);
+#define ESTILO_GUI_PAPEL_NO_DISPONIBLE (definiciones_estilos_gui[estilo_gui_activo].papel_no_disponible)
+#define ESTILO_GUI_TINTA_NO_DISPONIBLE (definiciones_estilos_gui[estilo_gui_activo].tinta_no_disponible)
+#define ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE (definiciones_estilos_gui[estilo_gui_activo].papel_seleccionado_no_disponible)
+#define ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE (definiciones_estilos_gui[estilo_gui_activo].tinta_seleccionado_no_disponible)
 
 #define ESTILO_GUI_PAPEL_TITULO (definiciones_estilos_gui[estilo_gui_activo].papel_titulo)
 #define ESTILO_GUI_TINTA_TITULO (definiciones_estilos_gui[estilo_gui_activo].tinta_titulo)

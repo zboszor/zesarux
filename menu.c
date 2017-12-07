@@ -13814,7 +13814,9 @@ int menu_onscreen_keyboard_return_index_cursor(void)
 	return osd_keyboard_cursor_y*10+osd_keyboard_cursor_x;
 }
 
-void menu_onscreen_keyboard_dibuja_cursor_aux(char *s,int x,int y)
+
+//Comun para dibujar cursor y senyalar teclas activas
+void menu_onscreen_keyboard_dibuja_cursor_aux(char *s,int x,int y,int escursor)
 {
 	char *textocursor;
 	char textospeech[32];
@@ -13827,7 +13829,11 @@ void menu_onscreen_keyboard_dibuja_cursor_aux(char *s,int x,int y)
         }
 
 
-	menu_escribe_texto_ventana(x,y,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,textocursor);
+        //Si es teclas activas, texto inverso. Si es cursor, texto papel de color seleccion no disponible (rojo por defecto)
+        if (escursor) menu_escribe_texto_ventana(x,y,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE,textocursor);
+	else menu_escribe_texto_ventana(x,y,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,textocursor);
+
+	
 
 	//Enviar a speech
 	string_a_minusculas(textocursor,textospeech);
@@ -13862,37 +13868,16 @@ void menu_onscreen_keyboard_dibuja_cursor(void)
 
 	//Si en stick
 	if (osd_keyboard_cursor_y==4) {
-		if (indice==40) menu_onscreen_keyboard_dibuja_cursor_aux("Stick",offset_x,offset_y+y);
-		else menu_onscreen_keyboard_dibuja_cursor_aux("Send",offset_x+6,offset_y+y);
+		if (indice==40) menu_onscreen_keyboard_dibuja_cursor_aux("Stick",offset_x,offset_y+y,1);
+		else menu_onscreen_keyboard_dibuja_cursor_aux("Send",offset_x+6,offset_y+y,1);
 		return;
 	}
 
 	x=teclas_osd[indice].x;
 
-	menu_onscreen_keyboard_dibuja_cursor_aux(teclas_osd[indice].tecla,offset_x+x,offset_y+y);
+	menu_onscreen_keyboard_dibuja_cursor_aux(teclas_osd[indice].tecla,offset_x+x,offset_y+y,1);
 
-	//Luego destacar CS y SS si estan seleccionados
-	/*if (menu_button_osdkeyboard_caps.v) {
-		indice=30;
-		x=teclas_osd[indice].x;
-		y=3*2;
-		menu_onscreen_keyboard_dibuja_cursor_aux("CS",offset_x+x,offset_y+y);
-	}
-
-	if (menu_button_osdkeyboard_symbol.v) {
-                indice=38;
-                x=teclas_osd[indice].x;
-                y=3*2;
-                menu_onscreen_keyboard_dibuja_cursor_aux("SS",offset_x+x,offset_y+y);
-        }
-
-	//Enter para ZX81
-	if (menu_button_osdkeyboard_enter.v) {
-		indice=29;
-                x=teclas_osd[indice].x;
-                y=2*2;
-                menu_onscreen_keyboard_dibuja_cursor_aux("ENT",offset_x+x,offset_y+y);
-        }*/
+	
 
 
 
@@ -13917,11 +13902,11 @@ void menu_onscreen_keyboard_dibuja_teclas_activas(void)
 		y=(i/10)*2;
 		if (menu_osd_teclas_pulsadas[i]) {
 			x=teclas_osd[i].x;
-			menu_onscreen_keyboard_dibuja_cursor_aux(teclas_osd[i].tecla,offset_x+x,offset_y+y);
+			menu_onscreen_keyboard_dibuja_cursor_aux(teclas_osd[i].tecla,offset_x+x,offset_y+y,0);
 		}
 	}
 
-	if (menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_dibuja_cursor_aux("Stick",offset_x,offset_y+(40/10)*2);
+	if (menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_dibuja_cursor_aux("Stick",offset_x,offset_y+(40/10)*2,0);
 }
 
 void menu_onscreen_keyboard_reset_pressed_keys(void)
