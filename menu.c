@@ -13774,7 +13774,7 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
 }
 
 #define OSD_KEYBOARD_ANCHO_VENTANA 25
-#define OSD_KEYBOARD_ALTO_VENTANA 11
+#define OSD_KEYBOARD_ALTO_VENTANA 12
 #define OSD_KEYBOARD_X_VENTANA (16-OSD_KEYBOARD_ANCHO_VENTANA/2)
 #define OSD_KEYBOARD_Y_VENTANA (12-OSD_KEYBOARD_ALTO_VENTANA/2)
 
@@ -13822,8 +13822,8 @@ void menu_onscreen_keyboard_dibuja_cursor_aux(char *s,int x,int y)
 
         //Parchecillo para ZX80/81
         if (MACHINE_IS_ZX8081) {
-				 		if (!strcmp(s,"SS")) textocursor=".";
-						if (!strcmp(s,"ENT")) textocursor="NL";
+		if (!strcmp(s,"SS")) textocursor=".";
+		if (!strcmp(s,"ENT")) textocursor="NL";
         }
 
 	menu_escribe_texto_ventana(x,y,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,textocursor);
@@ -13846,6 +13846,7 @@ void menu_onscreen_keyboard_dibuja_cursor_aux(char *s,int x,int y)
 void menu_onscreen_keyboard_dibuja_cursor(void)
 {
 
+
 	int offset_x=1;
 	int offset_y=1;
 
@@ -13854,13 +13855,19 @@ void menu_onscreen_keyboard_dibuja_cursor(void)
 	y=osd_keyboard_cursor_y*2;
 	//la x hay que buscarla en el array
 
+	//Si en stick
+	if (osd_keyboard_cursor_y==4) {
+		menu_onscreen_keyboard_dibuja_cursor_aux("Stick",offset_x,offset_y+y);
+		return;
+	}
+
 	int indice=menu_onscreen_keyboard_return_index_cursor();
 	x=teclas_osd[indice].x;
 
 	menu_onscreen_keyboard_dibuja_cursor_aux(teclas_osd[indice].tecla,offset_x+x,offset_y+y);
 
 	//Luego destacar CS y SS si estan seleccionados
-	if (menu_button_osdkeyboard_caps.v) {
+	/*if (menu_button_osdkeyboard_caps.v) {
 		indice=30;
 		x=teclas_osd[indice].x;
 		y=3*2;
@@ -13880,13 +13887,305 @@ void menu_onscreen_keyboard_dibuja_cursor(void)
                 x=teclas_osd[indice].x;
                 y=2*2;
                 menu_onscreen_keyboard_dibuja_cursor_aux("ENT",offset_x+x,offset_y+y);
-        }
+        }*/
 
 
 
 }
 
+
+//Que teclas se estan pulsando. A 0 no tecla, a 1 tecla
+z80_byte menu_osd_teclas_pulsadas[40];
+
+int menu_onscreen_keyboard_sticky=0;
+
+
+void menu_onscreen_keyboard_dibuja_teclas_activas(void)
+{
+	int i,x,y;
+
+	int offset_x=1;
+	int offset_y=1;
+
+
+	for (i=0;i<40;i++) {
+		y=i/10;
+		if (menu_osd_teclas_pulsadas[i]) {
+			x=teclas_osd[i].x;
+			menu_onscreen_keyboard_dibuja_cursor_aux(teclas_osd[i].tecla,offset_x+x,offset_y+y);
+		}
+	}
+}
+
+void menu_onscreen_keyboard_reset_pressed_keys(void)
+{
+	int i;
+	for (i=0;i<40;i++) menu_osd_teclas_pulsadas[i]=0;
+}
+
+void menu_osd_send_key_text(char *texto_tecla)
+{
+	//Enviar tecla ascii tal cual, excepto Enter, CS, SS, SP
+		if (strlen(texto_tecla)==1) {
+			z80_byte tecla=letra_minuscula(texto_tecla[0]);
+			debug_printf (VERBOSE_DEBUG,"Sending Ascii key: %c",tecla);
+			convert_numeros_letras_puerto_teclado_continue(tecla,1);
+		}
+		else {
+/*
+ A S D F G H J K L ENT
+CS Z X C V B N M SS SP
+*/
+			if (!strcmp(texto_tecla,"ENT")) util_set_reset_key(UTIL_KEY_ENTER,1);
+
+			//CS y SS los enviamos asi porque en algunos teclados, util_set_reset_key los gestiona diferente y no queremos
+
+			//Esto solo para zx80/81, el .
+			else if (!strcmp(texto_tecla,"SS") && MACHINE_IS_ZX8081) {
+				puerto_32766 &=255-2;
+				//menu_button_osdkeyboard_symbol.v=1;
+			}
+
+
+			else if (!strcmp(texto_tecla,"SP")) util_set_reset_key(UTIL_KEY_SPACE,1);
+
+
+		}
+}
+
 void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
+{
+	//Si maquina no es Spectrum o zx80/81, volver
+	if (!MACHINE_IS_SPECTRUM && !MACHINE_IS_ZX8081) return;
+
+	if (!menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_reset_pressed_keys();
+
+	//Si estaban caps y simbol activo a la vez, los quitamos (no es util activarlos mas de una vez)
+	/*if (menu_button_osdkeyboard_caps.v && menu_button_osdkeyboard_symbol.v) {
+		menu_button_osdkeyboard_caps.v=0;
+		menu_button_osdkeyboard_symbol.v=0;
+	}
+
+	//Mismo caso para CS+Enter en ZX81
+	if (menu_button_osdkeyboard_caps.v && menu_button_osdkeyboard_enter.v) {
+                menu_button_osdkeyboard_caps.v=0;
+                menu_button_osdkeyboard_enter.v=0;
+	}*/
+
+
+	menu_dibuja_ventana(OSD_KEYBOARD_X_VENTANA,OSD_KEYBOARD_Y_VENTANA,
+				OSD_KEYBOARD_ANCHO_VENTANA,OSD_KEYBOARD_ALTO_VENTANA,"On Screen Keyboard");
+	z80_byte tecla;
+
+	int salir=0;
+
+	int indice;
+
+	do {
+
+	        int linea=1;
+
+				//01234567890123456789012345678901
+        	char textoventana[32];
+
+		int fila_tecla;
+		int pos_tecla_en_fila;
+
+		int indice_tecla=0;
+
+		for (fila_tecla=0;fila_tecla<4;fila_tecla++) {
+		//Inicializar texto linea con 31 espacios
+					  //1234567890123456789012345678901
+			sprintf (textoventana,"%s","                               ");
+			for (pos_tecla_en_fila=0;pos_tecla_en_fila<10;pos_tecla_en_fila++) {
+				//Copiar texto tecla a buffer linea
+				int len=teclas_osd[indice_tecla].ancho_tecla;
+				int tecla_x=teclas_osd[indice_tecla].x;
+				int i;
+
+				//parchecillo para ZX80/81. Si es Symbol Shift, Realmente es el .
+				if (MACHINE_IS_ZX8081 && !strcmp(teclas_osd[indice_tecla].tecla,"SS")) {
+					textoventana[tecla_x+0]='.';
+					textoventana[tecla_x+1]=' ';  //Como ancho de tecla realmente es dos, meter un espacio
+				}
+
+				//parchecillo para ZX80/81. Si es ENT, Realmente es NL
+				else if (MACHINE_IS_ZX8081 && !strcmp(teclas_osd[indice_tecla].tecla,"ENT")) {
+					textoventana[tecla_x+0]='N';
+					textoventana[tecla_x+1]='L';
+					textoventana[tecla_x+2]=' ';  //Como ancho de tecla realmente es tres, meter un espacio
+				}
+
+				else for (i=0;i<len;i++) {
+					textoventana[tecla_x+i+0]=teclas_osd[indice_tecla].tecla[i];
+				}
+
+				indice_tecla++;
+			}
+
+			//Meter final de cadena
+			textoventana[OSD_KEYBOARD_ANCHO_VENTANA-2]=0;
+
+
+			//No queremos que se envie cada linea a speech
+			z80_bit old_textspeech_also_send_menu;
+			old_textspeech_also_send_menu.v=textspeech_also_send_menu.v;
+			textspeech_also_send_menu.v=0;
+
+	        	menu_escribe_linea_opcion(linea++,-1,1,textoventana);
+
+
+			//Restaurar parametro speech
+			textspeech_also_send_menu.v=old_textspeech_also_send_menu.v;
+
+			linea++;
+		}
+
+		menu_escribe_linea_opcion(linea++,-1,1,"Stick");
+
+		menu_onscreen_keyboard_dibuja_cursor();
+
+		menu_onscreen_keyboard_dibuja_teclas_activas();
+
+       		if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+		menu_espera_tecla();
+
+		tecla=menu_get_pressed_key();
+
+		menu_espera_no_tecla_con_repeticion();
+
+		//tambien permitir mover con joystick aunque no este mapeado a cursor key
+		switch (tecla) {
+			case 11:
+				//arriba
+				if (osd_keyboard_cursor_y>0) osd_keyboard_cursor_y--;
+			break;
+
+			case 10:
+				//abajo
+				if (osd_keyboard_cursor_y<4) osd_keyboard_cursor_y++;
+				if (osd_keyboard_cursor_y==4) osd_keyboard_cursor_x=0;  //Cursor en sticky
+			break;
+
+			case 8:
+				//izquierda
+				if (osd_keyboard_cursor_x>0) osd_keyboard_cursor_x--;
+			break;
+
+			case 9:
+				//derecha
+				if (osd_keyboard_cursor_x<9) osd_keyboard_cursor_x++;
+			break;
+
+			case 2: //ESC
+			case 13: //Enter
+				indice=menu_onscreen_keyboard_return_index_cursor();
+				if (indice==40) {
+					//En sticky
+					menu_onscreen_keyboard_sticky ^=1;
+				}
+
+				else salir=1;
+				//Si se ha pulsado caps o symbol, no salir, solo activar/desactivar flag
+				//if (!strcmp(teclas_osd[indice].tecla,"CS")) menu_button_osdkeyboard_caps.v ^=1;
+				//else if (!strcmp(teclas_osd[indice].tecla,"SS") && MACHINE_IS_SPECTRUM) menu_button_osdkeyboard_symbol.v ^=1;
+
+				//Enter solo actua de modificador cuando ya hay CS pulsado
+				//else if (!strcmp(teclas_osd[indice].tecla,"ENT") && MACHINE_IS_ZX81 && menu_button_osdkeyboard_caps.v) menu_button_osdkeyboard_enter.v ^=1;
+				//else salir=1;
+
+				//Pero si estan los dos a la vez, es modo extendido, enviarlos
+				//if (menu_button_osdkeyboard_caps.v && menu_button_osdkeyboard_symbol.v) salir=1;
+
+				//Similar para ZX81
+				//if (menu_button_osdkeyboard_caps.v && menu_button_osdkeyboard_enter.v) salir=1;
+			break;
+		}
+
+	} while (salir==0);
+
+	menu_espera_no_tecla();
+
+	//Si salido con Enter o Fire joystick
+	if (tecla==13) {
+
+		//Liberar otras teclas, por si acaso
+		reset_keyboard_ports();
+
+		//Si esta en modo sticky, agregar tecla a la lista y enviar todas
+		//Si no, solo enviar una tecla
+		if (!menu_onscreen_keyboard_sticky) {
+			menu_onscreen_keyboard_reset_pressed_keys();
+		}
+
+		//Agregar esa tecla al array
+	        indice=menu_onscreen_keyboard_return_index_cursor();
+		
+
+		menu_osd_teclas_pulsadas[indice] ^=1;
+		if (menu_osd_teclas_pulsadas[indice]) debug_printf (VERBOSE_DEBUG,"Adding key %s and sending all",teclas_osd[indice].tecla);
+		else debug_printf (VERBOSE_DEBUG,"Clearing key %s and sending all",teclas_osd[indice].tecla);
+
+		//Enviar todas las que haya
+		int i;
+		for (i=0;i<40;i++) {
+			if (menu_osd_teclas_pulsadas[i]) {
+				printf ("Sending key %s\n",teclas_osd[i].tecla);
+				menu_osd_send_key_text(teclas_osd[i].tecla);
+			}
+		}
+
+		
+
+		//Si estan los flags de CS o SS, activarlos
+		//if (menu_button_osdkeyboard_caps.v) puerto_65278  &=255-1;
+		//if (menu_button_osdkeyboard_symbol.v) puerto_32766 &=255-2;
+		//if (menu_button_osdkeyboard_enter.v) puerto_49150 &=255-1;
+
+		salir_todos_menus=1;
+		timer_on_screen_key=25; //durante medio segundo
+
+	}
+
+	cls_menu_overlay();
+
+	//Si no se ha salido con escape, hacer que vuelva y quitar pulsaciones de caps y symbol
+	if (tecla!=2) {
+		menu_button_osdkeyboard_return.v=1;
+	}
+	else {
+		//se sale con esc, quitar pulsaciones de caps y symbol
+		menu_onscreen_keyboard_reset_pressed_keys();
+		menu_onscreen_keyboard_sticky=0;
+		//menu_button_osdkeyboard_caps.v=0;
+		//menu_button_osdkeyboard_symbol.v=0;
+		//menu_button_osdkeyboard_enter.v=0;
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void old_to_delete_menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 {
 	//Si maquina no es Spectrum o zx80/81, volver
 	if (!MACHINE_IS_SPECTRUM && !MACHINE_IS_ZX8081) return;

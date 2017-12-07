@@ -3192,7 +3192,7 @@ int util_write_configfile(void)
   	}
   }
 
-  //TODO --joystick*
+  //joystickkeyev no lo estoy autoguardando, esto es mas indicado para archivos .config
   if (realjoystick_clear_keys_on_smartload.v) ADD_STRING_CONFIG,"--clearkeylistonsmart");
   if (quickexit.v)                            ADD_STRING_CONFIG,"--quickexit");
 
