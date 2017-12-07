@@ -13958,7 +13958,7 @@ int menu_onscreen_send_enter_check_exit(z80_byte tecla)
 
 
 	if (tecla==2) {
-		printf ("exit with ESC\n");
+		//printf ("exit with ESC\n");
 
 		return 1; //Salir con ESC
 	}
@@ -13970,6 +13970,8 @@ int menu_onscreen_send_enter_check_exit(z80_byte tecla)
 	if (indice==40) {
 					//En sticky
 					menu_onscreen_keyboard_sticky ^=1;
+
+					if (!menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_reset_pressed_keys();
 	}
 
 	else {
@@ -13986,8 +13988,8 @@ int menu_onscreen_send_enter_check_exit(z80_byte tecla)
 
 	        if (indice!=41) {
 			menu_osd_teclas_pulsadas[indice] ^=1;
-			if (menu_osd_teclas_pulsadas[indice]) debug_printf (VERBOSE_DEBUG,"Adding key %s and sending all",teclas_osd[indice].tecla);
-			else debug_printf (VERBOSE_DEBUG,"Clearing key %s and sending all",teclas_osd[indice].tecla);
+			if (menu_osd_teclas_pulsadas[indice]) debug_printf (VERBOSE_DEBUG,"Adding key %s",teclas_osd[indice].tecla);
+			else debug_printf (VERBOSE_DEBUG,"Clearing key %s",teclas_osd[indice].tecla);
 		}
 
 		//Si es modo stick, solo enviar cuando pulsar "Send"
@@ -14174,7 +14176,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 			int i;
 			for (i=0;i<40;i++) {
 				if (menu_osd_teclas_pulsadas[i]) {
-					printf ("Sending key %s\n",teclas_osd[i].tecla);
+					//printf ("Sending key %s\n",teclas_osd[i].tecla);
 					menu_osd_send_key_text(teclas_osd[i].tecla);
 				}
 			}
@@ -14186,7 +14188,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 		//if (menu_button_osdkeyboard_symbol.v) puerto_32766 &=255-2;
 		//if (menu_button_osdkeyboard_enter.v) puerto_49150 &=255-1;
 
-			printf ("Exiting and sending\n");
+			//printf ("Exiting and sending\n");
 
 			salir_todos_menus=1;
 			timer_on_screen_key=25; //durante medio segundo
