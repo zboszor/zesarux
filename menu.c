@@ -244,11 +244,11 @@ z80_bit menu_button_osdkeyboard={0};
 z80_bit menu_button_osdkeyboard_return={0};
 
 //Comun para zx8081 y spectrum
-z80_bit menu_button_osdkeyboard_caps={0};
+//z80_bit menu_button_osdkeyboard_caps={0};
 //Solo para spectrum
-z80_bit menu_button_osdkeyboard_symbol={0};
+//z80_bit menu_button_osdkeyboard_symbol={0};
 //Solo para zx81
-z80_bit menu_button_osdkeyboard_enter={0};
+//z80_bit menu_button_osdkeyboard_enter={0};
 
 z80_bit menu_button_exit_emulator={0};
 
@@ -13856,13 +13856,17 @@ void menu_onscreen_keyboard_dibuja_cursor(void)
 	y=osd_keyboard_cursor_y*2;
 	//la x hay que buscarla en el array
 
+
+
+	int indice=menu_onscreen_keyboard_return_index_cursor();
+
 	//Si en stick
 	if (osd_keyboard_cursor_y==4) {
-		menu_onscreen_keyboard_dibuja_cursor_aux("Stick",offset_x,offset_y+y);
+		if (indice==40) menu_onscreen_keyboard_dibuja_cursor_aux("Stick",offset_x,offset_y+y);
+		else menu_onscreen_keyboard_dibuja_cursor_aux("Send",offset_x+6,offset_y+y);
 		return;
 	}
 
-	int indice=menu_onscreen_keyboard_return_index_cursor();
 	x=teclas_osd[indice].x;
 
 	menu_onscreen_keyboard_dibuja_cursor_aux(teclas_osd[indice].tecla,offset_x+x,offset_y+y);
@@ -13964,6 +13968,74 @@ CS Z X C V B N M SS SP
 		}
 }
 
+int menu_onscreen_send_enter_check_exit(void)
+{
+	int indice;
+	int salir=0;
+
+	indice=menu_onscreen_keyboard_return_index_cursor();
+	if (indice==40) {
+					//En sticky
+					menu_onscreen_keyboard_sticky ^=1;
+	}
+
+	else {
+
+
+		//Si esta en modo sticky, agregar tecla a la lista y enviar todas
+		//Si no, solo enviar una tecla
+		if (!menu_onscreen_keyboard_sticky) {
+			menu_onscreen_keyboard_reset_pressed_keys();
+		}
+
+		//Agregar esa tecla al array, siempre que no sea orden "send"
+	        indice=menu_onscreen_keyboard_return_index_cursor();
+
+	        if (indice!=41) {
+			menu_osd_teclas_pulsadas[indice] ^=1;
+			if (menu_osd_teclas_pulsadas[indice]) debug_printf (VERBOSE_DEBUG,"Adding key %s and sending all",teclas_osd[indice].tecla);
+			else debug_printf (VERBOSE_DEBUG,"Clearing key %s and sending all",teclas_osd[indice].tecla);
+		}
+
+		//Si es modo stick, solo enviar cuando pulsar "Send"
+		//Si no modo stick, enviar la que haya
+		int enviar=1;
+		salir=1;
+		if (menu_onscreen_keyboard_sticky && indice!=41) {
+			salir=0;
+			enviar=0;
+		}
+
+		/*if (enviar) {
+			//Liberar otras teclas, por si acaso
+			reset_keyboard_ports();
+			int i;
+			for (i=0;i<40;i++) {
+				if (menu_osd_teclas_pulsadas[i]) {
+					printf ("Sending key %s\n",teclas_osd[i].tecla);
+					menu_osd_send_key_text(teclas_osd[i].tecla);
+				}
+			}
+
+		
+
+		//Si estan los flags de CS o SS, activarlos
+		//if (menu_button_osdkeyboard_caps.v) puerto_65278  &=255-1;
+		//if (menu_button_osdkeyboard_symbol.v) puerto_32766 &=255-2;
+		//if (menu_button_osdkeyboard_enter.v) puerto_49150 &=255-1;
+
+			printf ("Exiting and sending\n");
+
+			salir_todos_menus=1;
+			timer_on_screen_key=25; //durante medio segundo
+		}*/
+	}
+
+
+	return salir;
+
+}
+
 void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 {
 	//Si maquina no es Spectrum o zx80/81, volver
@@ -14052,7 +14124,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 			linea++;
 		}
 
-		menu_escribe_linea_opcion(linea++,-1,1,"Stick");
+		menu_escribe_linea_opcion(linea++,-1,1,"Stick Send");
 
 		menu_onscreen_keyboard_dibuja_cursor();
 
@@ -14085,31 +14157,24 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 			case 9:
 				//derecha
-				if (osd_keyboard_cursor_x<9) osd_keyboard_cursor_x++;
+				if (osd_keyboard_cursor_y==4) {  //Si en linea inferior
+					if (osd_keyboard_cursor_x<1) osd_keyboard_cursor_x++;
+				}
+				else if (osd_keyboard_cursor_x<9) osd_keyboard_cursor_x++;
 			break;
 
 			case 2: //ESC
 			case 13: //Enter
-				indice=menu_onscreen_keyboard_return_index_cursor();
+				/*indice=menu_onscreen_keyboard_return_index_cursor();
 				if (indice==40) {
 					//En sticky
 					menu_onscreen_keyboard_sticky ^=1;
 				}
 
-				else salir=1;
-				//Si se ha pulsado caps o symbol, no salir, solo activar/desactivar flag
-				//if (!strcmp(teclas_osd[indice].tecla,"CS")) menu_button_osdkeyboard_caps.v ^=1;
-				//else if (!strcmp(teclas_osd[indice].tecla,"SS") && MACHINE_IS_SPECTRUM) menu_button_osdkeyboard_symbol.v ^=1;
+				else salir=1;*/
 
-				//Enter solo actua de modificador cuando ya hay CS pulsado
-				//else if (!strcmp(teclas_osd[indice].tecla,"ENT") && MACHINE_IS_ZX81 && menu_button_osdkeyboard_caps.v) menu_button_osdkeyboard_enter.v ^=1;
-				//else salir=1;
-
-				//Pero si estan los dos a la vez, es modo extendido, enviarlos
-				//if (menu_button_osdkeyboard_caps.v && menu_button_osdkeyboard_symbol.v) salir=1;
-
-				//Similar para ZX81
-				//if (menu_button_osdkeyboard_caps.v && menu_button_osdkeyboard_enter.v) salir=1;
+				salir=menu_onscreen_send_enter_check_exit();
+				
 			break;
 		}
 
@@ -14120,31 +14185,17 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 	//Si salido con Enter o Fire joystick
 	if (tecla==13) {
 
-		//Liberar otras teclas, por si acaso
-		reset_keyboard_ports();
 
-		//Si esta en modo sticky, agregar tecla a la lista y enviar todas
-		//Si no, solo enviar una tecla
-		if (!menu_onscreen_keyboard_sticky) {
-			menu_onscreen_keyboard_reset_pressed_keys();
-		}
-
-		//Agregar esa tecla al array
-	        indice=menu_onscreen_keyboard_return_index_cursor();
 		
-
-		menu_osd_teclas_pulsadas[indice] ^=1;
-		if (menu_osd_teclas_pulsadas[indice]) debug_printf (VERBOSE_DEBUG,"Adding key %s and sending all",teclas_osd[indice].tecla);
-		else debug_printf (VERBOSE_DEBUG,"Clearing key %s and sending all",teclas_osd[indice].tecla);
-
-		//Enviar todas las que haya
-		int i;
-		for (i=0;i<40;i++) {
-			if (menu_osd_teclas_pulsadas[i]) {
-				printf ("Sending key %s\n",teclas_osd[i].tecla);
-				menu_osd_send_key_text(teclas_osd[i].tecla);
+			//Liberar otras teclas, por si acaso
+			reset_keyboard_ports();
+			int i;
+			for (i=0;i<40;i++) {
+				if (menu_osd_teclas_pulsadas[i]) {
+					printf ("Sending key %s\n",teclas_osd[i].tecla);
+					menu_osd_send_key_text(teclas_osd[i].tecla);
+				}
 			}
-		}
 
 		
 
@@ -14153,8 +14204,56 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 		//if (menu_button_osdkeyboard_symbol.v) puerto_32766 &=255-2;
 		//if (menu_button_osdkeyboard_enter.v) puerto_49150 &=255-1;
 
-		salir_todos_menus=1;
-		timer_on_screen_key=25; //durante medio segundo
+			printf ("Exiting and sending\n");
+
+			salir_todos_menus=1;
+			timer_on_screen_key=25; //durante medio segundo
+		
+	
+
+
+		//Liberar otras teclas, por si acaso
+		/*reset_keyboard_ports();
+
+		//Si esta en modo sticky, agregar tecla a la lista y enviar todas
+		//Si no, solo enviar una tecla
+		if (!menu_onscreen_keyboard_sticky) {
+			menu_onscreen_keyboard_reset_pressed_keys();
+		}
+
+		//Agregar esa tecla al array, siempre que no sea orden "send"
+	        indice=menu_onscreen_keyboard_return_index_cursor();
+
+	        if (indice!=41) {
+			menu_osd_teclas_pulsadas[indice] ^=1;
+			if (menu_osd_teclas_pulsadas[indice]) debug_printf (VERBOSE_DEBUG,"Adding key %s and sending all",teclas_osd[indice].tecla);
+			else debug_printf (VERBOSE_DEBUG,"Clearing key %s and sending all",teclas_osd[indice].tecla);
+		}
+
+		//Si es modo stick, solo enviar cuando pulsar "Send"
+		//Si no modo stick, enviar la que haya
+		int enviar=1;
+		if (menu_onscreen_keyboard_sticky && indice!=41) enviar=0;
+
+		if (enviar) {
+			int i;
+			for (i=0;i<40;i++) {
+				if (menu_osd_teclas_pulsadas[i]) {
+					printf ("Sending key %s\n",teclas_osd[i].tecla);
+					menu_osd_send_key_text(teclas_osd[i].tecla);
+				}
+			}
+
+		
+
+		//Si estan los flags de CS o SS, activarlos
+		//if (menu_button_osdkeyboard_caps.v) puerto_65278  &=255-1;
+		//if (menu_button_osdkeyboard_symbol.v) puerto_32766 &=255-2;
+		//if (menu_button_osdkeyboard_enter.v) puerto_49150 &=255-1;
+
+			salir_todos_menus=1;
+			timer_on_screen_key=25; //durante medio segundo
+		}*/
 
 	}
 
@@ -14195,7 +14294,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 
 
-
+/*
 void old_to_delete_menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 {
 	//Si maquina no es Spectrum o zx80/81, volver
@@ -14350,10 +14449,7 @@ void old_to_delete_menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 			convert_numeros_letras_puerto_teclado_continue(tecla,1);
 		}
 		else {
-/*
- A S D F G H J K L ENT
-CS Z X C V B N M SS SP
-*/
+
 			if (!strcmp(teclas_osd[indice].tecla,"ENT")) util_set_reset_key(UTIL_KEY_ENTER,1);
 
 			//CS y SS los enviamos asi porque en algunos teclados, util_set_reset_key los gestiona diferente y no queremos
@@ -14393,7 +14489,7 @@ CS Z X C V B N M SS SP
 		menu_button_osdkeyboard_enter.v=0;
 	}
 
-}
+}*/
 
 void menu_hardware_top_speed(MENU_ITEM_PARAMETERS)
 {
