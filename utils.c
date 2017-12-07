@@ -3120,6 +3120,29 @@ int util_write_configfile(void)
                                               ADD_STRING_CONFIG,"--remoteprotocol-port %d",remote_protocol_port);
 
   if (realjoystick_disabled.v==1)              ADD_STRING_CONFIG,"--disablerealjoystick");
+
+
+  //real joystick buttons to events
+  for (i=0;i<MAX_EVENTS_JOYSTICK;i++) {
+  	if (realjoystick_events_array[i].asignado.v) {
+  		char texto_button[20];
+  		int button_type;
+  		button_type=realjoystick_events_array[i].button_type;
+  		if (button_type==0) {
+  			sprintf(texto_button,"%d",realjoystick_events_array[i].button);
+  		}
+  		else if (button_type<0) {
+  			sprintf(texto_button,"-%d",realjoystick_events_array[i].button);
+  		}
+
+  		else {
+  			sprintf(texto_button,"+%d",realjoystick_events_array[i].button);
+  		}
+  		
+  		ADD_STRING_CONFIG,"--joystickevent %s %s",texto_button,realjoystick_event_names[i]);
+  	}
+  }
+
   //TODO --joystick*
   if (realjoystick_clear_keys_on_smartload.v) ADD_STRING_CONFIG,"--clearkeylistonsmart");
   if (quickexit.v)                            ADD_STRING_CONFIG,"--quickexit");
