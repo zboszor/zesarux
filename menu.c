@@ -14036,18 +14036,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 	if (!menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_reset_pressed_keys();
 
-	//Si estaban caps y simbol activo a la vez, los quitamos (no es util activarlos mas de una vez)
-	/*if (menu_button_osdkeyboard_caps.v && menu_button_osdkeyboard_symbol.v) {
-		menu_button_osdkeyboard_caps.v=0;
-		menu_button_osdkeyboard_symbol.v=0;
-	}
-
-	//Mismo caso para CS+Enter en ZX81
-	if (menu_button_osdkeyboard_caps.v && menu_button_osdkeyboard_enter.v) {
-                menu_button_osdkeyboard_caps.v=0;
-                menu_button_osdkeyboard_enter.v=0;
-	}*/
-
+	
 
 	menu_dibuja_ventana(OSD_KEYBOARD_X_VENTANA,OSD_KEYBOARD_Y_VENTANA,
 				OSD_KEYBOARD_ANCHO_VENTANA,OSD_KEYBOARD_ALTO_VENTANA,"On Screen Keyboard");
@@ -14119,9 +14108,9 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 		menu_escribe_linea_opcion(linea++,-1,1,"Stick Send");
 
-		menu_onscreen_keyboard_dibuja_cursor();
-
 		menu_onscreen_keyboard_dibuja_teclas_activas();
+
+		menu_onscreen_keyboard_dibuja_cursor();
 
        		if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
 		menu_espera_tecla();
