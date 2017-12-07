@@ -70,6 +70,8 @@ Convertir archivo
 
 -en mac, con driver cocoagl o no cocoagl, hace una especie de parpadeo abajo en el footer a veces. quiza solo es en el no-opengl?
 
+-menu en macos para poner zoom a 1 
+
 -Uso el debugger del Spectaculator y el del SpecEmu. Echo de menos es algo que he visto en el emulador SimCoupé y es una representación de la posición de pantalla que la ULA está refrescando cuando ejecutas un programa paso a paso
 
 -fallback de video y/o audio no lo hace si se especifica --vo .... o --ao ...... cosa que normalmente ya estara en el .zesaruxrc y por tanto no se hara fallback

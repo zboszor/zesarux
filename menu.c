@@ -13826,6 +13826,7 @@ void menu_onscreen_keyboard_dibuja_cursor_aux(char *s,int x,int y)
 		if (!strcmp(s,"ENT")) textocursor="NL";
         }
 
+
 	menu_escribe_texto_ventana(x,y,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,textocursor);
 
 	//Enviar a speech
@@ -13909,12 +13910,14 @@ void menu_onscreen_keyboard_dibuja_teclas_activas(void)
 
 
 	for (i=0;i<40;i++) {
-		y=i/10;
+		y=(i/10)*2;
 		if (menu_osd_teclas_pulsadas[i]) {
 			x=teclas_osd[i].x;
 			menu_onscreen_keyboard_dibuja_cursor_aux(teclas_osd[i].tecla,offset_x+x,offset_y+y);
 		}
 	}
+
+	if (menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_dibuja_cursor_aux("Stick",offset_x,offset_y+(40/10)*2);
 }
 
 void menu_onscreen_keyboard_reset_pressed_keys(void)
@@ -13940,14 +13943,22 @@ CS Z X C V B N M SS SP
 
 			//CS y SS los enviamos asi porque en algunos teclados, util_set_reset_key los gestiona diferente y no queremos
 
-			//Esto solo para zx80/81, el .
-			else if (!strcmp(texto_tecla,"SS") && MACHINE_IS_ZX8081) {
-				puerto_32766 &=255-2;
-				//menu_button_osdkeyboard_symbol.v=1;
+			else if (!strcmp(texto_tecla,"SS")) {
+				if (MACHINE_IS_ZX8081) {
+					puerto_32766 &=255-2;
+				}
+				else util_set_reset_key(UTIL_KEY_ALT_L,1);
 			}
 
 
 			else if (!strcmp(texto_tecla,"SP")) util_set_reset_key(UTIL_KEY_SPACE,1);
+
+
+			//Si estan los flags de CS o SS, activarlos
+			else if (!strcmp(texto_tecla,"CS")) util_set_reset_key(UTIL_KEY_SHIFT_L,1);
+		//if (menu_button_osdkeyboard_caps.v) puerto_65278  &=255-1;
+		//if (menu_button_osdkeyboard_symbol.v) puerto_32766 &=255-2;
+
 
 
 		}
