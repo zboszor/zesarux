@@ -2883,6 +2883,22 @@ int util_write_config_add_string (char *config_settings, const char * format , .
 }
 
 
+//Retorna un string con valor X,+X o -X segun button_type
+void util_write_config_aux_realjoystick(int button_type, int button, char *texto)
+{
+  		if (button_type==0) {
+  			sprintf(texto,"%d",button);
+  		}
+  		else if (button_type<0) {
+  			sprintf(texto,"-%d",button);
+  		}
+
+  		else {
+  			sprintf(texto,"+%d",button);
+  		}
+}
+
+
 //1 si ok
 //0 si error
 int util_write_configfile(void)
@@ -3128,6 +3144,10 @@ int util_write_configfile(void)
   		char texto_button[20];
   		int button_type;
   		button_type=realjoystick_events_array[i].button_type;
+
+  		util_write_config_aux_realjoystick(button_type, realjoystick_events_array[i].button, texto_button);
+
+  		/*
   		if (button_type==0) {
   			sprintf(texto_button,"%d",realjoystick_events_array[i].button);
   		}
@@ -3137,9 +3157,38 @@ int util_write_configfile(void)
 
   		else {
   			sprintf(texto_button,"+%d",realjoystick_events_array[i].button);
-  		}
+  		}*/
   		
   		ADD_STRING_CONFIG,"--joystickevent %s %s",texto_button,realjoystick_event_names[i]);
+  	}
+  }
+
+
+  //real joystick buttons to keys
+  for (i=0;i<MAX_KEYS_JOYSTICK;i++) {
+  	if (realjoystick_keys_array[i].asignado.v) {
+  		char texto_button[20];
+  		int button_type;
+  		z80_byte caracter;
+  		caracter=realjoystick_keys_array[i].caracter;
+  		button_type=realjoystick_keys_array[i].button_type;
+
+		util_write_config_aux_realjoystick(button_type, realjoystick_keys_array[i].button, texto_button);	
+
+		/*
+  		if (button_type==0) {
+  			sprintf(texto_button,"%d",realjoystick_keys_array[i].button);
+  		}
+  		else if (button_type<0) {
+  			sprintf(texto_button,"-%d",realjoystick_keys_array[i].button);
+  		}
+
+  		else {
+  			sprintf(texto_button,"+%d",realjoystick_keys_array[i].button);
+  		}
+  		*/
+  		
+  		ADD_STRING_CONFIG,"--joystickkeybt %s %d",texto_button,caracter);
   	}
   }
 
