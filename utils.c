@@ -5929,11 +5929,13 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
                                 }
                         break;
 
-                        //F7 pulsado. De momento no hace nada
+                        //F7 pulsado. Uso del simulador de joystick si esta habilitado
                         case UTIL_KEY_F7:
 
                                 if (pressrelease) {
-
+					if (simulador_joystick) {
+						simulador_joystick_forzado=1;
+					}
                                 }
                                 else {
 

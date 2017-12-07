@@ -630,7 +630,7 @@ int realjoystick_init(void)
 
 	if (simulador_joystick==1) {
 		printf ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
-		        "WARNING: using joystick simulator. Disable it on final version\n"
+		        "WARNING: using joystick simulator. Don't enable it on production version. Use F7 key to simulate joystick event\n"
 			"!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 		sleep(4);
 		return 0;

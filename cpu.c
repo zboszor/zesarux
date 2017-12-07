@@ -1598,6 +1598,7 @@ printf (
 		"--clearkeylistonsmart      Clear all joystick (events and buttons) to keys table every smart loading.\n"
 		"                           Joystick to events table is never cleared using this setting\n"
 		"--cleareventlist           Clears joystick to events table\n"
+		"--enablejoysticksimulator  Enable joystick simulator. Only useful on development\n"
 
 
 
@@ -5678,6 +5679,11 @@ void parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--cleareventlist")) {
                           	realjoystick_clear_events_array();
+			}
+
+
+			else if (!strcmp(argv[puntero_parametro],"--enablejoysticksimulator")) {
+				simulador_joystick=1;
 			}
 
 
