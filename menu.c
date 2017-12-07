@@ -13968,8 +13968,16 @@ CS Z X C V B N M SS SP
 		}
 }
 
-int menu_onscreen_send_enter_check_exit(void)
+int menu_onscreen_send_enter_check_exit(z80_byte tecla)
 {
+
+
+	if (tecla==2) {
+		printf ("exit with ESC\n");
+
+		return 1; //Salir con ESC
+	}
+
 	int indice;
 	int salir=0;
 
@@ -14173,7 +14181,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 				else salir=1;*/
 
-				salir=menu_onscreen_send_enter_check_exit();
+				salir=menu_onscreen_send_enter_check_exit(tecla);
 				
 			break;
 		}
