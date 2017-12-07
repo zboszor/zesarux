@@ -5,7 +5,7 @@ Fixed TBBlue MMU when using segment 0000-3FFFH
 Added setting to exit emulator after a number of seconds (--exit-after)
 Added setting to show changelog when updating emulator version
 When doesn't exist configuration file, the new one has the autosave configuration setting enabled
-Added joystick test menu
+Improved joystick support: added joystick test menu, buttons to events and buttons to joystick are saved on configuration file
 
 Version 6.0. 27 November 2017 - Gunfright edition
 
