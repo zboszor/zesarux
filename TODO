@@ -81,8 +81,7 @@ Convertir archivo
 
 -sdl2 en linux no deja redimensionar ventana con raton
 
--ESC no lo lee en curses?? se queda pillado. sera algo del debian 9. Quiza hacer alternativa con < como aa
-Parece que lo lee. El que no lee es backspace
+-backspace no lo lee en curses?? parece que tanto en mac como linux
 
 -Set breakpoint en dirección vista (en la que se esta viendo en pantalla y en ZRCP  )
 
@@ -157,7 +156,7 @@ Info de tamaño ventana. Y tamaño ventana sin zoom
 
 -Evitar el uso de ../../ etc en esxdos handler para evitar que puedan salir del root de esxdos. Esto también está planteado para zxpand 
 
--OCR con f4 y ZRCP con ansi?
+-OCR con F4 y ZRCP con ansi?
 
 -Zxpand+ nuevo firmware?
 https://github.com/charlierobson/ZXpand-Vitamins/wiki/ZXpand---Online-Manual
@@ -510,7 +509,7 @@ Conversión de tap a wav en ace. Requiere rutina diferente que la de spectrum
 
 --- Chrome ---
 
-Autoload load "" para chrome
+
 
 -----------------------
 
@@ -661,9 +660,6 @@ Ver registro 2:
 
 
 
--*Mmu límite página. Máscara and. en tbblue_set_ram_page y tbblue_set_rom_page mascara con el valor maximo
-por determinar hasta que se diga como se puede mapear toda la ram. Actualmente solo es 0-63 y eso permite 512k, y deja
-sin poder mapear otros 128kb
 *Contended en mmu tbblue. De momento la contencion la hace por bloques de 16 kb
 
 -------------

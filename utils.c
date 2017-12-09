@@ -9130,7 +9130,7 @@ void util_delete(char *filename)
 
 
 
-
+//Extraido de http://rosettacode.org/wiki/CRC-32#C
 z80_long_int util_crc32_calculation(z80_long_int crc, z80_byte *buf, size_t len)
 {
         static z80_long_int table[256];
