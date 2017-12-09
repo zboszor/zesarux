@@ -9129,68 +9129,16 @@ void util_delete(char *filename)
 }
 
 
-z80_long_int util_crc32_calculation(z80_byte *mem, int nBytes)
-{
-	typedef z80_long_int crc;
-
-	#define WIDTH  (8 * sizeof(crc))
-	#define TOPBIT (1 << (WIDTH - 1))
-	#define POLYNOMIAL 0xD8  /* 11011 followed by 0's */
-	//#define POLYNOMIAL 0xD8000000
-
-    crc  remainder = 0;	
 
 
-    /*
-     * Perform modulo-2 division, a byte at a time.
-     */
-    for (int byte = 0; byte < nBytes; ++byte)
-    {
-        /*
-         * Bring the next byte into the remainder.
-         */
-        remainder ^= (mem[byte] << (WIDTH - 8));
-
-        /*
-         * Perform modulo-2 division, a bit at a time.
-         */
-        for (uint8_t bit = 8; bit > 0; --bit)
-        {
-            /*
-             * Try to divide the current data bit.
-             */
-            if (remainder & TOPBIT)
-            {
-                remainder = (remainder << 1) ^ POLYNOMIAL;
-            }
-            else
-            {
-                remainder = (remainder << 1);
-            }
-        }
-    }
-
-    /*
-     * The final remainder is the CRC result.
-     */
-    return (remainder);
-
-  /* crcSlow() */
-}
-
-
-
-
-
-
-z80_long_int rc_crc32(z80_long_int crc, const char *buf, size_t len)
+z80_long_int util_crc32_calculation(z80_long_int crc, z80_byte *buf, size_t len)
 {
         static z80_long_int table[256];
         static int have_table = 0;
         z80_long_int rem;
         z80_byte octet;
         int i, j;
-        const char *p, *q;
+        z80_byte *p, *q;
  
         /* This check is not thread safe; there is no mutex. */
         if (have_table == 0) {

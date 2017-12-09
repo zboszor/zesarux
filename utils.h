@@ -573,8 +573,6 @@ extern int machine_get_next_available_memory_zone(int zone);
 
 extern void util_delete(char *filename);
 
-extern z80_long_int util_crc32_calculation(z80_byte *mem, int nBytes);
-
-extern z80_long_int rc_crc32(z80_long_int crc, const char *buf, size_t len);
+extern z80_long_int util_crc32_calculation(z80_long_int crc, z80_byte *buf, size_t len);
 
 #endif

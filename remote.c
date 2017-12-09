@@ -3285,9 +3285,36 @@ char buffer_retorno[2048];
       return;
     }*/
 
+    int start_address=parse_string_to_number(remote_command_argv[0]);
+    int length=parse_string_to_number(remote_command_argv[1]);
+
+    if (length<1) {
+      escribir_socket(misocket,"ERROR. Length must be >0");
+      return;
+    }
+
+
+    //Copiar contenido memoria segun memory zone activa a buffer de memoria temporal
+    z80_byte *memoria_temporal;
+    memoria_temporal=malloc(length);
+    if (memoria_temporal==NULL) cpu_panic("Can not allocate memory for crc32 calculation");
+
+
+    menu_debug_set_memory_zone_attr();
+    int longitud_copiar=length;
+    int i;
+
+    for (i=0;longitud_copiar>0;i++,longitud_copiar--) { 
+      z80_byte byte_leido=menu_debug_get_mapped_byte(start_address+i);
+      memoria_temporal[i]=byte_leido;
+    }
+
+
     //z80_long_int crc32=util_crc32_calculation(memoria_spectrum,16384);
-    z80_long_int crc32=rc_crc32(0,memoria_spectrum,16384);
+    z80_long_int crc32=util_crc32_calculation(0,memoria_temporal,length);
     escribir_socket_format (misocket,"%08x",crc32);
+
+    free(memoria_temporal);
 
   }
 
