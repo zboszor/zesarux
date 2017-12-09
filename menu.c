@@ -322,15 +322,17 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		7+8,2,7,2, 	//Colores para opcion no disponible
 		0,7+8,        	//Colores para el titulo y linea recuadro ventana
 		1,		//Color waveform
-		7		//Color para zona no usada en visualmem
+		7,		//Color para zona no usada en visualmem
+		2,7+8		//Color para opcion marcada
 		},
 	{"ZXSpectr",1,6,
 		1,0,0,0,		//Mostrar cursor >, no mostrar recuadro, no mostrar rainbow
-		1,6,		//Colores para opcion seleccionada
+		1+8,6,		//Colores para opcion seleccionada
 		1,6,1,6,	//Colores para opcion no disponible, iguales que para opcion disponible
 		1,6,		//Colores para el titulo y linea recuadro ventana
 		6,		//Color waveform
-		0               //Color para zona no usada en visualmem
+		0,               //Color para zona no usada en visualmem
+		2,7+8		//Color para opcion marcada
 		},
 
         {"ZX80/81",7+8,0,
@@ -339,7 +341,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7+8,0,0,7+8,      //Colores para opcion no disponible
                 7+8,0,          //Colores para el titulo y linea recuadro ventana
                 0,              //Color waveform
-                7               //Color para zona no usada en visualmem
+                7,               //Color para zona no usada en visualmem
+                7,0		//Color para opcion marcada
                 },
 
 //Lo ideal en Z88 seria mismos colores que Z88... Pero habria que revisar para otros drivers, tal como curses o cacalib
@@ -351,7 +354,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7,2,4,2,      //Colores para opcion no disponible
                 0,7,          //Colores para el titulo y linea recuadro ventana
                 4,              //Color waveform
-                4               //Color para zona no usada en visualmem
+                4,               //Color para zona no usada en visualmem
+                2,7+8		//Color para opcion marcada
                 },
 
 
@@ -361,7 +365,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 1,2,6+8,2,        //Colores para opcion no disponible
                 6+8,1,            //Colores para el titulo y linea recuadro ventana
                 6+8,              //Color waveform
-                0               //Color para zona no usada en visualmem
+                0,               //Color para zona no usada en visualmem
+                2,7+8		//Color para opcion marcada
                 },
 
         {"Sam",7+8,0,
@@ -370,7 +375,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7+8,2,7,2,      //Colores para opcion no disponible
                 0,7+8,          //Colores para el titulo y linea recuadro ventana
                 1,              //Color waveform
-                7               //Color para zona no usada en visualmem
+                7,               //Color para zona no usada en visualmem
+                2,7+8		//Color para opcion marcada
                 },
 
 						{"ManSoftware",7+8,0,
@@ -379,7 +385,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 							7+8,2,7,2, 	//Colores para opcion no disponible
 							0,7+8,        	//Colores para el titulo y linea recuadro ventana
 							1,		//Color waveform
-							7		//Color para zona no usada en visualmem
+							7,		//Color para zona no usada en visualmem
+							2,7+8		//Color para opcion marcada
 							},
 
 
@@ -389,7 +396,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 					7+8,2,7,2, 	//Colores para opcion no disponible
 					2,7+8,        	//Colores para el titulo y linea recuadro ventana
 					4,		//Color waveform
-					7		//Color para zona no usada en visualmem
+					7,		//Color para zona no usada en visualmem
+					2,7+8		//Color para opcion marcada
 								},
 
 
@@ -13830,8 +13838,9 @@ void menu_onscreen_keyboard_dibuja_cursor_aux(char *s,int x,int y,int escursor)
 
 
         //Si es teclas activas, texto inverso. Si es cursor, texto papel de color seleccion no disponible (rojo por defecto)
-        if (escursor) menu_escribe_texto_ventana(x,y,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE,textocursor);
-	else menu_escribe_texto_ventana(x,y,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,textocursor);
+        if (escursor) menu_escribe_texto_ventana(x,y,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO,textocursor);
+
+	else menu_escribe_texto_ventana(x,y,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,textocursor);
 
 	
 

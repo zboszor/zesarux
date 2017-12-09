@@ -261,6 +261,10 @@ struct s_estilos_gui {
 
         int color_waveform;  //Color para forma de onda en view waveform
         int color_unused_visualmem; //Color para zona no usada en visualmem
+
+
+	int papel_opcion_marcada; //Color para opcion marcada, de momento solo usado en osd keyboard
+	int tinta_opcion_marcada; 
 };
 
 typedef struct s_estilos_gui estilos_gui;
@@ -293,6 +297,9 @@ extern void set_charset(void);
 #define ESTILO_GUI_TINTA_NO_DISPONIBLE (definiciones_estilos_gui[estilo_gui_activo].tinta_no_disponible)
 #define ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE (definiciones_estilos_gui[estilo_gui_activo].papel_seleccionado_no_disponible)
 #define ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE (definiciones_estilos_gui[estilo_gui_activo].tinta_seleccionado_no_disponible)
+
+#define ESTILO_GUI_PAPEL_OPCION_MARCADA (definiciones_estilos_gui[estilo_gui_activo].papel_opcion_marcada)
+#define ESTILO_GUI_TINTA_OPCION_MARCADA (definiciones_estilos_gui[estilo_gui_activo].tinta_opcion_marcada)
 
 #define ESTILO_GUI_PAPEL_TITULO (definiciones_estilos_gui[estilo_gui_activo].papel_titulo)
 #define ESTILO_GUI_TINTA_TITULO (definiciones_estilos_gui[estilo_gui_activo].tinta_titulo)

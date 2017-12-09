@@ -133,10 +133,7 @@ Quizá haver función que mediante una string de entrada (quizá misma que comma
 Luego se podrá usar en el futuro para nuevos settings de menú y command line, y automáticamente desde ZRCP 
 
 
-1. can i please have a checksum function in zrcp, e.g. "checksum 0000h 3fffh"
-http://zxnet.co.uk/spectrum/roms/
-
-2. additionally, for the get-visualmem-xxx commands, could you please add start address & length/end address params?
+-for the get-visualmem-xxx commands, could you please add start address & length/end address params?
 Mark Hutchings  
 
 
