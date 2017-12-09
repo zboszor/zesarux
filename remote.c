@@ -716,6 +716,7 @@ struct s_items_ayuda items_ayuda[]={
   {"get-breakpoints","|gb","[index] [items]","Get breakpoints list. If set index, returns item at index. If set items, returns number of items list starting from index parameter"},
 	{"get-breakpointsactions","|gba","[index] [items]","Get breakpoints actions list. If set first, returns item at index. If set items, returns number of items list starting from index parameter"},
 	{"get-cpu-core-name",NULL,NULL,"Get emulation cpu core name"},
+  {"get-crc32",NULL,"start_address length","Calculate crc32 checksum starting at address for defined length. It uses current memory zone"},
   {"get-current-machine","|gcm",NULL,"Returns current machine name"},
 	{"get-current-memory-zone","|gcmz",NULL,"Returns current memory zone"},
 	{"get-debug-settings","|gds",NULL,"Get debug settings on remote command protocol. See command set-debug-settings"},
@@ -3270,6 +3271,29 @@ char buffer_retorno[2048];
 	}
 
 
+  else if (!strcmp(comando_sin_parametros,"get-crc32")) {
+
+    remote_parse_commands_argvc(parametros);
+
+    if (remote_command_argc<2) {
+      escribir_socket(misocket,"ERROR. Needs two parameters");
+      return;
+    }
+
+    /*if (return_internal_pointer(remote_command_argv[0],&inicio)==0) {
+      escribir_socket(misocket,"ERROR. Unknown pointer");
+      return;
+    }*/
+
+    //z80_long_int crc32=util_crc32_calculation(memoria_spectrum,16384);
+    z80_long_int crc32=rc_crc32(0,memoria_spectrum,16384);
+    escribir_socket_format (misocket,"%08x",crc32);
+
+  }
+
+
+
+
   else if (!strcmp(comando_sin_parametros,"get-current-machine") || !strcmp(comando_sin_parametros,"gcm")) {
     escribir_socket (misocket,get_machine_name(current_machine_type));
   }
@@ -3469,6 +3493,7 @@ char buffer_retorno[2048];
 		}
 	}
 #endif
+
 
 
 

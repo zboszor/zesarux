@@ -50,9 +50,8 @@ deberia verse bien, pues se usan funciones de putchar igual que en menu. si real
 
 -Intentar reproducir click inicial metiendo pausa expresamente. E intentar que solo haga ajuste de buffer cuando haya algo en dicho buffer 
 
--debe guardar configuraciones de joystick teclas a eventos, a teclas etc en zesaruxrc
 
-Menú utilidades archivos
+-Menú utilidades archivos
 
 Ver archivos
 Borrar
