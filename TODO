@@ -1531,8 +1531,6 @@ opcion tambien para bajar bit 7 final
 
 -Mostrar ay piano pero para notas deducidas del beeper (wave form)
 
-
-
 -items recientemente abiertos en quickload . Y en otros menus de carga tambien?
 
 -poder redefinir las teclas que emulan el joystick, en especial la tecla de disparo (como por ejemplo ponerla a TAB)
@@ -1629,7 +1627,8 @@ es decir, la pantalla en ascii esta ubicada hacia el final de la ram. obtener de
 
 -poder configurar lightgun por linea de comandos
 
--recreated zx spectrum
+-recreated zx spectrum. Solo debe actuar cuando menu este cerrado. Que sucede con los diferentes idiomas de teclado?
+Se podrá leer independientemente de localización? Como hacerlo en XWindow o SDL?
 
 -Pantalla de cpu panic, que colores aplique a toda pantalla y no solo 256x192. Util en otras maquinas, como ql, cpc, etc
 
@@ -1661,7 +1660,6 @@ es decir, la pantalla en ascii esta ubicada hacia el final de la ram. obtener de
 -Capturar senal sigbus. en que casos salta?
 
 -Enabling RAM refresh lo hace mediante cambio de funcion peek. Deberia hacerlo mediante funciones nested
-
 
 -top speed para Z88
 

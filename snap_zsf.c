@@ -115,6 +115,9 @@ Byte Fields:
 5 and next bytes: data bytes
 
 
+-Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
+Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
+Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
 
 */
 
