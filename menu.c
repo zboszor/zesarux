@@ -14969,7 +14969,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 		}
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_spectrum_keyboard_matrix_error,NULL,"Speccy keyb. ghost: %s",
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_spectrum_keyboard_matrix_error,NULL,"Speccy keyb. ghosting: %s",
 					(keyboard_matrix_error.v ? "Yes" : "No") );
 		}
 
