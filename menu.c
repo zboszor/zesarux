@@ -290,7 +290,7 @@ void menu_reset_counters_tecla_repeticion(void);
 void menu_textspeech_send_text(char *texto);
 
 
-
+int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcion1,char *opcion2);
 
 
 //si hay recuadro activo, y cuales son sus coordenadas y color
@@ -11573,8 +11573,64 @@ void menu_hardware_realjoystick_event_button(MENU_ITEM_PARAMETERS)
         cls_menu_overlay();
 }
 
+
+//Retorna <0 si salir con ESC
+int menu_joystick_event_list(void)
+{
+      
+        menu_item *array_menu_joystick_event_list;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+        int joystick_event_list_opcion_seleccionada=0;
+       
+
+                char buffer_texto[40];
+
+                int i;
+                for (i=0;i<MAX_EVENTS_JOYSTICK;i++) {
+
+                  //enum defined_f_function_ids accion=defined_f_functions_keys_array[i];
+
+                  sprintf (buffer_texto,"%s",realjoystick_event_names[i]);
+
+
+                    if (i==0) menu_add_item_menu_inicial_format(&array_menu_joystick_event_list,MENU_OPCION_NORMAL,NULL,NULL,buffer_texto);
+                     else menu_add_item_menu_format(array_menu_joystick_event_list,MENU_OPCION_NORMAL,NULL,NULL,buffer_texto);
+
+				}
+
+
+
+                menu_add_item_menu(array_menu_joystick_event_list,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                menu_add_ESC_item(array_menu_joystick_event_list);
+
+                retorno_menu=menu_dibuja_menu(&joystick_event_list_opcion_seleccionada,&item_seleccionado,array_menu_joystick_event_list,"Select event" );
+
+                cls_menu_overlay();
+
+
+								if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+
+												//Si se pulsa Enter
+												return joystick_event_list_opcion_seleccionada;
+			
+                                }
+
+                                else return -1;
+
+}
+
+
+
 void menu_hardware_realjoystick_keys_button(MENU_ITEM_PARAMETERS)
 {
+
+
+	//int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcion1,char *opcion2)
+	int tipo=menu_simple_two_choices("Selection type","You want to set by","Button","Event");
+
+	if (tipo==0) return; //ESC
 
 
         z80_byte caracter;
@@ -11593,22 +11649,33 @@ void menu_hardware_realjoystick_keys_button(MENU_ITEM_PARAMETERS)
 		return;
 	}
 
+
+
 	cls_menu_overlay();
 
+	if (tipo==1) { //Definir por boton
 
-        menu_simple_ventana("Redefine key","Please press the button/axis");
-        all_interlace_scr_refresca_pantalla();
 
-        //Para xwindows hace falta esto, sino no refresca
-        scr_actualiza_tablas_teclado();
+        	menu_simple_ventana("Redefine key","Please press the button/axis");
+        	all_interlace_scr_refresca_pantalla();
 
-        //redefinir boton a tecla
-        if (!realjoystick_redefine_key(hardware_realjoystick_keys_opcion_seleccionada,caracter)) {
-		//se ha salido con tecla. ver si es ESC
-                if ((puerto_especial1&1)==0) {
-                        //desasignar evento
-			realjoystick_keys_array[hardware_realjoystick_keys_opcion_seleccionada].asignado.v=0;
-                }
+        	//Para xwindows hace falta esto, sino no refresca
+        	scr_actualiza_tablas_teclado();
+
+        	//redefinir boton a tecla
+        	if (!realjoystick_redefine_key(hardware_realjoystick_keys_opcion_seleccionada,caracter)) {
+			//se ha salido con tecla. ver si es ESC
+        	        if ((puerto_especial1&1)==0) {
+                	        //desasignar evento
+				realjoystick_keys_array[hardware_realjoystick_keys_opcion_seleccionada].asignado.v=0;
+                	}
+        	}
+        }
+
+        if (tipo==2) { //Definir por evento
+        	int evento=menu_joystick_event_list();
+        	 realjoystick_copy_event_button_key(evento,hardware_realjoystick_keys_opcion_seleccionada,caracter);
+        	//printf ("evento: %d\n",evento);
         }
 
 
@@ -23132,6 +23199,52 @@ int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior)
 
 }
 
+
+//retorna 1 si opcion 1
+//retorna 2 si opcion 2
+//retorna 0 si ESC
+int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcion1,char *opcion2)
+{
+
+        cls_menu_overlay();
+
+        menu_espera_no_tecla();
+
+
+	menu_item *array_menu_simple_two_choices;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+	//Siempre indicamos la primera opcion
+	int simple_two_choices_opcion_seleccionada=1;
+        do {
+
+		menu_add_item_menu_inicial_format(&array_menu_simple_two_choices,MENU_OPCION_SEPARADOR,NULL,NULL,texto_interior);
+
+                menu_add_item_menu_format(array_menu_simple_two_choices,MENU_OPCION_NORMAL,NULL,NULL,opcion1);
+
+                menu_add_item_menu_format(array_menu_simple_two_choices,MENU_OPCION_NORMAL,NULL,NULL,opcion2);
+
+                //separador adicional para que quede mas grande la ventana y mas mono
+                menu_add_item_menu_format(array_menu_simple_two_choices,MENU_OPCION_SEPARADOR,NULL,NULL," ");
+
+
+
+                retorno_menu=menu_dibuja_menu(&simple_two_choices_opcion_seleccionada,&item_seleccionado,array_menu_simple_two_choices,texto_ventana);
+
+                cls_menu_overlay();
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        return simple_two_choices_opcion_seleccionada;
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+	return 0;
+
+
+}
 
 //Retorna 0=Cancel, 1=Append, 2=Truncate
 int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior)
