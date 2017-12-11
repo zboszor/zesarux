@@ -578,4 +578,6 @@ extern z80_long_int util_crc32_calculation(z80_long_int crc, z80_byte *buf, size
 
 extern int util_return_ceros_byte(z80_byte valor);
 
+extern void util_byte_to_binary(z80_byte value,char *texto);
+
 #endif

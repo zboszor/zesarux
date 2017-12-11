@@ -9180,3 +9180,20 @@ int util_return_ceros_byte(z80_byte valor)
 
 	return ceros;
 }
+
+
+void util_byte_to_binary(z80_byte value,char *texto)
+{
+	int i;
+
+	for (i=0;i<8;i++) {
+		if (value&128) *texto='1';
+		else *texto='0';
+
+		texto++;
+
+		value=value<<1;
+	}
+
+	*texto=0; //fin cadena
+}

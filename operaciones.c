@@ -5019,6 +5019,57 @@ z80_byte teclado_and_todas(z80_byte valor)
     return valor;
 }
 
+z80_byte teclado_return_valor_fila(z80_byte fila)
+{
+    switch (fila) {
+        case 0:
+            return puerto_65278;
+        break;
+
+        case 1:
+            return puerto_65022;
+        break;
+
+        case 2:
+            return puerto_64510;
+        break;
+
+        case 3:
+            return puerto_63486;
+        break;
+
+        case 4:
+            return puerto_61438;
+        break;
+
+        case 5:
+            return puerto_57342;
+        break;
+
+        case 6:
+            return puerto_49150;
+        break;
+
+        case 7:
+            return puerto_32766;
+        break;
+
+        default:
+            //no deberia suceder
+            return 255;
+        break;
+
+
+    }
+}
+
+/*
+Lo que ocurre exactamente es lo siguiente: cuando se pulsan dos teclas que pertenecen a distintas filas, 
+pero que pertenecen a la misma columna (como la A y la G en el ejemplo), las filas de ambas teclas adquieren 
+el potencial de 0 voltios, así que aunque nosotros hayamos seleccionado un fila para leer, en realidad se 
+están seleccionando dos filas para leer. Si en la fila que no pretendíamos leer hay más de una tecla pulsada (la I), 
+ésta obviamente aparecerá en la línea de salida.
+*/
 z80_byte teclado_matrix_error(z80_byte valor_puerto,z80_byte valor_acumulado)
 {
     if (MACHINE_IS_SPECTRUM && keyboard_matrix_error.v) {
@@ -5030,6 +5081,71 @@ z80_byte teclado_matrix_error(z80_byte valor_puerto,z80_byte valor_acumulado)
     return valor_acumulado;
 }
 
+
+//Para una fila que vamos a leer, comparamos si con el resto de filas, coinciden teclas en misma columna
+//si es asi, se agregara esa fila para leer en el puerto final
+
+//Para saber si se pulsan teclas de misma columna, hacer xor a nivel de bit
+
+z80_byte teclado_matrix_que_filas(z80_byte fila,z80_byte puerto_h)
+{
+    int i;
+
+    z80_byte valor_fila_leida=teclado_return_valor_fila(fila);
+    z80_byte mascara_fila=254; //11111110 realmente movemos el 0 a la izquierda
+
+    for (i=0;i<8;i++) {
+        if (i!=fila) { //No comparar fila con ella misma
+            int bit;
+            int mascara_bit=1;
+            for (bit=0;bit<5;bit++) {
+                //Si se ha pulsado esa tecla en la fila que estamos observando
+                if ((valor_fila_leida&mascara_bit)==0) {
+                    //Ver si se ha pulsado tambien tecla en la fila con la que comparamos
+                    if ((teclado_return_valor_fila(i)&mascara_bit)==0) {
+                        //Leeremos fila adicional
+                        puerto_h &=mascara_fila;
+                    }
+                }
+                mascara_bit=mascara_bit<<1;
+            }
+        }
+        mascara_fila=(mascara_fila<<1)|1; //Bit que resetearemos para leer fila adicional si conviene
+    }
+
+    return puerto_h;
+}
+
+//Que puerto o puertos se leeran finalmente aplicando bug de matrix error
+z80_byte teclado_matrix_puerto_final(z80_byte puerto_h)
+{
+    int mascara=1;
+    int i;
+
+    z80_byte final_puerto_h=puerto_h;
+
+    if (MACHINE_IS_SPECTRUM && keyboard_matrix_error.v) {
+
+        char puerto_binario[9];
+        
+        util_byte_to_binary(puerto_h,puerto_binario);
+        printf ("puerto a leer: %d (%s) ",puerto_h,puerto_binario);
+
+        for (i=0;i<8;i++) {
+          if ((puerto_h&mascara)==0) final_puerto_h=teclado_matrix_que_filas(i,puerto_h);
+          mascara=mascara<<1;
+        }
+
+        util_byte_to_binary(final_puerto_h,puerto_binario);
+        printf ("puerto finalmente leido: %d (%s)\n",final_puerto_h,puerto_binario);
+
+    }
+
+
+
+    return final_puerto_h;
+
+}
 
 //comun para spectrum y zx80/81 y sam
 z80_byte lee_puerto_teclado(z80_byte puerto_h)
@@ -5069,6 +5185,8 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
                         acumulado=255;
 
+            puerto_h=teclado_matrix_puerto_final(puerto_h);
+
                         //A zero in one of the five lowest bits means that the corresponding key is pressed. 
                         //If more than one address line is made low, the result is the logical AND of all single inputs, 
                         //so a zero in a bit means that at least one of the appropriate keys is pressed. 
@@ -5081,7 +5199,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 				}
 				else acumulado &=puerto_65278;
 
-                acumulado=teclado_matrix_error(puerto_65278,acumulado);
+                //acumulado=teclado_matrix_error(puerto_65278,acumulado);
 
 				//Si hay alguna tecla del joystick cursor pulsada, enviar tambien shift
 //z80_byte puerto_65278=255; //    db    255  ; V    C    X    Z    Sh    ;0
@@ -5093,7 +5211,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
             if ((puerto_h & 2) == 0)   {
 				acumulado &=puerto_65022;
-                acumulado=teclado_matrix_error(puerto_65022,acumulado);
+                //acumulado=teclado_matrix_error(puerto_65022,acumulado);
 
                                 //OPQASPACE Joystick
                                 if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
@@ -5105,7 +5223,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
             if ((puerto_h & 4) == 0)   {
 				acumulado &=puerto_64510;
-                acumulado=teclado_matrix_error(puerto_64510,acumulado);
+                //acumulado=teclado_matrix_error(puerto_64510,acumulado);
 
                                 //OPQASPACE Joystick
                                 if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
@@ -5125,7 +5243,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
             if ((puerto_h & 8) == 0)   {
 				acumulado &=puerto_63486;
-                acumulado=teclado_matrix_error(puerto_63486,acumulado);
+                //acumulado=teclado_matrix_error(puerto_63486,acumulado);
 				//sinclair 2 joystick
 				if (joystick_emulation==JOYSTICK_SINCLAIR_2) {
 					if ((puerto_especial_joystick&1)) acumulado &=(255-2);
@@ -5159,7 +5277,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
             if ((puerto_h & 16) == 0)  {
 				acumulado &=puerto_61438;
-                acumulado=teclado_matrix_error(puerto_61438,acumulado);
+                //acumulado=teclado_matrix_error(puerto_61438,acumulado);
 
 				//sinclair 1 joystick
 				if (joystick_emulation==JOYSTICK_SINCLAIR_1) {
@@ -5194,7 +5312,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
             if ((puerto_h & 32) == 0)  {
 				acumulado &=puerto_57342;
-                acumulado=teclado_matrix_error(puerto_57342,acumulado);
+                //acumulado=teclado_matrix_error(puerto_57342,acumulado);
 
                                 //OPQASPACE Joystick
                                 if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
@@ -5207,7 +5325,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
             if ((puerto_h & 64) == 0)  {
                 acumulado &=puerto_49150;
-                acumulado=teclado_matrix_error(puerto_49150,acumulado);
+                //acumulado=teclado_matrix_error(puerto_49150,acumulado);
             }
 
 
@@ -5217,7 +5335,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 				}
 				else acumulado &=puerto_32766;
 
-                acumulado=teclado_matrix_error(puerto_32766,acumulado);
+                //acumulado=teclado_matrix_error(puerto_32766,acumulado);
 
 				//OPQASPACE Joystick
 				if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
