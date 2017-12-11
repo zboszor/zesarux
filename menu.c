@@ -143,6 +143,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"LoadBinary",F_FUNCION_LOADBINARY},
 	{"SaveBinary",F_FUNCION_SAVEBINARY},
 	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD},
+	{"SwitchBorder",F_FUNCION_SWITCHBORDER},
 	{"ReloadMMC",F_FUNCION_RELOADMMC},
 	{"ReinsertTape",F_FUNCION_REINSERTTAPE},
 	{"DebugCPU",F_FUNCION_DEBUGCPU},
@@ -25098,6 +25099,10 @@ void menu_process_f_functions(void)
 
 		case F_FUNCION_OSDKEYBOARD:
 			menu_onscreen_keyboard(0);
+		break;
+
+		case F_FUNCION_SWITCHBORDER:
+			if (menu_interface_border_cond() ) menu_interface_border(0);
 		break;
 
 		case F_FUNCION_RELOADMMC:
