@@ -5129,7 +5129,7 @@ z80_byte teclado_matrix_puerto_final(z80_byte puerto_h)
         char puerto_binario[9];
         
         util_byte_to_binary(puerto_h,puerto_binario);
-        printf ("puerto a leer: %d (%s) ",puerto_h,puerto_binario);
+        printf ("Port to read: %02XH (%s) ",puerto_h,puerto_binario);
 
         for (i=0;i<8;i++) {
           if ((puerto_h&mascara)==0) final_puerto_h=teclado_matrix_que_filas(i,puerto_h);
@@ -5137,7 +5137,7 @@ z80_byte teclado_matrix_puerto_final(z80_byte puerto_h)
         }
 
         util_byte_to_binary(final_puerto_h,puerto_binario);
-        printf ("puerto finalmente leido: %d (%s)\n",final_puerto_h,puerto_binario);
+        printf ("Port finally read: %02XH (%s)\n",final_puerto_h,puerto_binario);
 
     }
 
