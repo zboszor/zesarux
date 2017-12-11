@@ -5001,6 +5001,36 @@ z80_byte jupiter_ace_retorna_puerto_32766(void)
         return b;
 }
 
+z80_byte teclado_and_todas(z80_byte valor)
+{
+     int ceros=0;
+                ceros +=util_return_ceros_byte(puerto_65278|224); //Valor de fila teclado poniendo los otros bits a 1
+                ceros +=util_return_ceros_byte(puerto_65022|224);
+                ceros +=util_return_ceros_byte(puerto_64510|224);
+                ceros +=util_return_ceros_byte(puerto_63486|224);
+                ceros +=util_return_ceros_byte(puerto_61438|224);
+                ceros +=util_return_ceros_byte(puerto_57342|224);
+                ceros +=util_return_ceros_byte(puerto_49150|224);
+                ceros +=util_return_ceros_byte(puerto_32766|224);
+
+                if (ceros>2) {
+                    valor &= puerto_65278 & puerto_65022 & puerto_64510 & puerto_63486 & puerto_61438 & puerto_57342 & puerto_49150 & puerto_32766;
+                }
+    return valor;
+}
+
+z80_byte teclado_matrix_error(z80_byte valor_puerto,z80_byte valor_acumulado)
+{
+    if (MACHINE_IS_SPECTRUM && keyboard_matrix_error.v) {
+        if ( (valor_puerto&31)!=31) {  //Si la fila mirada tiene al menos una tecla pulsada
+            valor_acumulado=teclado_and_todas(valor_acumulado);
+        }
+    }
+
+    return valor_acumulado;
+}
+
+
 //comun para spectrum y zx80/81 y sam
 z80_byte lee_puerto_teclado(z80_byte puerto_h)
 {
@@ -5039,13 +5069,19 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
                         acumulado=255;
 
-                        //A zero in one of the five lowest bits means that the corresponding key is pressed. If more than one address line is made low, the result is the logical AND of all single inputs, so a zero in a bit means that at least one of the appropriate keys is pressed. For example, only if each of the five lowest bits of the result from reading from Port 00FE (for instance by XOR A/IN A,(FE)) is one, no key is pressed
+                        //A zero in one of the five lowest bits means that the corresponding key is pressed. 
+                        //If more than one address line is made low, the result is the logical AND of all single inputs, 
+                        //so a zero in a bit means that at least one of the appropriate keys is pressed. 
+                        //For example, only if each of the five lowest bits of the result from reading from Port 00FE 
+                        //(for instance by XOR A/IN A,(FE)) is one, no key is pressed
 
-                        if ((puerto_h & 1) == 0)   {
+            if ((puerto_h & 1) == 0)   {
 				if (MACHINE_IS_ACE) {
 					acumulado &=jupiter_ace_retorna_puerto_65278();
 				}
 				else acumulado &=puerto_65278;
+
+                acumulado=teclado_matrix_error(puerto_65278,acumulado);
 
 				//Si hay alguna tecla del joystick cursor pulsada, enviar tambien shift
 //z80_byte puerto_65278=255; //    db    255  ; V    C    X    Z    Sh    ;0
@@ -5053,8 +5089,11 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 					acumulado &=(255-1);
 				}
 			}
-                        if ((puerto_h & 2) == 0)   {
+
+
+            if ((puerto_h & 2) == 0)   {
 				acumulado &=puerto_65022;
+                acumulado=teclado_matrix_error(puerto_65022,acumulado);
 
                                 //OPQASPACE Joystick
                                 if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
@@ -5062,8 +5101,11 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
                                 }
 
 			}
-                        if ((puerto_h & 4) == 0)   {
+
+
+            if ((puerto_h & 4) == 0)   {
 				acumulado &=puerto_64510;
+                acumulado=teclado_matrix_error(puerto_64510,acumulado);
 
                                 //OPQASPACE Joystick
                                 if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
@@ -5079,8 +5121,11 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
 			//Para cursor, sinclair joystick
 //z80_byte puerto_63486=255; //    db              255  ; 5    4    3    2    1     ;3
-                        if ((puerto_h & 8) == 0)   {
+
+
+            if ((puerto_h & 8) == 0)   {
 				acumulado &=puerto_63486;
+                acumulado=teclado_matrix_error(puerto_63486,acumulado);
 				//sinclair 2 joystick
 				if (joystick_emulation==JOYSTICK_SINCLAIR_2) {
 					if ((puerto_especial_joystick&1)) acumulado &=(255-2);
@@ -5110,8 +5155,11 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 			}
 
 //z80_byte puerto_61438=255; //    db              255  ; 6    7    8    9    0     ;4
-                        if ((puerto_h & 16) == 0)  {
+
+
+            if ((puerto_h & 16) == 0)  {
 				acumulado &=puerto_61438;
+                acumulado=teclado_matrix_error(puerto_61438,acumulado);
 
 				//sinclair 1 joystick
 				if (joystick_emulation==JOYSTICK_SINCLAIR_1) {
@@ -5143,8 +5191,10 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 				}
 			}
 
-                        if ((puerto_h & 32) == 0)  {
+
+            if ((puerto_h & 32) == 0)  {
 				acumulado &=puerto_57342;
+                acumulado=teclado_matrix_error(puerto_57342,acumulado);
 
                                 //OPQASPACE Joystick
                                 if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
@@ -5154,12 +5204,20 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
 
 			}
-                        if ((puerto_h & 64) == 0)  acumulado &=puerto_49150;
-                        if ((puerto_h & 128) == 0) {
+
+            if ((puerto_h & 64) == 0)  {
+                acumulado &=puerto_49150;
+                acumulado=teclado_matrix_error(puerto_49150,acumulado);
+            }
+
+
+            if ((puerto_h & 128) == 0) {
 				if (MACHINE_IS_ACE) {
 					acumulado &=jupiter_ace_retorna_puerto_32766();
 				}
 				else acumulado &=puerto_32766;
+
+                acumulado=teclado_matrix_error(puerto_32766,acumulado);
 
 				//OPQASPACE Joystick
 				if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
@@ -5168,7 +5226,8 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
 			}
 
-                        return acumulado;
+
+            return acumulado;
 
 
 }

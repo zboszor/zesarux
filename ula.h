@@ -71,4 +71,7 @@ extern z80_byte zesarux_zxi_read_register_value(void);
 
 extern void generate_nmi(void);
 
+
+extern z80_bit keyboard_matrix_error;
+
 #endif

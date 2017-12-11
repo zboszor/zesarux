@@ -14844,6 +14844,11 @@ void menu_hardware_set_f_functions(MENU_ITEM_PARAMETERS)
 
 
 
+void menu_hardware_spectrum_keyboard_matrix_error(MENU_ITEM_PARAMETERS)
+{
+	keyboard_matrix_error.v ^=1;
+}
+
 
 
 //menu hardware settings
@@ -14961,6 +14966,11 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'s');
 
 
+		}
+
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_spectrum_keyboard_matrix_error,NULL,"Speccy keyb. ghost: %s",
+					(keyboard_matrix_error.v ? "Yes" : "No") );
 		}
 
 

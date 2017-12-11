@@ -9165,3 +9165,18 @@ z80_long_int util_crc32_calculation(z80_long_int crc, z80_byte *buf, size_t len)
         }
         return ~crc;
 }
+
+
+//Retorna cuantos bits estan a 0 en un byte
+int util_return_ceros_byte(z80_byte valor)
+{
+	int i;
+	int ceros=0;
+	for (i=0;i<8;i++) {
+		if ((valor&1)==0) ceros++;
+
+		valor=valor>>1;
+	}
+
+	return ceros;
+}

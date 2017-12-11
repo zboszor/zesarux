@@ -7,6 +7,7 @@ Added setting to show changelog when updating emulator version
 When doesn't exist configuration file, the new one has the autosave configuration setting enabled
 Improved joystick support: added joystick test menu, buttons to events and buttons to joystick are saved on configuration file
 Improved OSD keyboard: now you can press up to all 40 keys (on Spectrum/ZX80/ZX81) at the same time
+Added Spectrum keyboard ghosting error feature
 
 Version 6.0. 27 November 2017 - Gunfright edition
 

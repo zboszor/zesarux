@@ -575,4 +575,7 @@ extern void util_delete(char *filename);
 
 extern z80_long_int util_crc32_calculation(z80_long_int crc, z80_byte *buf, size_t len);
 
+
+extern int util_return_ceros_byte(z80_byte valor);
+
 #endif

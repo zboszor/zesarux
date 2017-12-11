@@ -69,6 +69,11 @@ z80_bit ula_im2_slow={0};
 z80_bit pentagon_timing={0};
 
 
+//Si se pulsan mas de dos teclas en diferentes columnas, en spectrum, se leen mas teclas.
+//El tipico caps+b+v representa caps+b+v+space
+z80_bit keyboard_matrix_error={0};
+
+
 //Poder desactivar paginado de rom y ram
 z80_bit ula_disabled_ram_paging={0};
 z80_bit ula_disabled_rom_paging={0};
