@@ -25786,8 +25786,8 @@ void reset_splash_text(void)
 #define FILESEL_X 1
 #define FILESEL_Y 1
 #define FILESEL_ANCHO 30
-#define FILESEL_ALTO 22
-#define FILESEL_ALTO_DIR FILESEL_ALTO-9
+#define FILESEL_ALTO 23
+#define FILESEL_ALTO_DIR FILESEL_ALTO-10
 #define FILESEL_POS_FILTER FILESEL_ALTO-4
 #define FILESEL_POS_LEYENDA FILESEL_ALTO-3
 #define FILESEL_INICIO_DIR 4
@@ -25861,7 +25861,8 @@ void menu_filesel_print_legend(void)
 		antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
 		menu_writing_inverse_color.v=1;
 
-		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~View ~~Truncate ~~Delete m~~Kdir");
+		menu_escribe_linea_opcion(FILESEL_POS_FILTER-1,-1,1,"~~View ~~Truncate ~~Delete m~~Kdir");
+		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Move");
 
 		//Restaurar comportamiento mostrar atajos
 		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
@@ -25949,7 +25950,6 @@ void menu_filesel_print_file(char *s,unsigned char  d_type,unsigned int max_leng
 
 	if (filesel_zona_pantalla!=1) activo=-1;
 	menu_escribe_linea_opcion(y,activo,1,buffer);
-
 }
 
 
@@ -26113,6 +26113,47 @@ int si_menu_filesel_no_mas_alla_ultimo_item(int linea)
 {
 	if (filesel_archivo_seleccionado+linea<filesel_total_items-1) return 1;
 	return 0;
+}
+
+
+//Creo que no puedo anidar un fileselector dentro de otro :(
+void file_utils_move_file(char *archivo)
+{
+	char *filtros[2];
+
+        filtros[0]="";
+        filtros[1]=0;
+
+
+        //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
+
+        int ret;
+
+
+        char nada[PATH_MAX];
+
+
+        ret=menu_filesel("Enter dir and press ESC",filtros,nada);
+
+
+        //Si sale con ESC
+        if (ret==0) {
+                //Directorio root esxdos
+                //sprintf (esxdos_handler_root_dir,"%s",menu_filesel_last_directory_seen);
+                //debug_printf (VERBOSE_DEBUG,"Selected directory: %s",esxdos_handler_root_dir);
+
+                //directorio esxdos vacio
+                //esxdos_handler_cwd[0]=0;
+                printf ("Mover archivo %s a directorio %s\n",archivo,menu_filesel_last_directory_seen);
+
+        }
+
+
+        //volvemos a directorio inicial
+        menu_filesel_chdir(directorio_actual);
+
 }
 
 void menu_filesel_cursor_abajo(void)
@@ -26866,7 +26907,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_reset_counters_tecla_repeticion();
 						
 						//Comun para acciones que usan archivo seleccionado
-						if (tecla=='V' || tecla=='T' || tecla=='D') {
+						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M') {
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
@@ -26896,6 +26937,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 										}
 
 									}
+									//Move
+									/*if (tecla=='M') {
+										file_utils_move_file(file_utils_file_selected);
+										releer_directorio=1;
+
+									}*/
 								}
 							}
 
