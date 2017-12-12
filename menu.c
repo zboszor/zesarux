@@ -26119,6 +26119,7 @@ void file_utils_rename_file(char *archivo)
 {
 	char nombre_sin_dir[PATH_MAX];
 	char directorio[PATH_MAX];
+	char nombre_final[PATH_MAX];
 
 	util_get_dir(archivo,directorio);
 	util_get_file_no_directory(archivo,nombre_sin_dir);
@@ -26128,7 +26129,11 @@ void file_utils_rename_file(char *archivo)
 
 	menu_ventana_scanf("New name",nombre_sin_dir,PATH_MAX);
 
-	printf ("dir: %s new name %s\n",directorio,nombre_sin_dir);
+	sprintf(nombre_final,"%s/%s",directorio,nombre_sin_dir);
+
+	debug_printf (VERBOSE_INFO,"Original name: %s dir: %s new name %s final name %s",archivo,directorio,nombre_sin_dir,nombre_final);
+
+	rename(archivo,nombre_final);
 }
 
 //Creo que no puedo anidar un fileselector dentro de otro :(
