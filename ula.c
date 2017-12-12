@@ -275,6 +275,13 @@ BREAK SPACE        %^
 
 
 So when key 1 is pressed, we get an ‘a’ and when released we get a ‘b’.
+
+Que pasa con zxcvbnm symbol y space? Parece que generan diferentes pulsaciones segun el keyboard mapping del pc
+En caso de cocoa, leo el teclado en modo raw y no deberia afectar. 
+En framebuffer, tampoco deberia afectar
+En XWindow, sí que afecta la localizacion. soluciones: leer en raw? O usar el keymapping setting que uso para Z88 por ejemplo?
+En SDL también le afecta la localización
+
 */
 
     //Desde la a-z y A-Z tenemos una tabla

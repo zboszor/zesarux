@@ -1626,9 +1626,6 @@ es decir, la pantalla en ascii esta ubicada hacia el final de la ram. obtener de
 
 -poder configurar lightgun por linea de comandos
 
--recreated zx spectrum. Solo debe actuar cuando menu este cerrado. Que sucede con los diferentes idiomas de teclado?
-Se podrá leer independientemente de localización? Como hacerlo en XWindow o SDL?
-
 -Pantalla de cpu panic, que colores aplique a toda pantalla y no solo 256x192. Util en otras maquinas, como ql, cpc, etc
 
 -Multiface 128 falla en algunos juegos, como abadia del crimen. En eightyone tambien falla en este caso
