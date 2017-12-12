@@ -5070,16 +5070,6 @@ el potencial de 0 voltios, así que aunque nosotros hayamos seleccionado un fila
 están seleccionando dos filas para leer. Si en la fila que no pretendíamos leer hay más de una tecla pulsada (la I), 
 ésta obviamente aparecerá en la línea de salida.
 */
-z80_byte teclado_matrix_error(z80_byte valor_puerto,z80_byte valor_acumulado)
-{
-    if (MACHINE_IS_SPECTRUM && keyboard_matrix_error.v) {
-        if ( (valor_puerto&31)!=31) {  //Si la fila mirada tiene al menos una tecla pulsada
-            valor_acumulado=teclado_and_todas(valor_acumulado);
-        }
-    }
-
-    return valor_acumulado;
-}
 
 
 //Para una fila que vamos a leer, comparamos si con el resto de filas, coinciden teclas en misma columna
@@ -5129,7 +5119,7 @@ z80_byte teclado_matrix_puerto_final(z80_byte puerto_h)
         char puerto_binario[9];
         
         util_byte_to_binary(puerto_h,puerto_binario);
-        printf ("Port to read: %02XH (%s) ",puerto_h,puerto_binario);
+        //printf ("Port to read: %02XH (%s) ",puerto_h,puerto_binario);
 
         for (i=0;i<8;i++) {
           if ((puerto_h&mascara)==0) final_puerto_h=teclado_matrix_que_filas(i,puerto_h);
@@ -5137,7 +5127,7 @@ z80_byte teclado_matrix_puerto_final(z80_byte puerto_h)
         }
 
         util_byte_to_binary(final_puerto_h,puerto_binario);
-        printf ("Port finally read: %02XH (%s)\n",final_puerto_h,puerto_binario);
+        //printf ("Port finally read: %02XH (%s)\n",final_puerto_h,puerto_binario);
 
     }
 

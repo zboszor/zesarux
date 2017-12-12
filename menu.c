@@ -14279,7 +14279,6 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 			salir_todos_menus=1;
 			timer_on_screen_key=25; //durante medio segundo
 		
-			
 
 
 		//Liberar otras teclas, por si acaso

@@ -1115,8 +1115,7 @@ he intentado meterlo en :
 
 pero parece que envia otra tecla diferente
 
--Keyboard matrix error effect : Que al pulsar teclas QW y A, la S tambien queda pulsada
-Tener en cuenta que en Mac y la mayoria de teclados por ejemplo tiene problemas al pulsar mas de dos o tres teclas a la vez...
+
 
 -en raspberry, al salir de fbdev, dejar la resolucion tal y como estaba
 
