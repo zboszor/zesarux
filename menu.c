@@ -25862,7 +25862,7 @@ void menu_filesel_print_legend(void)
 		menu_writing_inverse_color.v=1;
 
 		menu_escribe_linea_opcion(FILESEL_POS_FILTER-1,-1,1,"~~View ~~Truncate ~~Delete m~~Kdir");
-		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Move");
+		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Move ~~Rename");
 
 		//Restaurar comportamiento mostrar atajos
 		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
@@ -26115,6 +26115,21 @@ int si_menu_filesel_no_mas_alla_ultimo_item(int linea)
 	return 0;
 }
 
+void file_utils_rename_file(char *archivo)
+{
+	char nombre_sin_dir[PATH_MAX];
+	char directorio[PATH_MAX];
+
+	util_get_dir(archivo,directorio);
+	util_get_file_no_directory(archivo,nombre_sin_dir);
+
+	//void menu_ventana_scanf(char *titulo,char *texto,int max_length);
+
+
+	menu_ventana_scanf("New name",nombre_sin_dir,PATH_MAX);
+
+	printf ("dir: %s new name %s\n",directorio,nombre_sin_dir);
+}
 
 //Creo que no puedo anidar un fileselector dentro de otro :(
 void file_utils_move_file(char *archivo)
@@ -26907,7 +26922,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_reset_counters_tecla_repeticion();
 						
 						//Comun para acciones que usan archivo seleccionado
-						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M') {
+						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R') {
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
@@ -26943,6 +26958,13 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 										releer_directorio=1;
 
 									}*/
+
+									//Rename
+									if (tecla=='R') {
+										file_utils_rename_file(file_utils_file_selected);
+										releer_directorio=1;
+									}
+
 								}
 							}
 
