@@ -14848,6 +14848,11 @@ void menu_hardware_spectrum_keyboard_matrix_error(MENU_ITEM_PARAMETERS)
 	keyboard_matrix_error.v ^=1;
 }
 
+void menu_hardware_recreated_keyboard(MENU_ITEM_PARAMETERS)
+{
+	recreated_zx_keyboard_support.v ^=1;
+}
+
 
 
 //menu hardware settings
@@ -14881,6 +14886,10 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Only used on xwindows driver by now. Enables to use numeric keys on Azerty keyboard, without having "
 						"to press Shift. Note we are referring to the numeric keys (up to letter A, Z, etc) and not to the numeric keypad.");
 		}
+
+
+		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_recreated_keyboard,NULL,"ZX Recreated support: %s",
+			(recreated_zx_keyboard_support.v ? "Yes" : "No") );
 
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_chloe_keyboard,NULL,"Chloe Keyboard: %s",(chloe_keyboard.v ? "Yes" : "No") );

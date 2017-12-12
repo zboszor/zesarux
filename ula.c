@@ -78,6 +78,9 @@ z80_bit keyboard_matrix_error={0};
 z80_bit ula_disabled_ram_paging={0};
 z80_bit ula_disabled_rom_paging={0};
 
+
+z80_bit recreated_zx_keyboard_support={0};
+
 void ula_pentagon_timing_common(void)
 {
 
@@ -213,4 +216,153 @@ void generate_nmi(void)
 		multiface_map_memory();
     multiface_lockout=0;
 	}
+}
+
+
+//Convertir tecla leida del recreated en tecla real y en si es un press (1) o un release(0)
+/*
+http://zedcode.blogspot.com.es/2016/07/notes-on-recreated-zx-spectrum.html
+*/
+
+char recreated_key_table_minus[]="1234567890qwe";
+char recreated_key_table_mayus[]="rtyuiopasdfgh";
+
+
+void recreated_zx_spectrum_keyboard_convert(int tecla, enum util_teclas *tecla_final, int *pressrelease)
+{
+/*
+Key    Push+Release
+1    ab
+2    cd
+3    ef
+4    gh
+5    ij
+6    kl
+7    mn
+8    op
+9    qr
+0    st
+Q    uv
+W    wx
+E    yz
+R    AB
+T    CD
+Y    EF
+U    GH
+I    IJ
+O    KL
+P    MN
+A    OP
+S    QR
+D    ST
+F    UV
+G    WX
+H    YZ
+J    01
+K    23
+L    45
+ENTER    67
+CAP SHIFT    89
+Z    <>
+X    -=
+C    []
+V    ;:
+B    ,.
+N    /?
+M    {}            See note [6]
+SYMBOL SHIFT    !$        See Note [6]
+BREAK SPACE        %^
+
+
+So when key 1 is pressed, we get an ‘a’ and when released we get a ‘b’.
+*/
+
+    //Desde la a-z y A-Z tenemos una tabla
+    //char recreated_key_table_minus[]="1234567890QWE";
+    //char recreated_key_table_mayus[]="RTYUIOPASDFGH";
+    if (tecla>='a' && tecla<='z') {
+        tecla -='a'; 
+        //Par es press, impar es release
+        if (tecla&1) *pressrelease=0;
+        else *pressrelease=1;
+
+        tecla /=2;
+        //retornar tecla
+        *tecla_final=recreated_key_table_minus[tecla];
+        return;
+    }
+
+    if (tecla>='A' && tecla<='Z') {
+        tecla -='A'; 
+        //Par es press, impar es release
+        if (tecla&1) *pressrelease=0;
+        else *pressrelease=1;
+
+        tecla /=2;
+        //retornar tecla
+        *tecla_final=recreated_key_table_mayus[tecla];
+        return;
+    }
+
+    //Resto de teclas
+    switch (tecla) {
+        case '0':
+            *pressrelease=1;
+            *tecla_final='j';
+        break;
+
+        case '1':
+            *pressrelease=0;
+            *tecla_final='j';
+        break;
+
+        case '2':
+            *pressrelease=1;
+            *tecla_final='k';
+        break;
+
+        case '3':
+            *pressrelease=0;
+            *tecla_final='k';
+        break;
+
+        case '4':
+            *pressrelease=1;
+            *tecla_final='l';
+        break;
+
+        case '5':
+            *pressrelease=0;
+            *tecla_final='l';
+        break;
+
+        case '6':
+            *pressrelease=1;
+            *tecla_final=UTIL_KEY_ENTER;
+        break;
+
+        case '7':
+            *pressrelease=0;
+            *tecla_final=UTIL_KEY_ENTER;
+        break;
+
+        case '8':
+            *pressrelease=1;
+            *tecla_final=UTIL_KEY_SHIFT_L;
+        break;
+
+        case '9':
+            *pressrelease=0;
+            *tecla_final=UTIL_KEY_SHIFT_L;
+        break;
+
+
+        default:
+            //Valores sin alterar
+            *tecla_final=0;
+        break;
+
+    }
+
+
 }

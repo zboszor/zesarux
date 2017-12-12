@@ -8,6 +8,7 @@ When doesn't exist configuration file, the new one has the autosave configuratio
 Improved joystick support: added joystick test menu, buttons to events and buttons to joystick are saved on configuration file
 Improved OSD keyboard: now you can press up to all 40 keys (on Spectrum/ZX80/ZX81) at the same time
 Added Spectrum keyboard ghosting error feature
+Added ZX Spectrum Recreated keyboard support
 
 Version 6.0. 27 November 2017 - Gunfright edition
 

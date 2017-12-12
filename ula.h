@@ -23,6 +23,7 @@
 #define ULA_H
 
 #include "cpu.h"
+#include "utils.h"
 
 extern z80_byte out_254_original_value;
 extern z80_byte out_254;
@@ -73,5 +74,9 @@ extern void generate_nmi(void);
 
 
 extern z80_bit keyboard_matrix_error;
+
+
+extern void recreated_zx_spectrum_keyboard_convert(int tecla, enum util_teclas *tecla_final, int *pressrelease);
+extern z80_bit recreated_zx_keyboard_support;
 
 #endif

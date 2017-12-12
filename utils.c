@@ -3494,7 +3494,33 @@ void convert_numeros_letras_puerto_teclado_continue(z80_byte tecla,int pressrele
 {
 
 
-        //temp reasignacion
+       //Si teclado recreated, y menu cerrado
+       if (!menu_abierto && recreated_zx_keyboard_support.v) {
+
+               enum util_teclas tecla_final;
+               int pressrelease_final;
+               recreated_zx_spectrum_keyboard_convert(tecla, &tecla_final, &pressrelease_final);
+               if (tecla_final) {
+               		//printf ("redefinicion de tecla\n");
+                       tecla=tecla_final;
+                       pressrelease=pressrelease_final;
+                       //Si sigue estando entre a-z y 0-9 enviar tal cual. Si no, llamar a util_set_reset_key
+                       if (
+                       	(tecla>='a' && tecla<='z') ||
+                       	(tecla>='0' && tecla<='9')
+                       	)
+                       {
+                       	//Nada. Prefiero escribir la condicion asi que no poner un negado
+                       }
+
+                       else {
+                       	util_set_reset_key(tecla,pressrelease);
+                       	return;
+                       }
+               }
+       }
+
+
 	//Redefinicion de teclas
 	z80_byte tecla_redefinida;
 	tecla_redefinida=util_redefinir_tecla(tecla);
@@ -4973,6 +4999,18 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
 
 void util_set_reset_key(enum util_teclas tecla,int pressrelease)
 {
+
+	//Si teclado recreated, y menu cerrado
+	if (!menu_abierto && recreated_zx_keyboard_support.v) {
+
+		enum util_teclas tecla_final;
+		int pressrelease_final;
+		recreated_zx_spectrum_keyboard_convert(tecla, &tecla_final, &pressrelease_final);
+		if (tecla_final) {
+			tecla=tecla_final;
+			pressrelease=pressrelease_final;
+		}
+	}
 
 	if (chloe_keyboard.v) {
 		//Ver si tecla que se pulsa es shift
