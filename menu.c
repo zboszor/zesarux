@@ -14858,11 +14858,19 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 	int retorno_menu;
         do {
 
+        	//Redefine keys
+		menu_add_item_menu_inicial_format(&array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_redefine_keys,NULL,"Rede~~fine keys");
+		menu_add_item_menu_shortcut(array_menu_hardware_settings,'f');
+		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Redefine one key to another");
+		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Redefine one key to another");
 
-		menu_add_item_menu_inicial_format(&array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_keyboard_issue,menu_hardware_keyboard_issue_cond,"~~Keyboard Issue %s", (keyboard_issue2.v==1 ? "2" : "3"));
-		menu_add_item_menu_shortcut(array_menu_hardware_settings,'k');
-		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Type of Spectrum keyboard emulated");
-		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Changes the way the Spectrum keyboard port returns its value: Issue 3 returns bit 6 off, and Issue 2 has bit 6 on");
+
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_keyboard_issue,menu_hardware_keyboard_issue_cond,"~~Keyboard Issue %s", (keyboard_issue2.v==1 ? "2" : "3"));
+			menu_add_item_menu_shortcut(array_menu_hardware_settings,'k');
+			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Type of Spectrum keyboard emulated");
+			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Changes the way the Spectrum keyboard port returns its value: Issue 3 returns bit 6 off, and Issue 2 has bit 6 on");
+		}
 
 
 		//Soporte para Azerty keyboard
@@ -14876,6 +14884,18 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_chloe_keyboard,NULL,"Chloe Keyboard: %s",(chloe_keyboard.v ? "Yes" : "No") );
+		}
+
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_spectrum_keyboard_matrix_error,NULL,"Speccy keyb. ghosting: %s",
+					(keyboard_matrix_error.v ? "Yes" : "No") );
+			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Enables real keyboard emulation, even with the keyboard matrix error");
+			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Enables real keyboard emulation, even with the keyboard matrix error.\n"
+						"This is the error/feature that returns more key pressed than the real situation, for example, "
+						"pressing keys ASQ, will return ASQW. Using a pc keyboard is difficult to test that effect, because "
+						"that most of them can return more than two or three keys pressed at a time. But using the on-screen keyboard "
+						"and also the Recreated Keyboard, you can test it");
+
 		}
 
 		if (MACHINE_IS_Z88 || MACHINE_IS_CPC || chloe_keyboard.v || MACHINE_IS_SAM || MACHINE_IS_QL)  {
@@ -14899,14 +14919,10 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		//Redefine keys
-		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_redefine_keys,NULL,"Rede~~fine keys");
-		menu_add_item_menu_shortcut(array_menu_hardware_settings,'f');
-		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Redefine one key to another");
-		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Redefine one key to another");
 
 
-		//Redefine keys
+
+		//Set F keys functions
 		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_set_f_functions,NULL,"Set F keys fu~~nctions");
 		menu_add_item_menu_shortcut(array_menu_hardware_settings,'n');
 		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Assign actions to F keys");
@@ -14967,10 +14983,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 		}
 
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_spectrum_keyboard_matrix_error,NULL,"Speccy keyb. ghosting: %s",
-					(keyboard_matrix_error.v ? "Yes" : "No") );
-		}
+		
 
 
 

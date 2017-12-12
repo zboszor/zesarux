@@ -5116,9 +5116,9 @@ z80_byte teclado_matrix_puerto_final(z80_byte puerto_h)
 
     if (MACHINE_IS_SPECTRUM && keyboard_matrix_error.v) {
 
-        char puerto_binario[9];
+        //char puerto_binario[9];
         
-        util_byte_to_binary(puerto_h,puerto_binario);
+        //util_byte_to_binary(puerto_h,puerto_binario);
         //printf ("Port to read: %02XH (%s) ",puerto_h,puerto_binario);
 
         for (i=0;i<8;i++) {
@@ -5126,7 +5126,7 @@ z80_byte teclado_matrix_puerto_final(z80_byte puerto_h)
           mascara=mascara<<1;
         }
 
-        util_byte_to_binary(final_puerto_h,puerto_binario);
+        //util_byte_to_binary(final_puerto_h,puerto_binario);
         //printf ("Port finally read: %02XH (%s)\n",final_puerto_h,puerto_binario);
 
     }
