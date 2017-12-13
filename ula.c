@@ -286,6 +286,12 @@ En SDL también le afecta la localización
 
 */
 
+/*
+NOTA: Esta funcion es sensible los valores de teclas. Si algun "UTIL_KEY_**" de estos llega a tener valor>31, puede que al redefinir
+una tecla (ascii>=32) llegue a pensar que se trata de algun simbolo UTIL_KEY
+Por lo que hay que tener cuidado de no usar aqui valores de UTIL_KEY que sean mayores de 31
+*/
+
     if (recreated_zx_keyboard_pressed_caps.v && tecla>='a' && tecla<='z')  tecla-=32;
 
     //Desde la a-z y A-Z tenemos una tabla
