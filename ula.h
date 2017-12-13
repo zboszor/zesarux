@@ -78,5 +78,6 @@ extern z80_bit keyboard_matrix_error;
 
 extern void recreated_zx_spectrum_keyboard_convert(int tecla, enum util_teclas *tecla_final, int *pressrelease);
 extern z80_bit recreated_zx_keyboard_support;
+extern z80_bit recreated_zx_keyboard_pressed_caps;
 
 #endif

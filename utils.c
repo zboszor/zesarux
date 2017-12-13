@@ -2982,6 +2982,9 @@ int util_write_configfile(void)
   //TODO printerbitmapfile
   //TODO printertextfile
   //TODO redefinekey
+
+  if (recreated_zx_keyboard_support.v)	      ADD_STRING_CONFIG,"--recreatedzx");
+
   if (autoload_snapshot_on_start.v)           ADD_STRING_CONFIG,"--autoloadsnap");
   if (autosave_snapshot_on_exit.v)            ADD_STRING_CONFIG,"--autosavesnap");
   if (autosave_snapshot_path_buffer[0]!=0) {
@@ -3501,17 +3504,26 @@ void convert_numeros_letras_puerto_teclado_continue(z80_byte tecla,int pressrele
                int pressrelease_final;
                recreated_zx_spectrum_keyboard_convert(tecla, &tecla_final, &pressrelease_final);
                if (tecla_final) {
-               		//printf ("redefinicion de tecla\n");
+               		//printf ("redefinicion de tecla. antes: %d despues: %d\n",tecla,tecla_final);
                        tecla=tecla_final;
                        pressrelease=pressrelease_final;
+
+			if (tecla==UTIL_KEY_CAPS_SHIFT) {
+				//printf ("Pulsada caps shift (%d)\n",UTIL_KEY_CAPS_SHIFT);
+				util_set_reset_key(tecla,pressrelease);
+				return;
+			}
+
                        //Si sigue estando entre a-z y 0-9 enviar tal cual. Si no, llamar a util_set_reset_key
                        if (
                        	(tecla>='a' && tecla<='z') ||
-                       	(tecla>='0' && tecla<='9')
+                       	(tecla>='0' && tecla<='9') 
                        	)
                        {
                        	//Nada. Prefiero escribir la condicion asi que no poner un negado
                        }
+
+                       //recreated_zx_keyboard_pressed_caps
 
                        else {
                        	util_set_reset_key(tecla,pressrelease);
@@ -5005,6 +5017,15 @@ void util_set_reset_key(enum util_teclas tecla,int pressrelease)
 
 		enum util_teclas tecla_final;
 		int pressrelease_final;
+
+		//Si es mayusculas
+		if (tecla==UTIL_KEY_SHIFT_L) {
+			//printf ("Pulsada shift L real\n");
+			if (pressrelease) recreated_zx_keyboard_pressed_caps.v=1;
+			else recreated_zx_keyboard_pressed_caps.v=0;
+			return;
+		}
+
 		recreated_zx_spectrum_keyboard_convert(tecla, &tecla_final, &pressrelease_final);
 		if (tecla_final) {
 			tecla=tecla_final;
@@ -5531,6 +5552,8 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
                         break;
 
                         case UTIL_KEY_SHIFT_L:
+                        case UTIL_KEY_CAPS_SHIFT:
+
                                 if (pressrelease) {
                                         puerto_65278  &=255-1;
                                         blink_kbd_a14 &= (255-64);

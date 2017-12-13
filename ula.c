@@ -81,6 +81,8 @@ z80_bit ula_disabled_rom_paging={0};
 
 z80_bit recreated_zx_keyboard_support={0};
 
+z80_bit recreated_zx_keyboard_pressed_caps={0};
+
 void ula_pentagon_timing_common(void)
 {
 
@@ -284,6 +286,8 @@ En SDL también le afecta la localización
 
 */
 
+    if (recreated_zx_keyboard_pressed_caps.v && tecla>='a' && tecla<='z')  tecla-=32;
+
     //Desde la a-z y A-Z tenemos una tabla
     //char recreated_key_table_minus[]="1234567890QWE";
     //char recreated_key_table_mayus[]="RTYUIOPASDFGH";
@@ -354,13 +358,14 @@ En SDL también le afecta la localización
         break;
 
         case '8':
+            //printf ("Pulsada 8\n");
             *pressrelease=1;
-            *tecla_final=UTIL_KEY_SHIFT_L;
+            *tecla_final=UTIL_KEY_CAPS_SHIFT;  //Para caps shift spectrum
         break;
 
         case '9':
             *pressrelease=0;
-            *tecla_final=UTIL_KEY_SHIFT_L;
+            *tecla_final=UTIL_KEY_CAPS_SHIFT;
         break;
 
 

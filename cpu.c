@@ -1413,6 +1413,7 @@ printf (
                 "                           Key must be ascii character numbers or a character included in escaped quotes, like: 97 (for 'a') or \\'q\\'\n"
                 "                           (the escaped quotes are used only in command line; on configuration file, they are normal quotes '')\n"
 
+                "--recreatedzx              Enable support for Recreated ZX Spectrum Keyboard\n"
 
 
 		);
@@ -4681,6 +4682,10 @@ void parse_cmdline_options(void) {
 				if (util_add_redefinir_tecla(tecla_original,tecla_redefinida)) {
 					exit(1);
 				}
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--recreatedzx")) {
+				recreated_zx_keyboard_support.v=1;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--enablekempstonmouse")) {
