@@ -27008,6 +27008,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									//Copy
 									if (tecla=='C') {
 										file_utils_move_rename_copy_file(file_utils_file_selected,2);
+										//Restaurar variables globales que se alteran al llamar al otro filesel
+										//TODO: hacer que estas variables no sean globales sino locales de esta funcion menu_filesel
+										filesel_filtros_iniciales=filtros;
+										filesel_filtros=filtros;
+										
 										releer_directorio=1;
 									}
 
