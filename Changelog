@@ -9,6 +9,7 @@ Improved joystick support: added joystick test menu, buttons to events and butto
 Improved OSD keyboard: now you can press up to all 40 keys (on Spectrum/ZX80/ZX81) at the same time
 Added Spectrum keyboard ghosting error feature
 Added ZX Spectrum Recreated keyboard support
+Added actions to file utilities: Copy, Move, Rename
 
 Version 6.0. 27 November 2017 - Gunfright edition
 

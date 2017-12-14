@@ -25863,7 +25863,7 @@ void menu_filesel_print_legend(void)
 		menu_writing_inverse_color.v=1;
 
 		menu_escribe_linea_opcion(FILESEL_POS_FILTER-1,-1,1,"~~View ~~Truncate ~~Delete m~~Kdir");
-		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Move ~~Rename");
+		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Copy ~~Move ~~Rename");
 
 		//Restaurar comportamiento mostrar atajos
 		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
@@ -26116,8 +26116,11 @@ int si_menu_filesel_no_mas_alla_ultimo_item(int linea)
 	return 0;
 }
 
-//parametro rename: si 1, es rename, si 0, move
-void file_utils_rename_move_file(char *archivo,int rename_move)
+//parametro rename: 
+//si 0, move
+//si 1, es rename
+//si 2, copy
+void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 {
 	char nombre_sin_dir[PATH_MAX];
 	char directorio[PATH_MAX];
@@ -26130,13 +26133,15 @@ void file_utils_rename_move_file(char *archivo,int rename_move)
 
 	int ejecutar_accion=1;
 
-	if (rename_move) {
+	//Rename
+	if (rename_move==1) {
 		menu_ventana_scanf("New name",nombre_sin_dir,PATH_MAX);
 		sprintf(nombre_final,"%s/%s",directorio,nombre_sin_dir);
 	}
 
-	else {
-		//Move
+	//Copy or move
+	else if (rename_move==2 || rename_move==0) {
+		//Move or copy
 		char *filtros[2];
 
        	 	filtros[0]="";
@@ -26162,7 +26167,12 @@ void file_utils_rename_move_file(char *archivo,int rename_move)
 
         	//Si sale con ESC
         	if (ret==0) {
-                      	debug_printf (VERBOSE_DEBUG,"Move file %s to directory %s",archivo,menu_filesel_last_directory_seen);
+
+        		//Move
+                      	if (rename_move==0) debug_printf (VERBOSE_DEBUG,"Move file %s to directory %s",archivo,menu_filesel_last_directory_seen);
+
+                      	//Copy
+                      	if (rename_move==2) debug_printf (VERBOSE_DEBUG,"Copy file %s to directory %s",archivo,menu_filesel_last_directory_seen);
                 	sprintf(nombre_final,"%s/%s",menu_filesel_last_directory_seen,nombre_sin_dir);
 
         	}
@@ -26180,10 +26190,16 @@ void file_utils_rename_move_file(char *archivo,int rename_move)
 	if (ejecutar_accion) {
 		debug_printf (VERBOSE_INFO,"Original name: %s dir: %s new name %s final name %s"
 				,archivo,directorio,nombre_sin_dir,nombre_final);
-		rename(archivo,nombre_final);
+
+		if (rename_move==2) util_copy_file(archivo,nombre_final);
+		else rename(archivo,nombre_final);
 
 
-		if (rename_move) menu_generic_message("Rename file","OK. File renamed");
+		//Copy
+		if (rename_move==2) menu_generic_message("Copy file","OK. File copied");
+		//Rename
+		else if (rename_move==1) menu_generic_message("Rename file","OK. File renamed");
+		//Move
 		else menu_generic_message("Move file","OK. File moved");
 	}
 }
@@ -26941,7 +26957,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_reset_counters_tecla_repeticion();
 						
 						//Comun para acciones que usan archivo seleccionado
-						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R') {
+						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R' || tecla=='C') {
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
@@ -26973,7 +26989,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									}
 									//Move
 									if (tecla=='M') {
-										file_utils_rename_move_file(file_utils_file_selected,0);
+										file_utils_move_rename_copy_file(file_utils_file_selected,0);
 										//Restaurar variables globales que se alteran al llamar al otro filesel
 										//TODO: hacer que estas variables no sean globales sino locales de esta funcion menu_filesel
 										filesel_filtros_iniciales=filtros;
@@ -26985,7 +27001,13 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 									//Rename
 									if (tecla=='R') {
-										file_utils_rename_move_file(file_utils_file_selected,1);
+										file_utils_move_rename_copy_file(file_utils_file_selected,1);
+										releer_directorio=1;
+									}
+
+									//Copy
+									if (tecla=='C') {
+										file_utils_move_rename_copy_file(file_utils_file_selected,2);
 										releer_directorio=1;
 									}
 

@@ -581,4 +581,6 @@ extern int util_return_ceros_byte(z80_byte valor);
 
 extern void util_byte_to_binary(z80_byte value,char *texto);
 
+extern void util_copy_file(char *source_file, char *destination_file);
+
 #endif
