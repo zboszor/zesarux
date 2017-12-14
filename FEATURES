@@ -107,6 +107,10 @@
 
 -On Screen keyboard useful when playing with joystick
 
+-Emulates Spectrum keyboard ghosting error feature
+
+-ZX Spectrum Recreated keyboard support
+
 -Supports native turbo modes on ZX-Uno, Chloe, Prism and TBBlue and manual for other machines
 
 -ZX Printer emulation
