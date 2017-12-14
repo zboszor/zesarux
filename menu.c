@@ -11897,7 +11897,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
         z80_byte acumulado;
 
 
-	int realjoystick_ultimo_indice=-1; //ultimo indice leido
+	//int realjoystick_ultimo_indice=-1; //ultimo indice leido
 
 
 
@@ -14125,7 +14125,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 	int salir=0;
 
-	int indice;
+	//int indice;
 
 	do {
 
@@ -15503,6 +15503,7 @@ void menu_filesel_readdir(void)
 
 */
 
+debug_printf(VERBOSE_DEBUG,"Reading directory");
 
 filesel_total_items=0;
 primer_filesel_item=NULL;
@@ -26115,7 +26116,8 @@ int si_menu_filesel_no_mas_alla_ultimo_item(int linea)
 	return 0;
 }
 
-void file_utils_rename_file(char *archivo)
+//parametro rename: si 1, es rename, si 0, move
+void file_utils_rename_move_file(char *archivo,int rename_move)
 {
 	char nombre_sin_dir[PATH_MAX];
 	char directorio[PATH_MAX];
@@ -26126,55 +26128,66 @@ void file_utils_rename_file(char *archivo)
 
 	//void menu_ventana_scanf(char *titulo,char *texto,int max_length);
 
+	int ejecutar_accion=1;
 
-	menu_ventana_scanf("New name",nombre_sin_dir,PATH_MAX);
+	if (rename_move) {
+		menu_ventana_scanf("New name",nombre_sin_dir,PATH_MAX);
+		sprintf(nombre_final,"%s/%s",directorio,nombre_sin_dir);
+	}
 
-	sprintf(nombre_final,"%s/%s",directorio,nombre_sin_dir);
+	else {
+		//Move
+		char *filtros[2];
 
-	debug_printf (VERBOSE_INFO,"Original name: %s dir: %s new name %s final name %s",archivo,directorio,nombre_sin_dir,nombre_final);
+       	 	filtros[0]="";
+        	filtros[1]=0;
 
-	rename(archivo,nombre_final);
+
+        	//guardamos directorio actual
+        	char directorio_actual[PATH_MAX];
+        	getcwd(directorio_actual,PATH_MAX);
+
+        	int ret;
+
+
+        	char nada[PATH_MAX];
+
+
+        	//Ocultar utilidades
+        	menu_filesel_show_utils.v=0;
+        	ret=menu_filesel("Enter dir and press ESC",filtros,nada);
+        	//Volver a mostrar utilidades
+        	menu_filesel_show_utils.v=1;
+
+
+        	//Si sale con ESC
+        	if (ret==0) {
+                      	debug_printf (VERBOSE_DEBUG,"Move file %s to directory %s",archivo,menu_filesel_last_directory_seen);
+                	sprintf(nombre_final,"%s/%s",menu_filesel_last_directory_seen,nombre_sin_dir);
+
+        	}
+        	else {
+        		//TODO: hacer de manera facil que menu_filesel no deje seleccionar archivos con enter y solo deje salir con ESC
+        		menu_warn_message("You must select the directory exiting with ESC key. Aborting!");
+        		ejecutar_accion=0;
+        	}
+
+
+        	//volvemos a directorio inicial
+        	menu_filesel_chdir(directorio_actual);
+	}
+
+	if (ejecutar_accion) {
+		debug_printf (VERBOSE_INFO,"Original name: %s dir: %s new name %s final name %s"
+				,archivo,directorio,nombre_sin_dir,nombre_final);
+		rename(archivo,nombre_final);
+
+
+		if (rename_move) menu_generic_message("Rename file","OK. File renamed");
+		else menu_generic_message("Move file","OK. File moved");
+	}
 }
 
-//Creo que no puedo anidar un fileselector dentro de otro :(
-void file_utils_move_file(char *archivo)
-{
-	char *filtros[2];
-
-        filtros[0]="";
-        filtros[1]=0;
-
-
-        //guardamos directorio actual
-        char directorio_actual[PATH_MAX];
-        getcwd(directorio_actual,PATH_MAX);
-
-        int ret;
-
-
-        char nada[PATH_MAX];
-
-
-        ret=menu_filesel("Enter dir and press ESC",filtros,nada);
-
-
-        //Si sale con ESC
-        if (ret==0) {
-                //Directorio root esxdos
-                //sprintf (esxdos_handler_root_dir,"%s",menu_filesel_last_directory_seen);
-                //debug_printf (VERBOSE_DEBUG,"Selected directory: %s",esxdos_handler_root_dir);
-
-                //directorio esxdos vacio
-                //esxdos_handler_cwd[0]=0;
-                printf ("Mover archivo %s a directorio %s\n",archivo,menu_filesel_last_directory_seen);
-
-        }
-
-
-        //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
-
-}
 
 void menu_filesel_cursor_abajo(void)
 {
@@ -26551,6 +26564,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		menu_filesel_print_filters(filesel_filtros);
 		menu_filesel_print_legend();
 		menu_filesel_readdir();
+		//printf ("despues leer directorio\n");
 
 		int releer_directorio=0;
 
@@ -26958,15 +26972,20 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 									}
 									//Move
-									/*if (tecla=='M') {
-										file_utils_move_file(file_utils_file_selected);
+									if (tecla=='M') {
+										file_utils_rename_move_file(file_utils_file_selected,0);
+										//Restaurar variables globales que se alteran al llamar al otro filesel
+										//TODO: hacer que estas variables no sean globales sino locales de esta funcion menu_filesel
+										filesel_filtros_iniciales=filtros;
+										filesel_filtros=filtros;
+		
 										releer_directorio=1;
 
-									}*/
+									}
 
 									//Rename
 									if (tecla=='R') {
-										file_utils_rename_file(file_utils_file_selected);
+										file_utils_rename_move_file(file_utils_file_selected,1);
 										releer_directorio=1;
 									}
 
