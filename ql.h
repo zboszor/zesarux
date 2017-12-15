@@ -90,5 +90,7 @@ extern int ql_pressed_backspace;
 
 extern int ql_pulsado_tecla(void);
 
+extern void ql_rom_traps(void);
+
 
 #endif
