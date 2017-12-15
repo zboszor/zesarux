@@ -32,6 +32,11 @@ cosa que ahora consigo mostrar sectores libres/usados aunque no aparece el nombr
 
 -Intento cargar programas basic con load/lrun interceptando IO.FLINE pero no consigo que al cargar vea los datos...
 
+-teniendo desactivada la emulacion de microdrive , igualmente consulta cosas al root path
+Debug: Source path: MDV1_BOOT Device: mdv1 File: boot
+Paranoid: File /Users/chernandezba/Documents/ZEsarUX/zesarux/extras/media/ql/spacepods/boot not found
+
+
 
 -- Fin estado funciones microdrive QL
 
