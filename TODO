@@ -30,6 +30,8 @@ si desactivo todo trap de rom de ql, se queda colgado despues del menu inicial, 
 si no desactivo traps, no parece llegar tampoco ahi, aunque esto me ha llevado a interceptar el trap FS.MDINF, que se usa en dir mdv1_,
 cosa que ahora consigo mostrar sectores libres/usados aunque no aparece el nombre del microdrive (registro A1 donde hay que guardar eso contiene direccion 100H !)
 
+-Intento cargar programas basic con load/lrun interceptando IO.FLINE pero no consigo que al cargar vea los datos...
+
 
 -- Fin estado funciones microdrive QL
 
