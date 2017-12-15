@@ -1382,7 +1382,7 @@ z80_byte fetch_opcode_legacy_ql(void)
 
 
 //Numero de canal ficticio para archivos que se abran mdv o flp, para distinguirlos de los que gestiona el sistema
-#define QL_ID_CANAL_INVENTADO_MICRODRIVE 1
+#define QL_ID_CANAL_INVENTADO_MICRODRIVE 32
 
 //char ql_nombre_archivo_load[255];
 
@@ -1466,6 +1466,10 @@ unsigned int pre_fs_load_d[8];
 
 unsigned int pre_fs_mdinf_a[8];
 unsigned int pre_fs_mdinf_d[8];
+
+
+unsigned int pre_io_fline_a[8];
+unsigned int pre_io_fline_d[8];
 
 void ql_store_a_registers(unsigned int *destino, int ultimo)
 {
@@ -1621,6 +1625,9 @@ void core_ql_trap_three(void)
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
     case 0x2:
       debug_printf(VERBOSE_PARANOID,"Trap 3: IO.FLINE. fetch a line of bytes");
+      	      //Guardar registros
+      ql_store_a_registers(pre_io_fline_a,7);
+      ql_store_d_registers(pre_io_fline_d,7);
     break;
 
     case 0x4:
@@ -2124,6 +2131,71 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           ql_writebyte(reg_a1++,'D');
           ql_writebyte(reg_a1++,' '); //10
           m68k_set_reg(M68K_REG_A1,reg_a1);
+
+
+
+        }
+    }
+
+
+//Trap 3 IO.FLINE
+    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x2 && ql_microdrive_floppy_emulation) {
+        debug_printf (VERBOSE_PARANOID,"IO.FLINE. Channel ID=%d Base of buffer A1=%08XH",
+        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1) );
+
+        //Si canal es el mio ficticio 100
+        if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
+
+        	//printf ("Mi canal MDINF\n");
+        	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from our microdrive channel without error");
+
+
+        	ql_restore_d_registers(pre_io_fline_d,7);
+          	ql_restore_a_registers(pre_io_fline_a,6);
+
+          	/*
+          	D0=$2 IO.FLlNE fetch a line of characters terminated by ASCII <LF> ($A)
+		D0=$3 IO.FSTRG fetch a string of bytes
+          	*/
+
+          	/*
+          	Entrada:
+          	D2.W length of buffer
+          	D3.W timeout
+          	A0 channel lD
+          	A1 base of buffer
+
+          	Salida:
+          	D1.W nr. of bytes fetched
+          	A1 updated ptr to buffer
+
+          	Errores:
+          	NC not complete
+          	NO channel not open
+          	EF end of file
+          	B0 buffer overflow (fetch line only)
+
+          	*/
+
+          	//temp
+          	//1 byte leido
+          	m68k_set_reg(M68K_REG_D1,1);
+        	
+          
+          //Volver de ese trap
+          m68k_set_reg(M68K_REG_PC,0x5e);
+          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+          reg_a7 +=12;
+          m68k_set_reg(M68K_REG_A7,reg_a7);
+
+          //No error.
+          m68k_set_reg(M68K_REG_D0,0);
+
+
+          	//temp eof
+          	m68k_set_reg(M68K_REG_D0,-10);
+
+         
 
 
 
