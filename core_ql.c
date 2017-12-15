@@ -81,8 +81,9 @@ void cpu_core_loop_ql(void)
 
 
 
-
-                ql_rom_traps();
+                //temp condicion
+                //if (ql_microdrive_floppy_emulation) 
+                  ql_rom_traps();
 
 
 
