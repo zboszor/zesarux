@@ -1890,11 +1890,9 @@ PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A
       //A7=0002847AH
       //Incrementar A7 en 12
       //set-register pc=5eh. apunta a un rte
+
       if (ql_si_ruta_mdv_flp(ql_nombre_archivo_load)) {
-      //char *buscar="mdv";
-      //char *encontrado;
-      //encontrado=util_strcasestr(ql_nombre_archivo_load, buscar);
-      //if (encontrado) {
+
         debug_printf (VERBOSE_PARANOID,"Returning from trap without opening anything because file is mdv1, mdv2 or flp1");
 
         //ql_debug_force_breakpoint("En IO.OPEN");
@@ -2042,10 +2040,10 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	ql_restore_a_registers(pre_fs_mdinf_a,6);
 
         	//Retornamos :
-        	//D1.L empty/good sectors
-        	//A1 end of medium name  (entrada: A1 ptr to 10 byte buffer)
-
-        	m68k_set_reg(M68K_REG_D1,0); //0 sectores libres
+        	//D1.L empty/good sectors. The number of empty sectors is in the most significant word (msw) of D1, 
+        	//the total available on the medium is in the least significant word (lsw). A sector is 512 bytes.
+        	//de momento ,MDV files in QLAY format. Thee files must be exactly 174930 bytes 174930/512->aprox 341
+        	m68k_set_reg(M68K_REG_D1,341); //0 sectores libres, 341 sectores ocupados
 
         	
           
@@ -2062,6 +2060,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           //m68k_set_reg(M68K_REG_D1,64);
 
           //Devolver medium name
+          //A1 end of medium name  (entrada: A1 ptr to 10 byte buffer)
+
           unsigned int reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
           ql_writebyte(reg_a1++,'Z');
           ql_writebyte(reg_a1++,'E');

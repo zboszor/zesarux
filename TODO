@@ -6,7 +6,7 @@
 --set-breakpoint 2 "D0=47H and PC=0032AH" 
 
 
-QL Estado a 13 de Mayo
+QL Estado a 15 diciembre
 -tanto lrun como load programa en basic borra la pantalla e inicializa  el basic pero no llama a cargar datos de microdrive
 muestran misma basura por pantalla que salia cuando tenia el trap de boot
 -si existe un archivo llamado "MDV1_BOOT" acaba sacando la misma basura por pantalla
@@ -25,7 +25,10 @@ A channel number (#n) is an index to an entry in the SuperBASIC channel table. T
 The format of each table entry is as follows:
 
 
-
+-Intento interceptar funciones de lectura de sectores de microdrive. MD.READ. aparentemente tiene que saltar desde la direccion 525CH pero ahi no parece saltar nunca,
+si desactivo todo trap de rom de ql, se queda colgado despues del menu inicial, seguramente intentando detectar microdrive
+si no desactivo traps, no parece llegar tampoco ahi, aunque esto me ha llevado a interceptar el trap FS.MDINF, que se usa en dir mdv1_,
+cosa que ahora consigo mostrar sectores libres/usados aunque no aparece el nombre del microdrive (registro A1 donde hay que guardar eso contiene direccion 100H !)
 
 
 -- Fin estado funciones microdrive QL
