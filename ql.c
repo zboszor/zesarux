@@ -1409,10 +1409,21 @@ void core_ql_trap_one(void)
 
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
 
-      case 0x01:
+      case 0x00:
         debug_printf (VERBOSE_PARANOID,"Trap 1: MT.INF");
-        //ql_debug_force_breakpoint("despues MT.INF");
       break;
+
+      case 0x01:
+        debug_printf (VERBOSE_PARANOID,"Trap 1: MT.CJOB");
+      break;
+
+      case 0x0C:
+        debug_printf (VERBOSE_PARANOID,"Trap 1: MT.ALLOC");
+      break;  
+
+      case 0x0D:
+        debug_printf (VERBOSE_PARANOID,"Trap 1: MT.LNKFR");
+      break;      
 
       case 0x10:
         debug_printf (VERBOSE_PARANOID,"Trap 1: MT.DMODE");
@@ -1443,6 +1454,8 @@ void core_ql_trap_one(void)
 unsigned int pre_io_open_a[8];
 unsigned int pre_io_open_d[8];
 
+unsigned int pre_io_close_a[8];
+unsigned int pre_io_close_d[8];
 
 unsigned int pre_fs_headr_a[8];
 unsigned int pre_fs_headr_d[8];
@@ -1527,6 +1540,8 @@ void core_ql_trap_two(void)
 
       case 2:
         debug_printf(VERBOSE_PARANOID,"Trap 1. IO.CLOSE");
+        ql_store_a_registers(pre_io_close_a,7);
+        ql_store_d_registers(pre_io_close_d,7);
       break;
 
       default:
@@ -1979,6 +1994,41 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
     }
 
+
+
+    //IO.CLOSE
+    if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==2) {
+    	debug_printf (VERBOSE_PARANOID,"IO.CLOSE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
+      
+      	//Si canal es el mio ficticio 
+        if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
+
+        	debug_printf (VERBOSE_PARANOID,"Returning IO.CLOSE from our microdrive channel without error");
+
+       	 	ql_restore_d_registers(pre_io_close_d,7);
+        	ql_restore_a_registers(pre_io_close_a,6);
+       
+
+
+        	//Volver de ese trap
+        	m68k_set_reg(M68K_REG_PC,0x5e);
+        	//Ajustar stack para volver
+        	int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+        	reg_a7 +=12;
+        	m68k_set_reg(M68K_REG_A7,reg_a7);
+
+
+        	//No error.
+        	m68k_set_reg(M68K_REG_D0,0);
+
+
+       }
+
+    }
+
+
+
+
     //Interceptar trap 3
     /*
     trap 3 salta a:
@@ -2033,7 +2083,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         //Si canal es el mio ficticio 100
         if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
 
-        	printf ("Mi canal MDINF\n");
+        	//printf ("Mi canal MDINF\n");
 
 
         	ql_restore_d_registers(pre_fs_mdinf_d,7);
