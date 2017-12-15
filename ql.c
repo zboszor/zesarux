@@ -1756,7 +1756,7 @@ int ql_si_ruta_mdv_flp(char *texto)
   return 0;
 }
 
-
+int temp_fs_line=0;
 
 void ql_rom_traps(void)
 {
@@ -2138,10 +2138,12 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
     }
 
 
+
+
 //Trap 3 IO.FLINE
     if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x2 && ql_microdrive_floppy_emulation) {
-        debug_printf (VERBOSE_PARANOID,"IO.FLINE. Channel ID=%d Base of buffer A1=%08XH",
-        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1) );
+        debug_printf (VERBOSE_PARANOID,"IO.FLINE. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH",
+        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),m68k_get_reg(NULL,M68K_REG_A6) );
 
         //Si canal es el mio ficticio 100
         if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
@@ -2178,8 +2180,33 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	*/
 
           	//temp
-          	//1 byte leido
-          	m68k_set_reg(M68K_REG_D1,1);
+          	//9 byte leido
+          	m68k_set_reg(M68K_REG_D1,9);
+
+
+          	unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+          	//puntero_destino=131072;
+
+          	m68k_set_reg(M68K_REG_A1,puntero_destino);
+
+          	printf ("Writing IO.FLINE data to %08XH\n",puntero_destino);
+
+
+
+          	//temp cambiar base
+          	//m68k_set_reg(M68K_REG_A1,131072);
+
+          	ql_writebyte(puntero_destino+0,'1');
+          	ql_writebyte(puntero_destino+1,' ');
+          	ql_writebyte(puntero_destino+2,'R');
+          	ql_writebyte(puntero_destino+3,'E');
+          	ql_writebyte(puntero_destino+4,'M');
+          	ql_writebyte(puntero_destino+5,'a');
+          	ql_writebyte(puntero_destino+6,'r');
+          	ql_writebyte(puntero_destino+7,'k');
+          	ql_writebyte(puntero_destino+8,10);
+
+          	//"1 REM<10>"
         	
           
           //Volver de ese trap
@@ -2188,12 +2215,22 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           reg_a7 +=12;
           m68k_set_reg(M68K_REG_A7,reg_a7);
 
+
+
           //No error.
           m68k_set_reg(M68K_REG_D0,0);
 
 
-          	//temp eof
+          if (temp_fs_line) {
+	          	//temp eof
+          
           	m68k_set_reg(M68K_REG_D0,-10);
+          	printf ("Retornar EOF\n");
+          	m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
+
+          }
+
+          temp_fs_line ^=1;
 
          
 
