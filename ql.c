@@ -2182,6 +2182,9 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         	//Registro de salida A1 a donde debe apuntar??
         	unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
 
+        	//O a A1 a secas
+        	//depende de si se ha llamado trap4 o no
+
           	ql_restore_d_registers(pre_io_fline_d,7);
           	ql_restore_a_registers(pre_io_fline_a,6);
 
@@ -2190,24 +2193,26 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),m68k_get_reg(NULL,M68K_REG_A6) );
 
 
+        if (temp_fs_line) {
+	          	//temp eof
+          
+          	m68k_set_reg(M68K_REG_D0,-10);
+          	printf ("Retornar EOF\n");
+          	m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
+
+          }
+
+
+          else {
+
           	//temp
           	//9 byte leido
           	m68k_set_reg(M68K_REG_D1,9);
 
 
-          	
-          	//puntero_destino=131072;
-
-          	m68k_set_reg(M68K_REG_A1,puntero_destino);
-
-          	//m68k_set_reg(M68K_REG_A1,0x109); //temp
 
           	printf ("Writing IO.FLINE data to %08XH\n",puntero_destino);
 
-
-
-          	//temp cambiar base
-          	//m68k_set_reg(M68K_REG_A1,131072);
 
           	ql_writebyte(puntero_destino+0,'1');
           	ql_writebyte(puntero_destino+1,' ');
@@ -2220,6 +2225,18 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	ql_writebyte(puntero_destino+8,10);
 
           	//"1 REM<10>"
+
+          	//Aumentar puntero A1
+          	unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
+          	registro_a1 +=9;
+          	m68k_set_reg(M68K_REG_A1,registro_a1);
+
+
+        	  //No error.
+          	m68k_set_reg(M68K_REG_D0,0);
+
+  	}
+
         	
           
           //Volver de ese trap
@@ -2230,18 +2247,9 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
 
-          //No error.
-          m68k_set_reg(M68K_REG_D0,0);
 
 
-          if (temp_fs_line) {
-	          	//temp eof
-          
-          	m68k_set_reg(M68K_REG_D0,-10);
-          	printf ("Retornar EOF\n");
-          	m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
-
-          }
+  
 
           temp_fs_line ^=1;
 
