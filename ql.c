@@ -2286,13 +2286,15 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         	//Dudas!! Donde se guarda los datos leidos? En A1+A6??
         	//Registro de salida A1 a donde debe apuntar??
-        	unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+        	//unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
 
         	//O a A1 a secas
         	//depende de si se ha llamado trap4 o no
 
           	ql_restore_d_registers(pre_io_fline_d,7);
           	ql_restore_a_registers(pre_io_fline_a,6);
+
+          	unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
 
 
           	debug_printf (VERBOSE_PARANOID,"IO.FLINE - restoreg registers. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH",
