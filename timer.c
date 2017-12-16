@@ -569,6 +569,14 @@ void timer_check_interrupt(void)
                                         }
                                 }
 
+				//temporizador de impresion para escribir texto mdflp ql en pantalla
+                                if (ql_mdflp_operating_counter) {
+                                        ql_mdflp_operating_counter--;
+                                        if (ql_mdflp_operating_counter==0) {
+                                                delete_ql_mdflp_text();
+                                        }
+                                }
+
 																//temporizador de impresion para escribir texto flash superupgrade en pantalla
 																if (superupgrade_flash_operating_counter) {
 																        superupgrade_flash_operating_counter--;

@@ -10,6 +10,7 @@
 #include "utils.h"
 #include "menu.h"
 #include "operaciones.h"
+#include "screen.h"
 
 
 #if defined(__APPLE__)
@@ -86,6 +87,35 @@ z80_byte ql_keyboard_table[8]={
 	255,
 	255
 };
+
+
+int ql_mdflp_operating_counter=0;
+
+void ql_footer_print_mdflp_operating(void)
+{
+        if (ql_mdflp_operating_counter) {
+                //color inverso
+                menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_MDFLP,1," MDFLP ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+        }
+}
+
+void ql_footer_mdflp_operating(void)
+{
+
+        //Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
+        if (!ql_mdflp_operating_counter) {
+
+                ql_mdflp_operating_counter=2;
+                ql_footer_print_mdflp_operating();
+
+        }
+}
+
+
+void delete_ql_mdflp_text(void)
+{
+        menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_MDFLP,1,"       ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+}
 
 //adicionales
 int ql_pressed_backspace=0;
@@ -2358,7 +2388,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from our microdrive channel without error");
 
-
+        	 //Indicar actividad en md flp
+        	ql_footer_mdflp_operating();
 
 
           	/*
@@ -2612,6 +2643,9 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
             debug_printf (VERBOSE_PARANOID,"Loading file %s at address %05XH with lenght: %d",ql_full_path_load,m68k_get_reg(NULL,M68K_REG_A1),longitud);
             //void load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
+
+             //Indicar actividad en md flp
+        	ql_footer_mdflp_operating();
 
             //longitud la saco del propio archivo, ya que no me llega bien de momento pues no retornaba bien fs.headr
             //int longitud=get_file_size(ql_nombre_archivo_load);

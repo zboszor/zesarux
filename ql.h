@@ -92,5 +92,7 @@ extern int ql_pulsado_tecla(void);
 
 extern void ql_rom_traps(void);
 
+extern int ql_mdflp_operating_counter;
+
 
 #endif
