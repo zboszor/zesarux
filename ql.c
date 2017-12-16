@@ -1457,6 +1457,9 @@ unsigned int pre_io_open_d[8];
 unsigned int pre_io_close_a[8];
 unsigned int pre_io_close_d[8];
 
+unsigned int pre_io_sstrg_a[8];
+unsigned int pre_io_sstrg_d[8];
+
 unsigned int pre_fs_headr_a[8];
 unsigned int pre_fs_headr_d[8];
 
@@ -1637,6 +1640,9 @@ void core_ql_trap_three(void)
 
     case 0x7:
       debug_printf (VERBOSE_PARANOID,"Trap 3: IO.SSTRG");
+      //Guardar registros
+      ql_store_a_registers(pre_io_sstrg_a,7);
+      ql_store_d_registers(pre_io_sstrg_d,7);
     break;
 
     case 0x45:
@@ -2027,11 +2033,6 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         debug_printf (VERBOSE_PARANOID,"Returning from trap without opening anything because file is mdv");
 
-        
-
-        //D2,D3,A2,A3 se tienen que preservar, segun dice el trap.
-        //Segun la info general de los traps, tambien se deben guardar de D4 a D7 y A4 a A6. Directamente guardo todos los D y A excepto A7
-
         ql_restore_d_registers(pre_io_open_d,7);
         ql_restore_a_registers(pre_io_open_a,6);
         //ql_restore_a_registers(pre_io_open_a,7);
@@ -2044,9 +2045,6 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
         reg_a7 +=12;
         m68k_set_reg(M68K_REG_A7,reg_a7);
-
-
-
         
 
         //No error.
@@ -2205,7 +2203,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
 
-//Trap 3 IO.FLINE
+	//Trap 3 IO.FLINE
     if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x2 && ql_microdrive_floppy_emulation) {
         debug_printf (VERBOSE_PARANOID,"IO.FLINE. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH",
         		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),m68k_get_reg(NULL,M68K_REG_A6) );
@@ -2262,7 +2260,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 	          	//temp eof
           
           	m68k_set_reg(M68K_REG_D0,-10);
-          	printf ("Retornar EOF\n");
+          	debug_printf (VERBOSE_PARANOID,"IO.FLINE - returning EOF");
           	m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
 
           }
@@ -2297,6 +2295,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	m68k_set_reg(M68K_REG_A1,registro_a1);
 
 
+
         	  //No error. 
           	m68k_set_reg(M68K_REG_D0,0);
 
@@ -2325,6 +2324,90 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         }
     }
 
+
+
+//Trap 3 IO.SSTRG
+    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x7 && ql_microdrive_floppy_emulation) {
+        debug_printf (VERBOSE_PARANOID,"IO.SSTRG. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%08XH",
+        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
+        		m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_D2) );
+
+        //Si canal es el mio ficticio 100
+        if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
+
+        	
+        	debug_printf (VERBOSE_PARANOID,"Returning IO.SSTRG from our microdrive channel without error");
+
+
+
+
+          	/*
+          	Entrada:
+          	D2.W nr of bytes to be sent
+          	D3.W timeout
+          	A0 channel ID
+          	A1 base of buffer
+
+          	Salida:
+          	D1.W nr. of bytes sent
+          	A1 updated ptr to buffer
+
+          	Errores:
+          	NC not complete
+          	NO channel not open
+          	EF end of file
+          	B0 buffer overflow (fetch line only)
+
+          	*/
+
+        	
+        	unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+
+        	//O a A1 a secas
+        	//depende de si se ha llamado trap4 o no
+
+          	ql_restore_d_registers(pre_io_sstrg_d,7);
+          	ql_restore_a_registers(pre_io_sstrg_a,6);
+
+
+          	debug_printf (VERBOSE_PARANOID,"IO.SSTRG - restoreg registers. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%08XH",
+        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
+        		m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_D2) );
+
+
+        
+
+
+          
+
+          	//bytes enviados 
+          	m68k_set_reg(M68K_REG_D1,m68k_get_reg(NULL,M68K_REG_D2) );
+
+
+          	//Aumentar puntero A1
+          	unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
+          	registro_a1 +=m68k_get_reg(NULL,M68K_REG_D2);
+          	m68k_set_reg(M68K_REG_A1,registro_a1);
+
+
+
+        	  //No error. 
+          	m68k_set_reg(M68K_REG_D0,0);
+
+  	
+
+        	
+          
+          //Volver de ese trap
+          m68k_set_reg(M68K_REG_PC,0x5e);
+          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+          reg_a7 +=12;
+          m68k_set_reg(M68K_REG_A7,reg_a7);
+
+
+
+        }
+    }
 
 
 
