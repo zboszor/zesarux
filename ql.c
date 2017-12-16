@@ -1781,6 +1781,100 @@ int ql_si_ruta_mdv_flp(char *texto)
 
 int temp_fs_line=0;
 
+
+
+FILE *ptr_io_fline=NULL;
+int next_eof_ptr_io_fline=0;
+
+//Leer archivo linea a linea. Retorna bytes leidos, y valor de retorno. 
+//Si hay eof, se debe retornar solo el eof y sin bytes leidos
+
+unsigned int ql_read_io_fline(unsigned int puntero_destino,unsigned int *valor_retorno)
+{
+
+
+	//Si habia final de fichero, retornar solo eso
+	if (next_eof_ptr_io_fline) {
+		debug_printf (VERBOSE_PARANOID,"Returning eof");
+		next_eof_ptr_io_fline=0;
+		*valor_retorno=-10;
+		return 0;
+	}
+
+	//Por defecto
+	*valor_retorno=0;
+
+	//Si no esta abierto el archivo, abrir
+	if (ptr_io_fline==NULL) {
+		debug_printf (VERBOSE_PARANOID,"Loading file %s at address %08XH",ql_full_path_load,puntero_destino);
+		ptr_io_fline=fopen(ql_full_path_load,"rb");
+
+		if (ptr_io_fline==NULL) {
+			debug_printf(VERBOSE_PARANOID,"Error opening file %s",ql_full_path_load);
+          		//Retornar Not complete (NC)
+
+			*valor_retorno=-1;
+			return 0; //bytes leidos 0
+     		
+		}
+
+		next_eof_ptr_io_fline=0;
+	}
+
+	unsigned int total_leidos=0;
+	//Ir leyendo hasta codigo 10 o final de fichero
+	int salir=0;
+
+	while (!salir) {
+		int bytes_leidos=fgetc(ptr_io_fline);
+		//Si negativo, asumimos final de fichero
+		if (bytes_leidos<0) {
+			next_eof_ptr_io_fline=1;
+			salir=1;
+		}
+		ql_writebyte(puntero_destino++,bytes_leidos);
+		total_leidos++;
+
+		//Si salto de linea, salir
+		if (bytes_leidos==10) salir=1;
+	}
+
+
+	return total_leidos;
+	//temp
+          	//9 byte leido
+          	/*m68k_set_reg(M68K_REG_D1,9);
+
+
+
+          	printf ("Writing IO.FLINE data to %08XH\n",puntero_destino);
+
+
+          	ql_writebyte(puntero_destino+0,'1');
+          	ql_writebyte(puntero_destino+1,' ');
+          	ql_writebyte(puntero_destino+2,'R');
+          	ql_writebyte(puntero_destino+3,'E');
+          	ql_writebyte(puntero_destino+4,'M');
+          	ql_writebyte(puntero_destino+5,'a');
+          	ql_writebyte(puntero_destino+6,'r');
+          	ql_writebyte(puntero_destino+7,'k');
+          	ql_writebyte(puntero_destino+8,10);
+
+          	//"1 REM<10>"
+
+          	//Aumentar puntero A1
+          	unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
+          	registro_a1 +=9;
+          	m68k_set_reg(M68K_REG_A1,registro_a1);
+
+
+
+        	  //No error. 
+          	m68k_set_reg(M68K_REG_D0,0);*/
+}
+
+
+
 void ql_rom_traps(void)
 {
 
@@ -2014,6 +2108,10 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_full_path_load);
 
+
+        //Para siguientes io.fline
+        ptr_io_fline=NULL;
+
         if (!si_existe_archivo(ql_full_path_load)) {
           debug_printf(VERBOSE_PARANOID,"File %s not found",ql_full_path_load);
           //Retornar Not found (NF)
@@ -2116,6 +2214,9 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         	//No error.
         	m68k_set_reg(M68K_REG_D0,0);
+
+        	//para operaciones fline
+        	ptr_io_fline=NULL;
 
 
        }
@@ -2314,9 +2415,11 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
           else {
 
+          	unsigned int valor_retorno;
+          	unsigned int leidos=ql_read_io_fline(puntero_destino,&valor_retorno);
           	//temp
           	//9 byte leido
-          	m68k_set_reg(M68K_REG_D1,9);
+          	/*m68k_set_reg(M68K_REG_D1,9);
 
 
 
@@ -2345,6 +2448,15 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         	  //No error. 
           	m68k_set_reg(M68K_REG_D0,0);
 
+
+          	//temp feof
+          	//m68k_set_reg(M68K_REG_D0,-10);*/
+
+          	m68k_set_reg(M68K_REG_D0,valor_retorno);
+          	unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
+          	registro_a1 +=leidos;
+          	m68k_set_reg(M68K_REG_A1,registro_a1);
+
   	}
 
         	
@@ -2361,7 +2473,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
   
 
-          temp_fs_line ^=1;
+          //temp_fs_line ^=1;
 
          
 
@@ -2407,13 +2519,15 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	*/
 
         	
-        	unsigned int puntero_origen=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+        	
 
         	//O a A1 a secas
         	//depende de si se ha llamado trap4 o no
 
           	ql_restore_d_registers(pre_io_sstrg_d,7);
           	ql_restore_a_registers(pre_io_sstrg_a,6);
+
+          	unsigned int puntero_origen=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
 
 
           	debug_printf (VERBOSE_PARANOID,"IO.SSTRG - restoreg registers. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%08XH",

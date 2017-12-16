@@ -10,6 +10,7 @@ Improved OSD keyboard: now you can press up to all 40 keys (on Spectrum/ZX80/ZX8
 Added Spectrum keyboard ghosting error feature
 Added ZX Spectrum Recreated keyboard support
 Added actions to file utilities: Copy, Move, Rename
+Improved QL emulation: experimental support of LOAD, LRUN command
 
 Version 6.0. 27 November 2017 - Gunfright edition
 
