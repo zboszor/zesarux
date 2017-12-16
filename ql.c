@@ -2361,7 +2361,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	*/
 
         	
-        	unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+        	unsigned int puntero_origen=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
 
         	//O a A1 a secas
         	//depende de si se ha llamado trap4 o no
@@ -2377,7 +2377,33 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         
 
+          	//Mostrar parte del mensaje enviado en SSTRG
+          	//unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+          	char buffer_mensaje[256];
+          	int longitud=m68k_get_reg(NULL,M68K_REG_D2);
+          	if (longitud>32) longitud=32;
 
+          	int i=0;
+          	char byte_leido;
+
+          	while (longitud) {
+          		byte_leido=ql_readbyte(puntero_origen);
+          		if (byte_leido>=32 && byte_leido<=127) {
+          			buffer_mensaje[i]=byte_leido;
+          			i++;
+          		}
+          		else {
+          			sprintf(&buffer_mensaje[i],"%02XH ",byte_leido);
+
+          			i+=4;
+          		}
+          		
+          		puntero_origen++;
+          	}
+
+          	buffer_mensaje[i]=0;
+
+          	debug_printf (VERBOSE_PARANOID,"IO.SSTRG - message sent: %s",buffer_mensaje);
           
 
           	//bytes enviados 
