@@ -1619,8 +1619,9 @@ void core_ql_trap_three(void)
 
 //Ver pagina 173. 18.14 Trap Keys
 
-  debug_printf (VERBOSE_PARANOID,"Trap 3. D0=%02XH A0=%08XH A1=%08XH PC=%05XH is : ",
-    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_PC));
+  debug_printf (VERBOSE_PARANOID,"Trap 3. D0=%02XH A0=%08XH A1=%08XH A6=%08XH PC=%05XH is : ",
+    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),
+    m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_PC));
 
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
     case 0x2:
@@ -1732,6 +1733,18 @@ int ql_return_full_path(char *device, char *file, char *fullpath)
   if (sourcepath[0])  sprintf(fullpath,"%s/%s",sourcepath,file);
   else sprintf(fullpath,"%s",file); //Ruta definida como vacia
 
+
+  return 0;
+}
+
+
+//Dice si la ruta que se le ha pasado corresponde a un mdv1_, o mdv2_, o flp1_
+int ql_si_ruta_parametro(char *texto,char *ruta)
+{
+  char *encontrado;
+
+  encontrado=util_strcasestr(texto, ruta);
+  if (encontrado) return 1;
 
   return 0;
 }
@@ -1903,8 +1916,15 @@ PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A
       }
       //printf ("\n");
       ql_nombre_archivo_load[i++]=0;
+
+
       debug_printf (VERBOSE_PARANOID,"Channel name: %s",ql_nombre_archivo_load);
       //sleep(1);
+
+
+
+       
+
 
       //Hacer que si es mdv1_ ... volver
 
@@ -1996,6 +2016,45 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         /*
 
         */
+
+        return;
+
+      }
+
+
+      //Aqui se llama despues de hacer "load" de programa basic, hace IO.FLINE y luego hace IO.OPEN de "mdv" sin mas
+      if (ql_si_ruta_parametro(ql_nombre_archivo_load,"mdv")) {
+
+        debug_printf (VERBOSE_PARANOID,"Returning from trap without opening anything because file is mdv");
+
+        
+
+        //D2,D3,A2,A3 se tienen que preservar, segun dice el trap.
+        //Segun la info general de los traps, tambien se deben guardar de D4 a D7 y A4 a A6. Directamente guardo todos los D y A excepto A7
+
+        ql_restore_d_registers(pre_io_open_d,7);
+        ql_restore_a_registers(pre_io_open_a,6);
+        //ql_restore_a_registers(pre_io_open_a,7);
+
+
+
+        //Volver de ese trap
+        m68k_set_reg(M68K_REG_PC,0x5e);
+        //Ajustar stack para volver
+        int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+        reg_a7 +=12;
+        m68k_set_reg(M68K_REG_A7,reg_a7);
+
+
+
+        
+
+        //No error.
+        m68k_set_reg(M68K_REG_D0,0);
+
+        
+
+        return;
 
       }
 
@@ -2120,17 +2179,23 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           //A1 end of medium name  (entrada: A1 ptr to 10 byte buffer)
 
           unsigned int reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
-          ql_writebyte(reg_a1++,'Z');
-          ql_writebyte(reg_a1++,'E');
-          ql_writebyte(reg_a1++,'s');
-          ql_writebyte(reg_a1++,'a');
-          ql_writebyte(reg_a1++,'r'); //5
-          ql_writebyte(reg_a1++,'U');
-          ql_writebyte(reg_a1++,'X');
-          ql_writebyte(reg_a1++,'M');
-          ql_writebyte(reg_a1++,'D');
-          ql_writebyte(reg_a1++,' '); //10
+          unsigned int puntero=reg_a1+m68k_get_reg(NULL,M68K_REG_A6);
+
+          reg_a1 +=10;
           m68k_set_reg(M68K_REG_A1,reg_a1);
+
+          ql_writebyte(puntero++,'Z');
+          ql_writebyte(puntero++,'E');
+          ql_writebyte(puntero++,'s');
+          ql_writebyte(puntero++,'a');
+          ql_writebyte(puntero++,'r'); //5
+          ql_writebyte(puntero++,'U');
+          ql_writebyte(puntero++,'X');
+          ql_writebyte(puntero++,'M');
+          ql_writebyte(puntero++,'D');
+          ql_writebyte(puntero++,' '); //10
+
+
 
 
 
@@ -2148,14 +2213,14 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         //Si canal es el mio ficticio 100
         if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
 
-        	//printf ("Mi canal MDINF\n");
+        	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from our microdrive channel without error");
 
 
 
 
           	/*
-          	D0=$2 IO.FLlNE fetch a line of characters terminated by ASCII <LF> ($A)
+          	D0=$2 IO.FLINE fetch a line of characters terminated by ASCII <LF> ($A)
 		D0=$3 IO.FSTRG fetch a string of bytes
           	*/
 
@@ -2163,7 +2228,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	Entrada:
           	D2.W length of buffer
           	D3.W timeout
-          	A0 channel lD
+          	A0 channel ID
           	A1 base of buffer
 
           	Salida:
@@ -2232,7 +2297,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	m68k_set_reg(M68K_REG_A1,registro_a1);
 
 
-        	  //No error.
+        	  //No error. 
           	m68k_set_reg(M68K_REG_D0,0);
 
   	}
