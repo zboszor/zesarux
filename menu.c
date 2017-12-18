@@ -26191,6 +26191,11 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 		debug_printf (VERBOSE_INFO,"Original name: %s dir: %s new name %s final name %s"
 				,archivo,directorio,nombre_sin_dir,nombre_final);
 
+		//Si existe archivo destino
+		if (si_existe_archivo(nombre_final)) {
+			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
+		}
+
 		if (rename_move==2) util_copy_file(archivo,nombre_final);
 		else rename(archivo,nombre_final);
 
