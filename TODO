@@ -7,22 +7,7 @@
 
 
 QL Estado a 15 diciembre
--tanto lrun como load programa en basic borra la pantalla e inicializa  el basic pero no llama a cargar datos de microdrive
-muestran misma basura por pantalla que salia cuando tenia el trap de boot
--si existe un archivo llamado "MDV1_BOOT" acaba sacando la misma basura por pantalla
--lbytes funciona perfectamente
 
--Quiza fallan load, lrun porque intenta buscar algo en memoria de la informacion del canal abierto (100)
-Como obtener 18.3 SuperBASIC Variables? pagina 161
-Quiza hay que llamar a mt.inf, luego ver valor sv_basic en esa tabla
-Quiza system variables esta cerca de 259754? este 259754 puede ser SV_RAMT -> Parece que no
-
-
-Pagina 55
-9.11 The Channel Table
-A channel number (#n) is an index to an entry in the SuperBASIC channel table. This is a table of items which are each of length CH.LENCH (currently $28) bytes. The base of the table is at BV_CHBAS(A6), and the top is at BV_CHP(A6); thus the base of the entry for channel #n is given by:
-(n*CH.LENCH+BV_CHBAS(A6)) (A6)
-The format of each table entry is as follows:
 
 
 -Intento interceptar funciones de lectura de sectores de microdrive. MD.READ. aparentemente tiene que saltar desde la direccion 525CH pero ahi no parece saltar nunca,
@@ -63,6 +48,7 @@ deberia verse bien, pues se usan funciones de putchar igual que en menu. si real
 
 -Menú utilidades archivos
 Convertir archivo
+TAB conmutar a zona de acciones?
 
 
 -It would be interesting if an emulator could provide FIFOs or shared memory that the host operating system could read/write to that were made available to the emulated machine.
