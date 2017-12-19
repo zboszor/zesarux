@@ -1418,7 +1418,7 @@ z80_byte fetch_opcode_legacy_ql(void)
 
 
 //Canal inventado solo para cuando se abre "mdv"
-#define QL_ID_CANAL_INVENTADO_2_MICRODRIVE 33
+#define QL_ID_CANAL_INVENTADO_2_MICRODRIVE 150
 
 
 
