@@ -94,5 +94,11 @@ extern void ql_rom_traps(void);
 
 extern int ql_mdflp_operating_counter;
 
+extern void delete_ql_mdflp_text(void);
+
+
+#define QLTRAPS_MAX_OPEN_FILES 64
+#define QLTRAPS_START_FILE_NUMBER 32
+
 
 #endif

@@ -59,6 +59,8 @@ int ql_ipc_last_nibble_to_read_length=1;
 
 unsigned char temp_pcintr;
 
+void ql_load_binary_file(FILE *ptr_file,unsigned int direccion, unsigned int longitud);
+
 //Valores que me invento para gestionar pulsaciones de teclas no ascii
 #define QL_KEYCODE_F1 256
 #define QL_KEYCODE_F2 257
@@ -1412,25 +1414,121 @@ z80_byte fetch_opcode_legacy_ql(void)
 
 
 //Numero de canal ficticio para archivos que se abran mdvx_ o flpx_, para distinguirlos de los que gestiona el sistema
-#define QL_ID_CANAL_INVENTADO_MICRODRIVE 32
+#define OLD_QL_ID_CANAL_INVENTADO_MICRODRIVE 32
 
 
 //Canal inventado solo para cuando se abre "mdv"
 #define QL_ID_CANAL_INVENTADO_2_MICRODRIVE 33
 
+
+
+struct s_qltraps_fopen {
+
+        /* Para archivos */
+        FILE *qltraps_last_open_file_handler_unix;
+        //z80_byte temp_qltraps_last_open_file_handler;
+
+        //Usado al hacer fstat
+        struct stat last_file_buf_stat;
+
+
+        /* Para directorios */
+        //usados al leer directorio
+        //z80_byte qltraps_handler_filinfo_fattrib;
+        struct dirent *qltraps_handler_dp;
+        DIR *qltraps_handler_dfd; //    =NULL;
+        //ultimo directorio leido al listar archivos
+        char qltraps_handler_last_dir_open[PATH_MAX];
+
+        //para telldir
+        unsigned int contador_directorio;
+
+
+        /* Comun */
+        //Indica a 1 que el archivo/directorio esta abierto. A 0 si no
+        z80_bit open_file;
+
+        z80_bit is_a_directory;
+};
+
+struct s_qltraps_fopen qltraps_fopen_files[QLTRAPS_MAX_OPEN_FILES];
+
 //char ql_nombre_archivo_load[255];
 
+//#define QLTRAPS_MAX_OPEN_FILES 64
+//#define QLTRAPS_START_FILE_NUMBER 32
 
-//Si el id del canal del fichero esta abierto por nuestro gestor de traps de ql
-int qltrap_if_file_open(unsigned int channel)
+void qltraps_init_fopen_files_array(void)
 {
-	if (channel==QL_ID_CANAL_INVENTADO_MICRODRIVE) return 1;
-	return 0;
+	int i;
+	for (i=0;i<QLTRAPS_MAX_OPEN_FILES;i++) {
+		qltraps_fopen_files[i].open_file.v=0;
+	}
+}
+
+//Ver si el numero del canal del fichero esta en el rango que gestiona este trap de emulacion
+int qltrap_if_file_in_range(unsigned int channel)
+{
+	unsigned int rangomin=QLTRAPS_START_FILE_NUMBER;
+	unsigned int rangomax=QLTRAPS_START_FILE_NUMBER+QLTRAPS_MAX_OPEN_FILES-1;
+	if (channel<rangomin || channel>rangomax) return 0;
+	return 1;
 }
 
 
+//Retorna indice al array. Si -1, no encontrado/no abierto
+int qltraps_find_open_file(unsigned int channel)
+{
+	if (!qltrap_if_file_in_range(channel)) return -1;
+
+	unsigned int indice=channel-QLTRAPS_START_FILE_NUMBER;
+	if (qltraps_fopen_files[indice].open_file.v) return indice;
+	else return -1;
+}
+
+//Si el id del canal del fichero esta abierto por nuestro gestor de traps de ql
+int old_qltrap_if_file_open(unsigned int channel)
+{
+	debug_printf(VERBOSE_DEBUG,"Lets see if file %d has been opened by the emulator traps",channel);
+
+	//Ver primero si el id del canal esta en el rango
+
+	if (!qltrap_if_file_in_range(channel)) {
+		debug_printf(VERBOSE_DEBUG,"File %d is out of range of ql traps",channel);
+		return 0;
+	}
+
+	if (channel==OLD_QL_ID_CANAL_INVENTADO_MICRODRIVE) {
+		debug_printf(VERBOSE_DEBUG,"File %d has been opened by the emulator traps",channel);
+		return 1;
+	}
+	else {
+		debug_printf(VERBOSE_DEBUG,"File %d has NOT been opened by the emulator traps",channel);
+		return 0;
+	}
+}
+
+
+//Retorna contador a array de estructura de archivo vacio. Retorna -1 si no hay
+int qltraps_find_free_fopen(void)
+{
+	int i;
+
+	for (i=0;i<QLTRAPS_MAX_OPEN_FILES;i++) {
+		if (qltraps_fopen_files[i].open_file.v==0) {
+			debug_printf (VERBOSE_DEBUG,"QL TRAPS: Free handle: %d",i+QLTRAPS_START_FILE_NUMBER);
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+
+
+
 //Archivo que se est abiendo, cargando, etc. TODO: no soporta abrir mas de un archivo a ala vez
-char ql_full_path_load[PATH_MAX];
+//char ql_full_path_load[PATH_MAX];
 
 void ql_debug_force_breakpoint(char *message)
 {
@@ -1602,7 +1700,7 @@ void core_ql_trap_two(void)
 
 }
 
-void ql_get_file_header(char *nombre,unsigned int destino)
+void ql_get_file_header(unsigned int indice_canal,unsigned int destino)
 {
   /*
   pagina 38. 7.0 Directory Device Drivers
@@ -1630,13 +1728,16 @@ void ql_get_file_header(char *nombre,unsigned int destino)
 
   */
 
-  debug_printf(VERBOSE_PARANOID,"Returning header for file %s on address %05XH",nombre,destino);
+  debug_printf(VERBOSE_DEBUG,"Returning header for file on address %05XH",destino);
 
   //Inicializamos cabecera a 0
   int i;
   for (i=0;i<64;i++) ql_writebyte(destino+i,0);
 
-  unsigned int tamanyo=get_file_size(nombre);
+  //unsigned int tamanyo=get_file_size(nombre);
+
+	unsigned int tamanyo=qltraps_fopen_files[indice_canal].last_file_buf_stat.st_size;
+
   //Guardar tamanyo big endian
   ql_writebyte(destino+0,(tamanyo>>24)&255);
   ql_writebyte(destino+1,(tamanyo>>16)&255);
@@ -1828,7 +1929,7 @@ int next_eof_ptr_io_fline=0;
 //Leer archivo linea a linea. Retorna bytes leidos, y valor de retorno. 
 //Si hay eof, se debe retornar solo el eof y sin bytes leidos
 
-unsigned int ql_read_io_fline(unsigned int puntero_destino,unsigned int *valor_retorno)
+unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,unsigned int *valor_retorno)
 {
 
 
@@ -1844,8 +1945,8 @@ unsigned int ql_read_io_fline(unsigned int puntero_destino,unsigned int *valor_r
 	*valor_retorno=0;
 
 	//Si no esta abierto el archivo, abrir
-	if (ptr_io_fline==NULL) {
-		debug_printf (VERBOSE_PARANOID,"Loading file %s at address %08XH",ql_full_path_load,puntero_destino);
+	/*if (ptr_io_fline==NULL) {
+		debug_printf (VERBOSE_PARANOID,"Loading file at address %08XH",ql_full_path_load,puntero_destino);
 		ptr_io_fline=fopen(ql_full_path_load,"rb");
 
 		if (ptr_io_fline==NULL) {
@@ -1858,7 +1959,9 @@ unsigned int ql_read_io_fline(unsigned int puntero_destino,unsigned int *valor_r
 		}
 
 		next_eof_ptr_io_fline=0;
-	}
+	}*/
+
+	ptr_io_fline=qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix;
 
 	unsigned int total_leidos=0;
 	//Ir leyendo hasta codigo 10 o final de fichero
@@ -1912,6 +2015,25 @@ unsigned int ql_read_io_fline(unsigned int puntero_destino,unsigned int *valor_r
           	m68k_set_reg(M68K_REG_D0,0);*/
 }
 
+
+void ql_load_binary_file(FILE *ptr_file,unsigned int valor_leido_direccion, unsigned int valor_leido_longitud)
+{
+
+
+
+
+int leidos=1;
+                                                z80_byte byte_leido;
+                                                while (valor_leido_longitud>0 && leidos>0) {
+                                                        leidos=fread(&byte_leido,1,1,ptr_file);
+                                                        if (leidos>0) {
+                                                                //poke_byte_no_time(valor_leido_direccion,byte_leido);
+                                                                poke_byte_z80_moto(valor_leido_direccion,byte_leido);
+                                                                valor_leido_direccion++;
+                                                                valor_leido_longitud--;
+                                                        }
+                                                }
+}
 
 
 void ql_rom_traps(void)
@@ -2122,8 +2244,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
 
-        //Metemos channel id (A0) inventado
-        m68k_set_reg(M68K_REG_A0,QL_ID_CANAL_INVENTADO_MICRODRIVE);
+
 
         //Como decir no error
         /*
@@ -2143,19 +2264,60 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         char ql_io_open_device[PATH_MAX];
         char ql_io_open_file[PATH_MAX];
 
+        char ql_nombrecompleto[PATH_MAX];
+
         ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file);
 
-        ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_full_path_load);
+        ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
 
 
         //Para siguientes io.fline
         ptr_io_fline=NULL;
 
-        if (!si_existe_archivo(ql_full_path_load)) {
-          debug_printf(VERBOSE_PARANOID,"File %s not found",ql_full_path_load);
+        if (!si_existe_archivo(ql_nombrecompleto)) {
+          debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
           //Retornar Not found (NF)
           m68k_set_reg(M68K_REG_D0,-7);
         }
+
+        else {
+
+        	//Metemos channel id (A0) inventado
+        	//m68k_set_reg(M68K_REG_A0,QL_ID_CANAL_INVENTADO_MICRODRIVE);
+
+        	//Obtenemos canal disponible
+        	int canal=qltraps_find_free_fopen();
+        	if (canal<0) {
+        		//No hay disponibles. Error. De momento Retornar Not found (NF)
+          		m68k_set_reg(M68K_REG_D0,-7);
+          		return;
+        	}
+
+        	//Se ha retornado indice al array. Canal sera sumando 
+        	m68k_set_reg(M68K_REG_A0,canal+QLTRAPS_START_FILE_NUMBER);
+
+        	//Indicamos en array que esta abierto
+        	qltraps_fopen_files[canal].open_file.v=1;
+
+        	//Indicar file handle
+        	FILE *archivo;
+        	archivo=fopen(ql_nombrecompleto,"rb");
+        	if (archivo==NULL) {
+        		debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
+          		//Retornar Not found (NF)
+          		m68k_set_reg(M68K_REG_D0,-7);
+          		return;
+        	}
+
+
+        	qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix=archivo;
+
+        	//Le hacemos un stat
+        	if (stat(ql_nombrecompleto, &qltraps_fopen_files[canal].last_file_buf_stat)!=0) {
+						debug_printf (VERBOSE_DEBUG,"QLTRAPS handler: Unable to get status of file %s",ql_nombrecompleto);
+		}
+
+	}
 
         //D1= Job ID. TODO. Parece que da error "error in expression" porque no se asigna un job id valido?
         //Parece que D1 entra con -1, que quiere decir "the channel will be associated with the current job"
@@ -2234,7 +2396,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
        }
       	//Si canal es el mio ficticio 
-        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0))) {
+        if (qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0))>=0  ) {
 
         	debug_printf (VERBOSE_PARANOID,"Returning IO.CLOSE from our microdrive channel without error");
 
@@ -2279,10 +2441,15 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         debug_printf (VERBOSE_PARANOID,"FS.HEADR. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
         //Si canal es el mio ficticio 100
-        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0)) ) {
+        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        if (indice_canal>=0 ) {
           //Devolver cabecera. Se supone que el sistema operativo debe asignar espacio para la cabecera? Posiblemente si.
           //Forzamos meter cabecera en espacio de memoria de pantalla a ver que pasa
-          ql_get_file_header(ql_full_path_load,m68k_get_reg(NULL,M68K_REG_A1));
+          //ql_get_file_header(ql_full_path_load,m68k_get_reg(NULL,M68K_REG_A1));
+
+          //TODO completar esto
+          ql_get_file_header(indice_canal,m68k_get_reg(NULL,M68K_REG_A1));
+
           //ql_get_file_header(ql_nombre_archivo_load,131072); //131072=pantalla
 
           ql_restore_d_registers(pre_fs_headr_d,7);
@@ -2317,7 +2484,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         debug_printf (VERBOSE_PARANOID,"FS.MDINF. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
         //Si canal es el mio ficticio 100
-        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0)) ) {
+        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        if (indice_canal>=0 ) {
 
         	//printf ("Mi canal MDINF\n");
 
@@ -2392,7 +2560,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         }
 
         //Si canal es el mio ficticio 100
-        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0)) ) {
+        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        if (indice_canal>=0) {
 
         	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from our microdrive channel without error");
@@ -2456,7 +2625,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           else {
 
           	unsigned int valor_retorno;
-          	unsigned int leidos=ql_read_io_fline(puntero_destino,&valor_retorno);
+          	unsigned int leidos=ql_read_io_fline(indice_canal,puntero_destino,&valor_retorno);
           	//temp
           	//9 byte leido
           	/*m68k_set_reg(M68K_REG_D1,9);
@@ -2531,7 +2700,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         		m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_D2) );
 
         //Si canal es el mio ficticio 100
-        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0)) ) {
+        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        if (indice_canal>=0 ) {
 
         	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.SSTRG from our microdrive channel without error");
@@ -2642,7 +2812,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         debug_printf (VERBOSE_PARANOID,"FS.LOAD. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
         //Si canal es el mio ficticio 100
-        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0)) ) {
+        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        if (indice_canal>=0 ) {
 
           ql_restore_d_registers(pre_fs_load_d,7);
           ql_restore_a_registers(pre_fs_load_a,6);
@@ -2650,7 +2821,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           unsigned int longitud=m68k_get_reg(NULL,M68K_REG_D2);
 
 
-            debug_printf (VERBOSE_PARANOID,"Loading file %s at address %05XH with lenght: %d",ql_full_path_load,m68k_get_reg(NULL,M68K_REG_A1),longitud);
+            debug_printf (VERBOSE_PARANOID,"Loading file at address %05XH with lenght: %d",m68k_get_reg(NULL,M68K_REG_A1),longitud);
             //void load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
 
              //Indicar actividad en md flp
@@ -2658,7 +2829,9 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
             //longitud la saco del propio archivo, ya que no me llega bien de momento pues no retornaba bien fs.headr
             //int longitud=get_file_size(ql_nombre_archivo_load);
-            load_binary_file(ql_full_path_load,m68k_get_reg(NULL,M68K_REG_A1),longitud);
+        	FILE *ptr_file;
+        	ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;
+            ql_load_binary_file(ptr_file,m68k_get_reg(NULL,M68K_REG_A1),longitud);
 
 
 

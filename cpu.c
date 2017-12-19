@@ -957,6 +957,7 @@ util_stats_init();
 		//printf ("Reg PC QL: %08XH\n",pc);
 		//sleep(2);
 		ql_ipc_reset();
+		qltraps_init_fopen_files_array();
 	}
 
 	if (MACHINE_IS_MK14) {
