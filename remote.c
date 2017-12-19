@@ -730,7 +730,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"get-os",NULL,NULL,"Shows emulator operating system"},
   {"get-paging-state",NULL,NULL,"Shows paging state on Spectrum 128k machines: if using screen 5/7 and if paging enabled"},
   {"get-registers","|gr",NULL,"Get CPU registers"},
-	{"get-stack-backtrace",NULL,NULL,"Get last 5 16-bit values from the stack"},
+	{"get-stack-backtrace",NULL,"[items]","Get last 16-bit values from the stack. If no items parameter, it shows 5 by default"},
 	  {"get-version",NULL,NULL,"Shows emulator version"},
 #ifdef EMULATE_VISUALMEM
   {"get-visualmem-written-dump","|gvmwd","[compact]","Dumps all the visual memory written positions and values. Then, clear its contents. If parameter compact, will compress non zero values on the same line, for a maximum of 16"},
@@ -3420,12 +3420,26 @@ char buffer_retorno[2048];
   }
 
 	else if (!strcmp(comando_sin_parametros,"get-stack-backtrace")) {
+
+    int items=5;
+
+    remote_parse_commands_argvc(parametros);
+    if (remote_command_argc>0) {
+      items=parse_string_to_number(remote_command_argv[0]);
+      if (items<1) {
+        escribir_socket(misocket,"ERROR. Items must be >0");
+        return;
+      }
+    }
+
 		if (CPU_IS_MOTOROLA) {
 
 		}
 		else {
 			int i;
-			for (i=0;i<5;i++) {
+
+
+			for (i=0;i<items;i++) {
 				z80_int valor=peek_byte_z80_moto(reg_sp+i*2)+256*peek_byte_z80_moto(reg_sp+1+i*2);
 				escribir_socket_format(misocket,"%04XH ",valor);
 			}
