@@ -1420,6 +1420,15 @@ z80_byte fetch_opcode_legacy_ql(void)
 
 //char ql_nombre_archivo_load[255];
 
+
+//Si el id del canal del fichero esta abierto por nuestro gestor de traps de ql
+int qltrap_if_file_open(unsigned int channel)
+{
+	if (channel==QL_ID_CANAL_INVENTADO_MICRODRIVE) return 1;
+	return 0;
+}
+
+
 //Archivo que se est abiendo, cargando, etc. TODO: no soporta abrir mas de un archivo a ala vez
 char ql_full_path_load[PATH_MAX];
 
@@ -2225,7 +2234,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
        }
       	//Si canal es el mio ficticio 
-        if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
+        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0))) {
 
         	debug_printf (VERBOSE_PARANOID,"Returning IO.CLOSE from our microdrive channel without error");
 
@@ -2270,7 +2279,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         debug_printf (VERBOSE_PARANOID,"FS.HEADR. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
         //Si canal es el mio ficticio 100
-        if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
+        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0)) ) {
           //Devolver cabecera. Se supone que el sistema operativo debe asignar espacio para la cabecera? Posiblemente si.
           //Forzamos meter cabecera en espacio de memoria de pantalla a ver que pasa
           ql_get_file_header(ql_full_path_load,m68k_get_reg(NULL,M68K_REG_A1));
@@ -2308,7 +2317,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         debug_printf (VERBOSE_PARANOID,"FS.MDINF. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
         //Si canal es el mio ficticio 100
-        if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
+        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0)) ) {
 
         	//printf ("Mi canal MDINF\n");
 
@@ -2383,7 +2392,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         }
 
         //Si canal es el mio ficticio 100
-        if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
+        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0)) ) {
 
         	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from our microdrive channel without error");
@@ -2522,7 +2531,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         		m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_D2) );
 
         //Si canal es el mio ficticio 100
-        if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
+        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0)) ) {
 
         	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.SSTRG from our microdrive channel without error");
@@ -2633,7 +2642,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         debug_printf (VERBOSE_PARANOID,"FS.LOAD. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
         //Si canal es el mio ficticio 100
-        if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_MICRODRIVE) {
+        if (qltrap_if_file_open(m68k_get_reg(NULL,M68K_REG_A0)) ) {
 
           ql_restore_d_registers(pre_fs_load_d,7);
           ql_restore_a_registers(pre_fs_load_a,6);
