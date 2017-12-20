@@ -28,6 +28,18 @@ Paranoid: File /Users/chernandezba/Documents/ZEsarUX/zesarux/extras/media/ql/spa
 
 --- Cosas para la version 6.1
 
+QL:
+parece que los fallos de lectura en sentencias basic no son del archivo original sino que es algún tipo de error del emulador.
+No sera culpa de esa suma de punteros a1+a6 que no siempre se produce, y que depende de… lo de los traps que me dijeron en el foro
+
+Ejemplo:
+demos/cueshell.zip 
+
+Linea 70, la lee mal hacia el final. pero no siempre lo hace… :(
+
+
+-implementar exec_mdv1_... mismo ejemplo con cueshell, va a   Returning header for file on address 00100H y ahi peta
+
 
 IMPORTANTE: ruido al iniciar emulador, no siempre, debido al agregar rutina de autoresize audio puntero
 Quiza solo permitir cuando hayan pasado unos segundos desde el inicio del emulador
