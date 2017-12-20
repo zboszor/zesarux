@@ -1927,7 +1927,7 @@ int ql_si_ruta_mdv_flp(char *texto)
   return 0;
 }
 
-int temp_fs_line=0;
+//int temp_fs_line=0;
 
 
 
@@ -2144,9 +2144,41 @@ set-register pc=04B50h
     }
 
 
+
+/*
+Info rapida de como funcionan los traps:
+Detectar primero si se llama a trap 1, 2 o 3 , y llamar a core_ql_trap_one, two o three segun detectado
+En esas funciones , cuando es alguna funcion de qdos que estamos gestionando, se guardan los registros A y D del Motorola, para su posterior uso
+
+Esos traps en la rom acaban saltando a unas direcciones mas altas, y son las que posteriormente intercepto, 
+con la funcion exacta del qdos, como ejemplo:
+
+
+//Trap2, IO.OPEN
+if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==1) {
+
+Cuando salta ahi, los registros A y D se han modificado algunos desde que he detectado el trap, por eso los guardo antes.
+Cuando se detecta la funcion exacta del qdos, como este con D0=1, restauro los registros que tenia salvados antes para obtener 
+las variables de entrada (tal y como entraban al principio del trap). Con esos registros restaurados ya se qué hace la llamada a qdos.
+Se realiza la función adecuada a esa llamada: abrir fichero, cerrar, leer, etc
+
+Para volver del trap despues de haberlo interceptado, cambio el registro pc a una instruccion rte que hau en 53H de la rom
+Ajusto también el stack de salida para que vuelva tal cual deberia del trap inicial (digamos que evito algun push y algun salto)
+Y el registro D0 siempre contiene el codigo de error/ok de retorno del trap
+Con esto ya se vuelve del trap: un tanto chapucero pero funciona
+
+Esto probado con la rom ql_js.rom, con otras, es probable que falle.
+
+*/
+
+
+
     if (get_pc_register()==0x0031e) {
       core_ql_trap_one();
     }
+
+
+
 
 
 //00324 bsr     336
@@ -2158,6 +2190,20 @@ trap 2 salta a:
   if (get_pc_register()==0x00324) {
     core_ql_trap_two();
   }
+
+
+
+    //Interceptar trap 3
+    /*
+    trap 3 salta a:
+    0032A bsr     336
+    */
+    if (get_pc_register()==0x0032a) {
+      core_ql_trap_three();
+    }
+
+
+
 
 
     //Interceptar trap 2, con d0=1, cuando ya sabemos la direccion
@@ -2483,14 +2529,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
 
-    //Interceptar trap 3
-    /*
-    trap 3 salta a:
-    0032A bsr     336
-    */
-    if (get_pc_register()==0x0032a) {
-      core_ql_trap_three();
-    }
+
 
     //Quiza Trap 3 FS.HEADR acaba saltando a 0337C move.l  A0, D7
     if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x47 && ql_microdrive_floppy_emulation) {
@@ -2680,17 +2719,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         		m68k_get_reg(NULL,M68K_REG_A6),puntero_destino );
 
 
-        if (temp_fs_line) {
-	          	//temp eof
-          
-          	m68k_set_reg(M68K_REG_D0,-10);
-          	debug_printf (VERBOSE_PARANOID,"IO.FLINE - returning EOF");
-          	m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
-
-          }
-
-
-          else {
+                  
 
           	unsigned int valor_retorno;
           	unsigned int leidos=ql_read_io_fline(indice_canal,puntero_destino,&valor_retorno);
@@ -2702,7 +2731,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	registro_a1 +=leidos;
           	m68k_set_reg(M68K_REG_A1,registro_a1);
 
-  	}
+  	
 
         	
           
@@ -2712,13 +2741,6 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           reg_a7 +=12;
           m68k_set_reg(M68K_REG_A7,reg_a7);
 
-
-
-
-
-  
-
-          //temp_fs_line ^=1;
 
          
 
