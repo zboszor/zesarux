@@ -2188,7 +2188,7 @@ PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A
 
 
       debug_printf (VERBOSE_PARANOID,"Channel name: %s",ql_nombre_archivo_load);
-      //sleep(1);
+      
 
 
 
@@ -2292,8 +2292,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         	//Obtenemos canal disponible
         	int canal=qltraps_find_free_fopen();
         	if (canal<0) {
-        		//No hay disponibles. Error. De momento Retornar Not found (NF)
-          		m68k_set_reg(M68K_REG_D0,-7);
+        		//No hay disponibles. Error.
+          		m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_NC);
           		return;
         	}
 
@@ -2376,7 +2376,12 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
     //IO.CLOSE
     if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==2) {
-    	debug_printf (VERBOSE_PARANOID,"IO.CLOSE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
+
+
+    	ql_restore_d_registers(pre_io_close_d,7);
+        ql_restore_a_registers(pre_io_close_a,6);
+
+    	debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
     	//Si canal es el segundo ficticio 
         if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_2_MICRODRIVE) {
@@ -2403,12 +2408,15 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
        }
       	//Si canal es el mio ficticio 
-        if (qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0))>=0  ) {
+       	int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
 
-        	debug_printf (VERBOSE_PARANOID,"Returning IO.CLOSE from our microdrive channel without error");
+        if (indice_canal>=0  ) {
+        	debug_printf (VERBOSE_DEBUG,"Closing file");
 
-       	 	ql_restore_d_registers(pre_io_close_d,7);
-        	ql_restore_a_registers(pre_io_close_a,6);
+        	//Liberar ese item del array
+        	qltraps_fopen_files[indice_canal].open_file.v=0;
+
+
        
 
 
@@ -2633,40 +2641,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
           	unsigned int valor_retorno;
           	unsigned int leidos=ql_read_io_fline(indice_canal,puntero_destino,&valor_retorno);
-          	//temp
-          	//9 byte leido
-          	/*m68k_set_reg(M68K_REG_D1,9);
 
-
-
-          	printf ("Writing IO.FLINE data to %08XH\n",puntero_destino);
-
-
-          	ql_writebyte(puntero_destino+0,'1');
-          	ql_writebyte(puntero_destino+1,' ');
-          	ql_writebyte(puntero_destino+2,'R');
-          	ql_writebyte(puntero_destino+3,'E');
-          	ql_writebyte(puntero_destino+4,'M');
-          	ql_writebyte(puntero_destino+5,'a');
-          	ql_writebyte(puntero_destino+6,'r');
-          	ql_writebyte(puntero_destino+7,'k');
-          	ql_writebyte(puntero_destino+8,10);
-
-          	//"1 REM<10>"
-
-          	//Aumentar puntero A1
-          	unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
-          	registro_a1 +=9;
-          	m68k_set_reg(M68K_REG_A1,registro_a1);
-
-
-
-        	  //No error. 
-          	m68k_set_reg(M68K_REG_D0,0);
-
-
-          	//temp feof
-          	//m68k_set_reg(M68K_REG_D0,-10);*/
+          	
 
           	m68k_set_reg(M68K_REG_D0,valor_retorno);
           	unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);

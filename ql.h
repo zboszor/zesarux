@@ -97,8 +97,22 @@ extern int ql_mdflp_operating_counter;
 extern void delete_ql_mdflp_text(void);
 
 
-#define QLTRAPS_MAX_OPEN_FILES 64
+#define QLTRAPS_MAX_OPEN_FILES 3
 #define QLTRAPS_START_FILE_NUMBER 32
+
+
+//operation not complete
+#define QDOS_ERROR_CODE_NC -1
+
+//channel not open
+#define QDOS_ERROR_CODE_NO -6
+
+
+//file or device not found
+#define QDOS_ERROR_CODE_NF -7
+
+//end of file
+#define QDOS_ERROR_CODE_EF -10
 
 
 #endif
