@@ -1414,11 +1414,11 @@ z80_byte fetch_opcode_legacy_ql(void)
 
 
 //Numero de canal ficticio para archivos que se abran mdvx_ o flpx_, para distinguirlos de los que gestiona el sistema
-#define OLD_QL_ID_CANAL_INVENTADO_MICRODRIVE 32
+//#define OLD_QL_ID_CANAL_INVENTADO_MICRODRIVE 32
 
 
 //Canal inventado solo para cuando se abre "mdv"
-#define QL_ID_CANAL_INVENTADO_2_MICRODRIVE 150
+//#define QL_ID_CANAL_INVENTADO_2_MICRODRIVE 150
 
 
 
@@ -1445,6 +1445,11 @@ struct s_qltraps_fopen {
 
         //para io.file. indica que la siguiente lectura debe retornar eof
         int next_eof_ptr_io_fline;
+
+        //Indica que se ha abierto el dispositivo entero "mdv1_", "mdv2_",etc. Se usa en dir mdv1_
+        int es_dispositivo;
+
+        char ql_file_name[1024];
 
 
         /* Comun */
@@ -1490,7 +1495,7 @@ int qltraps_find_open_file(unsigned int channel)
 }
 
 //Si el id del canal del fichero esta abierto por nuestro gestor de traps de ql
-int old_qltrap_if_file_open(unsigned int channel)
+/*int old_qltrap_if_file_open(unsigned int channel)
 {
 	debug_printf(VERBOSE_DEBUG,"Lets see if file %d has been opened by the emulator traps",channel);
 
@@ -1509,7 +1514,7 @@ int old_qltrap_if_file_open(unsigned int channel)
 		debug_printf(VERBOSE_DEBUG,"File %d has NOT been opened by the emulator traps",channel);
 		return 0;
 	}
-}
+}*/
 
 
 //Retorna contador a array de estructura de archivo vacio. Retorna -1 si no hay
@@ -2202,7 +2207,25 @@ PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A
       //Incrementar A7 en 12
       //set-register pc=5eh. apunta a un rte
 
-      if (ql_si_ruta_mdv_flp(ql_nombre_archivo_load)) {
+      int es_dispositivo=0;
+
+      int hacer_trap=0;
+
+
+      if (ql_si_ruta_mdv_flp(ql_nombre_archivo_load)) hacer_trap=1;
+
+      if (!hacer_trap) {
+      	if (
+      		ql_si_ruta_parametro(ql_nombre_archivo_load,"mdv") ||
+      		ql_si_ruta_parametro(ql_nombre_archivo_load,"flp")
+      	    ) {
+      		hacer_trap=1;
+      		es_dispositivo=1;
+      	}
+      }
+      
+
+      if (hacer_trap) {
 
         debug_printf (VERBOSE_PARANOID,"Returning from trap without opening anything because file is mdv1, mdv2 or flp1");
 
@@ -2270,61 +2293,80 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         char ql_nombrecompleto[PATH_MAX];
 
-        ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file);
+        if (!es_dispositivo) {
 
-        ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
+   	     ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file);
+
+        	ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
 
 
         //Para siguientes io.fline
         //ptr_io_fline=NULL;
 
-        if (!si_existe_archivo(ql_nombrecompleto)) {
-          debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
-          //Retornar Not found (NF)
-          m68k_set_reg(M68K_REG_D0,-7);
-        }
-
-        else {
-
-        	//Metemos channel id (A0) inventado
-        	//m68k_set_reg(M68K_REG_A0,QL_ID_CANAL_INVENTADO_MICRODRIVE);
-
-        	//Obtenemos canal disponible
-        	int canal=qltraps_find_free_fopen();
-        	if (canal<0) {
-        		//No hay disponibles. Error.
-          		m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_NC);
-          		return;
-        	}
-
-        	//Se ha retornado indice al array. Canal sera sumando 
-        	m68k_set_reg(M68K_REG_A0,canal+QLTRAPS_START_FILE_NUMBER);
-
-        	//Indicamos en array que esta abierto
-        	qltraps_fopen_files[canal].open_file.v=1;
-
-        	//Resetear eof 
-        	qltraps_fopen_files[canal].next_eof_ptr_io_fline=0;
-
-        	//Indicar file handle
-        	FILE *archivo;
-        	archivo=fopen(ql_nombrecompleto,"rb");
-        	if (archivo==NULL) {
-        		debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
+        	if (!si_existe_archivo(ql_nombrecompleto)) {
+          		debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
           		//Retornar Not found (NF)
           		m68k_set_reg(M68K_REG_D0,-7);
           		return;
         	}
+	}
+
+        
+
+	//Metemos channel id (A0) inventado
+	//m68k_set_reg(M68K_REG_A0,QL_ID_CANAL_INVENTADO_MICRODRIVE);
+
+	//Obtenemos canal disponible
+	int canal=qltraps_find_free_fopen();
+	if (canal<0) {
+		//No hay disponibles. Error.
+  		m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_NC);
+  		return;
+	}
+
+	//Se ha retornado indice al array. Canal sera sumando 
+	m68k_set_reg(M68K_REG_A0,canal+QLTRAPS_START_FILE_NUMBER);
 
 
-        	qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix=archivo;
+	//Resetear eof 
+	qltraps_fopen_files[canal].next_eof_ptr_io_fline=0;
 
-        	//Le hacemos un stat
-        	if (stat(ql_nombrecompleto, &qltraps_fopen_files[canal].last_file_buf_stat)!=0) {
-						debug_printf (VERBOSE_DEBUG,"QLTRAPS handler: Unable to get status of file %s",ql_nombrecompleto);
+
+	strcpy(qltraps_fopen_files[canal].ql_file_name,ql_nombre_archivo_load);
+
+	qltraps_fopen_files[canal].es_dispositivo=es_dispositivo;
+
+
+
+	if (!es_dispositivo) {
+		
+		
+	
+		//Indicar file handle
+		FILE *archivo;
+		archivo=fopen(ql_nombrecompleto,"rb");
+		if (archivo==NULL) {
+        		debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
+	  		//Retornar Not found (NF)
+  			m68k_set_reg(M68K_REG_D0,-7);
+  			return;
+		}
+
+
+		qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix=archivo;
+
+		//Le hacemos un stat
+		if (stat(ql_nombrecompleto, &qltraps_fopen_files[canal].last_file_buf_stat)!=0) {
+			debug_printf (VERBOSE_DEBUG,"QLTRAPS handler: Unable to get status of file %s",ql_nombrecompleto);
 		}
 
 	}
+
+
+	//Indicamos en array que esta abierto
+	qltraps_fopen_files[canal].open_file.v=1;
+
+	
 
         //D1= Job ID. TODO. Parece que da error "error in expression" porque no se asigna un job id valido?
         //Parece que D1 entra con -1, que quiere decir "the channel will be associated with the current job"
@@ -2339,7 +2381,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
       //Aqui se llama despues de hacer "load" de programa basic, hace IO.FLINE y luego hace IO.OPEN de "mdv" sin mas
-      if (ql_si_ruta_parametro(ql_nombre_archivo_load,"mdv")) {
+      /*if (ql_si_ruta_parametro(ql_nombre_archivo_load,"mdv")) {
 
         debug_printf (VERBOSE_PARANOID,"Returning from trap without opening anything because file is mdv");
 
@@ -2368,7 +2410,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         return;
 
-      }
+      }*/
 
     }
 
@@ -2384,8 +2426,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
     	debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
     	//Si canal es el segundo ficticio 
-        if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_2_MICRODRIVE) {
-      		debug_printf (VERBOSE_PARANOID,"Returning IO.CLOSE from our second microdrive channel without error");
+        /*if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_2_MICRODRIVE) {
+      		debug_printf (VERBOSE_DEBUG,"Returning IO.CLOSE from our second microdrive channel without error");
 
        	 	ql_restore_d_registers(pre_io_close_d,7);
         	ql_restore_a_registers(pre_io_close_a,6);
@@ -2406,18 +2448,20 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         	return;
 
 
-       }
+       }*/
       	//Si canal es el mio ficticio 
        	int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
 
         if (indice_canal>=0  ) {
-        	debug_printf (VERBOSE_DEBUG,"Closing file");
+        	debug_printf (VERBOSE_DEBUG,"Closing file/device %s",qltraps_fopen_files[indice_canal].ql_file_name);
+
+        	//Si no es dispositivo, fclose
+        	if (!qltraps_fopen_files[indice_canal].es_dispositivo) {
+        		fclose(qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix);
+        	}
 
         	//Liberar ese item del array
         	qltraps_fopen_files[indice_canal].open_file.v=0;
-
-
-       
 
 
         	//Volver de ese trap
@@ -2430,9 +2474,6 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         	//No error.
         	m68k_set_reg(M68K_REG_D0,0);
-
-        	//para operaciones fline
-        	//ptr_io_fline=NULL;
 
 
        }
@@ -2565,14 +2606,14 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
         //Si canal es el segundo ficticio 100
-        if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_2_MICRODRIVE) {
-        	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from second microdrive channel (just \"mdv\") with EOF");
+        /*if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_2_MICRODRIVE) {
+        	debug_printf (VERBOSE_DEBUG,"Returning IO.FLINE from second microdrive channel (just \"mdv\") with EOF");
         	m68k_set_reg(M68K_REG_D0,-10);
-          	debug_printf (VERBOSE_PARANOID,"IO.FLINE - returning EOF");
+          	debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
           	m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
 
           	return;
-        }
+        }*/
 
         //Si canal es el mio ficticio 100
         int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
@@ -2580,6 +2621,18 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from our microdrive channel without error");
+
+
+        	//Si es un dispositivo entero
+        	if (qltraps_fopen_files[indice_canal].es_dispositivo) {
+        		debug_printf (VERBOSE_DEBUG,"Returning IO.FLINE from full device channel (just \"%s\") with EOF",
+        			qltraps_fopen_files[indice_canal].ql_file_name);
+
+        		m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
+          		debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
+          		m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
+      			return;
+        	}
 
         	 //Indicar actividad en md flp
         	ql_footer_mdflp_operating();
