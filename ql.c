@@ -1443,6 +1443,9 @@ struct s_qltraps_fopen {
         //para telldir
         unsigned int contador_directorio;
 
+        //para io.file. indica que la siguiente lectura debe retornar eof
+        int next_eof_ptr_io_fline;
+
 
         /* Comun */
         //Indica a 1 que el archivo/directorio esta abierto. A 0 si no
@@ -1923,8 +1926,8 @@ int temp_fs_line=0;
 
 
 
-FILE *ptr_io_fline=NULL;
-int next_eof_ptr_io_fline=0;
+//FILE *ptr_io_fline=NULL;
+//int next_eof_ptr_io_fline=0;
 
 //Leer archivo linea a linea. Retorna bytes leidos, y valor de retorno. 
 //Si hay eof, se debe retornar solo el eof y sin bytes leidos
@@ -1932,11 +1935,12 @@ int next_eof_ptr_io_fline=0;
 unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,unsigned int *valor_retorno)
 {
 
+	FILE *ptr_archivo;
 
 	//Si habia final de fichero, retornar solo eso
-	if (next_eof_ptr_io_fline) {
+	if (qltraps_fopen_files[canal].next_eof_ptr_io_fline) {
 		debug_printf (VERBOSE_PARANOID,"Returning eof");
-		next_eof_ptr_io_fline=0;
+		qltraps_fopen_files[canal].next_eof_ptr_io_fline=0;
 		*valor_retorno=-10;
 		return 0;
 	}
@@ -1961,17 +1965,17 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 		next_eof_ptr_io_fline=0;
 	}*/
 
-	ptr_io_fline=qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix;
+	ptr_archivo=qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix;
 
 	unsigned int total_leidos=0;
 	//Ir leyendo hasta codigo 10 o final de fichero
 	int salir=0;
 
 	while (!salir) {
-		int bytes_leidos=fgetc(ptr_io_fline);
+		int bytes_leidos=fgetc(ptr_archivo);
 		//Si negativo, asumimos final de fichero
 		if (bytes_leidos<0) {
-			next_eof_ptr_io_fline=1;
+			qltraps_fopen_files[canal].next_eof_ptr_io_fline=1;
 			salir=1;
 		}
 		ql_writebyte(puntero_destino++,bytes_leidos);
@@ -2272,7 +2276,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
         //Para siguientes io.fline
-        ptr_io_fline=NULL;
+        //ptr_io_fline=NULL;
 
         if (!si_existe_archivo(ql_nombrecompleto)) {
           debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
@@ -2298,6 +2302,9 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         	//Indicamos en array que esta abierto
         	qltraps_fopen_files[canal].open_file.v=1;
+
+        	//Resetear eof 
+        	qltraps_fopen_files[canal].next_eof_ptr_io_fline=0;
 
         	//Indicar file handle
         	FILE *archivo;
@@ -2417,7 +2424,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         	m68k_set_reg(M68K_REG_D0,0);
 
         	//para operaciones fline
-        	ptr_io_fline=NULL;
+        	//ptr_io_fline=NULL;
 
 
        }
