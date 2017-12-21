@@ -1983,8 +1983,15 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 			qltraps_fopen_files[canal].next_eof_ptr_io_fline=1;
 			salir=1;
 		}
-		ql_writebyte(puntero_destino++,bytes_leidos);
-		total_leidos++;
+
+		if (!salir) {
+
+			//printf ("Escribiendo byte %d (%c) direccion %XH\n",bytes_leidos,(bytes_leidos>32 && bytes_leidos<128 ? bytes_leidos : '.'),puntero_destino);
+
+			ql_writebyte(puntero_destino++,bytes_leidos);
+			total_leidos++;
+
+		}
 
 		//Si salto de linea, salir
 		if (bytes_leidos==10) salir=1;
@@ -1992,36 +1999,8 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 
 
 	return total_leidos;
-	//temp
-          	//9 byte leido
-          	/*m68k_set_reg(M68K_REG_D1,9);
+	
 
-
-
-          	printf ("Writing IO.FLINE data to %08XH\n",puntero_destino);
-
-
-          	ql_writebyte(puntero_destino+0,'1');
-          	ql_writebyte(puntero_destino+1,' ');
-          	ql_writebyte(puntero_destino+2,'R');
-          	ql_writebyte(puntero_destino+3,'E');
-          	ql_writebyte(puntero_destino+4,'M');
-          	ql_writebyte(puntero_destino+5,'a');
-          	ql_writebyte(puntero_destino+6,'r');
-          	ql_writebyte(puntero_destino+7,'k');
-          	ql_writebyte(puntero_destino+8,10);
-
-          	//"1 REM<10>"
-
-          	//Aumentar puntero A1
-          	unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
-          	registro_a1 +=9;
-          	m68k_set_reg(M68K_REG_A1,registro_a1);
-
-
-
-        	  //No error. 
-          	m68k_set_reg(M68K_REG_D0,0);*/
 }
 
 
@@ -2714,7 +2693,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
 
 
-          	debug_printf (VERBOSE_PARANOID,"IO.FLINE - restoreg registers. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH",
+          	debug_printf (VERBOSE_DEBUG,"IO.FLINE - Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH",
         		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
         		m68k_get_reg(NULL,M68K_REG_A6),puntero_destino );
 
@@ -2727,9 +2706,13 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	
 
           	m68k_set_reg(M68K_REG_D0,valor_retorno);
+
           	unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
           	registro_a1 +=leidos;
           	m68k_set_reg(M68K_REG_A1,registro_a1);
+
+          	//printf ("Leidos: %d\n",leidos);
+          	m68k_set_reg(M68K_REG_D1,leidos);
 
   	
 

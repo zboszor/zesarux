@@ -15375,6 +15375,8 @@ int menu_file_filter_dir(const char *name,char *filtros[])
 }
 
 
+#define MENU_LAST_DIR_FILE_NAME "zesarux_last_dir.txt"
+
 
 //devuelve 1 si el archivo cumple el filtro
 int menu_file_filter(const char *name,char *filtros[])
@@ -15400,6 +15402,9 @@ int menu_file_filter(const char *name,char *filtros[])
 	//printf ("Extension: %s\n",extension);
 
 	*/
+
+	//El archivo MENU_LAST_DIR_FILE_NAME zesarux_last_dir.txt usado para abrir archivos comprimidos, no lo mostrare nunca
+	if (!strcmp(name,MENU_LAST_DIR_FILE_NAME)) return 0;
 
 	util_get_file_extension((char *) name,extension);
 
@@ -26451,7 +26456,7 @@ return 0;
 
 }
 
-#define MENU_LAST_DIR_FILE_NAME "zesarux_last_dir.txt"
+
 //escribir archivo que indique directorio anterior
 void menu_filesel_write_file_last_dir(char *directorio_anterior)
 {
