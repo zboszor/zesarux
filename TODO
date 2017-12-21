@@ -37,7 +37,7 @@ demos/cueshell.zip
 
 Linea 70, la lee mal hacia el final. pero no siempre lo hace… :(
 
--solo cambiar en la ruta de archivos de ql, la primera _ empezando por la derecha es un "."
+-solo cambiar en la ruta de archivos de ql, la primera _ empezando por la derecha es un ".", sin tener en cuenta logicamente el mdv1_
 Necesario?? si se pone ruta entre comillas no hay que cambiar los . en el basic por _
 
 -tema mayusculas/ minusculas en ql solo funciona directo en mac... que pasa con windows? y mac?
