@@ -1868,7 +1868,7 @@ void ql_split_path_device_name(char *ql_path, char *ql_device, char *ql_file)
 
   for (;ql_path[i];i++,destino++) {
     c=letra_minuscula(ql_path[i]);
-    if (c=='_') c='.';
+    if (c=='_') c='.'; //TODO: Deberia hacer eso solo para la primera _ desde la derecha
     ql_file[destino]=c;
   }
 
