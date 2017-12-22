@@ -255,22 +255,22 @@ int keymap[] =
     'r',
     'y',
     't',
-    '1',
+    '1',  //18
     '2',
     '3',  //20
-    '4',
+    '4',  //21
     '6',
     '5',
-    '=',
+    '=',  //24
     '9',
     '7',
-    '-',
+    '-',  //27
     '8',
     '0',
     ']',  //30
     'o',
     'u',
-    '[',
+    '[',  //33
     'i',
     'p',
     COCOA_KEY_RETURN,
@@ -280,11 +280,11 @@ int keymap[] =
     'k',  //40
     ';',
     '\\',
-    ',',
+    ',',  //43
     '/',
     'n',
     'm',
-    '.',
+    '.',  //47
     COCOA_KEY_TAB,
     ' ',
     '`',  //50
@@ -1527,11 +1527,19 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
 			*/
 
                         case ',':
-				util_set_reset_key(UTIL_KEY_COMMA,pressrelease);
+				util_set_reset_key(',',pressrelease);
                         break;
 
                         case '.':
-				util_set_reset_key(UTIL_KEY_PERIOD,pressrelease);
+				util_set_reset_key('.',pressrelease);
+                        break;
+
+                        case '<':
+                        util_set_reset_key('<',pressrelease);
+                        break;
+
+                        case '>':
+                        util_set_reset_key('>',pressrelease);
                         break;
 
                         case COCOA_KEY_TAB:

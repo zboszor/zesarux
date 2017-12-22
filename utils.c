@@ -3502,6 +3502,7 @@ void convert_numeros_letras_puerto_teclado_continue(z80_byte tecla,int pressrele
 
                enum util_teclas tecla_final;
                int pressrelease_final;
+               //printf ("Entrada a convertir tecla recreated desde convert_numeros_letras_puerto_teclado_continue\n");
                recreated_zx_spectrum_keyboard_convert(tecla, &tecla_final, &pressrelease_final);
                if (tecla_final) {
                		//printf ("redefinicion de tecla. antes: %d despues: %d\n",tecla,tecla_final);
@@ -3521,17 +3522,26 @@ void convert_numeros_letras_puerto_teclado_continue(z80_byte tecla,int pressrele
                        	)
                        {
                        	//Nada. Prefiero escribir la condicion asi que no poner un negado
+                       	//printf("Tecla final es entre az y 09. generar puerto spectrum\n");
                        }
 
-                       //recreated_zx_keyboard_pressed_caps
 
                        else {
-                       	util_set_reset_key(tecla,pressrelease);
+                       	//util_set_reset_key(tecla,pressrelease);
+                       	//printf ("Enviar a util_set_reset_key_convert_recreated_yesno sin convertir\n");
+                       	util_set_reset_key_convert_recreated_yesno(tecla,pressrelease,0);
                        	return;
                        }
                }
        }
 
+       convert_numeros_letras_puerto_teclado_continue_after_recreated(tecla,pressrelease);
+}
+
+
+
+void convert_numeros_letras_puerto_teclado_continue_after_recreated(z80_byte tecla,int pressrelease)
+{
 
 	//Redefinicion de teclas
 	z80_byte tecla_redefinida;
@@ -5008,28 +5018,33 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
 
 }
 
-
-void util_set_reset_key(enum util_teclas tecla,int pressrelease)
+void util_set_reset_key_convert_recreated_yesno(enum util_teclas tecla,int pressrelease,int convertrecreated)
+//void util_set_reset_key(enum util_teclas tecla,int pressrelease)
 {
 
-	//Si teclado recreated, y menu cerrado
-	if (!menu_abierto && recreated_zx_keyboard_support.v) {
 
-		enum util_teclas tecla_final;
-		int pressrelease_final;
+	//Para poder evitar que se vuelva a convertir cuando se llama desde convert_numeros_letras_puerto_teclado_continue
+	if (convertrecreated) {
+		//Si teclado recreated, y menu cerrado
+		if (!menu_abierto && recreated_zx_keyboard_support.v) {
 
-		//Si es mayusculas
-		if (tecla==UTIL_KEY_SHIFT_L) {
-			//printf ("Pulsada shift L real\n");
-			if (pressrelease) recreated_zx_keyboard_pressed_caps.v=1;
-			else recreated_zx_keyboard_pressed_caps.v=0;
-			return;
-		}
+			enum util_teclas tecla_final;
+			int pressrelease_final;
 
-		recreated_zx_spectrum_keyboard_convert(tecla, &tecla_final, &pressrelease_final);
-		if (tecla_final) {
-			tecla=tecla_final;
-			pressrelease=pressrelease_final;
+			//Si es mayusculas
+			if (tecla==UTIL_KEY_SHIFT_L) {
+				//printf ("Pulsada shift L real\n");
+				if (pressrelease) recreated_zx_keyboard_pressed_caps.v=1;
+				else recreated_zx_keyboard_pressed_caps.v=0;
+				return;
+			}
+
+			//printf ("Entrada a convertir tecla recreated desde util_set_reset_key\n");
+			recreated_zx_spectrum_keyboard_convert(tecla, &tecla_final, &pressrelease_final);
+			if (tecla_final) {
+				tecla=tecla_final;
+				pressrelease=pressrelease_final;
+			}
 		}
 	}
 
@@ -5177,6 +5192,13 @@ void util_set_reset_key(enum util_teclas tecla,int pressrelease)
 
 }
 
+
+
+
+void util_set_reset_key(enum util_teclas tecla,int pressrelease)
+{
+	util_set_reset_key_convert_recreated_yesno(tecla,pressrelease,1);
+}
 
 void convert_numeros_letras_puerto_teclado(z80_byte tecla,int pressrelease)
 {
@@ -5506,6 +5528,7 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 
 	switch (tecla) {
                         case UTIL_KEY_SPACE:
+                       	case 32:
                                 if (pressrelease) {
                                         puerto_32766 &=255-1;
                                         blink_kbd_a13 &= (255-64);
@@ -5884,7 +5907,9 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 	                                }
 				}
                         break;
+
                         case UTIL_KEY_COMMA:
+                        case ',':
 				if (MACHINE_IS_ZX8081) {
 					if (pressrelease) {
 						puerto_32766 &=255-2;
@@ -5923,6 +5948,7 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 
                         //Punto
                         case UTIL_KEY_PERIOD:
+                        case '.':
 
                                 if (MACHINE_IS_ZX8081) {
                                         //para zx80/81
@@ -6363,6 +6389,22 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 			case UTIL_KEY_NONE:
 				//Esto no se usa aqui, solo lo usa en la rutina de Chloe. Lo pongo para que no se queje de Warning al compilar
 				//Ademas esto identifica cuando no habia tecla previa en Chloe, no tiene sentido aqui en el switch gestionarlo
+			break;
+
+			//Chapuza. Para gestion de z y b del teclado recreated
+			//La solucion elegante seria que para activar un puerto de tecla, se usase solo util_set_reset_keys, 
+			//y nadie llamase a conver_numeros_teclas_teclado. Para ello, todas las teclas fuera de lo ascii (ctrl, alt, etc)
+			//deben tener una numeracion fuera de lo ascii normal (128 en adelante?)
+			//Esta chapuza que hago tambien esta provocando que se llame a la funcion de recreated_zx_spectrum_keyboard_convert
+			//desde dos sitios, cuando deberia llamarse solo desde un sitio
+			case 'z':
+			case 'b':
+				convert_numeros_letras_puerto_teclado_continue_after_recreated(tecla,pressrelease);
+			break;
+
+
+			default:
+				//printf ("Caso no gestionado de util_reset_key_continue\n");
 			break;
 
 

@@ -265,15 +265,15 @@ K    23
 L    45
 ENTER    67
 CAP SHIFT    89
-Z    <>
+Z    <>   (es ,. pero con mayusculas)
 X    -=
 C    []
 V    ;:
 B    ,.
-N    /?
-M    {}            See note [6]
-SYMBOL SHIFT    !$        See Note [6]
-BREAK SPACE        %^
+N    /?  (? es / con mayusculas)
+M    {}   (Es [] pero con mayusculas)       See note [6]
+SYMBOL SHIFT    !$   (es 14 pero con mayusculas)     See Note [6]
+BREAK SPACE        %^ (es 56 pero con mayusculas)
 
 
 So when key 1 is pressed, we get an ‘a’ and when released we get a ‘b’.
@@ -292,7 +292,61 @@ una tecla (ascii>=32) llegue a pensar que se trata de algun simbolo UTIL_KEY
 Por lo que hay que tener cuidado de no usar aqui valores de UTIL_KEY que sean mayores de 31
 */
 
-    if (recreated_zx_keyboard_pressed_caps.v && tecla>='a' && tecla<='z')  tecla-=32;
+    //printf ("convirtiendo tecla %d (\"%c\") shift=%d de recreated\n",tecla,tecla,recreated_zx_keyboard_pressed_caps.v);
+
+    if (recreated_zx_keyboard_pressed_caps.v) {
+        if (tecla>='a' && tecla<='z')  tecla-=32;
+        else {
+            //Otros cambios con mayusculas
+            switch (tecla)
+            {
+                case ',':
+                    tecla='<';
+                break;
+
+                case '.':
+                    tecla='>';
+                break;
+
+                case '/':
+                    tecla='?';
+                break;
+
+                case '[':
+                    tecla='{';
+                break;
+
+                case ']':
+                    tecla='}';
+                break;
+
+                case ';':
+                    tecla=':';
+                break;
+
+/*
+SYMBOL SHIFT    !$   (es 14 pero con mayusculas)     See Note [6]
+BREAK SPACE        %^ (es 56 pero con mayusculas)
+*/
+                case '1':
+                    tecla='!';
+                break;
+
+                case '4':
+                    tecla='$';
+                break;
+
+                case '5':
+                    tecla='%';
+                break;
+
+                case '6':
+                    tecla='^';
+                break;
+
+            }
+        }
+    }
 
     //Desde la a-z y A-Z tenemos una tabla
     //char recreated_key_table_minus[]="1234567890QWE";
@@ -374,13 +428,127 @@ Por lo que hay que tener cuidado de no usar aqui valores de UTIL_KEY que sean ma
             *tecla_final=UTIL_KEY_CAPS_SHIFT;
         break;
 
+        /*
+        Z    <>
+X    -=
+C    []
+V    ;:
+
+        */
+
+        case '<':
+            *pressrelease=1;
+            *tecla_final='z';
+        break;
+
+        case '>':
+            *pressrelease=0;
+            *tecla_final='z';
+        break;
+
+
+        case '-':
+            *pressrelease=1;
+            *tecla_final='x';
+        break;
+
+        case '=':
+            *pressrelease=0;
+            *tecla_final='x';
+        break;
+
+
+        case '[':
+            *pressrelease=1;
+            *tecla_final='c';
+        break;
+
+        case ']':
+            *pressrelease=0;
+            *tecla_final='c';
+        break;
+
+        case ';':
+            *pressrelease=1;
+            *tecla_final='v';
+        break;
+
+        case ':':
+            *pressrelease=0;
+            *tecla_final='v';
+        break;
+
+/*
+B    ,.
+N    /?
+M    {}            See note [6]
+
+
+*/
+
+        case ',':
+            *pressrelease=1;
+            *tecla_final='b';
+        break;
+
+        case '.':
+            *pressrelease=0;
+            *tecla_final='b';
+        break;
+
+        case '/':
+            *pressrelease=1;
+            *tecla_final='n';
+        break;
+
+        case '?':
+            *pressrelease=0;
+            *tecla_final='n';
+        break;
+
+        case '{':
+            *pressrelease=1;
+            *tecla_final='m';
+        break;
+
+        case '}':
+            *pressrelease=0;
+            *tecla_final='m';
+        break;
+/*
+SYMBOL SHIFT    !$        See Note [6]
+BREAK SPACE        %^
+*/
+
+        case '!':
+            *pressrelease=1;
+            *tecla_final=UTIL_KEY_CONTROL_L;
+        break;
+
+        case '$':
+            *pressrelease=0;
+            *tecla_final=UTIL_KEY_CONTROL_L;
+        break;
+
+        case '%':
+            *pressrelease=1;
+            *tecla_final=32;
+        break;
+
+        case '^':
+            *pressrelease=0;
+            *tecla_final=32;
+        break;        
 
         default:
             //Valores sin alterar
+            //printf ("tecla sin alterar %c\n",tecla);
             *tecla_final=0;
         break;
 
     }
+
+    //printf ("fin de funcion. tecla final: %c pressrelease: %d\n",*tecla_final,*pressrelease);
 
 
 }

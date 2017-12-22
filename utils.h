@@ -235,9 +235,9 @@ extern void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
 //valores usados en funcion util_set_reset_key
 enum util_teclas
 {
-	UTIL_KEY_NONE,  //None se usa en teclado chloe
+	UTIL_KEY_NONE=0,  //None se usa en teclado chloe
 
-	UTIL_KEY_SPACE,
+	UTIL_KEY_SPACE=128,  //128 en adelante para no entrar en conflicto con teclas ascii <128
 	UTIL_KEY_ENTER,
 	UTIL_KEY_SHIFT_L,
 	UTIL_KEY_SHIFT_R,
@@ -582,5 +582,9 @@ extern int util_return_ceros_byte(z80_byte valor);
 extern void util_byte_to_binary(z80_byte value,char *texto);
 
 extern void util_copy_file(char *source_file, char *destination_file);
+
+extern void util_set_reset_key_convert_recreated_yesno(enum util_teclas tecla,int pressrelease,int convertrecreated);
+
+extern void convert_numeros_letras_puerto_teclado_continue_after_recreated(z80_byte tecla,int pressrelease);
 
 #endif
