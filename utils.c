@@ -966,7 +966,7 @@ void old_open_sharedfile(char *archivo,FILE **f)
 //2) ../Resources/
 //3) INSTALLPREFIX/
 //normalmente usado para cargar roms
-//Retorna ruta archivo en ruta_final, valor retorno no 0. Si no existe, valor retorno 0
+//Retorna ruta archivo en ruta_final (siempre que no sea NULL), valor retorno no 0. Si no existe, valor retorno 0
 int find_sharedfile(char *archivo,char *ruta_final)
 {
         char buffer_nombre[PATH_MAX];
@@ -993,8 +993,8 @@ int find_sharedfile(char *archivo,char *ruta_final)
         }
 
 	if (existe) {
-		strcpy(ruta_final,buffer_nombre);
-		debug_printf(VERBOSE_INFO,"Found on path %s",ruta_final);
+		if (ruta_final!=NULL) strcpy(ruta_final,buffer_nombre);
+		debug_printf(VERBOSE_INFO,"Found on path %s",buffer_nombre);
 	}
 
 	return existe;
@@ -9398,15 +9398,27 @@ void util_copy_file(char *source_file, char *destination_file)
 
 }
 
+int si_existe_editionnamegame(char *nombre_final)
+{
+	return find_sharedfile("editionnamegame.tap",nombre_final);
+}
+
 //Carga el juego designado como edition name game. Devuelve 0 si no encontrado (en caso por ejemplo que el juego
 //esté denegada la distribución
 int util_load_editionnamegame(void)
 {
 	char nombre_final[PATH_MAX];
-	if (find_sharedfile("editionnamegame.tap",nombre_final)) {
+	if (si_existe_editionnamegame(nombre_final)) {
+		debug_printf(VERBOSE_INFO,"Loading name edition game %s",EMULATOR_GAME_EDITION);
 		strcpy(quickload_file,nombre_final);
 		quickfile=quickload_file;
+		//Forzar autoload
+		z80_bit pre_noautoload;
+		pre_noautoload.v=noautoload.v;
+		noautoload.v=0;
 		quickload(quickload_file);
+
+		noautoload.v=pre_noautoload.v;
 		return 1;
 	}
 	else return 0;

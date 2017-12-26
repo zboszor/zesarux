@@ -32,7 +32,8 @@
 
 #define EMULATOR_DATE "26 December 2017"
 #define EMULATOR_SHORT_DATE "26/12/2017"
-#define EMULATOR_EDITION_NAME "Xeno edition"
+#define EMULATOR_GAME_EDITION "Xeno"
+#define EMULATOR_EDITION_NAME EMULATOR_GAME_EDITION " edition"
 
 //8 bits
 typedef unsigned char z80_byte;

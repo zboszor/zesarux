@@ -23636,8 +23636,35 @@ void menu_about_about(MENU_ITEM_PARAMETERS)
 
                         "(C) 2013 Cesar Hernandez Ba%co\n",letra_enye);
 
-	menu_generic_message("About",mensaje_about);
+	//menu_generic_message("About",mensaje_about);
 
+/*menu_generic_message_tooltip("Select file", 0, 0, 0, &retorno_archivo, "%s", texto_buffer);
+menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...);
+*/
+	generic_message_tooltip_return retorno_ventana;
+	menu_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
+
+	//Si se sale con ESC
+        if (retorno_ventana.estado_retorno==0) return;
+
+	//Linea seleccionada es 1? quiere decir que se selecciona texto "--- edition"
+/*
+	Por defecto, linea seleccionada es 0, incluso aunque no se haya habilitado linea de cursor, por ejemplo
+	al buscar texto con f y n
+	Como la que buscamos es la 1, no hay problema de falso positivo
+*/
+	int linea=retorno_ventana.linea_seleccionada;
+	debug_printf(VERBOSE_INFO,"Closing window with Enter and selected line=%d",linea);
+	if (linea==1) {
+		if (si_existe_editionnamegame(NULL)) {
+			util_load_editionnamegame();
+			salir_todos_menus=1;
+		}
+		else {
+			//Se ha seleccionado texto edition name pero el juego no esta disponible
+			debug_printf(VERBOSE_INFO,"Edition name game %s is not available",EMULATOR_GAME_EDITION);
+		}
+	}
 
 }
 

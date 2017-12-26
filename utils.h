@@ -587,4 +587,8 @@ extern void util_set_reset_key_convert_recreated_yesno(enum util_teclas tecla,in
 
 extern void convert_numeros_letras_puerto_teclado_continue_after_recreated(z80_byte tecla,int pressrelease);
 
+extern int util_load_editionnamegame(void);
+extern int find_sharedfile(char *archivo,char *ruta_final);
+extern int si_existe_editionnamegame(char *nombre_final);
+
 #endif
