@@ -934,13 +934,14 @@ void clear_shift_z88(void)
 //3) INSTALLPREFIX/
 //normalmente usado para cargar roms
 //modifica puntero FILE adecuadamente
-void open_sharedfile(char *archivo,FILE **f)
+void old_open_sharedfile(char *archivo,FILE **f)
 {
         char buffer_nombre[1024];
+	strcpy(buffer_nombre,archivo);
 
         //ruta actual
-        debug_printf(VERBOSE_INFO,"Looking for file %s at current dir",archivo);
-        *f=fopen(archivo,"rb");
+        debug_printf(VERBOSE_INFO,"Looking for file %s at current dir",buffer_nombre);
+        *f=fopen(buffer_nombre,"rb");
 
         //sino, en ../Resources
         if (!(*f)) {
@@ -958,6 +959,67 @@ void open_sharedfile(char *archivo,FILE **f)
 
 
 }
+
+
+//Busca un archivo buscandolo en las rutas:
+//1) ruta actual
+//2) ../Resources/
+//3) INSTALLPREFIX/
+//normalmente usado para cargar roms
+//Retorna ruta archivo en ruta_final, valor retorno no 0. Si no existe, valor retorno 0
+int find_sharedfile(char *archivo,char *ruta_final)
+{
+        char buffer_nombre[PATH_MAX];
+	strcpy(buffer_nombre,archivo);
+
+	int existe;
+
+        //ruta actual
+        debug_printf(VERBOSE_INFO,"Looking for file %s at current dir",buffer_nombre);
+        existe=si_existe_archivo(buffer_nombre);
+
+        //sino, en ../Resources
+        if (!existe) {
+                sprintf(buffer_nombre,"../Resources/%s",archivo);
+                debug_printf(VERBOSE_INFO,"Looking for file %s",buffer_nombre);
+                existe=si_existe_archivo(buffer_nombre);
+
+                //sino, en INSTALLPREFIX/share/zesarux
+                if (!existe) {
+                        sprintf(buffer_nombre,"%s/%s/%s",INSTALL_PREFIX,"/share/zesarux/",archivo);
+                        debug_printf(VERBOSE_INFO,"Looking for file %s",buffer_nombre);
+                        existe=si_existe_archivo(buffer_nombre);
+                }
+        }
+
+	if (existe) {
+		strcpy(ruta_final,buffer_nombre);
+		debug_printf(VERBOSE_INFO,"Found on path %s",ruta_final);
+	}
+
+	return existe;
+}
+
+
+//Abre un archivo en solo lectura buscandolo en las rutas:
+//1) ruta actual
+//2) ../Resources/
+//3) INSTALLPREFIX/
+//normalmente usado para cargar roms
+//modifica puntero FILE adecuadamente
+void open_sharedfile(char *archivo,FILE **f)
+{
+        char buffer_nombre[PATH_MAX];
+
+	int existe=find_sharedfile(archivo,buffer_nombre);
+	if (existe) {
+		*f=fopen(buffer_nombre,"rb");
+	}
+ 
+	else *f=NULL;
+
+}
+
 
 //Devuelve puntero a archivo si ha podido encontrar el archivo y abrirlo en escritura.
 //NULL
@@ -9334,4 +9396,18 @@ void util_copy_file(char *source_file, char *destination_file)
         fclose(ptr_destination_file);
 
 
+}
+
+//Carga el juego designado como edition name game. Devuelve 0 si no encontrado (en caso por ejemplo que el juego
+//esté denegada la distribución
+int util_load_editionnamegame(void)
+{
+	char nombre_final[PATH_MAX];
+	if (find_sharedfile("editionnamegame.tap",nombre_final)) {
+		strcpy(quickload_file,nombre_final);
+		quickfile=quickload_file;
+		quickload(quickload_file);
+		return 1;
+	}
+	else return 0;
 }
