@@ -96,6 +96,8 @@ extern int ql_mdflp_operating_counter;
 
 extern void delete_ql_mdflp_text(void);
 
+extern void qltraps_init_fopen_files_array(void);
+
 
 #define QLTRAPS_MAX_OPEN_FILES 3
 #define QLTRAPS_START_FILE_NUMBER 32

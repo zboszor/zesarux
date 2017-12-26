@@ -212,10 +212,11 @@ void zxpand_footer_zxpand_operating(void)
 	//Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
 	if (!zxpand_operating_counter) {
 
-		zxpand_operating_counter=2;
+		
 		zxpand_footer_print_zxpand_operating();
 
 	}
+	zxpand_operating_counter=2;
 }
 
 
