@@ -14080,29 +14080,6 @@ int menu_onscreen_send_enter_check_exit(z80_byte tecla)
 			enviar=0;
 		}
 
-		/*if (enviar) {
-			//Liberar otras teclas, por si acaso
-			reset_keyboard_ports();
-			int i;
-			for (i=0;i<40;i++) {
-				if (menu_osd_teclas_pulsadas[i]) {
-					printf ("Sending key %s\n",teclas_osd[i].tecla);
-					menu_osd_send_key_text(teclas_osd[i].tecla);
-				}
-			}
-
-		
-
-		//Si estan los flags de CS o SS, activarlos
-		//if (menu_button_osdkeyboard_caps.v) puerto_65278  &=255-1;
-		//if (menu_button_osdkeyboard_symbol.v) puerto_32766 &=255-2;
-		//if (menu_button_osdkeyboard_enter.v) puerto_49150 &=255-1;
-
-			printf ("Exiting and sending\n");
-
-			salir_todos_menus=1;
-			timer_on_screen_key=25; //durante medio segundo
-		}*/
 	}
 
 
@@ -14235,14 +14212,6 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 			case 2: //ESC
 			case 13: //Enter
-				/*indice=menu_onscreen_keyboard_return_index_cursor();
-				if (indice==40) {
-					//En sticky
-					menu_onscreen_keyboard_sticky ^=1;
-				}
-
-				else salir=1;*/
-
 				salir=menu_onscreen_send_enter_check_exit(tecla);
 				
 			break;
@@ -14254,9 +14223,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 	//Si salido con Enter o Fire joystick
 	if (tecla==13) {
-
-
-		
+	
 			//Liberar otras teclas, por si acaso
 			reset_keyboard_ports();
 			int i;
@@ -14267,62 +14234,12 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 				}
 			}
 
-		
-
-		//Si estan los flags de CS o SS, activarlos
-		//if (menu_button_osdkeyboard_caps.v) puerto_65278  &=255-1;
-		//if (menu_button_osdkeyboard_symbol.v) puerto_32766 &=255-2;
-		//if (menu_button_osdkeyboard_enter.v) puerto_49150 &=255-1;
 
 			//printf ("Exiting and sending\n");
 
 			salir_todos_menus=1;
 			timer_on_screen_key=25; //durante medio segundo
 		
-
-
-		//Liberar otras teclas, por si acaso
-		/*reset_keyboard_ports();
-
-		//Si esta en modo sticky, agregar tecla a la lista y enviar todas
-		//Si no, solo enviar una tecla
-		if (!menu_onscreen_keyboard_sticky) {
-			menu_onscreen_keyboard_reset_pressed_keys();
-		}
-
-		//Agregar esa tecla al array, siempre que no sea orden "send"
-	        indice=menu_onscreen_keyboard_return_index_cursor();
-
-	        if (indice!=41) {
-			menu_osd_teclas_pulsadas[indice] ^=1;
-			if (menu_osd_teclas_pulsadas[indice]) debug_printf (VERBOSE_DEBUG,"Adding key %s and sending all",teclas_osd[indice].tecla);
-			else debug_printf (VERBOSE_DEBUG,"Clearing key %s and sending all",teclas_osd[indice].tecla);
-		}
-
-		//Si es modo stick, solo enviar cuando pulsar "Send"
-		//Si no modo stick, enviar la que haya
-		int enviar=1;
-		if (menu_onscreen_keyboard_sticky && indice!=41) enviar=0;
-
-		if (enviar) {
-			int i;
-			for (i=0;i<40;i++) {
-				if (menu_osd_teclas_pulsadas[i]) {
-					printf ("Sending key %s\n",teclas_osd[i].tecla);
-					menu_osd_send_key_text(teclas_osd[i].tecla);
-				}
-			}
-
-		
-
-		//Si estan los flags de CS o SS, activarlos
-		//if (menu_button_osdkeyboard_caps.v) puerto_65278  &=255-1;
-		//if (menu_button_osdkeyboard_symbol.v) puerto_32766 &=255-2;
-		//if (menu_button_osdkeyboard_enter.v) puerto_49150 &=255-1;
-
-			salir_todos_menus=1;
-			timer_on_screen_key=25; //durante medio segundo
-		}*/
 
 	}
 
@@ -14336,9 +14253,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 		//se sale con esc, quitar pulsaciones de caps y symbol
 		menu_onscreen_keyboard_reset_pressed_keys();
 		menu_onscreen_keyboard_sticky=0;
-		//menu_button_osdkeyboard_caps.v=0;
-		//menu_button_osdkeyboard_symbol.v=0;
-		//menu_button_osdkeyboard_enter.v=0;
+
 	}
 
 }
