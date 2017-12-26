@@ -1497,7 +1497,7 @@ int menu_si_pulsada_tecla_osd(void)
 		return 1;
 	}
 
-	if (menu_button_f_function.v==0) return 0;
+	/*if (menu_button_f_function.v==0) return 0;
 
 	debug_printf(VERBOSE_DEBUG,"Pressed F key");
 
@@ -1508,7 +1508,7 @@ int menu_si_pulsada_tecla_osd(void)
 	if (accion==F_FUNCION_OSDKEYBOARD) {
 		debug_printf(VERBOSE_DEBUG,"Pressed F key mapped to OSD");
 		return 1;
-	}
+	}*/
 
 	return 0;
 

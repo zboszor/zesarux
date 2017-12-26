@@ -5298,7 +5298,9 @@ int util_set_reset_key_continue_f_functions(enum util_teclas tecla,int pressrele
 
   //printf ("tecla: %d pressrelease: %d menu_abierto: %d\n",tecla,pressrelease,menu_abierto);
 
-  if (menu_abierto) return 0;
+  //Aunque este el menu abierto, procesar estas teclas. Asi esto permite que la tecla de OSD aparezca 
+  //desde el menu
+  //if (menu_abierto) return 0;
   //Ver si la tecla F esta asignada
   //enum defined_f_function_ids defined_f_functions_keys_array[MAX_F_FUNCTIONS_KEYS]
 
