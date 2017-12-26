@@ -22993,13 +22993,17 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 							buffer_texto_buscado[0]=0;
 			        			menu_ventana_scanf("Text to find",buffer_texto_buscado,33);
 
-							ultima_linea_buscada=0;
+							//ultima_linea_buscada=0; //Si lo pusiera a 0, no encontraria nada en primera linea
+							//pues no se cumpliria la condicion de mas abajo de i>ultima_linea_buscada
+
+							ultima_linea_buscada=-1;
 
 						}
 
 						int i;
 						char *encontrado=NULL;
 						for (i=0;i<indice_linea;i++) {
+							debug_printf(VERBOSE_DEBUG,"Searching text on line %d: %s",i,buffer_lineas[i]);
 							encontrado=util_strcasestr(buffer_lineas[i], buffer_texto_buscado);
 							if (encontrado && i>ultima_linea_buscada) {
 								break;

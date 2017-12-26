@@ -48,6 +48,8 @@ archivo se llama spacepods.bas y hace lbytes mdv1_spacepods_bas -> lo normal
 
 -implementar exec_mdv1_... mismo ejemplo con cueshell, va a   Returning header for file on address 00100H y ahi peta
 
+-teclado en pantalla deberia poder salir desde propio menu
+
 
 IMPORTANTE: ruido al iniciar emulador, no siempre, debido al agregar rutina de autoresize audio puntero
 Quiza solo permitir cuando hayan pasado unos segundos desde el inicio del emulador
@@ -1525,8 +1527,6 @@ Convertir archivo
 -Archivos recientes. Solo para smartload ?
 
 -Otra mejora: poder mover ventanas menu con ratón 
-
--quiza juego que de nombre a la edicion del emulador incluir en opcion del menu
 
 -Poder buscar cadenas de texto en find byte. Al estilo de strings de linux, es decir, indicarle un minimo de caracteres juntos y saque todas las cadenas de texto
 opcion tambien para bajar bit 7 final
