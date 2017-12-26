@@ -106,6 +106,7 @@ void ql_footer_mdflp_operating(void)
 
         //Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
         if (!ql_mdflp_operating_counter) {    
+		ql_mdflp_operating_counter=2;
                 ql_footer_print_mdflp_operating();
 
         }

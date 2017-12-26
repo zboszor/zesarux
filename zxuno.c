@@ -162,6 +162,7 @@ void zxuno_footer_flash_operating(void)
 
 	//Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
 	if (!zxuno_flash_operating_counter) {
+		zxuno_flash_operating_counter=2;
 		zxuno_footer_print_flash_operating();
 
 	}

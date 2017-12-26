@@ -145,8 +145,7 @@ void superupgrade_footer_flash_operating(void)
 
 	//Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
 	if (!superupgrade_flash_operating_counter) {
-
-		
+		superupgrade_flash_operating_counter=2;
 		superupgrade_footer_print_flash_operating();
 
 	}

@@ -460,8 +460,7 @@ void ide_footer_ide_operating(void)
 
         //Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
         if (!ide_operating_counter) {
-
-                
+		ide_operating_counter=2;
                 ide_footer_print_ide_operating();
 
         }

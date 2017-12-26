@@ -142,8 +142,7 @@ void mmc_footer_mmc_operating(void)
 
         //Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
         if (!mmc_operating_counter) {
-
-                
+		mmc_operating_counter=2;
                 mmc_footer_print_mmc_operating();
 
         }
