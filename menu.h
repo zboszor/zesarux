@@ -58,6 +58,9 @@ struct s_overlay_screen {
 	z80_byte caracter;
 };
 
+#define OVERLAY_SCREEN_WIDTH 32
+#define OVERLAY_SCREEN_HEIGTH 24
+
 typedef struct s_overlay_screen overlay_screen;
 
 #define MAX_F_FUNCTIONS 18

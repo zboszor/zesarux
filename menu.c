@@ -197,7 +197,7 @@ int menu_define_key_function(int tecla,char *funcion)
 void (*menu_overlay_function)(void);
 
 //buffer de escritura por pantalla
-overlay_screen overlay_screen_array[32*24];
+overlay_screen overlay_screen_array[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
 
 //Indica que hay una segunda capa de texto por encima de menu y por encima del juego incluso
 //util para mostrar indicadores de carga de cinta, por ejemplo
@@ -1428,6 +1428,92 @@ void menu_scanf_print_string(char *string,int offset_string,int max_length_shown
 
 }
 
+//funcion que guarda el contenido del texto del menu. Usado por ejemplo en scanf cuando se usa teclado en pantalla
+void menu_save_overlay_text_contents(overlay_screen *destination)
+{
+	int size=sizeof(overlay_screen_array);
+	debug_printf(VERBOSE_DEBUG,"Saving overlay text contents. Size=%d bytes",size);
+
+	memcpy(destination,overlay_screen_array,size);
+}
+
+//funcion que restaura el contenido del texto del menu. Usado por ejemplo en scanf cuando se usa teclado en pantalla
+void menu_restore_overlay_text_contents(overlay_screen *origin)
+{
+	int size=sizeof(overlay_screen_array);
+	debug_printf(VERBOSE_DEBUG,"Restoring overlay text contents. Size=%d bytes",size);
+
+	memcpy(overlay_screen_array,origin,size);
+}
+
+
+//Llamar al teclado en pantalla pero desde algun menu ya, sobreimprimiéndolo
+void menu_call_onscreen_keyboard_from_menu(void)
+{
+
+	menu_espera_no_tecla();
+	//menu_button_osdkeyboard.v=0; //Decir que no tecla osd pulsada, por si acaso
+	//menu_button_f_function.v=0;
+
+	overlay_screen copia_overlay[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
+
+	//Guardamos contenido de la pantalla
+	menu_save_overlay_text_contents(copia_overlay);
+	//Guardamos linea cuadrado ventana
+	int antes_cuadrado_activo=0;
+	z80_byte antes_cuadrado_x1,antes_cuadrado_y1,antes_cuadrado_x2,antes_cuadrado_y2,antes_cuadrado_color;
+	
+	antes_cuadrado_activo=cuadrado_activo;
+	antes_cuadrado_x1=cuadrado_x1;
+	antes_cuadrado_y1=cuadrado_y1;
+	antes_cuadrado_x2=cuadrado_x2;
+	antes_cuadrado_y2=cuadrado_y2;
+	antes_cuadrado_color=cuadrado_color;
+
+	menu_onscreen_keyboard(0);
+
+	//Restaurar texto ventana
+	menu_restore_overlay_text_contents(copia_overlay);
+	
+	//Restaurar linea cuadrado ventana
+	cuadrado_activo=antes_cuadrado_activo;
+	cuadrado_x1=antes_cuadrado_x1;
+	cuadrado_y1=antes_cuadrado_y1;
+	cuadrado_x2=antes_cuadrado_x2;
+	cuadrado_y2=antes_cuadrado_y2;
+	cuadrado_color=antes_cuadrado_color;
+
+	all_interlace_scr_refresca_pantalla();	
+
+	
+}
+
+//Si se ha pulsado tecla (o boton) asignado a osd
+int menu_si_pulsada_tecla_osd(void)
+{
+	if (menu_button_osdkeyboard.v) {
+		debug_printf(VERBOSE_DEBUG,"Pressed OSD default key");
+		return 1;
+	}
+
+	if (menu_button_f_function.v==0) return 0;
+
+	debug_printf(VERBOSE_DEBUG,"Pressed F key");
+
+	//Tecla F pulsada, ver si es la asignada a osd
+        int indice=menu_button_f_function_index;
+
+        enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+	if (accion==F_FUNCION_OSDKEYBOARD) {
+		debug_printf(VERBOSE_DEBUG,"Pressed F key mapped to OSD");
+		return 1;
+	}
+
+	return 0;
+
+
+}
+
 //devuelve cadena de texto desde teclado
 //max_length contando caracter 0 del final, es decir, para un texto de 4 caracteres, debemos especificar max_length=5
 //ejemplo, si el array es de 50, se le debe pasar max_length a 50
@@ -1466,6 +1552,12 @@ int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,i
 		menu_espera_tecla();
 		tecla=menu_get_pressed_key();
 		menu_espera_no_tecla();
+
+		//On screen keyboard
+		if (menu_si_pulsada_tecla_osd() ) {
+			tecla=0;
+			menu_call_onscreen_keyboard_from_menu();
+		}
 
 		//si tecla normal, agregar:
 		if (tecla>31 && tecla<128) {
