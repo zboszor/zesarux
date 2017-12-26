@@ -1452,8 +1452,8 @@ void menu_call_onscreen_keyboard_from_menu(void)
 {
 
 	menu_espera_no_tecla();
-	//menu_button_osdkeyboard.v=0; //Decir que no tecla osd pulsada, por si acaso
-	//menu_button_f_function.v=0;
+	menu_button_osdkeyboard.v=0; //Decir que no tecla osd pulsada, por si acaso
+	menu_button_f_function.v=0;
 
 	overlay_screen copia_overlay[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
 
@@ -1484,6 +1484,7 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	cuadrado_color=antes_cuadrado_color;
 
 	all_interlace_scr_refresca_pantalla();	
+
 
 	
 }
@@ -1551,12 +1552,17 @@ int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,i
 
 		menu_espera_tecla();
 		tecla=menu_get_pressed_key();
+		//printf ("tecla leida=%d\n",tecla);
 		menu_espera_no_tecla();
 
 		//On screen keyboard
 		if (menu_si_pulsada_tecla_osd() ) {
-			tecla=0;
+		//if (tecla=='o') {
+			//tecla=0;
 			menu_call_onscreen_keyboard_from_menu();
+			menu_espera_tecla();
+			tecla=menu_get_pressed_key();
+			//printf ("despues de haber leido tecla de osd\n");
 		}
 
 		//si tecla normal, agregar:
