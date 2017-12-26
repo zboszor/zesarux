@@ -30,9 +30,9 @@
 #define EMULATOR_VERSION "6.1-SN"
 #define SNAPSHOT_VERSION
 
-#define EMULATOR_DATE "30 November 2017"
-#define EMULATOR_SHORT_DATE "30/11/2017"
-#define EMULATOR_EDITION_NAME "xxxx edition"
+#define EMULATOR_DATE "26 December 2017"
+#define EMULATOR_SHORT_DATE "26/12/2017"
+#define EMULATOR_EDITION_NAME "Xeno edition"
 
 //8 bits
 typedef unsigned char z80_byte;

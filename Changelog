@@ -1,4 +1,4 @@
-Version 6.1. 30 November 2017 - xxxx edition
+Version 6.1. 26 December 2017 - Xeno edition
 
 Improved sound: Silence detector does not activate on pthreads versions
 Fixed TBBlue MMU when using segment 0000-3FFFH

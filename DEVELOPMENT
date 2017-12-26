@@ -8,6 +8,7 @@ activar capture segmentation fault en cpu.c
 activar capture floating point exception en cpu.c
 Cambiar EMULATOR_VERSION en archivo configure 
 Cambiar version en macos/apptemplate/Contents/Info.plist, tag CFBundleVersion
+Ajustar juego editionnamegame.tap, si juego no permitido distribucion, eliminar
 En changelog, decir qué comandos nuevos de ZRCP, haciendo diff con version anterior
 
 * desactivar simulador joystick
@@ -16,9 +17,9 @@ En changelog, decir qué comandos nuevos de ZRCP, haciendo diff con version ante
 * vigilar funciones F de pruebas en xwindows, desactivar las que sean de pruebas
 
 nombres ediciones:
-toi acid, sabre wulf, turbo esprit, great escape, target renegade, cliff hanger,  Night Shift, Saint Dragon, silent service, bubble bobble, dynamite Dan 2, rygar, frank n stein, match day, Hysteria, Star raiders 2, Bruce lee, El zorro , Exploding fist, Three weeks in Paradise, Exolon, xeno, Koronis Rift, Fox Fights back, Gauntlet, world destruction
+toi acid, sabre wulf, turbo esprit, great escape, target renegade, cliff hanger,  Night Shift, Saint Dragon, silent service, bubble bobble, dynamite Dan 2, rygar, frank n stein, match day, Hysteria, Star raiders 2, Bruce lee, El zorro , Exploding fist, Three weeks in Paradise, Exolon, Koronis Rift, Fox Fights back, Gauntlet, world destruction
 
-*rainbow islands, *jetpac, *hard drivin', *lemmings, *sir fred, *rick, *agent dan, *id, *rainbow, *rainbow+, *saint george, *chase hq, *Rescue on Fractalus, *gunfright
+*rainbow islands, *jetpac, *hard drivin', *lemmings, *sir fred, *rick, *agent dan, *id, *rainbow, *rainbow+, *saint george, *chase hq, *Rescue on Fractalus, *gunfright, *xeno
 
 *: usado
 
