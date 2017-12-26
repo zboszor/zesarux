@@ -29,6 +29,8 @@
 //en casos de spectrum y zx80/81 se agregan los 3 bits faltantes
 #define MENU_PUERTO_TECLADO_NINGUNA 255
 
+#define MENU_ITEM_PARAMETERS int valor_opcion GCC_UNUSED
+
 extern int menu_overlay_activo;
 extern void (*menu_overlay_function)(void);
 
@@ -345,6 +347,8 @@ extern menu_z80_moto_int adjust_address_memory_size(menu_z80_moto_int direccion)
 extern int menu_debug_get_total_digits_hexa(int valor);
 
 extern int menu_gui_zoom;
+
+extern void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS);
 
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \

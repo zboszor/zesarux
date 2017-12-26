@@ -408,14 +408,14 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 
 //valores de la ventana mostrada
-
+ 
 z80_byte ventana_x,ventana_y,ventana_ancho,ventana_alto;
 
 #define MENU_OPCION_SEPARADOR 0
 #define MENU_OPCION_NORMAL 1
 #define MENU_OPCION_ESC 2
 
-#define MENU_ITEM_PARAMETERS int valor_opcion GCC_UNUSED
+
 
 //valores de retorno de seleccion de menu
 //#define MENU_SELECCION_ESC -1
@@ -1470,7 +1470,12 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	antes_cuadrado_y2=cuadrado_y2;
 	antes_cuadrado_color=cuadrado_color;
 
+	//Conservar setting salir_todos_menus, que lo cambia el osd
+	int antes_salir_todos_menus=salir_todos_menus;
+
 	menu_onscreen_keyboard(0);
+
+	salir_todos_menus=antes_salir_todos_menus;
 
 	//Restaurar texto ventana
 	menu_restore_overlay_text_contents(copia_overlay);
@@ -1497,7 +1502,7 @@ int menu_si_pulsada_tecla_osd(void)
 		return 1;
 	}
 
-	/*if (menu_button_f_function.v==0) return 0;
+	if (menu_button_f_function.v==0) return 0;
 
 	debug_printf(VERBOSE_DEBUG,"Pressed F key");
 
@@ -1508,7 +1513,7 @@ int menu_si_pulsada_tecla_osd(void)
 	if (accion==F_FUNCION_OSDKEYBOARD) {
 		debug_printf(VERBOSE_DEBUG,"Pressed F key mapped to OSD");
 		return 1;
-	}*/
+	}
 
 	return 0;
 
@@ -1557,9 +1562,10 @@ int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,i
 
 		//On screen keyboard
 		if (menu_si_pulsada_tecla_osd() ) {
-		//if (tecla=='o') {
-			//tecla=0;
 			menu_call_onscreen_keyboard_from_menu();
+			//TODO: si se pulsa CS o SS, no lo detecta como tecla pulsada (en parte logico)
+			//pero esto hara que al pulsar una de esas teclas no se abra el menu osd de nuevo hasta que se pulse otra
+			//tecla distinta
 			menu_espera_tecla();
 			tecla=menu_get_pressed_key();
 			//printf ("despues de haber leido tecla de osd\n");
@@ -1606,11 +1612,6 @@ int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,i
 
 		}
 
-		//tecla tabulador. a efectos practicos, es ENTER igual
-		//if (tecla==15) {
-		//	printf ("TAB pulsado en scanf\n");
-		//	tecla=13;
-		//}
 
 	} while (tecla!=13 && tecla!=15 && tecla!=2);
 
@@ -14171,11 +14172,11 @@ int menu_onscreen_send_enter_check_exit(z80_byte tecla)
 
 		//Si es modo stick, solo enviar cuando pulsar "Send"
 		//Si no modo stick, enviar la que haya
-		int enviar=1;
+		//int enviar=1;
 		salir=1;
 		if (menu_onscreen_keyboard_sticky && indice!=41) {
 			salir=0;
-			enviar=0;
+			//enviar=0;
 		}
 
 	}
@@ -22928,6 +22929,20 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 
 
                 tecla=menu_get_pressed_key();
+
+
+		//On screen keyboard
+		if (menu_si_pulsada_tecla_osd() ) {
+			menu_call_onscreen_keyboard_from_menu();
+			//TODO: si se pulsa CS o SS, no lo detecta como tecla pulsada (en parte logico)
+			//pero esto hara que al pulsar una de esas teclas no se abra el menu osd de nuevo hasta que se pulse otra
+			//tecla distinta
+			menu_espera_tecla();
+			tecla=menu_get_pressed_key();
+			//printf ("despues de haber leido tecla de osd\n");
+		}
+
+
 								if (volver_timeout) tecla=13;
 
 								if (mouse_movido) {
