@@ -333,7 +333,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		1,0,0,0,		//Mostrar cursor >, no mostrar recuadro, no mostrar rainbow
 		1+8,6,		//Colores para opcion seleccionada
 		1,6,1,6,	//Colores para opcion no disponible, iguales que para opcion disponible
-		1,6,		//Colores para el titulo y linea recuadro ventana
+		6,1,		//Colores para el titulo y linea recuadro ventana
 		6,		//Color waveform
 		0,               //Color para zona no usada en visualmem
 		2,7+8		//Color para opcion marcada
@@ -343,7 +343,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 1,0,0,1,          //Mostrar cursor >, no mostrar recuadro, no mostrar rainbow
                 0,7+8,          //Colores para opcion seleccionada
                 7+8,0,0,7+8,      //Colores para opcion no disponible
-                7+8,0,          //Colores para el titulo y linea recuadro ventana
+                0,7+8,          //Colores para el titulo y linea recuadro ventana
                 0,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 7,0		//Color para opcion marcada
