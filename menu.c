@@ -1575,16 +1575,7 @@ int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,i
 		//printf ("tecla leida=%d\n",tecla);
 		menu_espera_no_tecla();
 
-		//On screen keyboard
-		/*if (menu_si_pulsada_tecla_osd() ) {
-			menu_call_onscreen_keyboard_from_menu();
-			//TODO: si se pulsa CS o SS, no lo detecta como tecla pulsada (en parte logico)
-			//pero esto hara que al pulsar una de esas teclas no se abra el menu osd de nuevo hasta que se pulse otra
-			//tecla distinta
-			menu_espera_tecla();
-			tecla=menu_get_pressed_key();
-			//printf ("despues de haber leido tecla de osd\n");
-		}*/
+
 
 		//si tecla normal, agregar:
 		if (tecla>31 && tecla<128) {
@@ -3331,8 +3322,8 @@ int timer_osd_keyboard_menu=0;
 z80_byte menu_da_todas_teclas(void)
 {
 
-                //On screen keyboard
-                if (menu_si_pulsada_tecla_osd() && !osd_kb_no_mostrar_desde_menu && !timer_osd_keyboard_menu) {
+                //On screen keyboard desde el propio menu. Necesita multitask
+                if (menu_si_pulsada_tecla_osd() && !osd_kb_no_mostrar_desde_menu && !timer_osd_keyboard_menu && menu_multitarea) {
 			debug_printf(VERBOSE_INFO,"Calling osd keyboard from menu keyboard read routine");
 
 			osd_kb_no_mostrar_desde_menu=1;
@@ -19916,10 +19907,10 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 		//Teclado en pantalla
 		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_onscreen_keyboard,NULL,"~~On Screen Keyboard");
-			menu_add_item_menu_shortcut(array_menu_interface_settings,'o');
+			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_onscreen_keyboard,NULL,"On Screen ~~Keyboard");
+			menu_add_item_menu_shortcut(array_menu_interface_settings,'k');
 			menu_add_item_menu_tooltip(array_menu_interface_settings,"Open on screen keyboard");
-			menu_add_item_menu_ayuda(array_menu_interface_settings,"You can also get this pressing F8 with menu closed, only for Spectrum and ZX80/81 machines");
+			menu_add_item_menu_ayuda(array_menu_interface_settings,"You can also get this pressing F8, only for Spectrum and ZX80/81 machines");
 		}
 
 
@@ -19974,15 +19965,6 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 						"ESC means abort next executions on queue.\n"
 						"Enter means run pending execution.\n");
 
-/*
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_red,NULL,"Red display: %s",(screen_gray_mode & 4 ? "On" : "Off") );
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_green,NULL,"Green display: %s",(screen_gray_mode & 2 ? "On" : "Off") );
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_blue,NULL,"Blue display: %s",(screen_gray_mode & 1 ? "On" : "Off") );
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_inverse_video,NULL,"Inverse video: %s",(inverse_video.v==1 ? "On" : "Off") );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Inverse Color Palette");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Inverses all the colours used on the emulator, including menu");
-		*/
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"Colour settings");
 
@@ -22978,17 +22960,6 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 
                 tecla=menu_get_pressed_key();
 
-
-		//On screen keyboard
-		/*if (menu_si_pulsada_tecla_osd() ) {
-			menu_call_onscreen_keyboard_from_menu();
-			//TODO: si se pulsa CS o SS, no lo detecta como tecla pulsada (en parte logico)
-			//pero esto hara que al pulsar una de esas teclas no se abra el menu osd de nuevo hasta que se pulse otra
-			//tecla distinta
-			menu_espera_tecla();
-			tecla=menu_get_pressed_key();
-			//printf ("despues de haber leido tecla de osd\n");
-		}*/
 
 
 								if (volver_timeout) tecla=13;
