@@ -435,6 +435,10 @@ void timer_check_interrupt(void)
 
 			}
 
+			if (timer_osd_keyboard_menu) {
+				timer_osd_keyboard_menu--;
+			}
+
 
 			//joystick autofire
 			if (joystick_autofire_frequency!=0) {

@@ -1561,7 +1561,7 @@ int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,i
 		menu_espera_no_tecla();
 
 		//On screen keyboard
-		if (menu_si_pulsada_tecla_osd() ) {
+		/*if (menu_si_pulsada_tecla_osd() ) {
 			menu_call_onscreen_keyboard_from_menu();
 			//TODO: si se pulsa CS o SS, no lo detecta como tecla pulsada (en parte logico)
 			//pero esto hara que al pulsar una de esas teclas no se abra el menu osd de nuevo hasta que se pulse otra
@@ -1569,7 +1569,7 @@ int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,i
 			menu_espera_tecla();
 			tecla=menu_get_pressed_key();
 			//printf ("despues de haber leido tecla de osd\n");
-		}
+		}*/
 
 		//si tecla normal, agregar:
 		if (tecla>31 && tecla<128) {
@@ -3307,8 +3307,35 @@ void menu_calculate_mouse_xy(void)
 	}
 }
 
+
+
+//No dejar aparecer el osd keyboard dentro del mismo osd keyboard
+int menu_osd_keyboard_no_debe_aparecer=0;
+int timer_osd_keyboard_menu=0;
+
 z80_byte menu_da_todas_teclas(void)
 {
+
+                //On screen keyboard
+                if (menu_si_pulsada_tecla_osd() && !menu_osd_keyboard_no_debe_aparecer && !timer_osd_keyboard_menu) {
+			debug_printf(VERBOSE_INFO,"Calling osd keyboard from menu keyboard read routine");
+			exec_show_backtrace();
+
+			menu_osd_keyboard_no_debe_aparecer=1;
+                        menu_call_onscreen_keyboard_from_menu();
+                        //TODO: si se pulsa CS o SS, no lo detecta como tecla pulsada (en parte logico)
+                        //pero esto hara que al pulsar una de esas teclas no se abra el menu osd de nuevo hasta que se pulse otra
+                        //tecla distinta
+                        //printf ("despues de haber leido tecla de osd\n");
+			menu_osd_keyboard_no_debe_aparecer=0;
+
+			//Esperar 1 segundo hasta poder abrir menu osd. La pulsacion de teclas desde osd se hace por medio segundo,
+			//con lo que al retornar a 1 segundo ya es correcto
+			timer_osd_keyboard_menu=50;
+                }
+
+
+
 	z80_byte acumulado;
 
 	acumulado=255;
@@ -14190,6 +14217,11 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 {
 	//Si maquina no es Spectrum o zx80/81, volver
 	if (!MACHINE_IS_SPECTRUM && !MACHINE_IS_ZX8081) return;
+	
+	//Evitar que se pueda llamar al mismo osd desde aqui dentro
+	int antes_menu_osd_keyboard_no_debe_aparecer=menu_osd_keyboard_no_debe_aparecer;
+	menu_osd_keyboard_no_debe_aparecer=1;
+
 
 	if (!menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_reset_pressed_keys();
 
@@ -14354,6 +14386,8 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 		menu_onscreen_keyboard_sticky=0;
 
 	}
+
+	menu_osd_keyboard_no_debe_aparecer=antes_menu_osd_keyboard_no_debe_aparecer;
 
 }
 
@@ -22932,7 +22966,7 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 
 
 		//On screen keyboard
-		if (menu_si_pulsada_tecla_osd() ) {
+		/*if (menu_si_pulsada_tecla_osd() ) {
 			menu_call_onscreen_keyboard_from_menu();
 			//TODO: si se pulsa CS o SS, no lo detecta como tecla pulsada (en parte logico)
 			//pero esto hara que al pulsar una de esas teclas no se abra el menu osd de nuevo hasta que se pulse otra
@@ -22940,7 +22974,7 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 			menu_espera_tecla();
 			tecla=menu_get_pressed_key();
 			//printf ("despues de haber leido tecla de osd\n");
-		}
+		}*/
 
 
 								if (volver_timeout) tecla=13;
@@ -25384,9 +25418,13 @@ void menu_inicio(void)
 	//Desactivar fire, por si esta disparador automatico
 	joystick_release_fire();
 
+	printf ("before menu_espera_no_tecla\n");
+
+	//Si se ha pulsado tecla de OSD keyboard, al llamar a espera_no_tecla, se abrira osd y no conviene.
+	menu_osd_keyboard_no_debe_aparecer=1;
 	menu_espera_no_tecla();
 
-	//printf ("after menu_espera_no_tecla\n");
+	printf ("after menu_espera_no_tecla\n");
 
 
         if (!strcmp(scr_driver_name,"stdout")) {
@@ -25417,14 +25455,23 @@ void menu_inicio(void)
         set_menu_overlay_function(normal_overlay_texto_menu);
 
 
-
 	//Establecemos variable de salida de todos menus a 0
 	salir_todos_menus=0;
 
 
 
 	//char multitarea_opc[30];
+	if (menu_button_osdkeyboard.v) {
+		printf ("1\n");
+		menu_espera_no_tecla();
+		menu_onscreen_keyboard(0);
+		menu_osd_keyboard_no_debe_aparecer=0; //Volver a permitir aparecer
+		cls_menu_overlay();
+  	}
 
+
+	else {
+	menu_osd_keyboard_no_debe_aparecer=0; //Volver a permitir aparecer
 
 
 	//Gestionar pulsaciones directas de teclado o joystick
@@ -25439,14 +25486,6 @@ void menu_inicio(void)
 		menu_quickload(0);
 		cls_menu_overlay();
 	}
-
-	else if (menu_button_osdkeyboard.v) {
-		menu_espera_no_tecla();
-		menu_onscreen_keyboard(0);
-		cls_menu_overlay();
-  }
-
-
 
 	else if (menu_button_exit_emulator.v) {
 		//Pulsado salir del emulador
@@ -25568,6 +25607,8 @@ void menu_inicio(void)
 
 		//Cualquier otra cosa abrir menu normal
 		menu_inicio_bucle();
+
+	}
 
 	}
 

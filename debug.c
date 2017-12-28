@@ -28,6 +28,10 @@
 #include <string.h>
 #include <unistd.h>
 
+#ifdef linux
+#include <execinfo.h>
+#endif
+
 
 
 #include "cpu.h"
@@ -344,6 +348,23 @@ void screen_show_panic_screen(void)
 }
 
 
+//Compile with -g -rdynamic to show function names
+void exec_show_backtrace(void) {
+#ifdef linux
+  int max_items=50;
+  void *array[max_items];
+  size_t size;
+
+  // get void*'s for all entries on the stack
+  size = backtrace(array, max_items);
+
+  // print out all the frames to stderr
+  //fprintf(stderr, "Error: signal %d:\n", sig);
+  backtrace_symbols_fd(array, size, STDERR_FILENO);
+#endif
+}
+
+
 void cpu_panic_printf_mensaje(char *mensaje)
 {
 
@@ -417,6 +438,8 @@ void cpu_panic(char *mensaje)
 	}
 
 	cpu_panic_printf_mensaje(mensaje);
+
+	exec_show_backtrace();
 
 	exit(1);
 }

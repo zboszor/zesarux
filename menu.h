@@ -350,6 +350,8 @@ extern int menu_gui_zoom;
 
 extern void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS);
 
+extern int timer_osd_keyboard_menu;
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \
