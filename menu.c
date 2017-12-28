@@ -313,6 +313,9 @@ z80_bit menu_writing_inverse_color={0};
 //Si forzar letras en color inverso siempre
 z80_bit menu_force_writing_inverse_color={0};
 
+//siempre empieza con 1 espacio de separacion en menu_escribe_linea_opcion excepto algunas ventanas que requieren mas ancho, como hexdump
+int menu_escribe_linea_startx=1;
+
 
 int estilo_gui_activo=0;
 
@@ -1477,6 +1480,11 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	antes_ventana_y=ventana_y;
 	antes_ventana_ancho=ventana_ancho;
 	antes_ventana_alto=ventana_alto;
+
+	//Comportamiento de 1 caracter de margen a la izquierda en ventana (lo altera hexdump)
+	int antes_menu_escribe_linea_startx=menu_escribe_linea_startx;
+
+	menu_escribe_linea_startx=1;
 	
 
 	//Conservar setting salir_todos_menus, que lo cambia el osd
@@ -1485,6 +1493,8 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	menu_onscreen_keyboard(0);
 
 	salir_todos_menus=antes_salir_todos_menus;
+
+	menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
 
 	//Restaurar texto ventana
 	menu_restore_overlay_text_contents(copia_overlay);
@@ -2919,8 +2929,7 @@ void menu_textspeech_send_text(char *texto)
 }
 
 
-//siempre empieza con 1 espacio de separacion excepto algunas ventanas que requieren mas ancho, como hexdump
-int menu_escribe_linea_startx=1;
+
 
 //escribe opcion de linea de texto
 //coordenadas y relativa al interior de la ventana (0=inicio)
@@ -14222,10 +14231,18 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 {
 	//Si maquina no es Spectrum o zx80/81, volver
 	if (!MACHINE_IS_SPECTRUM && !MACHINE_IS_ZX8081) return;
+
 	
 	//Evitar que se pueda llamar al mismo osd desde aqui dentro
 	int antes_osd_kb_no_mostrar_desde_menu=osd_kb_no_mostrar_desde_menu;
 	osd_kb_no_mostrar_desde_menu=1;
+
+	clear_putpixel_cache();
+        //TODO: Si no se pone clear_putpixel_cache,
+        //al aparecer desde maquina zx80/81 desde menu, el texto se fusiona con el fondo de manera casi transparente,
+        //como si no borrase el putpixel cache
+        //esto también sucede en otras partes del código del menú pero no se por que es
+
 
 
 	if (!menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_reset_pressed_keys();
@@ -14757,7 +14774,7 @@ void menu_multiface(MENU_ITEM_PARAMETERS)
 
                 menu_add_ESC_item(array_menu_multiface);
 
-                retorno_menu=menu_dibuja_menu(&multiface_opcion_seleccionada,&item_seleccionado,array_menu_multiface,"ZX Multiface settings" );
+                retorno_menu=menu_dibuja_menu(&multiface_opcion_seleccionada,&item_seleccionado,array_menu_multiface,"Multiface settings" );
 
                 cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {

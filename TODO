@@ -58,6 +58,9 @@ probado lo siguiente:
 * poner a 0 tambien fifo_read_position al hacer empty buffer: ningun cambio
 ->Quiza solucion es que haga reseteo solo cuando se haya llenado 1 vez el buffer al menos
 
+-osd cuando aparece desde visual mem por ejemplo no se ve, dado que visual mem sobreescribe la funcion de escriura de texto
+overlay y todo queda por encima del texto del osd
+
 -Quizá resetear puntero escritura latencia siempre que carga, graba, etc
 
 -pantalla kernel panic que funcione en todas  las maquinas y con realvideo activo o desactivado. en tsconf se ve especialmente mal,
