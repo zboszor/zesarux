@@ -1451,6 +1451,7 @@ void menu_restore_overlay_text_contents(overlay_screen *origin)
 void menu_call_onscreen_keyboard_from_menu(void)
 {
 
+
 	menu_espera_no_tecla();
 	menu_button_osdkeyboard.v=0; //Decir que no tecla osd pulsada, por si acaso
 	menu_button_f_function.v=0;
@@ -1470,6 +1471,14 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	antes_cuadrado_y2=cuadrado_y2;
 	antes_cuadrado_color=cuadrado_color;
 
+	//Guardamos tamanyo ventana
+	z80_byte antes_ventana_x,antes_ventana_y,antes_ventana_ancho,antes_ventana_alto;
+	antes_ventana_x=ventana_x;
+	antes_ventana_y=ventana_y;
+	antes_ventana_ancho=ventana_ancho;
+	antes_ventana_alto=ventana_alto;
+	
+
 	//Conservar setting salir_todos_menus, que lo cambia el osd
 	int antes_salir_todos_menus=salir_todos_menus;
 
@@ -1487,6 +1496,12 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	cuadrado_x2=antes_cuadrado_x2;
 	cuadrado_y2=antes_cuadrado_y2;
 	cuadrado_color=antes_cuadrado_color;
+
+	//Restaurar tamanyo ventana
+	ventana_x=antes_ventana_x;
+	ventana_y=antes_ventana_y;
+	ventana_ancho=antes_ventana_ancho;
+	ventana_alto=antes_ventana_alto;
 
 	all_interlace_scr_refresca_pantalla();	
 
@@ -3310,23 +3325,23 @@ void menu_calculate_mouse_xy(void)
 
 
 //No dejar aparecer el osd keyboard dentro del mismo osd keyboard
-int menu_osd_keyboard_no_debe_aparecer=0;
+int osd_kb_no_mostrar_desde_menu=0;
 int timer_osd_keyboard_menu=0;
 
 z80_byte menu_da_todas_teclas(void)
 {
 
                 //On screen keyboard
-                if (menu_si_pulsada_tecla_osd() && !menu_osd_keyboard_no_debe_aparecer && !timer_osd_keyboard_menu) {
+                if (menu_si_pulsada_tecla_osd() && !osd_kb_no_mostrar_desde_menu && !timer_osd_keyboard_menu) {
 			debug_printf(VERBOSE_INFO,"Calling osd keyboard from menu keyboard read routine");
 
-			menu_osd_keyboard_no_debe_aparecer=1;
+			osd_kb_no_mostrar_desde_menu=1;
                         menu_call_onscreen_keyboard_from_menu();
                         //TODO: si se pulsa CS o SS, no lo detecta como tecla pulsada (en parte logico)
                         //pero esto hara que al pulsar una de esas teclas no se abra el menu osd de nuevo hasta que se pulse otra
                         //tecla distinta
                         //printf ("despues de haber leido tecla de osd\n");
-			menu_osd_keyboard_no_debe_aparecer=0;
+			osd_kb_no_mostrar_desde_menu=0;
 
 			//Esperar 1 segundo hasta poder abrir menu osd. La pulsacion de teclas desde osd se hace por medio segundo,
 			//con lo que al retornar a 1 segundo ya es correcto
@@ -14218,8 +14233,8 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 	if (!MACHINE_IS_SPECTRUM && !MACHINE_IS_ZX8081) return;
 	
 	//Evitar que se pueda llamar al mismo osd desde aqui dentro
-	int antes_menu_osd_keyboard_no_debe_aparecer=menu_osd_keyboard_no_debe_aparecer;
-	menu_osd_keyboard_no_debe_aparecer=1;
+	int antes_osd_kb_no_mostrar_desde_menu=osd_kb_no_mostrar_desde_menu;
+	osd_kb_no_mostrar_desde_menu=1;
 
 
 	if (!menu_onscreen_keyboard_sticky) menu_onscreen_keyboard_reset_pressed_keys();
@@ -14386,7 +14401,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 
 	}
 
-	menu_osd_keyboard_no_debe_aparecer=antes_menu_osd_keyboard_no_debe_aparecer;
+	osd_kb_no_mostrar_desde_menu=antes_osd_kb_no_mostrar_desde_menu;
 
 }
 
@@ -25386,7 +25401,7 @@ void menu_inicio(void)
 	if (menu_desactivado.v) end_emulator();
 
 	//No permitir aparecer osd keyboard desde aqui. Luego se reactiva en cada gestion de tecla
-	menu_osd_keyboard_no_debe_aparecer=1;
+	osd_kb_no_mostrar_desde_menu=1;
 
 	menu_contador_teclas_repeticion=CONTADOR_HASTA_REPETICION;
 
@@ -25466,7 +25481,7 @@ void menu_inicio(void)
 	if (menu_button_osdkeyboard.v) {
 		menu_espera_no_tecla();
 		menu_onscreen_keyboard(0);
-		menu_osd_keyboard_no_debe_aparecer=0; //Volver a permitir aparecer
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer
 		cls_menu_overlay();
   	}
 
@@ -25483,7 +25498,7 @@ void menu_inicio(void)
 		//para evitar que entre con la pulsacion de teclas activa
 		//menu_espera_no_tecla_con_repeticion();
 		menu_espera_no_tecla();
-		menu_osd_keyboard_no_debe_aparecer=0; //Volver a permitir aparecer teclado osd
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
 		menu_quickload(0);
 		cls_menu_overlay();
@@ -25494,7 +25509,7 @@ void menu_inicio(void)
                 //para evitar que entre con la pulsacion de teclas activa
                 //menu_espera_no_tecla_con_repeticion();
                 menu_espera_no_tecla();
-		menu_osd_keyboard_no_debe_aparecer=0; //Volver a permitir aparecer teclado osd
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
                 menu_exit_emulator(0);
                 cls_menu_overlay();
@@ -25506,7 +25521,7 @@ void menu_inicio(void)
                 //para evitar que entre con la pulsacion de teclas activa
                 //menu_espera_no_tecla_con_repeticion();
                 menu_espera_no_tecla();
-		menu_osd_keyboard_no_debe_aparecer=0; //Volver a permitir aparecer teclado osd
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		quickfile=quickload_file;
 
                 if (quickload(quickload_file)) {
@@ -25523,7 +25538,7 @@ void menu_inicio(void)
 	else if (menu_breakpoint_exception.v) {
 		//Ver tipo de accion para ese breakpoint
 		//printf ("indice breakpoint & accion : %d\n",catch_breakpoint_index);
-		menu_osd_keyboard_no_debe_aparecer=0; //Volver a permitir aparecer teclado osd
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
 
 		//Si accion nula o menu o break
@@ -25561,7 +25576,7 @@ void menu_inicio(void)
 	else if (menu_event_remote_protocol_enterstep.v) {
 		//Entrada
 		menu_espera_no_tecla();
-		menu_osd_keyboard_no_debe_aparecer=0; //Volver a permitir aparecer teclado osd
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
 		remote_ack_enter_cpu_step.v=1; //Avisar que nos hemos enterado
 		//Mientras no se salga del modo step to step del remote protocol
@@ -25592,7 +25607,7 @@ void menu_inicio(void)
 	else if (menu_button_f_function.v) {
 		//Entrada
 		menu_espera_no_tecla();
-		menu_osd_keyboard_no_debe_aparecer=0; //Volver a permitir aparecer teclado osd
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
 		//Procesar comandos F
 
@@ -25603,7 +25618,7 @@ void menu_inicio(void)
 	}
 
 	else if (menu_event_new_version_show_changes.v) {
-		menu_osd_keyboard_no_debe_aparecer=0; //Volver a permitir aparecer teclado osd
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		menu_event_new_version_show_changes.v=0;
 		menu_generic_message_format("Updated version","You have updated ZEsarUX :)\nPlease take a look at the changes:");
 		menu_about_changelog(0);
@@ -25613,7 +25628,7 @@ void menu_inicio(void)
 
 	else {
 
-		menu_osd_keyboard_no_debe_aparecer=0; //Volver a permitir aparecer teclado osd
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		//Cualquier otra cosa abrir menu normal
 		menu_inicio_bucle();
 
