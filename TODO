@@ -61,6 +61,10 @@ probado lo siguiente:
 -osd cuando aparece desde visual mem por ejemplo no se ve, dado que visual mem sobreescribe la funcion de escriura de texto
 overlay y todo queda por encima del texto del osd
 
+-eventos joystick para simular pgup, pgdn
+
+-quiza en file utils, view file, detecta por ejemplo si es .tap, hace un tap browser. si es otra extension conocida, un visor adecuado
+
 -Quizá resetear puntero escritura latencia siempre que carga, graba, etc
 
 -pantalla kernel panic que funcione en todas  las maquinas y con realvideo activo o desactivado. en tsconf se ve especialmente mal,
