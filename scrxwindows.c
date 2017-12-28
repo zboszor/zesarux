@@ -1376,18 +1376,6 @@ void deal_with_keys(XEvent *event,int pressrelease)
                                 util_set_reset_key(UTIL_KEY_F7,pressrelease);
                         break;
 
-/*
-
-
-                        //simulador de joystick
-                        extern int simulador_joystick_forzado;
-                        extern int simulador_joystick;
-                        case XK_F7:
-                                if (simulador_joystick && pressrelease) simulador_joystick_forzado=1;
-                        break;
-
-*/
-
 
 			//F8 pulsado. osdkeyboard
 			case XK_F8:

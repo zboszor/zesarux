@@ -1605,16 +1605,6 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
                                 util_set_reset_key(UTIL_KEY_F7,pressrelease);
                         break;
 
-/*
-
-                        //simulador de joystick
-                        extern int simulador_joystick_forzado;
-                        extern int simulador_joystick;
-                        case COCOA_KEY_F7:
-                                if (simulador_joystick && pressrelease) simulador_joystick_forzado=1;
-                        break;
-
-*/
 
                         //F8 pulsado. osdkeyboard
                         case COCOA_KEY_F8:

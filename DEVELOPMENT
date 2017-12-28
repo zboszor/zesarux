@@ -8,11 +8,10 @@ activar capture segmentation fault en cpu.c
 activar capture floating point exception en cpu.c
 Cambiar EMULATOR_VERSION en archivo configure 
 Cambiar version en macos/apptemplate/Contents/Info.plist, tag CFBundleVersion
-Ajustar juego editionnamegame.tap, si juego no permitido distribucion, eliminar
+Ajustar juego editionnamegame.tap, si juego no permitido distribucion, eliminar. Ajustar EMULATOR_GAME_EDITION
 En changelog, decir qué comandos nuevos de ZRCP, haciendo diff con version anterior
 
 * desactivar simulador joystick
-* vigilar tecla F7 de scrxwindows.c, scrcocoa.m de simulador de joystick que no este asociada al simulador
 * Actualizar features, segun lo agregado a Changelog
 * vigilar funciones F de pruebas en xwindows, desactivar las que sean de pruebas
 
