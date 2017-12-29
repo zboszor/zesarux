@@ -593,4 +593,6 @@ extern int si_existe_editionnamegame(char *nombre_final);
 
 extern int util_extract_mdv(char *mdvname, char *dest_dir);
 
+extern void util_string_replace_char(char *s,char orig,char dest);
+
 #endif

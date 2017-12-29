@@ -504,7 +504,14 @@ int entries = mdvtool_file_size(0)/sizeof(file_t);
 	printf("%s\n",f->name);
 
 	char finalpath[PATH_MAX];
-	sprintf(finalpath,"%s/%s",dest_dir,f->name);
+
+  //Cambiar las _ por . del nombre
+  char finalname[PATH_MAX];
+  strcpy(finalname,f->name);
+  util_string_replace_char(finalname,'_','.');
+
+	sprintf(finalpath,"%s/%s",dest_dir,finalname);
+  printf("Extracting %s to %s\n",finalname,finalpath);
 	mdvtool_file_export_dest(f->name,finalpath);
 
 	}

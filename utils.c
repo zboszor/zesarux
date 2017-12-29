@@ -9431,6 +9431,13 @@ int util_load_editionnamegame(void)
 int util_extract_mdv(char *mdvname, char *dest_dir)
 {
 	//echo "./mdvtool /Users/chernandezba/Downloads/psion/ABACUS.MDV export_all /tmp/"
+
+	//qlay mdv must be file size 174930
+	if (get_file_size(mdvname)!=174930) {
+		debug_printf(VERBOSE_ERR,"I can only open QLAY mdv file format - must be exactly 174930 bytes in size");
+		return 1;
+	}
+
 	char *argumentos[]={
                 "mdvtool","","export_all",""
         };
@@ -9439,4 +9446,14 @@ int util_extract_mdv(char *mdvname, char *dest_dir)
         argumentos[3]=dest_dir;
 
 	return main_mdvtool(4,argumentos);
+}
+
+
+//Cambiar en cadena s, caracter orig por dest
+void util_string_replace_char(char *s,char orig,char dest)
+{
+	while (*s) {
+		if ( (*s)==orig) *s=dest;
+		s++;
+	}
 }

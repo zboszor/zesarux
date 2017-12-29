@@ -14,7 +14,9 @@ Improved joystick support:
 Improved OSD keyboard:
 * now you can press up to all 40 keys (on Spectrum/ZX80/ZX81) at the same time
 * now it can be opened from any place (needs multitask on)
-Improved QL emulation: experimental support of LOAD, LRUN command
+Improved QL emulation: 
+* experimental support of LOAD, LRUN command
+* can now open qlay mdv microdrive image files
 Improved file viewer from file utilities: now can see other file types than text: .tap
 Fixed TBBlue MMU when using segment 0000-3FFFH
 
