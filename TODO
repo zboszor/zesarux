@@ -63,6 +63,8 @@ overlay y todo queda por encima del texto del osd
 
 -eventos joystick para simular pgup, pgdn
 
+-quiza compilar sin soporte libsssl en linux
+
 -quiza en file utils, view file, detecta por ejemplo si es .tap, hace un tap browser. si es otra extension conocida, un visor adecuado
 
 -Quizá resetear puntero escritura latencia siempre que carga, graba, etc

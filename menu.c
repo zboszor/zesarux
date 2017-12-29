@@ -16055,23 +16055,23 @@ void menu_realtape_loading_sound(MENU_ITEM_PARAMETERS)
 	realtape_loading_sound.v ^=1;
 }
 
-void menu_tape_browser(MENU_ITEM_PARAMETERS)
+void menu_tape_browser_show(char *filename)
 {
 	//tapefile
-	if (util_compare_file_extension(tapefile,"tap")!=0) {
+	if (util_compare_file_extension(filename,"tap")!=0) {
 		debug_printf(VERBOSE_ERR,"Tape browser not supported for this tape type (yet)");
 		return;
 	}
 
 	//Leemos cinta en memoria
-	int total_mem=get_file_size(tapefile);
+	int total_mem=get_file_size(filename);
 
 	z80_byte *taperead;
 
 
 
         FILE *ptr_tapebrowser;
-        ptr_tapebrowser=fopen(tapefile,"rb");
+        ptr_tapebrowser=fopen(filename,"rb");
 
         if (!ptr_tapebrowser) {
 		debug_printf(VERBOSE_ERR,"Unable to open tape");
@@ -16133,6 +16133,12 @@ void menu_tape_browser(MENU_ITEM_PARAMETERS)
 
 	free(taperead);
 
+}
+
+
+void menu_tape_browser(MENU_ITEM_PARAMETERS)
+{
+	menu_tape_browser_show(tapefile);
 }
 
 //menu tape settings
@@ -18399,7 +18405,7 @@ void menu_debug_view_basic(MENU_ITEM_PARAMETERS)
 }
 
 
-void menu_file_viewer_read_file(char *title,char *file_name)
+void menu_file_viewer_read_text_file(char *title,char *file_name)
 {
 
 	char file_read_memory[MAX_TEXTO_GENERIC_MESSAGE];
@@ -18436,56 +18442,15 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 
 }
 
-
-/*
-void menu_debug_file_viewer(MENU_ITEM_PARAMETERS)
+void menu_file_viewer_read_file(char *title,char *file_name)
 {
+	//Algunos tipos conocidos
+	if (!util_compare_file_extension(file_name,"tap")) menu_tape_browser_show(file_name);
 
-
-	int ret=1;
-
-	while (ret!=0) {
-			char *filtros[2];
-
-			filtros[0]="";
-			filtros[1]=0;
-
-
-        //guardamos directorio actual
-        char directorio_actual[PATH_MAX];
-        getcwd(directorio_actual,PATH_MAX);
-
-
-        //Obtenemos ultimo directorio visitado
-        if (file_viewer_file_name[0]!=0) {
-                char directorio[PATH_MAX];
-                util_get_dir(file_viewer_file_name,directorio);
-                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
-
-                //cambiamos a ese directorio, siempre que no sea nulo
-                if (directorio[0]!=0) {
-                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
-                }
-        }
-
-        ret=menu_filesel("Select File",filtros,file_viewer_file_name);
-
-        //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
-
-        if (ret==1) {
-
-						cls_menu_overlay();
-						menu_file_viewer_read_file("File view",file_viewer_file_name);
-				}
-
-    }
-
-
-
+	//Por defecto, texto
+	else menu_file_viewer_read_text_file(title,file_name);
 }
-*/
+
 
 void menu_debug_file_utils(MENU_ITEM_PARAMETERS)
 {
@@ -24919,7 +24884,7 @@ void menu_settings_config_file_show(MENU_ITEM_PARAMETERS)
 					menu_warn_message("Unknown configuration file");
                                 }
 	else {
-		menu_file_viewer_read_file("Config file",configfile);
+		menu_file_viewer_read_text_file("Config file",configfile);
 	}
 }
 
