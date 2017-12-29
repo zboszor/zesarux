@@ -35,7 +35,12 @@
 #include <assert.h>
 //#include <zip.h>
 
+#if defined(__APPLE__)
+        #include <sys/syslimits.h>
+#endif
+
 #include "mdvtool.h"
+#include "utils.h"
 
 FILE *mdv = NULL;
 
@@ -353,7 +358,7 @@ int file_open(char *name) {
   return -1;
 }
 
-void file_export(char *name) {
+void file_export_dest(char *name,char *destination_name) {
   int f = file_open(name);
   if(f < 0) {
     printf("File %s not found\n", name);
@@ -363,7 +368,7 @@ void file_export(char *name) {
   int size = file_size(f);
   printf("Exporting %d bytes to '%s' ... ", size, name);
 
-  FILE *out = fopen(name, "wb");
+  FILE *out = fopen(destination_name, "wb");
   if(!out) {
     printf("\nERROR: Unable to open %s for writing\n", name);
     return;
@@ -392,6 +397,10 @@ void file_export(char *name) {
 
   fclose(out);
   printf("ok!\n");
+}
+
+void file_export(char *name) {
+	file_export_dest(name,name);
 }
 
 int file_exists(int i) {
@@ -480,11 +489,11 @@ void mdv_dir() {
   }
 }
 
-void file_export_all(void)
+void file_export_all(char *dest_dir)
 {
 int entries = file_size(0)/sizeof(file_t);
   if(entries >= 1) {
-    printf("DIR listing from directory file:\n");
+    printf("Extracting list from directory file:\n");
 
     // scan all entries
     int j;
@@ -493,6 +502,11 @@ int entries = file_size(0)/sizeof(file_t);
       if(f) {
 	//show_file_entry(f);	
 	printf("%s\n",f->name);
+
+	char finalpath[PATH_MAX];
+	sprintf(finalpath,"%s/%s",dest_dir,f->name);
+	file_export_dest(f->name,finalpath);
+
 	}
     }
   } else
@@ -739,7 +753,7 @@ int main(int argc, char **argv) {
     printf("   check_mapping        - check the sector mapping\n");
     printf("   show_mapping         - show physical/loginal sector mapping\n");
     printf("   export file_name     - export a file from the MDV image\n");
-    printf("   export_all           - export all files from the MDV image\n");
+    printf("   export_all dest_dir  - export all files from the MDV image\n");
     printf("   erase                - erase the MDV image\n");
     printf("   name image_name      - rename the MDV image\n");
     printf("   import file_name     - import a file to the MDV image\n");
@@ -774,7 +788,12 @@ int main(int argc, char **argv) {
     }
 
     else if(!strcasecmp(argv[c], "export_all")) {
-      file_export_all();
+	if(++c >= argc) {
+        printf("export_all needs a path name as parameter\n");
+        return 0;
+      }
+
+      file_export_all(argv[c]);
     }
 
     
