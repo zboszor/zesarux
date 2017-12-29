@@ -15513,6 +15513,9 @@ int menu_file_filter(const char *name,char *filtros[])
 	//Si es rar, tambien lo soportamos
 	if (!strcasecmp(extension,"rar")) return 1;
 
+	//Si es mdv, tambien lo soportamos
+	if (!strcasecmp(extension,"mdv")) return 1;
+
 
 	return 0;
 
@@ -26422,6 +26425,11 @@ void menu_filesel_file_no_ext(char *origen, char *destino)
 int menu_filesel_uncompress (char *archivo,char *tmpdir)
 {
 
+
+//descomprimir creando carpeta TMPDIR_BASE/zipname
+ sprintf (tmpdir,"%s/%s",get_tmpdir_base(),archivo);
+ menu_filesel_mkdir(tmpdir);
+
 #define COMPRESSED_ZIP 1
 #define COMPRESSED_GZ  2
 #define COMPRESSED_TAR 3
@@ -26449,17 +26457,15 @@ int menu_filesel_uncompress (char *archivo,char *tmpdir)
                 compressed_type=COMPRESSED_RAR;
         }
 
+        //mdv no se gestiona con utilidad aparte
+        else if ( !util_compare_file_extension(archivo,"mdv") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a mdv file");
+                return util_extract_mdv(archivo,tmpdir);
+        }
 
 
 
-
-//descomprimir creando carpeta TMPDIR_BASE/zipname
-
- //descomprimir
- sprintf (tmpdir,"%s/%s",get_tmpdir_base(),archivo);
-
- menu_filesel_mkdir(tmpdir);
-
+//descomprimir
  char uncompress_command[PATH_MAX];
 
  char uncompress_program[PATH_MAX];
@@ -26969,11 +26975,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							    !util_compare_file_extension(item_seleccionado->d_name,"zip") ||
                                                             !util_compare_file_extension(item_seleccionado->d_name,"gz") ||
                                                             !util_compare_file_extension(item_seleccionado->d_name,"tar") ||
-                                                            !util_compare_file_extension(item_seleccionado->d_name,"rar")
+                                                            !util_compare_file_extension(item_seleccionado->d_name,"rar")||
+                                                            !util_compare_file_extension(item_seleccionado->d_name,"mdv")
 
 
 							) {
-								debug_printf (VERBOSE_DEBUG,"Is a compressed file");
+								debug_printf (VERBOSE_DEBUG,"Is a compressed/packed file");
 
 								char tmpdir[PATH_MAX];
 

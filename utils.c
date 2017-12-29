@@ -88,6 +88,7 @@
 #include "tbblue.h"
 #include "tsconf.h"
 #include "kartusho.h"
+#include "mdvtool.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -9424,4 +9425,18 @@ int util_load_editionnamegame(void)
 		return 1;
 	}
 	else return 0;
+}
+
+
+int util_extract_mdv(char *mdvname, char *dest_dir)
+{
+	//echo "./mdvtool /Users/chernandezba/Downloads/psion/ABACUS.MDV export_all /tmp/"
+	char *argumentos[]={
+                "mdvtool","","export_all",""
+        };
+
+        argumentos[1]=mdvname;
+        argumentos[3]=dest_dir;
+
+	return main_mdvtool(4,argumentos);
 }

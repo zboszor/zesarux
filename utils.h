@@ -591,4 +591,6 @@ extern int util_load_editionnamegame(void);
 extern int find_sharedfile(char *archivo,char *ruta_final);
 extern int si_existe_editionnamegame(char *nombre_final);
 
+extern int util_extract_mdv(char *mdvname, char *dest_dir);
+
 #endif

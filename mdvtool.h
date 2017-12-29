@@ -29,7 +29,7 @@
 #ifndef MDV_H
 #define MDV_H
 
-#define MAX_SECTORS 255
+#define MDVTOOL_MAX_SECTORS 255
 
 typedef struct {
   unsigned char preamble[12];   // 10*0, 2*ff
@@ -82,5 +82,7 @@ typedef struct {
   int last_access;
   int creation;
 } __attribute__((packed)) zip_extra_ur_t;
+
+extern int main_mdvtool(int argc, char **argv);
 
 #endif // MDV_H
