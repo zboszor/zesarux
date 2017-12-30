@@ -1190,7 +1190,7 @@ void inicializa_tabla_contend(void)
 
 	//ZXUno timing de 128k (128k, no +2a)
         if (MACHINE_IS_ZXUNO && (zxuno_ports[0]&16)) {
-                //128k
+                //Mismos timings que 128k
                 timings=contend_patron_65432100;
 
 		//Empieza en 14365 con 65432100, esto poniendo offset_time=-1
@@ -1199,6 +1199,7 @@ void inicializa_tabla_contend(void)
 		offset_time=3; //6,5,4,3,2,1,0,0 pattern starts at 14361 segun http://www.worldofspectrum.org/faq/reference/128kreference.htm
                 offset_patron=-1;
                 //Empieza en 14365 con 65432100
+
         }
 
         //ZXUno timing de 48k

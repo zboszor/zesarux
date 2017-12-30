@@ -4901,9 +4901,24 @@ z80_byte idle_bus_port(z80_int puerto)
 	//Caso Inves, siempre 255
 	if (MACHINE_IS_INVES) return 255;
 
-	//Caso 48k, 128k, zxuno, tsconf. Retornar atributo de pantalla
+    if (MACHINE_IS_ZXUNO) {
+        //cuando el puerto 1FFD está operativo, el puerto FF devuelve FF
+        z80_byte devcontrol=zxuno_ports[0x0E];
+        //DISD  ENMMU   DIROMSEL1F  DIROMSEL7F  DI1FFD  DI7FFD  DITAY   DIAY
+        //DI1FFD: a 1 para deshabilitar el sistema de paginación compatible con +2A/+3. 
+        //Deshabilitando esta interfaz se libera el puerto $1FFD en escritura. 
+        //Tenga en cuenta que la decodificación del puerto $7FFD, si está activa, es diferente dependiendo de si el puerto $1FFD está activo o no.
+        if (devcontrol&8) { //A 1, esta deshabilitado puerto 1ffd
+            z80_byte valor_idle=idle_bus_port_atribute();
+            return valor_idle;
+        }
+        else return 255;
+
+    }
+
+	//Caso 48k, 128k, tsconf. Retornar atributo de pantalla
 	//Parece que si en tsconf no retornamos esto, no acaba de arrancar la bios
-	if (MACHINE_IS_SPECTRUM_16_48 || MACHINE_IS_SPECTRUM_128_P2 || MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE || MACHINE_IS_PRISM || MACHINE_IS_TSCONF) {
+	if (MACHINE_IS_SPECTRUM_16_48 || MACHINE_IS_SPECTRUM_128_P2 || MACHINE_IS_TBBLUE || MACHINE_IS_PRISM || MACHINE_IS_TSCONF) {
 		z80_byte valor_idle=idle_bus_port_atribute();
 
 		//int t_estados_en_linea=(t_estados % screen_testados_linea);

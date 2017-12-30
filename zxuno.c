@@ -972,6 +972,7 @@ void zxuno_load_spi_flash(void)
 
 void zxuno_set_timing_128k(void)
 {
+	//Mismos timings que 128k
 	contend_read=contend_read_128k;
 	contend_read_no_mreq=contend_read_no_mreq_128k;
 	contend_write_no_mreq=contend_write_no_mreq_128k;
@@ -984,8 +985,9 @@ void zxuno_set_timing_128k(void)
 	screen_invisible_borde_superior=7;
 	screen_invisible_borde_derecho=104;
 
-	port_from_ula=port_from_ula_p2a;
-	contend_pages_128k_p2a=contend_pages_p2a;
+	port_from_ula=port_from_ula_48k; 
+	contend_pages_128k_p2a=contend_pages_128k;
+
 
 }
 

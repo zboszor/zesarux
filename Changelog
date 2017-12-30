@@ -19,6 +19,7 @@ Improved QL emulation:
 * can now open qlay mdv microdrive image files
 Improved file viewer from file utilities: now can see other file types than text: .tap
 Fixed TBBlue MMU when using segment 0000-3FFFH
+Fixed ZX-Uno emulation: 128kb timings are the same as a Spectrum 128k. When port 1ffd enabled, port FF return FF
 
 
 Version 6.0. 27 November 2017 - Gunfright edition
