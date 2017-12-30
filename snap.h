@@ -66,5 +66,7 @@ extern z80_bit sna_setting_no_change_machine;
 
 extern char *zxfile_machines_id[];
 
+extern char *z80file_machines_id[];
+
 
 #endif

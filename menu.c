@@ -16126,6 +16126,10 @@ void menu_file_zx_browser_show(char *filename)
         }
 
 
+        z80_int zx_pc_reg=value_8_to_16(zx_header[31],zx_header[30]);
+        sprintf(buffer_texto,"PC Register: %04XH",zx_pc_reg);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
 
 	texto_browser[indice_buffer]=0;
 	menu_generic_message_tooltip("ZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
@@ -16163,11 +16167,15 @@ void menu_file_z80_browser_show(char *filename)
         //Ver si version 2 o 3
         z80_byte z80_version=1;
 
-        if (z80_header[6]==0 && z80_header[7]==0) {
+        z80_int z80_pc_reg=value_8_to_16(z80_header[7],z80_header[6]);
+
+        if (z80_pc_reg==0) {
         	z80_version=2; //minimo 2
 
-        	//Leer cabecera adicional adicionales
+        	//Leer cabecera adicional 
         	fread(&z80_header[30],1,57,ptr_file_z80_browser);
+
+        	z80_pc_reg=value_8_to_16(z80_header[33],z80_header[32]);
 
         	if (z80_header[30]!=23) z80_version=3;
         }
@@ -16188,7 +16196,36 @@ void menu_file_z80_browser_show(char *filename)
 	sprintf(buffer_texto,"Z80 File version: %d",z80_version);
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
- 	
+ 	//Maquina
+ 	if (z80_version==1) {
+ 		sprintf(buffer_texto,"Machine: Spectrum 48k");
+ 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+ 	}
+ 	else {
+ 		z80_byte z80_machine=z80_header[34];
+ 		if (z80_machine<7) {
+ 			if (z80_version==2) {
+ 				if (z80_machine==3 || z80_machine==4) {
+ 					z80_machine++;
+ 				}
+ 			}
+ 			sprintf(buffer_texto,"Machine: %s",z80file_machines_id[z80_machine]);
+ 		}
+
+ 		else if (z80_machine>=7 && z80_machine<=15) {
+ 			sprintf(buffer_texto,"Machine: %s",z80file_machines_id[z80_machine]);
+ 		}
+
+ 		else if (z80_machine==128) {
+ 			sprintf(buffer_texto,"Machine: TS2068");
+ 		}
+
+ 		else sprintf(buffer_texto,"Machine: Unknown");
+ 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+ 	}
+
+ 	sprintf(buffer_texto,"PC Register: %04XH",z80_pc_reg);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 	texto_browser[indice_buffer]=0;
 	menu_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, "%s", texto_browser);

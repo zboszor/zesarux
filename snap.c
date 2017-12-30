@@ -146,6 +146,27 @@ char *zxfile_machines_id[]={
 
 };
 
+//Empezando desde 7 esta estandarizado, antes depende de si version 2 o 3
+char *z80file_machines_id[]={
+    "48k",
+    "48k + If.1",
+    "SamRam",
+    "48k + M.G.T.",
+    "128k",
+    "128k + If.1", //5
+    "128k + M.G.T.",
+    "Spectrum +3",
+    "Spectrum +3",
+    "Pentagon (128K)",
+    "Scorpion (256K)", //10
+    "Didaktik-Kompakt",
+    "Spectrum +2",
+    "Spectrum +2A",
+    "TC2048",
+    "TC2068"   //15
+};
+
+
 
 #define AUTOSAVE_NAME "zesarux_autosave.zx"
 
