@@ -16058,6 +16058,84 @@ void menu_realtape_loading_sound(MENU_ITEM_PARAMETERS)
 	realtape_loading_sound.v ^=1;
 }
 
+
+void menu_file_zx_browser_show(char *filename)
+{
+	
+	//Leemos cabecera archivo zx
+        FILE *ptr_file_zx_browser;
+        ptr_file_zx_browser=fopen(filename,"rb");
+
+        if (!ptr_file_zx_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+	//Leer 201 bytes de la cabecera
+	z80_byte zx_header[201];
+
+        int leidos=fread(zx_header,1,201,ptr_file_zx_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_zx_browser);
+
+        //Testear cabecera "ZX" en los primeros bytes
+        if (zx_header[0]!='Z' || zx_header[1]!='X') {
+        	debug_printf(VERBOSE_ERR,"Invalid .ZX file");
+        	return;
+        }
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 4096
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	
+     //printf ("nombre: %s c1: %d\n",buffer_nombre,buffer_nombre[0]);
+	z80_byte zx_version=zx_header[38];
+	sprintf(buffer_texto,"ZX File version: %d",zx_version);
+	//longitud_texto=strlen(buffer_texto)+1; //Agregar salto de linea
+	//sprintf (&texto_browser[indice_buffer],"%s\n",buffer_texto);
+ 	//indice_buffer +=longitud_texto+1;
+
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+ 	if (zx_version>=3) {
+ 		z80_byte zx_machine=zx_header[71];
+ 		if (zx_machine<=24) {
+ 			sprintf(buffer_texto,"Machine: %s",zxfile_machines_id[zx_machine]);
+ 			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+ 		}
+ 	}
+
+
+ 	if (zx_version>=4) {
+		sprintf(buffer_texto,"Saved on: %d/%02d/%02d %02d:%02d ",
+			value_8_to_16(zx_header[78],zx_header[77]),zx_header[76],zx_header[75],zx_header[79],zx_header[80]);
+
+		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+        }
+
+
+
+	texto_browser[indice_buffer]=0;
+	menu_generic_message_tooltip("ZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+
+}
+
+
 void menu_tape_browser_show(char *filename)
 {
 	//tapefile
@@ -18449,6 +18527,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 {
 	//Algunos tipos conocidos
 	if (!util_compare_file_extension(file_name,"tap")) menu_tape_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"zx")) menu_file_zx_browser_show(file_name);
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);

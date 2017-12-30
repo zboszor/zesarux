@@ -117,6 +117,36 @@ z80_bit autoload_snapshot_on_start;
 char autosave_snapshot_path_buffer[PATH_MAX];
 
 
+char *zxfile_machines_id[]={
+"Sinclair 16k",              //0
+"Sinclair 48k", 
+"Inves Spectrum+", 
+"Sinclair 128k", 
+"Amstrad +2", 
+"Amstrad +2 - French",       //5
+"Amstrad +2 - Spanish", 
+"Amstrad +2A (ROM v4.0)",     
+"Amstrad +2A (ROM v4.1)", 
+"Amstrad +2A - Spanish", 
+"Spectrum 128k (Spanish)",     //10
+"TK90X", 
+"TK90XS", 
+"TK95", 
+"ZX80", 
+"ZX81",       //15
+"Z88", 
+"Jupiter Ace", 
+"Amstrad CPC 464", 
+"Timex TS 2068", 
+"ZX-Uno",    //20
+"Chloe 140SE", 
+"Chloe 280SE", 
+"Prism", 
+"Spectrum 48k (Spanish)"  //24
+
+};
+
+
 #define AUTOSAVE_NAME "zesarux_autosave.zx"
 
 void autosave_snapshot(void)

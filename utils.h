@@ -595,4 +595,6 @@ extern int util_extract_mdv(char *mdvname, char *dest_dir);
 
 extern void util_string_replace_char(char *s,char orig,char dest);
 
+extern int util_add_string_newline(char *destination,char *text_to_add);
+
 #endif

@@ -64,5 +64,7 @@ extern void snapshot_quick_save(char *nombre);
 
 extern z80_bit sna_setting_no_change_machine;
 
+extern char *zxfile_machines_id[];
+
 
 #endif
