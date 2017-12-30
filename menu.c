@@ -16135,6 +16135,69 @@ void menu_file_zx_browser_show(char *filename)
 
 }
 
+void menu_file_z80_browser_show(char *filename)
+{
+	
+	//Leemos cabecera archivo z80
+        FILE *ptr_file_z80_browser;
+        ptr_file_z80_browser=fopen(filename,"rb");
+
+        if (!ptr_file_z80_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+	//Leemos primeros 30 bytes de la cabecera
+	z80_byte z80_header[87];
+
+        int leidos=fread(z80_header,1,30,ptr_file_z80_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        
+
+        //Ver si version 2 o 3
+        z80_byte z80_version=1;
+
+        if (z80_header[6]==0 && z80_header[7]==0) {
+        	z80_version=2; //minimo 2
+
+        	//Leer cabecera adicional adicionales
+        	fread(&z80_header[30],1,57,ptr_file_z80_browser);
+
+        	if (z80_header[30]!=23) z80_version=3;
+        }
+
+
+        fclose(ptr_file_z80_browser);
+
+       
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 4096
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	sprintf(buffer_texto,"Z80 File version: %d",z80_version);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+ 	
+
+	texto_browser[indice_buffer]=0;
+	menu_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+
+}
+
 
 void menu_tape_browser_show(char *filename)
 {
@@ -18529,6 +18592,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	if (!util_compare_file_extension(file_name,"tap")) menu_tape_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"zx")) menu_file_zx_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"z80")) menu_file_z80_browser_show(file_name);
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);
