@@ -169,7 +169,9 @@ void scrsdl_putchar_footer(int x,int y, z80_byte caracter,z80_byte tinta,z80_byt
         f.v=0;
         //128 y 129 corresponden a franja de menu y a letra enye minuscula
         if (caracter<32 || caracter>MAX_CHARSET_GRAPHIC) caracter='?';
-        scr_putsprite_comun_zoom(&char_set[(caracter-32)*8],x,y,inverse,tinta,papel,f,1);
+
+	//Proteger fuera de rango.
+        if (y<WINDOW_FOOTER_SIZE-8) scr_putsprite_comun_zoom(&char_set[(caracter-32)*8],x,y,inverse,tinta,papel,f,1);
 }
 
 
