@@ -41,6 +41,7 @@
 
 #include "mdvtool.h"
 #include "utils.h"
+#include "ay38912.h"
 
 FILE *mdv = NULL;
 
@@ -725,6 +726,15 @@ void mdv_erase(void) {
   mdvtool_file_get_entry(0)->length = SWAP32(1*sizeof(file_t));
 }
 
+z80_int mdv_get_random(void)
+{
+  ay_randomize(0);
+
+  //randomize_noise es valor de 16 bits
+  return randomize_noise[0];
+}
+
+
 void mdv_rename(char *name) {
   char lname[11];
   strncpy(lname, name, 11);
@@ -737,7 +747,7 @@ void mdv_rename(char *name) {
   printf("Setting name: '%s'\n", lname);
 
   int i;
-  unsigned short rnd = random();
+  unsigned short rnd = mdv_get_random();
   for(i=0;i<MDVTOOL_MAX_SECTORS;i++) {
     if(buffer[i].hdr.ff == 0xff) {
       memcpy(buffer[i].hdr.name, lname, 10);
