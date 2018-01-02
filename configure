@@ -1341,7 +1341,7 @@ utils.o: utils.c utils.h cpu.h debug.h joystick.h compileoptions.h tape.h snap.h
 playtzx.o: playtzx.c playtzx.h debug.h audio.h utils.h
 	\$(CC) \$(CFLAGS) -c playtzx.c
 
-mdvtool.o: mdvtool.c mdvtool.h debug.h audio.h utils.h
+mdvtool.o: mdvtool.c mdvtool.h debug.h utils.h ay38912.h
 	\$(CC) \$(CFLAGS) -c mdvtool.c
 
 contend.o: contend.c contend.h cpu.h debug.h screen.h compileoptions.h ulaplus.h zxuno.h ula.h tbblue.h
