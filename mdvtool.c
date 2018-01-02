@@ -34,6 +34,7 @@
 #include <string.h>
 #include <assert.h>
 //#include <zip.h>
+#include <ctype.h>
 
 #if defined(__APPLE__)
         #include <sys/syslimits.h>
@@ -117,7 +118,7 @@ int mdvtool_get_mapping_entry(int i) {
 }
 
 // compare mapping table with sector number of sector header
-int mdv_check_mapping(void) {
+void mdv_check_mapping(void) {
   int i;
   for(i=0;i<255;i++) {
     // mapping entry from sector 0
@@ -272,8 +273,8 @@ int mdv_load(char *name) {
     if(mdvtool_sector_table[i] != 255) {
       // for every sector != 0 the previous sector must also exist
       if(mdvtool_sector_table[i] > 0) {
-	if(mdvtool_get_index(mdvtool_sector_table[i]-1) == -1) 
-	  fprintf(stderr, "WARNING: Missing sector %d\n", mdvtool_sector_table[i]-1);
+	     if(mdvtool_get_index(mdvtool_sector_table[i]-1) == 0xffff) 
+	       fprintf(stderr, "WARNING: Missing sector %d\n", mdvtool_sector_table[i]-1);
       }
     }
   }
@@ -387,7 +388,7 @@ void mdvtool_file_export_dest(char *name,char *destination_name) {
     int offset = (!block)?sizeof(file_t):0;
     int bytes2copy = (size>512-offset)?(512-offset):size;
 
-    if(fwrite(s->data+offset, 1l, bytes2copy, out) != bytes2copy) {
+    if(fwrite(s->data+offset, 1l, bytes2copy, out) != (size_t) bytes2copy) {
       printf("\nERROR: Writing %s\n", name);
       fclose(out);
       return;
@@ -531,7 +532,7 @@ void mdvtool_file_write(file_t *file, char *data) {
   // Change them to run from microdrive
 
   int i, replace = 0;
-  for(i=0;i<SWAP32(file->length)-5;i++) {
+  for(i=0;(unsigned int) i<SWAP32(file->length)-5;i++) {
     if(memcmp(data+i, "flp1_", 5) == 0) {
       memcpy(data+i, "mdv1_", 5);
       replace++;
@@ -613,7 +614,9 @@ void mdvtool_file_write(file_t *file, char *data) {
       memcpy(sec->data, data, blk_size);
 
     // adjust headers
-    unsigned short phys = mdvtool_get_index(s);
+    //unsigned short phys = mdvtool_get_index(s);
+
+    mdvtool_get_index(s);
 
     sec->file = file_index;
     sec->block = block;
@@ -641,7 +644,7 @@ void mdvtool_file_import(char *name) {
   fseek(mdv, 0, SEEK_SET);
 
   char *buffer = malloc(size);
-  if(fread(buffer, 1, size, in) != size) {
+  if(fread(buffer, 1, size, in) != (size_t) size) {
     perror("fread()");
     free(buffer);
     fclose(in);
@@ -692,7 +695,9 @@ void mdv_erase(void) {
   // mark all sectors as free
   int i;
   for(i=0;i<MDVTOOL_MAX_SECTORS;i++) {
-    unsigned short phys = mdvtool_get_index(i);
+    //unsigned short phys = mdvtool_get_index(i);
+
+    mdvtool_get_index(i);
 
     // set new mapping entry
 
