@@ -2377,6 +2377,7 @@ void scrcocoa_putchar_footer(int x,int y, z80_byte caracter,z80_byte tinta,z80_b
 
         //scr_putchar_menu(x,yorigen+y,caracter,tinta,papel);
 	y +=yorigen;
+	//printf ("y: %d\n",y); entre 31,32 y 33 normalmente
 	z80_bit inverse,f;
 
 	inverse.v=0;

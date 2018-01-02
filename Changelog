@@ -20,6 +20,7 @@ Improved QL emulation:
 Improved file viewer from file utilities: now can see other file types than text: .tap, .zx, .sp, .z80, .sna, .spg, .p, .o 
 Fixed TBBlue MMU when using segment 0000-3FFFH
 Fixed ZX-Uno emulation: 128kb timings are the same as a Spectrum 128k. When port 1ffd enabled, port FF return FF
+Fixed window footer when running Pentagon
 
 
 Version 6.0. 27 November 2017 - Gunfright edition

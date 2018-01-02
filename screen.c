@@ -2801,6 +2801,9 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
         int margenx_izq=screen_total_borde_izquierdo*border_enabled.v;
         int margeny_arr=screen_borde_superior*border_enabled.v;
 
+	//Caso de pentagon y en footer
+	if (pentagon_timing.v && y>=31) margeny_arr=56*border_enabled.v;
+
 	if (MACHINE_IS_Z88) {
 		//no hay border. estas variables se leen en modo rainbow
 		margenx_izq=margeny_arr=0;
