@@ -88,6 +88,7 @@
 #include "tsconf.h"
 #include "kartusho.h"
 #include "spritefinder.h"
+#include "snap_spg.h"
 
 
 #if defined(__APPLE__)
@@ -16058,6 +16059,341 @@ void menu_realtape_loading_sound(MENU_ITEM_PARAMETERS)
 	realtape_loading_sound.v ^=1;
 }
 
+void menu_file_p_browser_show(char *filename)
+{
+	
+	//Leemos cabecera archivo p
+        FILE *ptr_file_p_browser;
+        ptr_file_p_browser=fopen(filename,"rb");
+
+        if (!ptr_file_p_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+	//Leer 128 bytes de la cabecera. Nota: archivos .P no tienen cabecera como tal
+	z80_byte p_header[128];
+
+        int leidos=fread(p_header,1,128,ptr_file_p_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_p_browser);
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 4096
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	sprintf(buffer_texto,"Machine: ZX-81");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	
+
+        z80_int p_pc_reg=0x207;
+        sprintf(buffer_texto,"PC Register: %04XH",p_pc_reg);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+	texto_browser[indice_buffer]=0;
+	menu_generic_message_tooltip("P file browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+
+}
+
+
+void menu_file_o_browser_show(char *filename)
+{
+	
+	//Leemos cabecera archivo p
+        FILE *ptr_file_o_browser;
+        ptr_file_o_browser=fopen(filename,"rb");
+
+        if (!ptr_file_o_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+	//Leer 128 bytes de la cabecera. Nota: archivos .O no tienen cabecera como tal
+	z80_byte o_header[128];
+
+        int leidos=fread(o_header,1,128,ptr_file_o_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_o_browser);
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 4096
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	sprintf(buffer_texto,"Machine: ZX-80");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	
+
+        z80_int o_pc_reg=0x283;
+        sprintf(buffer_texto,"PC Register: %04XH",o_pc_reg);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+	texto_browser[indice_buffer]=0;
+	menu_generic_message_tooltip("O file browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tao_get_info(z80_byte *tape,char *texto)
+
+
+}
+
+
+
+void menu_file_sp_browser_show(char *filename)
+{
+	
+	//Leemos cabecera archivo sp
+        FILE *ptr_file_sp_browser;
+        ptr_file_sp_browser=fopen(filename,"rb");
+
+        if (!ptr_file_sp_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+	//Leer 38 bytes de la cabecera
+	z80_byte sp_header[38];
+
+        int leidos=fread(sp_header,1,38,ptr_file_sp_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_sp_browser);
+
+        //Testear cabecera "SP" en los primeros bytes
+        if (sp_header[0]!='S' || sp_header[1]!='P') {
+        	debug_printf(VERBOSE_ERR,"Invalid .SP file");
+        	return;
+        }
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 4096
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	sprintf(buffer_texto,"Machine: Spectrum 48k");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	
+
+        z80_int sp_pc_reg=value_8_to_16(sp_header[31],sp_header[30]);
+        sprintf(buffer_texto,"PC Register: %04XH",sp_pc_reg);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+	texto_browser[indice_buffer]=0;
+	menu_generic_message_tooltip("SP file browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+
+}
+
+void menu_file_sna_browser_show(char *filename)
+{
+	
+	//Leemos cabecera archivo sna
+        FILE *ptr_file_sna_browser;
+        ptr_file_sna_browser=fopen(filename,"rb");
+
+        if (!ptr_file_sna_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+	//Leer 27 bytes de la cabecera
+	z80_byte sna_header[27];
+
+        int leidos=fread(sna_header,1,27,ptr_file_sna_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_sna_browser);
+
+
+        
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 4096
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	
+
+        //z80_int sna_pc_reg=value_8_to_16(sna_header[31],sna_header[30]);
+        //sprintf(buffer_texto,"PC Register: %04XH",sna_pc_reg);
+ 	//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+ 	//si 49179, snapshot de 48k
+ 	long int tamanyo=get_file_size(filename);
+ 	if (tamanyo==49179) {
+ 		sprintf(buffer_texto,"Machine: Spectrum 48k");
+ 	}
+ 	else if (tamanyo==131103 || tamanyo==147487) {
+ 		sprintf(buffer_texto,"Machine: Spectrum 128k");
+ 	}
+
+ 	else {
+ 		debug_printf(VERBOSE_ERR,"Invalid .SNA file");
+ 		return;
+ 	}
+
+
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+
+	texto_browser[indice_buffer]=0;
+	menu_generic_message_tooltip("SNA file browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+
+}
+
+
+void menu_file_spg_browser_show(char *filename)
+{
+	
+	//Leemos cabecera archivo spg
+        FILE *ptr_file_spg_browser;
+        ptr_file_spg_browser=fopen(filename,"rb");
+
+        if (!ptr_file_spg_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+	//Leer  bytes de la cabecera
+	int tamanyo_cabecera=sizeof(struct hdrSPG1_0);
+	struct hdrSPG1_0 spg_header;
+
+        int leidos=fread(&spg_header,1,tamanyo_cabecera,ptr_file_spg_browser);
+
+	if (leidos!=tamanyo_cabecera) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+        fclose(ptr_file_spg_browser);
+
+
+
+
+
+
+        
+
+
+        
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 4096
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+
+	if (memcmp(&spg_header.sign, "SpectrumProg", 12)) {
+    		debug_printf(VERBOSE_ERR,"Unknown snapshot signature");
+    		return;
+    	}
+
+
+
+
+	
+
+        //z80_int spg_pc_reg=value_8_to_16(spg_header[31],spg_header[30]);
+        //sprintf(buffer_texto,"PC Register: %04XH",spg_pc_reg);
+ 	//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+ 	sprintf(buffer_texto,"Machine: ZX Evolution TSConf");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+    	z80_byte snap_type = spg_header.ver;
+
+        if ((snap_type != 0) && (snap_type != 1) && (snap_type != 2) && (snap_type != 0x10)) {
+      		debug_printf(VERBOSE_ERR,"Unknown snapshot type: %02XH",snap_type);
+      		return;
+      	}
+
+
+	sprintf(buffer_texto,"Snapshot type: %02XH",snap_type);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	sprintf(buffer_texto,"Author/Name: %s",spg_header.author);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	sprintf(buffer_texto,"Creator: %s",spg_header.creator);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	sprintf(buffer_texto,"Saved on: %d/%02d/%02d %02d:%02d:%02d ",
+			2000+spg_header.year,spg_header.month,spg_header.day,spg_header.hour,spg_header.minute,spg_header.second);
+
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	z80_int zx_pc_reg=spg_header.pc;
+        sprintf(buffer_texto,"PC Register: %04XH",zx_pc_reg);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+	texto_browser[indice_buffer]=0;
+	menu_generic_message_tooltip("SPG file browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+
+}
+
 
 void menu_file_zx_browser_show(char *filename)
 {
@@ -18630,7 +18966,17 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 
 	else if (!util_compare_file_extension(file_name,"zx")) menu_file_zx_browser_show(file_name);
 
+	else if (!util_compare_file_extension(file_name,"sp")) menu_file_sp_browser_show(file_name);
+
 	else if (!util_compare_file_extension(file_name,"z80")) menu_file_z80_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"sna")) menu_file_sna_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"spg")) menu_file_spg_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"p")) menu_file_p_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"o")) menu_file_o_browser_show(file_name);
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);
