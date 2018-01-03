@@ -74,6 +74,7 @@
 #include "snap.h"
 #include "kartusho.h"
 #include "diviface.h"
+#include "betadisk.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -3979,6 +3980,13 @@ void debug_registers_get_mem_page_extended(z80_byte segmento,char *texto_pagina,
                 return;
         }
 
+        //Si es betadisk
+        if (segmento==0 && betadisk_enabled.v && betadisk_active.v) {
+                sprintf (texto_pagina_short,"BDSK");
+                sprintf (texto_pagina,"Betadisk ROM");
+                return;
+        }
+
         //Si es superupgrade
         if (superupgrade_enabled.v) {
                 if (debug_paginas_memoria_mapeadas[segmento] & DEBUG_PAGINA_MAP_ES_ROM) {
@@ -4187,6 +4195,11 @@ typedef struct s_debug_memory_segment debug_memory_segment;
 
                         //Si kartusho y maquina 48kb
                         if (MACHINE_IS_SPECTRUM_16_48 && kartusho_enabled.v) {
+                                debug_registers_get_mem_page_extended(0,segmentos[0].longname,segmentos[0].shortname);
+                        }
+
+                        //Si betadisk y maquina 48kb
+                        if (MACHINE_IS_SPECTRUM_16_48 && betadisk_enabled.v && betadisk_active.v) {
                                 debug_registers_get_mem_page_extended(0,segmentos[0].longname,segmentos[0].shortname);
                         }
 

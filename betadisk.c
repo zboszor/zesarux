@@ -120,7 +120,6 @@ void betadisk_restore_peek_poke_functions(void)
 
 
 
-
 z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
 	//Llamar a anterior

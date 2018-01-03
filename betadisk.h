@@ -29,6 +29,7 @@
 #define BETADISK_ROM_FILENAME "trdos.rom"
 
 extern z80_bit betadisk_enabled;
+extern z80_bit betadisk_active;
 
 extern void betadisk_enable(void);
 extern void betadisk_disable(void);
