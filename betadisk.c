@@ -184,6 +184,16 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 	betadisk_cambio_pagina(reg_pc);
 
 
+	//http://www.worldofspectrum.org/pub/sinclair/hardware-info/TR-DOS_Programming.txt
+
+	//Debug
+	//if (betadisk_check_if_rom_area(reg_pc) ) {
+		//if (reg_pc==0x3D13 || reg_pc==0x3C13) {
+		//	printf ("TR-DOS Call function %02XH on addr %04XH\n",reg_c,reg_pc);
+		//}
+	//}
+
+
 
 	//Para que no se queje el compilador, aunque este valor de retorno no lo usamos
 	return 0;
