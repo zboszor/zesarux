@@ -34,6 +34,7 @@
 #include "utils.h"
 #include "operaciones.h"
 #include "ula.h"
+#include "mem128.h"
 
 
 z80_bit betadisk_enabled={0};
@@ -42,6 +43,8 @@ z80_bit betadisk_enabled={0};
 z80_byte *betadisk_memory_pointer;
 
 z80_bit betadisk_active={0};
+
+z80_bit betadisk_allow_boot_48k={1};
 
 
 int betadisk_nested_id_core;
@@ -57,6 +60,12 @@ char *betadisk_rom_file_name="trdos.rom";
 
 int betadisk_check_if_rom_area(z80_int dir)
 {
+
+	//Si maquina 128k y es rom 0, volver
+	if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+		if (!(puerto_32765&16)) return 0;
+	}
+
 	if (betadisk_active.v && dir<16384) return 1;
 	else return 0;
 }
@@ -118,7 +127,37 @@ void betadisk_restore_peek_poke_functions(void)
 	debug_nested_peek_byte_no_time_del(betadisk_nested_id_peek_byte_no_time);
 }
 
+void betadisk_cambio_pagina(z80_int dir)
+{
 
+
+
+	if (betadisk_active.v) {
+		if (dir>=0x4000) {
+			//printf ("Unactivating betadisk rom space\n");
+			betadisk_active.v=0;
+		}
+	}
+
+	else {
+		if (dir>=0x3C00 && dir<=0x3DFF) {
+			//printf ("Activating betadisk rom space\n");
+			betadisk_active.v=1;
+		}
+	}
+}
+
+void betadisk_reset(void)
+{
+
+	betadisk_active.v=0;
+
+	//Al hacer reset, se activa betadisk en maquinas 48k
+
+	if (MACHINE_IS_SPECTRUM_16_48 && betadisk_allow_boot_48k.v) {
+		betadisk_active.v=1;
+	}
+}
 
 z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
@@ -142,19 +181,9 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 
 	*/
 
-	if (betadisk_active.v) {
-		if (reg_pc>=0x4000) {
-			//printf ("Unactivating betadisk rom space\n");
-			betadisk_active.v=0;
-		}
-	}
+	betadisk_cambio_pagina(reg_pc);
 
-	else {
-		if (reg_pc>=0x3C00 && reg_pc<=0x3DFF) {
-			//printf ("Activating betadisk rom space\n");
-			betadisk_active.v=1;
-		}
-	}
+
 
 	//Para que no se queje el compilador, aunque este valor de retorno no lo usamos
 	return 0;

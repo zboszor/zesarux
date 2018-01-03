@@ -949,6 +949,8 @@ util_stats_init();
 		multiface_unmap_memory();
 	}
 
+	if (MACHINE_IS_SPECTRUM && betadisk_enabled.v) betadisk_reset();
+
 	if (MACHINE_IS_QL) {
         m68k_init();
         m68k_set_cpu_type(M68K_CPU_TYPE_68000);
@@ -1525,6 +1527,7 @@ printf (
 		"--enable-superupgrade      Enable Superupgrade emulation. Requires --superupgrade-flash\n"
                 "--kartusho-rom f           Set Kartusho rom file\n"
                 "--enable-kartusho          Enable Kartusho emulation. Requires --kartusho-rom\n"
+                "--enable-betadisk          Enable Betadisk emulation\n"
 
 		"--enable-ql-mdv-flp        Enable QL Microdrive & Floppy emulation\n"
 		"--ql-mdv1-root-dir p       Set QL mdv1 root directory\n"
@@ -4142,6 +4145,7 @@ z80_bit command_line_dandanator={0};
 z80_bit command_line_dandanator_push_button={0};
 z80_bit command_line_superupgrade={0};
 z80_bit command_line_kartusho={0};
+z80_bit command_line_betadisk={0};
 
 z80_bit command_line_set_breakpoints={0};
 
@@ -5156,6 +5160,10 @@ void parse_cmdline_options(void) {
 
                         else if (!strcmp(argv[puntero_parametro],"--enable-kartusho")) {
                                 command_line_kartusho.v=1;
+                        }
+
+                         else if (!strcmp(argv[puntero_parametro],"--enable-betadisk")) {
+                                command_line_betadisk.v=1;
                         }
 
                         else if (!strcmp(argv[puntero_parametro],"--superupgrade-flash")) {
@@ -6352,6 +6360,14 @@ struct sched_param sparam;
 
 	//Kartusho
 	if (command_line_kartusho.v) kartusho_enable();
+
+	//Betadisk
+	if (command_line_betadisk.v) {
+		betadisk_enable();
+		//Gestionar autoboot. Si este betadisk_enable estuviese antes del hacer el reset_cpu desde aqui,
+		//no haria falta este truco
+		betadisk_reset();
+	}
 
 	if (command_line_set_breakpoints.v) {
 		if (debug_breakpoints_enabled.v==0) {
