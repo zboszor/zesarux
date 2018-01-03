@@ -89,6 +89,7 @@
 #include "kartusho.h"
 #include "spritefinder.h"
 #include "snap_spg.h"
+#include "betadisk.h"
 
 
 #if defined(__APPLE__)
@@ -598,7 +599,7 @@ int dandanator_opcion_seleccionada=0;
 int kartusho_opcion_seleccionada=0;
 int superupgrade_opcion_seleccionada=0;
 int multiface_opcion_seleccionada=0;
-
+int betadisk_opcion_seleccionada=0;
 
 int settings_opcion_seleccionada=0;
 int settings_audio_opcion_seleccionada=0;
@@ -9258,6 +9259,7 @@ int menu_cond_allow_write_rom(void)
 	if (superupgrade_enabled.v) return 0;
 	if (dandanator_enabled.v) return 0;
 	if (kartusho_enabled.v) return 0;
+	if (betadisk_enabled.v) return 0;
 
 	if (MACHINE_IS_INVES) return 0;
 	if (MACHINE_IS_SPECTRUM_16_48) return 1;
@@ -12903,6 +12905,66 @@ void menu_kartusho(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_storage_betadisk_emulation(MENU_ITEM_PARAMETERS)
+{
+	if (betadisk_enabled.v) betadisk_disable();
+	else betadisk_enable();
+}
+
+
+void menu_betadisk(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_betadisk;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                /*char string_betadisk_file_shown[13];
+
+
+                        menu_tape_settings_trunc_name(betadisk_rom_file_name,string_betadisk_file_shown,13);
+                        menu_add_item_menu_inicial_format(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_betadisk_rom_file,NULL,"~~ROM File: %s",string_betadisk_file_shown);
+                        menu_add_item_menu_shortcut(array_menu_betadisk,'r');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"ROM Emulation file");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"ROM Emulation file");*/
+
+
+                        menu_add_item_menu_inicial_format(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_emulation,NULL,"~~Betadisk Enabled: %s", (betadisk_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_shortcut(array_menu_betadisk,'k');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"Enable betadisk");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"Enable betadisk");
+
+
+			/*menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_press_button,menu_storage_betadisk_press_button_cond,"~~Press button");
+			menu_add_item_menu_shortcut(array_menu_betadisk,'p');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"Press button");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"Press button");*/
+
+
+                                menu_add_item_menu(array_menu_betadisk,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+                menu_add_ESC_item(array_menu_betadisk);
+
+                retorno_menu=menu_dibuja_menu(&betadisk_opcion_seleccionada,&item_seleccionado,array_menu_betadisk,"Betadisk settings" );
+
+                cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+}
+
+
 void menu_superupgrade_rom_file(MENU_ITEM_PARAMETERS)
 {
         superupgrade_disable();
@@ -13807,6 +13869,14 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_storage_settings,"IDE, DivIDE and 8-bit simple settings");
 
 
+		}
+
+
+		if (MACHINE_IS_SPECTRUM) {
+                        menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_kartusho,NULL,"~~Betadisk");
+                        menu_add_item_menu_shortcut(array_menu_storage_settings,'b');
+                        menu_add_item_menu_tooltip(array_menu_storage_settings,"Betadisk settings");
+                        menu_add_item_menu_ayuda(array_menu_storage_settings,"Betadisk settings");
 		}
 
 
