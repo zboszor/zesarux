@@ -63,6 +63,7 @@ int betadisk_check_if_rom_area(z80_int dir)
 
 z80_byte betadisk_read_byte(z80_int dir)
 {
+	//printf ("Returning betadisk data address %d\n",dir);
 	return betadisk_memory_pointer[dir];
 }
 
@@ -143,11 +144,17 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 	*/
 
 	if (betadisk_active.v) {
-		if (dir>=0x4000) betadisk_active.v=0;
+		if (reg_pc>=0x4000) {
+			//printf ("Unactivating betadisk rom space\n");
+			betadisk_active.v=0;
+		}
 	}
 
 	else {
-		if (dir>=0x3C00 && dir<=0x3DFF) betadisk_active.v=1;
+		if (reg_pc>=0x3C00 && reg_pc<=0x3DFF) {
+			//printf ("Activating betadisk rom space\n");
+			betadisk_active.v=1;
+		}
 	}
 
 	//Para que no se queje el compilador, aunque este valor de retorno no lo usamos

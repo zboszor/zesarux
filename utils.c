@@ -89,6 +89,7 @@
 #include "tsconf.h"
 #include "kartusho.h"
 #include "mdvtool.h"
+#include "betadisk.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -9002,10 +9003,19 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         }
     break;
 
-
+    //Z88 memory
     case 10:
     	if (MACHINE_IS_Z88) {
     		size=4*1024*1024; //Zona entera de los 4 MB
+    	}
+    break;
+
+
+
+    //Betadisk
+    case 11:
+    	if (betadisk_enabled.v) {
+    		size=BETADISK_SIZE; 
     	}
     break;
 
@@ -9163,6 +9173,12 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
     	}
     break;
 
+    //Betadisk
+    case 11:
+	if (betadisk_enabled.v) {
+    		p=&betadisk_memory_pointer[address];
+    	}
+    break;
 
 
   }
@@ -9266,6 +9282,13 @@ void machine_get_memory_zone_name(int zone, char *name)
     	}
     break;
 
+    //Betadisk
+    case 11:
+	if (betadisk_enabled.v) {
+			   //123456789012345
+		strcpy(name,"Betadisk rom");
+	}
+    break;
 
 
   }
