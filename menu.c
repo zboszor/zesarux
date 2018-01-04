@@ -16298,6 +16298,133 @@ void menu_file_sp_browser_show(char *filename)
 
 }
 
+
+void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino)
+{
+	int i;
+	for (i=0;i<11;i++) {
+		char caracter;
+		caracter=*origen;
+		origen++;
+		if (caracter<32 || caracter>127) caracter='?';
+		*destino=caracter;
+		destino++;
+		//punto si hace falta
+		if (i==7) {
+			*destino='.';
+			destino++;
+		}
+	}
+
+	*destino=0;
+}
+
+void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
+{
+
+	/*
+	Ejemplo directorio en fat para imagenes mmc de 32 MB:
+00110200  54 42 42 4c 55 45 20 20  46 57 20 20 00 5d 10 95  |TBBLUE  FW  .]..|
+00110210  54 49 58 4b 00 00 6f 9d  58 4b 04 00 00 7e 01 00  |TIXK..o.XK...~..|
+00110220  54 4d 50 20 20 20 20 20  20 20 20 10 00 5d 10 95  |TMP        ..]..|
+00110230  54 49 54 49 00 00 10 95  54 49 5d 00 00 00 00 00  |TITI....TI].....|
+00110240  42 49 4e 20 20 20 20 20  20 20 20 10 00 79 4f 9e  |BIN        ..yO.|
+00110250  58 4b 58 4b 00 00 4f 9e  58 4b 03 00 00 00 00 00  |XKXK..O.XK......|
+00110260  42 49 54 4d 41 50 53 20  20 20 20 10 00 2d 77 9e  |BITMAPS    ..-w.|
+00110270  58 4b 58 4b 00 00 77 9e  58 4b 79 00 00 00 00 00  |XKXK..w.XKy.....|
+00110280  52 54 43 20 20 20 20 20  20 20 20 10 00 27 88 9e  |RTC        ..'..|
+00110290  58 4b 58 4b 00 00 88 9e  58 4b 7d 00 00 00 00 00  |XKXK....XK}.....|
+001102a0  53 59 53 20 20 20 20 20  20 20 20 10 00 89 a5 9e  |SYS        .....|
+001102b0  58 4b 58 4b 00 00 a5 9e  58 4b 5c 01 00 00 00 00  |XKXK....XK\.....|
+001102c0  54 42 42 4c 55 45 20 20  20 20 20 10 00 0f c5 9e  |TBBLUE     .....|
+001102d0  58 4b 58 4b 00 00 c5 9e  58 4b f5 01 00 00 00 00  |XKXK....XK......|
+001102e0  53 50 52 49 54 45 53 20  20 20 20 10 00 92 95 9e  |SPRITES    .....|
+001102f0  58 4b 58 4b 00 00 95 9e  58 4b 09 01 00 00 00 00  |XKXK....XK......|
+00110300  e5 45 53 54 49 4e 4f 20  20 20 20 20 08 6c 53 9d  |.ESTINO     .lS.|
+	*/
+
+	//Asignamos 00110300H bytes
+	int bytes_to_load=0x110300;
+
+	z80_byte *mmc_file_memory;
+	mmc_file_memory=malloc(bytes_to_load);
+	if (mmc_file_memory==NULL) {
+		debug_printf(VERBOSE_ERR,"Unable to assign memory");
+		return;
+	}
+	
+	//Leemos cabecera archivo mmc
+        FILE *ptr_file_mmc_browser;
+        ptr_file_mmc_browser=fopen(filename,"rb");
+
+        if (!ptr_file_mmc_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		free(mmc_file_memory);
+		return;
+	}
+
+
+        int leidos=fread(mmc_file_memory,1,bytes_to_load,ptr_file_mmc_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_mmc_browser);
+
+
+        
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 4096
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	
+
+
+ 	sprintf(buffer_texto,"RAW disk image");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	sprintf(buffer_texto,"First VFAT entries");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	int puntero,i;
+
+	puntero=0x110200;
+
+	for (i=0;i<16;i++) {
+		menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto);
+		if (buffer_texto[0]!='?') {
+			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+		}
+
+		puntero +=32;	
+	}
+
+
+	
+
+	texto_browser[indice_buffer]=0;
+	char titulo_ventana[32];
+	sprintf(titulo_ventana,"%s file browser",tipo_imagen);
+	menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+	free(mmc_file_memory);
+
+}
+
+
+
 void menu_file_sna_browser_show(char *filename)
 {
 	
@@ -19052,6 +19179,10 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"p")) menu_file_p_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"o")) menu_file_o_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"mmc")) menu_file_mmc_browser_show(file_name,"MMC");
+
+	else if (!util_compare_file_extension(file_name,"ide")) menu_file_mmc_browser_show(file_name,"IDE");
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);
@@ -27668,7 +27799,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);
 									
 									//Visor de archivos
-									if (tecla=='V') menu_file_viewer_read_file("File view",file_utils_file_selected);
+									if (tecla=='V') menu_file_viewer_read_file("Text file view",file_utils_file_selected);
 
 									//Truncate
 									if (tecla=='T') {

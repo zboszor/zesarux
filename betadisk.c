@@ -57,6 +57,12 @@ char *betadisk_rom_file_name="trdos.rom";
 
 //http://problemkaputt.de/zxdocs.htm#spectrumdiscbetabetaplusbeta128diskinterfacetrdos
 
+/*
+Estado actual de la emulación de floppy: parece que detecta el floppy aunque da siempre un disk error
+El único caso que no da disk error es al formatear
+*/
+
+
 
 int betadisk_check_if_rom_area(z80_int dir)
 {
