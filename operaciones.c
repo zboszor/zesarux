@@ -67,6 +67,7 @@
 #include "ds1307.h"
 #include "tsconf.h"
 #include "mk14.h"
+#include "betadisk.h"
 
 
 void (*poke_byte)(z80_int dir,z80_byte valor);
@@ -5461,8 +5462,7 @@ z80_byte lee_puerto_spectrum_ula(z80_byte puerto_h)
 
 }
 
-
-
+z80_byte temp_puerto_1f=0;
 
 //Devuelve valor puerto para maquinas Spectrum
 z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
@@ -5500,6 +5500,37 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 	}
 
+    //Test betadisk
+    if (betadisk_enabled.v) {
+        if (betadisk_check_if_rom_area(reg_pc)) {
+           if (puerto_l==0xFF) {
+               debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk Status PC=%04XH",puerto_h,puerto_l,reg_pc);
+               return 255;
+         }
+
+         if (puerto_l==0x1f) {
+               debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Status PC=%04XH",puerto_h,puerto_l,reg_pc);
+               temp_puerto_1f ^=2;
+              return temp_puerto_1f; //Parece que al conmutar bit 1 al menos detecta que hay disco, aunque luego da error
+          }
+
+         if (puerto_l==0x3f) {
+               debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Track PC=%04XH",puerto_h,puerto_l,reg_pc);
+               return 0;
+         }
+
+         if (puerto_l==0x5f) {
+               debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Sector PC=%04XH",puerto_h,puerto_l,reg_pc);
+               return 0;
+         }
+
+
+         if (puerto_l==0x7f) {
+                debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Data PC=%04XH",puerto_h,puerto_l,reg_pc);
+               return 0;
+         }
+     }
+    }
 
 
 	//Esto tiene que estar antes de zxmmc y fuller dado que interfiere con puerto 3fh

@@ -40,5 +40,6 @@ extern void betadisk_reset(void);
 
 
 extern z80_byte *betadisk_memory_pointer;
+extern int betadisk_check_if_rom_area(z80_int dir);
 
 #endif

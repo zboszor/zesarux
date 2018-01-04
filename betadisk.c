@@ -61,12 +61,15 @@ char *betadisk_rom_file_name="trdos.rom";
 int betadisk_check_if_rom_area(z80_int dir)
 {
 
+	//Si no betadisk activo, volver
+	if (betadisk_active.v==0) return 0;
+
 	//Si maquina 128k y es rom 0, volver
 	if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
 		if (!(puerto_32765&16)) return 0;
 	}
 
-	if (betadisk_active.v && dir<16384) return 1;
+	if (dir<16384) return 1;
 	else return 0;
 }
 
