@@ -17066,8 +17066,76 @@ void menu_file_z80_browser_show(char *filename)
 }
 
 
+void menu_file_tzx_browser_show(char *filename)
+{
+	
+	//Leemos cabecera archivo tzx
+        FILE *ptr_file_tzx_browser;
+        ptr_file_tzx_browser=fopen(filename,"rb");
+
+        if (!ptr_file_tzx_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+	//Leer cabecera
+	z80_byte tzx_header[10];
+
+        int leidos=fread(tzx_header,1,10,ptr_file_tzx_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_tzx_browser);
+
+        //Testear cabecera "ZXTape!" en los primeros bytes
+	char signature[8];
+	memcpy(signature,tzx_header,7);
+	signature[7]=0;
+        if (strcmp(signature,"ZXTape!")) {
+        	debug_printf(VERBOSE_ERR,"Invalid .TZX file");
+        	return;
+        }
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 4096
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	
+	z80_byte tzx_version_major=tzx_header[8];
+	z80_byte tzx_version_minor=tzx_header[9];
+	sprintf(buffer_texto,"TZX File version: %d.%d",tzx_version_major,tzx_version_minor);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+
+	texto_browser[indice_buffer]=0;
+	menu_generic_message_tooltip("TZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+
+}
+
+
+
 void menu_tape_browser_show(char *filename)
 {
+
+	//Si tzx
+	if (!util_compare_file_extension(filename,"tzx")) {
+		menu_file_tzx_browser_show(filename);
+		return;
+	}
+
 	//tapefile
 	if (util_compare_file_extension(filename,"tap")!=0) {
 		debug_printf(VERBOSE_ERR,"Tape browser not supported for this tape type (yet)");
@@ -19503,6 +19571,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"ide")) menu_file_mmc_browser_show(file_name,"IDE");
 
 	else if (!util_compare_file_extension(file_name,"trd")) menu_file_trd_browser_show(file_name,"TRD");
+
+	else if (!util_compare_file_extension(file_name,"tzx")) menu_file_tzx_browser_show(file_name);
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);
