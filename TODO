@@ -48,6 +48,8 @@ archivo se llama spacepods.bas y hace lbytes mdv1_spacepods_bas -> lo normal
 
 -implementar exec_mdv1_... mismo ejemplo con cueshell, va a   Returning header for file on address 00100H y ahi peta
 
+-mejorar visor .tzx
+
 
 IMPORTANTE: ruido al iniciar emulador, no siempre, debido al agregar rutina de autoresize audio puntero
 Quiza solo permitir cuando hayan pasado unos segundos desde el inicio del emulador
