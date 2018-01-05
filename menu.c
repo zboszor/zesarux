@@ -16299,7 +16299,7 @@ void menu_file_sp_browser_show(char *filename)
 }
 
 
-void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino)
+void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int sipuntoextension)
 {
 	int i;
 	for (i=0;i<11;i++) {
@@ -16310,7 +16310,7 @@ void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino)
 		*destino=caracter;
 		destino++;
 		//punto si hace falta
-		if (i==7) {
+		if (sipuntoextension && i==7) {
 			*destino='.';
 			destino++;
 		}
@@ -16407,6 +16407,12 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
         indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
+	char vfat_label[8+3+1];
+	menu_file_mmc_browser_show_file(&mmc_file_memory[0x10002b],vfat_label,0);
+	sprintf(buffer_texto,"FAT Label: %s",vfat_label);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
 	sprintf(buffer_texto,"First VFAT entries");
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
@@ -16415,7 +16421,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 	puntero=0x110200;
 
 	for (i=0;i<max_entradas_vfat;i++) {
-		menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto);
+		menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1);
 		if (buffer_texto[0]!='?') {
 			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 		}
