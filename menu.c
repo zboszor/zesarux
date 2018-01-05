@@ -17130,8 +17130,10 @@ void menu_file_tzx_browser_show(char *filename)
 void menu_tape_browser_show(char *filename)
 {
 
-	//Si tzx
-	if (!util_compare_file_extension(filename,"tzx")) {
+	//Si tzx o cdt
+	if (!util_compare_file_extension(filename,"tzx") ||
+	    !util_compare_file_extension(filename,"cdt")
+		) {
 		menu_file_tzx_browser_show(filename);
 		return;
 	}
@@ -19573,6 +19575,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"trd")) menu_file_trd_browser_show(file_name,"TRD");
 
 	else if (!util_compare_file_extension(file_name,"tzx")) menu_file_tzx_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"cdt")) menu_file_tzx_browser_show(file_name);
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);
