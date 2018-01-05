@@ -9491,3 +9491,34 @@ int util_add_string_newline(char *destination,char *text_to_add)
  	return longitud_texto;
 
 }
+
+//De una cadena de bytes, lo muestra como hexadecimal, sin espacios. Retorna cadena acabada en 0
+void util_binary_to_hex(z80_byte *origen, char *destino, int longitud)
+{
+	int i;
+
+	for (i=0;i<longitud;i++) {
+		sprintf(destino,"%02X",*origen);
+
+		origen++;
+		destino+=2;
+	}
+}
+
+
+
+//De una cadena de bytes, lo muestra como ascii, sin espacios. si hay caracter no imprimible, muestra . . . Retorna cadena acabada en 0
+void util_binary_to_ascii(z80_byte *origen, char *destino, int longitud)
+{
+	int i;
+	z80_byte caracter;
+
+	for (i=0;i<longitud;i++) {
+		caracter=*origen;
+		if (caracter<32 || caracter>127) caracter='.';
+		*destino=caracter;
+
+		origen++;
+		destino++;
+	}
+}

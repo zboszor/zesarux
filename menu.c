@@ -16634,6 +16634,84 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 
 
 
+void menu_file_hexdump_browser_show(char *filename)
+{
+
+
+	//Cargamos maximo 4 kb
+#define MAX_HEXDUMP_FILE 4096
+	int bytes_to_load=MAX_HEXDUMP_FILE;
+
+	z80_byte *hexdump_file_memory;
+	hexdump_file_memory=malloc(bytes_to_load);
+	if (hexdump_file_memory==NULL) {
+		debug_printf(VERBOSE_ERR,"Unable to assign memory");
+		return;
+	}
+	
+	//Leemos cabecera archivo hexdump
+        FILE *ptr_file_hexdump_browser;
+        ptr_file_hexdump_browser=fopen(filename,"rb");
+
+        if (!ptr_file_hexdump_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		free(hexdump_file_memory);
+		return;
+	}
+
+
+        int leidos=fread(hexdump_file_memory,1,bytes_to_load,ptr_file_hexdump_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_hexdump_browser);
+
+
+        
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER_HEX (MAX_HEXDUMP_FILE*5)
+//Por cada linea de texto de 33 bytes, se muestran 8 bytes del fichero. Por tanto, podemos aproximar por lo alto,
+//que el texto ocupa 5 veces los bytes. Ejemplo 8*5=40 
+
+	char texto_browser[MAX_TEXTO_BROWSER_HEX];
+	int indice_buffer=0;
+
+	
+ 	sprintf(buffer_texto,"Hexadecimal view");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	int i;
+	//char buffer_indice[5];
+	char buffer_hex[8*2+1];
+	char buffer_ascii[8+1];
+
+	for (i=0;i<bytes_to_load;i+=8) {
+		util_binary_to_hex(&hexdump_file_memory[i],buffer_hex,8);
+		util_binary_to_ascii(&hexdump_file_memory[i],buffer_ascii,8);
+		sprintf(buffer_texto,"%04X %s %s",i,buffer_hex,buffer_ascii);
+		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	}
+
+
+
+	texto_browser[indice_buffer]=0;
+	menu_generic_message_tooltip("Hex viewer", 0, 0, 1, NULL, "%s", texto_browser);
+
+	free(hexdump_file_memory);
+
+}
+
+
 
 
 void menu_file_sna_browser_show(char *filename)
@@ -19396,6 +19474,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"ide")) menu_file_mmc_browser_show(file_name,"IDE");
 
 	else if (!util_compare_file_extension(file_name,"trd")) menu_file_trd_browser_show(file_name,"TRD");
+
+	else if (!util_compare_file_extension(file_name,"rom")) menu_file_hexdump_browser_show(file_name);
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);
