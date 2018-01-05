@@ -16344,6 +16344,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 	*/
 
 	int tamanyo_vfat_entry=32;
+	int tamanyo_plus3_entry=32;
 
 	int max_entradas_vfat=16;
 
@@ -16427,7 +16428,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 00010080  00 50 33 33 45 4d 4d 43  30 52 4f 4d 00 00 00 80  |.P33EMMC0ROM....|
 */
 
-	char filesystem[6];
+	char filesystem[32];
 	memcpy(filesystem,&mmc_file_memory[0x100036],5);
 
 	filesystem[5]=0;
@@ -16444,7 +16445,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
-		sprintf(buffer_texto,"First VFAT entries");
+		sprintf(buffer_texto,"First VFAT entries:");
 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 		int puntero,i;
@@ -16461,7 +16462,37 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 		}
 	}
 
+	memcpy(filesystem,&mmc_file_memory[0],10);
 
+	filesystem[10]=0;
+	if (!strcmp(filesystem,"PLUSIDEDOS")) {
+
+		sprintf(buffer_texto,"Filesystem: PLUSIDEDOS");
+        	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+		char plus3_label[16+1];
+		menu_file_mmc_browser_show_file(&mmc_file_memory[0x40],plus3_label,0);
+		sprintf(buffer_texto,"Label: %s",plus3_label);
+		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+		sprintf(buffer_texto,"First PLUS3 entries:");
+		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+		int puntero,i;
+
+		puntero=0x10000+1;
+
+		for (i=0;i<max_entradas_vfat;i++) {
+			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1);
+			if (buffer_texto[0]!='?') {
+				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+			}
+
+			puntero +=tamanyo_plus3_entry;	
+		}
+	}
 	
 
 	texto_browser[indice_buffer]=0;
