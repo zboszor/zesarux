@@ -19464,7 +19464,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 	int umbral=leidos/10;
 
 	if (codigos_no_imprimibles>umbral) {
-		debug_printf(VERBOSE_INFO,"Considering file as hexadecimal because the invalid characters are higher than 10% (%d/%d)",
+		debug_printf(VERBOSE_INFO,"Considering file as hexadecimal because the invalid characters are higher than 10%% of the total size (%d/%d)",
 			codigos_no_imprimibles,leidos);
 		menu_file_hexdump_browser_show(file_name);
 	}
