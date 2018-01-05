@@ -16690,7 +16690,9 @@ void menu_file_hexdump_browser_show(char *filename)
  	sprintf(buffer_texto,"Hexadecimal view");
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
-	sprintf(buffer_texto,"Showing first %d bytes",bytes_to_load);
+	if (leidos>bytes_to_load) leidos=bytes_to_load;
+
+	sprintf(buffer_texto,"Showing first %d bytes",leidos);
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 	int i;
@@ -16698,7 +16700,7 @@ void menu_file_hexdump_browser_show(char *filename)
 	char buffer_hex[8*2+1];
 	char buffer_ascii[8+1];
 
-	for (i=0;i<bytes_to_load;i+=8) {
+	for (i=0;i<leidos;i+=8) {
 		util_binary_to_hex(&hexdump_file_memory[i],buffer_hex,8);
 		util_binary_to_ascii(&hexdump_file_memory[i],buffer_ascii,8);
 		sprintf(buffer_texto,"%04X %s %s",i,buffer_hex,buffer_ascii);

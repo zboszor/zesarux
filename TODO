@@ -50,6 +50,8 @@ archivo se llama spacepods.bas y hace lbytes mdv1_spacepods_bas -> lo normal
 
 -mejorar visor .tzx
 
+-visor hex que pueda cortar linea si no es multiple de 8 el total leido
+
 
 IMPORTANTE: ruido al iniciar emulador, no siempre, debido al agregar rutina de autoresize audio puntero
 Quiza solo permitir cuando hayan pasado unos segundos desde el inicio del emulador
