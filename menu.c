@@ -16299,10 +16299,10 @@ void menu_file_sp_browser_show(char *filename)
 }
 
 
-void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int sipuntoextension)
+void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int sipuntoextension,int longitud)
 {
 	int i;
-	for (i=0;i<11;i++) {
+	for (i=0;i<longitud;i++) {
 		char caracter;
 		caracter=*origen;
 		origen++;
@@ -16440,7 +16440,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 
 
 		char vfat_label[8+3+1];
-		menu_file_mmc_browser_show_file(&mmc_file_memory[0x10002b],vfat_label,0);
+		menu_file_mmc_browser_show_file(&mmc_file_memory[0x10002b],vfat_label,0,11);
 		sprintf(buffer_texto,"FAT Label: %s",vfat_label);
 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
@@ -16453,7 +16453,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 		puntero=0x110200;
 
 		for (i=0;i<max_entradas_vfat;i++) {
-			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1);
+			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1,11);
 			if (buffer_texto[0]!='?') {
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 			}
@@ -16472,7 +16472,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 
 
 		char plus3_label[16+1];
-		menu_file_mmc_browser_show_file(&mmc_file_memory[0x40],plus3_label,0);
+		menu_file_mmc_browser_show_file(&mmc_file_memory[0x40],plus3_label,0,11);
 		sprintf(buffer_texto,"Label: %s",plus3_label);
 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
@@ -16485,7 +16485,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 		puntero=0x10000+1;
 
 		for (i=0;i<max_entradas_vfat;i++) {
-			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1);
+			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1,11);
 			if (buffer_texto[0]!='?') {
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 			}
@@ -16505,6 +16505,121 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 	free(mmc_file_memory);
 
 }
+
+
+void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
+{
+
+
+	int tamanyo_trd_entry=16;
+
+	int max_entradas_trd=16;
+
+	//Asignamos para 16 entradas
+	int bytes_to_load=tamanyo_trd_entry*max_entradas_trd;
+
+	z80_byte *trd_file_memory;
+	trd_file_memory=malloc(bytes_to_load);
+	if (trd_file_memory==NULL) {
+		debug_printf(VERBOSE_ERR,"Unable to assign memory");
+		return;
+	}
+	
+	//Leemos cabecera archivo trd
+        FILE *ptr_file_trd_browser;
+        ptr_file_trd_browser=fopen(filename,"rb");
+
+        if (!ptr_file_trd_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		free(trd_file_memory);
+		return;
+	}
+
+
+        int leidos=fread(trd_file_memory,1,bytes_to_load,ptr_file_trd_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_trd_browser);
+
+
+        
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 4096
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	
+
+
+ 	sprintf(buffer_texto,"TRD disk image");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+/*
+00000000  43 43 31 30 41 59 20 20  42 4a 00 4a 00 31 00 01  |CC10AY  BJ.J.1..|
+00000010  74 69 74 6c 65 20 20 20  43 20 20 00 1b 1b 01 04  |title   C  .....|
+00000020  73 6b 69 6e 20 20 20 20  43 20 20 00 1b 1b 0c 05  |skin    C  .....|
+00000030  20 4e 69 67 68 74 49 6e  6d 20 20 b9 0a 0b 07 07  | NightInm  .....|
+00000040  20 45 76 61 31 20 20 20  70 74 33 26 0c 0d 02 08  | Eva1   pt3&....|
+00000050  20 45 76 61 32 20 20 20  70 74 33 c4 1e 1f 0f 08  | Eva2   pt3.....|
+00000060  20 52 6f 73 65 31 20 20  70 74 33 ef 03 04 0e 0a  | Rose1  pt3.....|
+00000070  20 52 6f 73 65 32 20 20  70 74 33 a2 04 05 02 0b  | Rose2  pt3.....|
+00000080  20 53 74 72 6f 6c 6c 6e  70 74 33 a6 19 1a 07 0b  | Strollnpt3.....|
+00000090  20 53 77 6f 6f 6e 43 56  6d 20 20 7f 0f 10 01 0d  | SwoonCVm  .....|
+000000a0  20 53 6f 70 68 69 65 45  6d 20 20 76 11 12 01 0e  | SophieEm  v....|
+000000b0  20 73 75 6d 6d 65 72 31  70 74 33 e0 06 07 03 0f  | summer1pt3.....|
+000000c0  20 73 75 6d 6d 65 72 32  70 74 33 8d 05 06 0a 0f  | summer2pt3.....|
+000000d0  20 62 74 74 66 31 20 20  70 74 33 60 0b 0c 00 10  | bttf1  pt3`....|
+000000e0  20 62 74 74 66 32 20 20  70 74 33 41 04 05 0c 10  | bttf2  pt3A....|
+000000f0  20 54 6f 52 69 73 6b 54  6d 20 20 e3 28 29 01 11  | ToRiskTm  .()..|
+*/
+
+
+	        sprintf(buffer_texto,"Filesystem: TRDOS");
+        	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+		sprintf(buffer_texto,"First file entries:");
+		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+		int puntero,i;
+
+		puntero=0;
+
+		for (i=0;i<max_entradas_trd;i++) {
+			menu_file_mmc_browser_show_file(&trd_file_memory[puntero],buffer_texto,1,11);
+			if (buffer_texto[0]!='?') {
+				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+			}
+
+			puntero +=tamanyo_trd_entry;	
+		}
+	
+
+
+	texto_browser[indice_buffer]=0;
+	char titulo_ventana[32];
+	sprintf(titulo_ventana,"%s file browser",tipo_imagen);
+	menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+	free(trd_file_memory);
+
+}
+
+
 
 
 
@@ -19266,6 +19381,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"mmc")) menu_file_mmc_browser_show(file_name,"MMC");
 
 	else if (!util_compare_file_extension(file_name,"ide")) menu_file_mmc_browser_show(file_name,"IDE");
+
+	else if (!util_compare_file_extension(file_name,"trd")) menu_file_trd_browser_show(file_name,"TRD");
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);
