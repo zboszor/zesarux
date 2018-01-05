@@ -16403,30 +16403,38 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 00100030  4d 45 20 20 20 20 46 41  54 31 36 20 20 20 0e 1f  |ME    FAT16   ..|
 */
 
-        sprintf(buffer_texto,"FAT filesystem");
-        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	char fatfs[6];
+	memcpy(fatfs,&mmc_file_memory[0x100036],5);
+
+	fatfs[5]=0;
+	if (!strcmp(fatfs,"FAT16")) {
 
 
-	char vfat_label[8+3+1];
-	menu_file_mmc_browser_show_file(&mmc_file_memory[0x10002b],vfat_label,0);
-	sprintf(buffer_texto,"FAT Label: %s",vfat_label);
-	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	        sprintf(buffer_texto,"Filesystem: FAT16");
+        	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
-	sprintf(buffer_texto,"First VFAT entries");
-	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+		char vfat_label[8+3+1];
+		menu_file_mmc_browser_show_file(&mmc_file_memory[0x10002b],vfat_label,0);
+		sprintf(buffer_texto,"FAT Label: %s",vfat_label);
+		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
-	int puntero,i;
 
-	puntero=0x110200;
+		sprintf(buffer_texto,"First VFAT entries");
+		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
-	for (i=0;i<max_entradas_vfat;i++) {
-		menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1);
-		if (buffer_texto[0]!='?') {
-			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+		int puntero,i;
+
+		puntero=0x110200;
+
+		for (i=0;i<max_entradas_vfat;i++) {
+			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1);
+			if (buffer_texto[0]!='?') {
+				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+			}
+
+			puntero +=tamanyo_vfat_entry;	
 		}
-
-		puntero +=tamanyo_vfat_entry;	
 	}
 
 
