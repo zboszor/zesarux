@@ -16299,21 +16299,32 @@ void menu_file_sp_browser_show(char *filename)
 }
 
 
-void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int sipuntoextension,int longitud)
+void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int sipuntoextension,int longitud,int sidetectar_final_trd)
 {
 	int i;
-	for (i=0;i<longitud;i++) {
+	int salir=0;
+	for (i=0;i<longitud && !salir;i++) {
 		char caracter;
 		caracter=*origen;
-		origen++;
-		if (caracter<32 || caracter>127) caracter='?';
-		*destino=caracter;
-		destino++;
-		//punto si hace falta
-		if (sipuntoextension && i==7) {
-			*destino='.';
-			destino++;
-		}
+
+		
+			origen++;
+			if (caracter<32 || caracter>127) {
+				//Si detectamos final de texto y siempre que no este en primer caracter
+				if (sidetectar_final_trd && i) salir=1;
+				else caracter='?';
+			}
+
+			if (!salir) {
+				*destino=caracter;
+				destino++;
+			
+				if (sipuntoextension && i==7) {
+					*destino='.';
+					destino++;
+				}
+			}
+		
 	}
 
 	*destino=0;
@@ -16440,7 +16451,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 
 
 		char vfat_label[8+3+1];
-		menu_file_mmc_browser_show_file(&mmc_file_memory[0x10002b],vfat_label,0,11);
+		menu_file_mmc_browser_show_file(&mmc_file_memory[0x10002b],vfat_label,0,11,0);
 		sprintf(buffer_texto,"FAT Label: %s",vfat_label);
 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
@@ -16453,7 +16464,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 		puntero=0x110200;
 
 		for (i=0;i<max_entradas_vfat;i++) {
-			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1,11);
+			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1,11,0);
 			if (buffer_texto[0]!='?') {
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 			}
@@ -16472,7 +16483,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 
 
 		char plus3_label[16+1];
-		menu_file_mmc_browser_show_file(&mmc_file_memory[0x40],plus3_label,0,11);
+		menu_file_mmc_browser_show_file(&mmc_file_memory[0x40],plus3_label,0,11,0);
 		sprintf(buffer_texto,"Label: %s",plus3_label);
 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
@@ -16485,7 +16496,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 		puntero=0x10000+1;
 
 		for (i=0;i<max_entradas_vfat;i++) {
-			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1,11);
+			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1,11,0);
 			if (buffer_texto[0]!='?') {
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 			}
@@ -16585,26 +16596,28 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 000000f0  20 54 6f 52 69 73 6b 54  6d 20 20 e3 28 29 01 11  | ToRiskTm  .()..|
 */
 
-
-	        sprintf(buffer_texto,"Filesystem: TRDOS");
-        	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	//Los nombres en tr-dos pueden finalizar (parece que en la extension) con codigo 0 de final
 
 
-		sprintf(buffer_texto,"First file entries:");
-		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	sprintf(buffer_texto,"Filesystem: TRDOS");
+        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
-		int puntero,i;
 
-		puntero=0;
+	sprintf(buffer_texto,"First file entries:");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
-		for (i=0;i<max_entradas_trd;i++) {
-			menu_file_mmc_browser_show_file(&trd_file_memory[puntero],buffer_texto,1,11);
-			if (buffer_texto[0]!='?') {
-				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
-			}
+	int puntero,i;
 
-			puntero +=tamanyo_trd_entry;	
+	puntero=0;
+
+	for (i=0;i<max_entradas_trd;i++) {
+		menu_file_mmc_browser_show_file(&trd_file_memory[puntero],buffer_texto,1,11,1);
+		if (buffer_texto[0]!='?') {
+			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 		}
+
+		puntero +=tamanyo_trd_entry;	
+	}
 	
 
 
