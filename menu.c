@@ -16343,8 +16343,12 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 00110300  e5 45 53 54 49 4e 4f 20  20 20 20 20 08 6c 53 9d  |.ESTINO     .lS.|
 	*/
 
-	//Asignamos 00110300H bytes
-	int bytes_to_load=0x110300;
+	int tamanyo_vfat_entry=32;
+
+	int max_entradas_vfat=16;
+
+	//Asignamos para 16 entradas
+	int bytes_to_load=0x110200+tamanyo_vfat_entry*max_entradas_vfat;
 
 	z80_byte *mmc_file_memory;
 	mmc_file_memory=malloc(bytes_to_load);
@@ -16393,6 +16397,16 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
  	sprintf(buffer_texto,"RAW disk image");
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
+
+/*
+00100020  00 00 00 00 80 00 29 bb  4f 74 10 4e 4f 20 4e 41  |......).Ot.NO NA|
+00100030  4d 45 20 20 20 20 46 41  54 31 36 20 20 20 0e 1f  |ME    FAT16   ..|
+*/
+
+        sprintf(buffer_texto,"FAT filesystem");
+        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
 	sprintf(buffer_texto,"First VFAT entries");
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
@@ -16400,13 +16414,13 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 
 	puntero=0x110200;
 
-	for (i=0;i<16;i++) {
+	for (i=0;i<max_entradas_vfat;i++) {
 		menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto);
 		if (buffer_texto[0]!='?') {
 			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 		}
 
-		puntero +=32;	
+		puntero +=tamanyo_vfat_entry;	
 	}
 
 
