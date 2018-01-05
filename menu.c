@@ -16690,6 +16690,9 @@ void menu_file_hexdump_browser_show(char *filename)
  	sprintf(buffer_texto,"Hexadecimal view");
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
+	sprintf(buffer_texto,"Showing first %d bytes",bytes_to_load);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
 	int i;
 	//char buffer_indice[5];
 	char buffer_hex[8*2+1];
@@ -19428,25 +19431,51 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 	if (!ptr_file_name)
 	{
 		debug_printf (VERBOSE_ERR,"Unable to open %s file",file_name);
+		return;
 	}
+	
+
+	int leidos=fread(file_read_memory,1,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name);
+	debug_printf (VERBOSE_INFO,"Read %d bytes of file: %s",leidos,file_name);
+	int avisolimite=0;
+
+	if (leidos==MAX_TEXTO_GENERIC_MESSAGE) {
+		avisolimite=1;
+		leidos--;
+	}
+
+	file_read_memory[leidos]=0;
+
+	fclose(ptr_file_name);
+
+	//Ahora deducir si el archivo cargado es texto o binario.
+	//Codigos mayores de 127 hacen disparar el aviso. Cuantos tiene que haber? Por porcentaje del archivo o por numero?
+	//Mejor por porcentaje. Cualquier archivo con un 10% minimo de codigos no imprimibles, se considerara binario
+	int i;
+	int codigos_no_imprimibles=0;
+	z80_byte caracter;
+
+	for (i=0;i<leidos;i++) {
+		caracter=file_read_memory[i];
+		if (caracter>127) codigos_no_imprimibles++;
+	}
+
+	//Sacar porcentaje 10%
+	int umbral=leidos/10;
+
+	if (codigos_no_imprimibles>umbral) {
+		debug_printf(VERBOSE_INFO,"Considering file as hexadecimal because the invalid characters are higher than 10% (%d/%d)",
+			codigos_no_imprimibles,leidos);
+		menu_file_hexdump_browser_show(file_name);
+	}
+
 	else {
-
-		int leidos=fread(file_read_memory,1,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name);
-		debug_printf (VERBOSE_INFO,"Read %d bytes of file: %s",leidos,file_name);
-
-		if (leidos==MAX_TEXTO_GENERIC_MESSAGE) {
-			debug_printf (VERBOSE_ERR,"Read max text buffer: %d bytes. Showing only these",leidos);
-			leidos--;
-		}
-
-		file_read_memory[leidos]=0;
-
-
-		fclose(ptr_file_name);
+		if (avisolimite) debug_printf (VERBOSE_ERR,"Read max text buffer: %d bytes. Showing only these",leidos);
 
 		menu_generic_message(title,file_read_memory);
-
 	}
+
+	
 
 }
 
@@ -19474,8 +19503,6 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"ide")) menu_file_mmc_browser_show(file_name,"IDE");
 
 	else if (!util_compare_file_extension(file_name,"trd")) menu_file_trd_browser_show(file_name,"TRD");
-
-	else if (!util_compare_file_extension(file_name,"rom")) menu_file_hexdump_browser_show(file_name);
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);
