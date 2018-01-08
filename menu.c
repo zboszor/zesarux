@@ -13003,21 +13003,11 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
 						
 
 
-                        menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,13);
-                        menu_add_item_menu_inicial_format(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_file,NULL,"~~TRD File: %s",string_trd_file_shown);
-                        menu_add_item_menu_shortcut(array_menu_betadisk,'t');
-                        menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation file");
-                        menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation file");
-
-
-                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_emulation,menu_storage_trd_emulation_cond,"TRD ~~Emulation: %s", (trd_enabled.v ? "Yes" : "No"));
-                        menu_add_item_menu_shortcut(array_menu_betadisk,'e');
-                        menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation");
-                        menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation");
 
 
 
-                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_emulation,NULL,"~~Betadisk Enabled: %s", (betadisk_enabled.v ? "Yes" : "No"));
+
+                        menu_add_item_menu_inicial_format(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_emulation,NULL,"~~Betadisk Enabled: %s", (betadisk_enabled.v ? "Yes" : "No"));
                         menu_add_item_menu_shortcut(array_menu_betadisk,'k');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"Enable betadisk");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"Enable betadisk");
@@ -13027,6 +13017,19 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_betadisk,'a');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"Allow autoboot on 48k machines");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"Allow autoboot on 48k machines");
+
+
+                                                menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,13);
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_file,NULL,"~~TRD File: %s",string_trd_file_shown);
+                        menu_add_item_menu_shortcut(array_menu_betadisk,'t');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation file");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation file");
+
+
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_emulation,menu_storage_trd_emulation_cond,"TRD ~~Emulation: %s", (trd_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_shortcut(array_menu_betadisk,'e');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation");
 
 
                                 menu_add_item_menu(array_menu_betadisk,"",MENU_OPCION_SEPARADOR,NULL,NULL);

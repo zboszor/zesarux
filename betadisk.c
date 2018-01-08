@@ -212,9 +212,19 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 	if (trd_enabled.v) {
 		if (betadisk_check_if_rom_area(reg_pc) ) {
 			if (reg_pc==0x1e3d) {
+				char buffer_registros[8192];
+				print_registers(buffer_registros);
 				printf ("Handler for read sectors\n");
+				printf ("%s\n",buffer_registros);
 				betadisk_trdoshandler_read_sectors();
 			}
+
+			/*if (reg_pc==0xef2) {
+				char buffer_registros[8192];
+				print_registers(buffer_registros);
+				printf ("read_sector_DE_into_tmp_buffer:  equ 0x03F2\n");
+				printf ("%s\n",buffer_registros);
+			}*/
 		}
 	}
 
