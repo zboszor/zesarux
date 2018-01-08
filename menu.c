@@ -16617,7 +16617,7 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 	sprintf(buffer_texto,"Free sectors on disk: %d",trd_file_memory[start_track_8+229]+256*trd_file_memory[start_track_8+230]);
         indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
-	sprintf(buffer_texto,"First free sector sec: %d track %d",trd_file_memory[start_track_8+225],trd_file_memory[start_track_8+226]);
+	sprintf(buffer_texto,"First free sector %dt:%ds",trd_file_memory[start_track_8+226],trd_file_memory[start_track_8+225]);
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
