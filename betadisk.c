@@ -398,8 +398,6 @@ HL = dirección de memoria para carga o lectura de los sectores
 	}
 
 	printf ("\ntotal leidos: %d\n",leidos);
-	//23807 sector number
-	poke_byte_no_time(23807,sector);
 	
 	//No error
 	reg_a=0;
@@ -409,6 +407,17 @@ HL = dirección de memoria para carga o lectura de los sectores
 	reg_hl=destino;
 	reg_e=sector;
 	reg_d=pista;
+
+/*
+   23807 | 1* | Sector number for sector read/write Tr-Dos functions
+   23808 | 2* | Current address of buffer for Tr-Dos #05 and #06 functions
+*/
+	//23807 sector number
+	poke_byte_no_time(23807,sector);
+	poke_byte_no_time(23808,reg_l);
+	poke_byte_no_time(23809,reg_h);
+
+
 
 	//Return
 	reg_pc=pop_valor();
