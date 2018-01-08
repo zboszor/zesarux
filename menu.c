@@ -16299,7 +16299,7 @@ void menu_file_sp_browser_show(char *filename)
 }
 
 
-void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int sipuntoextension,int longitud,int sidetectar_final_trd)
+void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int sipuntoextension,int longitud)
 {
 	int i;
 	int salir=0;
@@ -16311,7 +16311,7 @@ void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int sipuntoe
 			origen++;
 			if (caracter<32 || caracter>127) {
 				//Si detectamos final de texto y siempre que no este en primer caracter
-				if (sidetectar_final_trd && i) salir=1;
+				if (i) salir=1;
 				else caracter='?';
 			}
 
@@ -16451,7 +16451,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 
 
 		char vfat_label[8+3+1];
-		menu_file_mmc_browser_show_file(&mmc_file_memory[0x10002b],vfat_label,0,11,0);
+		menu_file_mmc_browser_show_file(&mmc_file_memory[0x10002b],vfat_label,0,11);
 		sprintf(buffer_texto,"FAT Label: %s",vfat_label);
 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
@@ -16464,7 +16464,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 		puntero=0x110200;
 
 		for (i=0;i<max_entradas_vfat;i++) {
-			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1,11,0);
+			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1,11);
 			if (buffer_texto[0]!='?') {
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 			}
@@ -16483,7 +16483,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 
 
 		char plus3_label[16+1];
-		menu_file_mmc_browser_show_file(&mmc_file_memory[0x40],plus3_label,0,11,0);
+		menu_file_mmc_browser_show_file(&mmc_file_memory[0x40],plus3_label,0,11);
 		sprintf(buffer_texto,"Label: %s",plus3_label);
 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
@@ -16496,7 +16496,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 		puntero=0x10000+1;
 
 		for (i=0;i<max_entradas_vfat;i++) {
-			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1,11,0);
+			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1,11);
 			if (buffer_texto[0]!='?') {
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 			}
@@ -16596,7 +16596,7 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 000000f0  20 54 6f 52 69 73 6b 54  6d 20 20 e3 28 29 01 11  | ToRiskTm  .()..|
 */
 
-	//Los nombres en tr-dos pueden finalizar (parece que en la extension) con codigo 0 de final
+	//La extension es de 1 byte
 
 
 	sprintf(buffer_texto,"Filesystem: TRDOS");
@@ -16611,7 +16611,7 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 	puntero=0;
 
 	for (i=0;i<max_entradas_trd;i++) {
-		menu_file_mmc_browser_show_file(&trd_file_memory[puntero],buffer_texto,1,11,1);
+		menu_file_mmc_browser_show_file(&trd_file_memory[puntero],buffer_texto,1,9);
 		if (buffer_texto[0]!='?') {
 			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 		}
