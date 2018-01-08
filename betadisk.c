@@ -426,6 +426,9 @@ HL = dirección de memoria para carga o lectura de los sectores
 	//temp prueba. con paralact consigue cargar el basic y el resto
 	if (sector==0 && pista==1) numero_sectores++;
 
+	//temp
+	//if (numero_sectores) numero_sectores=1;
+
 
 
 
