@@ -52,8 +52,11 @@ int betadisk_nested_id_peek_byte;
 int betadisk_nested_id_peek_byte_no_time;
 
 
+char trd_file_name[PATH_MAX]="";
 
 char *betadisk_rom_file_name="trdos.rom";
+
+z80_bit trd_enabled={0};
 
 void betadisk_trdoshandler_read_sectors(void);
 
@@ -206,10 +209,12 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 
 
 	//Handler
-	if (betadisk_check_if_rom_area(reg_pc) ) {
-		if (reg_pc==0x1e3d) {
-			printf ("Handler for read sectors\n");
-			betadisk_trdoshandler_read_sectors();
+	if (trd_enabled.v) {
+		if (betadisk_check_if_rom_area(reg_pc) ) {
+			if (reg_pc==0x1e3d) {
+				printf ("Handler for read sectors\n");
+				betadisk_trdoshandler_read_sectors();
+			}
 		}
 	}
 
@@ -290,30 +295,37 @@ int betadisk_load_rom(void)
 }
 
 
-z80_byte *temp_beta_trd;
+z80_byte *trd_memory_pointer;
 
 int betadisk_bytes_por_sector=256;
 int betadisk_sectores_por_pista=16;
 
 
-void temp_trd_load(void)
+void trd_insert(void)
 {
 
-	temp_beta_trd=malloc(655360);
-
-        FILE *ptr_configfile;
-        //ptr_configfile=fopen("./extras/media/spectrum/pentagon/mescaline_pentagon.trd","rb");
-	//ptr_configfile=fopen("./extras/media/spectrum/pentagon/Kpacku_deluxe.trd","rb");
-	ptr_configfile=fopen("./extras/media/spectrum/pentagon/paralactika_by_demarche.trd","rb");
-
-        if (!ptr_configfile) {
-                printf("Unable to open configuration file\n");
+        //Si existe
+        if (!si_existe_archivo(trd_file_name)) {
+                debug_printf (VERBOSE_ERR,"File %s does not exist",trd_file_name);
+                trd_disable();
                 return;
         }
 
-        int leidos=fread(temp_beta_trd,1,655360,ptr_configfile);
 
-        fclose(ptr_configfile);
+	trd_memory_pointer=malloc(TRD_FILE_SIZE);
+
+        FILE *ptr_trdfile;
+	ptr_trdfile=fopen(trd_file_name,"rb");
+
+        if (!ptr_trdfile) {
+                debug_printf (VERBOSE_ERR,"Unable to open trd file file");
+                trd_disable();
+                return;
+        }
+
+        int leidos=fread(trd_memory_pointer,1,TRD_FILE_SIZE,ptr_trdfile);
+
+        fclose(ptr_trdfile);
 
 
 
@@ -325,13 +337,13 @@ z80_byte betadisk_get_byte_disk(int pista, int sector, int byte_en_sector)
 	int bytes_por_pista=betadisk_sectores_por_pista*betadisk_bytes_por_sector;
 	int offset=pista*bytes_por_pista+sector*betadisk_bytes_por_sector+byte_en_sector;
 
-	if (offset>=655360) {
-		//TODO error
-		printf ("Reading beyond trd disk\n");
-		return 0;
+	if (offset>=TRD_FILE_SIZE) {
+		debug_printf (VERBOSE_ERR,"Error. Trying to read beyond trd. Size: %ld Asked: %u. Disabling TRD",TRD_FILE_SIZE,offset);
+                trd_disable();
+                return 0;
 	}
 
-	z80_byte byte_leido=temp_beta_trd[offset];
+	z80_byte byte_leido=trd_memory_pointer[offset];
 	z80_byte caracter=byte_leido;
 	if (caracter<32 || caracter>127) caracter='.';
 	printf ("%c",caracter);
@@ -454,9 +466,6 @@ void betadisk_enable(void)
 	betadisk_enabled.v=1;
 
 
-	temp_trd_load();
-
-
 }
 
 void betadisk_disable(void)
@@ -473,6 +482,28 @@ void betadisk_disable(void)
 }
 
 
+
+
+
+
+void trd_enable(void)
+{
+        debug_printf (VERBOSE_INFO,"Enabling trd");
+        trd_enabled.v=1;
+
+        trd_insert();
+
+
+}
+
+void trd_disable(void)
+{
+
+
+        trd_enabled.v=0;
+
+
+}
 
 
 

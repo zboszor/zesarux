@@ -12917,6 +12917,72 @@ void menu_storage_betadisk_allow_boot(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_storage_trd_emulation(MENU_ITEM_PARAMETERS)
+{
+	if (trd_enabled.v) trd_disable();
+	else trd_enable();
+}
+
+
+int menu_storage_trd_emulation_cond(void)
+{
+        if (trd_file_name[0]==0) return 0;
+        else return 1;
+}
+
+
+void menu_storage_trd_file(MENU_ITEM_PARAMETERS)
+{
+
+	trd_disable();
+
+        char *filtros[2];
+
+        filtros[0]="trd";
+        filtros[1]=0;
+
+
+        if (menu_filesel("Select TRD File",filtros,trd_file_name)==1) {
+		if (!si_existe_archivo(trd_file_name)) {
+			if (menu_confirm_yesno_texto("File does not exist","Create?")==0) {
+                                trd_file_name[0]=0;
+                                return;
+                        }
+
+
+			//Crear archivo vacio
+		        FILE *ptr_trdfile;
+			ptr_trdfile=fopen(trd_file_name,"wb");
+
+		        long int totalsize=640*1024;
+			
+			z80_byte valor_grabar=0;
+
+		        if (ptr_trdfile!=NULL) {
+				while (totalsize) {
+					fwrite(&valor_grabar,1,1,ptr_trdfile);
+					totalsize--;
+				}
+		                fclose(ptr_trdfile);
+		        }
+
+		}
+
+		
+
+
+        }
+        //Sale con ESC
+        else {
+                //Quitar nombre
+                trd_file_name[0]=0;
+
+
+        }
+}
+
+
+
 void menu_betadisk(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_betadisk;
@@ -12933,8 +12999,25 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_tooltip(array_menu_betadisk,"ROM Emulation file");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"ROM Emulation file");*/
 
+        	char string_trd_file_shown[13];
+						
 
-                        menu_add_item_menu_inicial_format(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_emulation,NULL,"~~Betadisk Enabled: %s", (betadisk_enabled.v ? "Yes" : "No"));
+
+                        menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,13);
+                        menu_add_item_menu_inicial_format(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_file,NULL,"~~TRD File: %s",string_trd_file_shown);
+                        menu_add_item_menu_shortcut(array_menu_betadisk,'t');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation file");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation file");
+
+
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_emulation,menu_storage_trd_emulation_cond,"TRD ~~Emulation: %s", (trd_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_shortcut(array_menu_betadisk,'e');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation");
+
+
+
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_emulation,NULL,"~~Betadisk Enabled: %s", (betadisk_enabled.v ? "Yes" : "No"));
                         menu_add_item_menu_shortcut(array_menu_betadisk,'k');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"Enable betadisk");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"Enable betadisk");

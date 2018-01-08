@@ -42,4 +42,14 @@ extern void betadisk_reset(void);
 extern z80_byte *betadisk_memory_pointer;
 extern int betadisk_check_if_rom_area(z80_int dir);
 
+extern char trd_file_name[];
+
+extern z80_bit trd_enabled;
+
+#define TRD_FILE_SIZE (640*1024)
+
+extern void trd_enable(void);
+
+extern void trd_disable(void);
+
 #endif
