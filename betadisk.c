@@ -302,7 +302,9 @@ void temp_trd_load(void)
 	temp_beta_trd=malloc(655360);
 
         FILE *ptr_configfile;
-        ptr_configfile=fopen("./extras/media/spectrum/pentagon/mescaline_pentagon.trd","rb");
+        //ptr_configfile=fopen("./extras/media/spectrum/pentagon/mescaline_pentagon.trd","rb");
+	//ptr_configfile=fopen("./extras/media/spectrum/pentagon/Kpacku_deluxe.trd","rb");
+	ptr_configfile=fopen("./extras/media/spectrum/pentagon/paralactika_by_demarche.trd","rb");
 
         if (!ptr_configfile) {
                 printf("Unable to open configuration file\n");
@@ -350,21 +352,36 @@ A = número de sectores
 D = pista del primer sector a usar (0..159)
 E = primer sector a usar de la pista (0..15)
 HL = dirección de memoria para carga o lectura de los sectores
+
+
+
+
+	#05 - Read group of sectors. In HL must be  loaded address where  sector data
+       should  be readed, B must be  loaded with  number of sectors to read, D
+       must be loaded  with track number and E with sector number. If B loaded
+       with  #00 then interface will only read sector address mark - useful if
+       you only want check is there sector with defined number on the track.
+
 	*/
 
-	z80_byte numero_sectores=reg_a;
+	//z80_byte numero_sectores=reg_a;
+	z80_byte numero_sectores=reg_b;
 	z80_byte pista=reg_d;
 	z80_byte sector=reg_e;
 	int byte_en_sector;
 	z80_int destino=reg_hl;
 
+	printf ("Reading %d sectors from track %d sector %d to address %04XH\n",numero_sectores,pista,sector,destino);
+
 	//prueba
 	//if (numero_sectores>1) numero_sectores=1;
-	if (numero_sectores==0) numero_sectores=1;
+	//if (numero_sectores==0) numero_sectores=1;
 
 	//numero_sectores++;
+	//numero_sectores &=15;
 
-	printf ("Reading %d sectors from track %d sector %d to address %04XH\n",numero_sectores,pista,sector,destino);
+
+
 
 	int leidos=0;
 
@@ -378,6 +395,8 @@ HL = dirección de memoria para carga o lectura de los sectores
 	}
 
 	printf ("\ntotal leidos: %d\n",leidos);
+	//23807 sector number
+	poke_byte_no_time(23807,sector);
 	
 	//No error
 	reg_a=0;
