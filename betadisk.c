@@ -224,7 +224,7 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 			if (reg_pc==0x1e64 && reg_a==0) {
 				char buffer_registros[8192];
 				print_registers(buffer_registros);
-				printf ("Handler for transfer_sectors\n");
+				printf ("\n\nHandler for transfer_sectors\n");
 				printf ("%s\n",buffer_registros);
 				betadisk_trdoshandler_read_sectors();
 			}
@@ -425,7 +425,7 @@ HL = dirección de memoria para carga o lectura de los sectores
 
 	//temp prueba. con paralact consigue cargar el basic y el resto
 	if (sector==0 && pista==1) {
-		printf ("hack for paralactika basic. increment number of sectors to read\n");
+		printf ("\nHACK for paralactika basic. increment number of sectors to read\n");
 		numero_sectores++;
 	}
 
