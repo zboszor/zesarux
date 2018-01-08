@@ -52,4 +52,8 @@ extern void trd_enable(void);
 
 extern void trd_disable(void);
 
+#define TRD_SYM_trdos_variable_sector_rw_flag 23758
+#define TRD_SYM_trdos_variable_current_sector 23796
+#define TRD_SYM_trdos_variable_current_track 23797
+
 #endif

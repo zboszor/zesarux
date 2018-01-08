@@ -211,10 +211,20 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 	//Handler
 	if (trd_enabled.v) {
 		if (betadisk_check_if_rom_area(reg_pc) ) {
-			if (reg_pc==0x1e3d) {
+			/*if (reg_pc==0x1e3d) {
 				char buffer_registros[8192];
 				print_registers(buffer_registros);
 				printf ("Handler for read sectors\n");
+				printf ("%s\n",buffer_registros);
+				betadisk_trdoshandler_read_sectors();
+			}*/
+
+
+			//Si A=0, lectura. Si A=255, escritura
+			if (reg_pc==0x1e64 && reg_a==0) {
+				char buffer_registros[8192];
+				print_registers(buffer_registros);
+				printf ("Handler for transfer_sectors\n");
 				printf ("%s\n",buffer_registros);
 				betadisk_trdoshandler_read_sectors();
 			}
@@ -223,6 +233,13 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 				char buffer_registros[8192];
 				print_registers(buffer_registros);
 				printf ("read_sector_DE_into_tmp_buffer:  equ 0x03F2\n");
+				printf ("%s\n",buffer_registros);
+			}*/
+
+			/*if (reg_pc==0x1e36) {
+				char buffer_registros[8192];
+				print_registers(buffer_registros);
+				printf ("sub_1e36h\n");
 				printf ("%s\n",buffer_registros);
 			}*/
 		}
@@ -354,9 +371,10 @@ z80_byte betadisk_get_byte_disk(int pista, int sector, int byte_en_sector)
 	}
 
 	z80_byte byte_leido=trd_memory_pointer[offset];
-	z80_byte caracter=byte_leido;
-	if (caracter<32 || caracter>127) caracter='.';
-	printf ("%c",caracter);
+	
+	//z80_byte caracter=byte_leido;
+	//if (caracter<32 || caracter>127) caracter='.';
+	//printf ("%c",caracter);
 
 	return byte_leido;
 }
@@ -395,6 +413,9 @@ HL = dirección de memoria para carga o lectura de los sectores
 
 	printf ("Reading %d sectors from track %d sector %d to address %04XH\n",numero_sectores,pista,sector,destino);
 
+
+		poke_byte_no_time(TRD_SYM_trdos_variable_sector_rw_flag,reg_a);
+
 	//prueba
 	//if (numero_sectores>1) numero_sectores=1;
 	//if (numero_sectores==0) numero_sectores=1;
@@ -403,7 +424,7 @@ HL = dirección de memoria para carga o lectura de los sectores
 	//numero_sectores &=15;
 
 	//temp prueba. con paralact consigue cargar el basic y el resto
-	if (sector==0 && pista>0) numero_sectores++;
+	if (sector==0 && pista==1) numero_sectores++;
 
 
 
@@ -427,8 +448,8 @@ HL = dirección de memoria para carga o lectura de los sectores
 
 	//??
 	reg_hl=destino;
-	//reg_e=sector;
-	//reg_d=pista;
+	reg_e=sector;
+	reg_d=pista;
 
 /*
    23807 | 1* | Sector number for sector read/write Tr-Dos functions
@@ -438,6 +459,10 @@ HL = dirección de memoria para carga o lectura de los sectores
 	//poke_byte_no_time(23807,sector);
 	//poke_byte_no_time(23808,reg_l);
 	//poke_byte_no_time(23809,reg_h);
+
+
+	poke_byte_no_time(TRD_SYM_trdos_variable_current_sector,reg_e);
+	poke_byte_no_time(TRD_SYM_trdos_variable_current_track,reg_d);
 
 
 
