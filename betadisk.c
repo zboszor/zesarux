@@ -55,6 +55,8 @@ int betadisk_nested_id_peek_byte_no_time;
 
 char *betadisk_rom_file_name="trdos.rom";
 
+void betadisk_trdoshandler_read_sectors(void);
+
 //http://problemkaputt.de/zxdocs.htm#spectrumdiscbetabetaplusbeta128diskinterfacetrdos
 
 /*
@@ -203,6 +205,15 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 	//}
 
 
+	//Handler
+	if (betadisk_check_if_rom_area(reg_pc) ) {
+		if (reg_pc==0x1e3d) {
+			printf ("Handler for read sectors\n");
+			betadisk_trdoshandler_read_sectors();
+		}
+	}
+
+
 
 	//Para que no se queje el compilador, aunque este valor de retorno no lo usamos
 	return 0;
@@ -282,6 +293,8 @@ int betadisk_load_rom(void)
 z80_byte *temp_beta_trd;
 
 int betadisk_bytes_por_sector=256;
+int betadisk_sectores_por_pista=16;
+
 
 void temp_trd_load(void)
 {
@@ -296,7 +309,7 @@ void temp_trd_load(void)
                 return;
         }
 
-        int leidos=fread(temp_beta_trd,1,655350,ptr_configfile);
+        int leidos=fread(temp_beta_trd,1,655360,ptr_configfile);
 
         fclose(ptr_configfile);
 
@@ -306,20 +319,33 @@ void temp_trd_load(void)
 
 z80_byte betadisk_get_byte_disk(int pista, int sector, int byte_en_sector)
 {
-	int offset=(pista*sector*betadisk_bytes_por_sector)+byte_en_sector;
+
+	int bytes_por_pista=betadisk_sectores_por_pista*betadisk_bytes_por_sector;
+	int offset=pista*bytes_por_pista+sector*betadisk_bytes_por_sector+byte_en_sector;
 
 	if (offset>=655360) {
 		//TODO error
+		printf ("Reading beyond trd disk\n");
 		return 0;
 	}
 
-	return temp_beta_trd[offset];
+	z80_byte byte_leido=temp_beta_trd[offset];
+	z80_byte caracter=byte_leido;
+	if (caracter<32 || caracter>127) caracter='.';
+	printf ("%c",caracter);
+
+	return byte_leido;
 }
 
 
 void betadisk_trdoshandler_read_sectors(void)
 {
 	/*
+
+
+read_sectors:                                               equ 0x1E3D
+write_sectors:                                              equ 0x1E4D
+
 A = número de sectores
 D = pista del primer sector a usar (0..159)
 E = primer sector a usar de la pista (0..15)
@@ -332,16 +358,30 @@ HL = dirección de memoria para carga o lectura de los sectores
 	int byte_en_sector;
 	z80_int destino=reg_hl;
 
+	//prueba
+	//if (numero_sectores>1) numero_sectores=1;
+	if (numero_sectores==0) numero_sectores=1;
+
+	//numero_sectores++;
+
+	printf ("Reading %d sectors from track %d sector %d to address %04XH\n",numero_sectores,pista,sector,destino);
+
+	int leidos=0;
+
 	for (;numero_sectores>0;numero_sectores--) {
 		for (byte_en_sector=0;byte_en_sector<betadisk_bytes_por_sector;byte_en_sector++) {
 			z80_byte byte_leido=betadisk_get_byte_disk(pista,sector,byte_en_sector);
 			poke_byte_no_time(destino++,byte_leido);
+			leidos++;
 		}
 		sector++;
 	}
+
+	printf ("\ntotal leidos: %d\n",leidos);
 	
 	//No error
 	reg_a=0;
+	Z80_FLAGS |=FLAG_Z;
 	//Return
 	reg_pc=pop_valor();
 }
