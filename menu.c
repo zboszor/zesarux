@@ -16165,7 +16165,7 @@ void menu_file_p_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 4096
+#define MAX_TEXTO_BROWSER 8192
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -16218,7 +16218,7 @@ void menu_file_o_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 4096
+#define MAX_TEXTO_BROWSER 8192
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -16277,7 +16277,7 @@ void menu_file_sp_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 4096
+#define MAX_TEXTO_BROWSER 8192
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -16399,7 +16399,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 4096
+#define MAX_TEXTO_BROWSER 8192
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -16527,7 +16527,10 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 	int max_entradas_trd=16;
 
 	//Asignamos para 16 entradas
-	int bytes_to_load=tamanyo_trd_entry*max_entradas_trd;
+	//int bytes_to_load=tamanyo_trd_entry*max_entradas_trd;
+
+	//Leemos 4kb. esto permite leer el directorio y el label
+	int bytes_to_load=4096;
 
 	z80_byte *trd_file_memory;
 	trd_file_memory=malloc(bytes_to_load);
@@ -16566,7 +16569,7 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 4096
+#define MAX_TEXTO_BROWSER 8192
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -16600,6 +16603,45 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 
 
 	sprintf(buffer_texto,"Filesystem: TRDOS");
+        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	int start_track_8=256*8;
+
+
+        char trd_label[8+1];
+        menu_file_mmc_browser_show_file(&trd_file_memory[0x8f5],trd_label,0,8);
+        sprintf(buffer_texto,"TRD Label: %s",trd_label);
+        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+	sprintf(buffer_texto,"Free sectors on disk: %d",trd_file_memory[start_track_8+229]+256*trd_file_memory[start_track_8+230]);
+        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	sprintf(buffer_texto,"First free sector sec: %d track %d",trd_file_memory[start_track_8+225],trd_file_memory[start_track_8+226]);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+	char *trd_disk_types[]={
+	"80 tracks, double side",
+	"40 tracks, double side",
+	"80 tracks, single side",
+	"40 tracks, single side"};
+
+	char buffer_trd_disk_type[32];
+	z80_byte trd_disk_type=trd_file_memory[start_track_8+227];
+
+	if (trd_disk_type>=0x16 && trd_disk_type<=0x19) {
+		strcpy(buffer_trd_disk_type,trd_disk_types[trd_disk_type-0x16]);
+	}
+	else strcpy(buffer_trd_disk_type,"Unknown");
+
+	sprintf(buffer_texto,"Disk type: %04XH (%s)",trd_disk_type,buffer_trd_disk_type);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	sprintf(buffer_texto,"Files on disk: %d",trd_file_memory[start_track_8+228]);
+        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	sprintf(buffer_texto,"Deleted files on disk: %d",trd_file_memory[start_track_8+244]);
         indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
@@ -16753,7 +16795,7 @@ void menu_file_sna_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 4096
+#define MAX_TEXTO_BROWSER 8192
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -16832,7 +16874,7 @@ void menu_file_spg_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 4096
+#define MAX_TEXTO_BROWSER 8192
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -16927,7 +16969,7 @@ void menu_file_zx_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 4096
+#define MAX_TEXTO_BROWSER 8192
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -17021,7 +17063,7 @@ void menu_file_z80_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 4096
+#define MAX_TEXTO_BROWSER 8192
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -17107,7 +17149,7 @@ void menu_file_tzx_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 4096
+#define MAX_TEXTO_BROWSER 8192
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -17184,7 +17226,7 @@ void menu_tape_browser_show(char *filename)
 	int longitud_bloque;
 
 	int longitud_texto;
-#define MAX_TEXTO_BROWSER 4096
+#define MAX_TEXTO_BROWSER 8192
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
