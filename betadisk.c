@@ -303,8 +303,8 @@ void temp_trd_load(void)
 
         FILE *ptr_configfile;
         //ptr_configfile=fopen("./extras/media/spectrum/pentagon/mescaline_pentagon.trd","rb");
-	ptr_configfile=fopen("./extras/media/spectrum/pentagon/Kpacku_deluxe.trd","rb");
-	//ptr_configfile=fopen("./extras/media/spectrum/pentagon/paralactika_by_demarche.trd","rb");
+	//ptr_configfile=fopen("./extras/media/spectrum/pentagon/Kpacku_deluxe.trd","rb");
+	ptr_configfile=fopen("./extras/media/spectrum/pentagon/paralactika_by_demarche.trd","rb");
 
         if (!ptr_configfile) {
                 printf("Unable to open configuration file\n");
@@ -375,10 +375,13 @@ HL = dirección de memoria para carga o lectura de los sectores
 
 	//prueba
 	//if (numero_sectores>1) numero_sectores=1;
-	if (numero_sectores==0) numero_sectores=1;
+	//if (numero_sectores==0) numero_sectores=1;
 
 	//numero_sectores++;
 	//numero_sectores &=15;
+
+	//temp paralact basic
+	if (sector==0 && pista==1 && numero_sectores==1 ) numero_sectores=2;
 
 
 
@@ -404,6 +407,8 @@ HL = dirección de memoria para carga o lectura de los sectores
 
 	//??
 	reg_hl=destino;
+	reg_e=sector;
+	reg_d=pista;
 
 	//Return
 	reg_pc=pop_valor();
