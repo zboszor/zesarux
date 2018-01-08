@@ -279,6 +279,79 @@ int betadisk_load_rom(void)
 }
 
 
+z80_byte *temp_beta_trd;
+
+int betadisk_bytes_por_sector=256;
+
+void temp_trd_load(void)
+{
+
+	temp_beta_trd=malloc(655360);
+
+        FILE *ptr_configfile;
+        ptr_configfile=fopen("./extras/media/spectrum/pentagon/mescaline_pentagon.trd","rb");
+
+        if (!ptr_configfile) {
+                printf("Unable to open configuration file\n");
+                return;
+        }
+
+        int leidos=fread(temp_beta_trd,1,655350,ptr_configfile);
+
+        fclose(ptr_configfile);
+
+
+
+}
+
+z80_byte betadisk_get_byte_disk(int pista, int sector, int byte_en_sector)
+{
+	int offset=(pista*sector*betadisk_bytes_por_sector)+byte_en_sector;
+
+	if (offset>=655360) {
+		//TODO error
+		return 0;
+	}
+
+	return temp_beta_trd[offset];
+}
+
+
+void betadisk_trdoshandler_read_sectors(void)
+{
+	/*
+A = número de sectores
+D = pista del primer sector a usar (0..159)
+E = primer sector a usar de la pista (0..15)
+HL = dirección de memoria para carga o lectura de los sectores
+	*/
+
+	z80_byte numero_sectores=reg_a;
+	z80_byte pista=reg_d;
+	z80_byte sector=reg_e;
+	int byte_en_sector;
+	z80_int destino=reg_hl;
+
+	for (;numero_sectores>0;numero_sectores--) {
+		for (byte_en_sector=0;byte_en_sector<betadisk_bytes_por_sector;byte_en_sector++) {
+			z80_byte byte_leido=betadisk_get_byte_disk(pista,sector,byte_en_sector);
+			poke_byte_no_time(destino++,byte_leido);
+		}
+		sector++;
+	}
+	
+	//No error
+	reg_a=0;
+	//Return
+	reg_pc=pop_valor();
+}
+
+	
+
+
+	
+
+
 
 void betadisk_enable(void)
 {
@@ -304,6 +377,9 @@ void betadisk_enable(void)
 	betadisk_enabled.v=1;
 
 
+	temp_trd_load();
+
+
 }
 
 void betadisk_disable(void)
@@ -318,6 +394,9 @@ void betadisk_disable(void)
 
 	betadisk_enabled.v=0;
 }
+
+
+
 
 
 
