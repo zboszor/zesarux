@@ -17265,9 +17265,9 @@ void menu_file_tzx_browser_show(char *filename)
 	int puntero=10;
 	int salir=0;
 
-	for (;puntero<filesize && !salir;puntero++) {
+	for (;puntero<filesize && !salir;) {
 		z80_byte tzx_id=tzx_file_mem[puntero++];
-		z80_int longitud_bloque;
+		z80_int longitud_bloque,longitud_sub_bloque;
 		char buffer_bloque[256];
 		switch (tzx_id) {
 
@@ -17277,7 +17277,17 @@ void menu_file_tzx_browser_show(char *filename)
 				longitud_bloque=tzx_file_mem[puntero+2]+256*tzx_file_mem[puntero+3];
 
 				puntero+=4;
-				puntero+=longitud_bloque;
+				//puntero+=longitud_bloque;
+
+				while (longitud_bloque>0) {
+			                longitud_sub_bloque=util_tape_tap_get_info(&tzx_file_mem[puntero],buffer_bloque);
+					indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
+        	        		longitud_bloque-=longitud_sub_bloque;
+			                puntero +=longitud_sub_bloque;
+				}
+
+
 			break;
 
 			case 0x30:
@@ -17285,11 +17295,13 @@ void menu_file_tzx_browser_show(char *filename)
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 				longitud_bloque=tzx_file_mem[puntero];
+				//printf ("puntero: %d longitud: %d\n",puntero,longitud_bloque);
 				util_binary_to_ascii(&tzx_file_mem[puntero+1],buffer_bloque,longitud_bloque,longitud_bloque);
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
 
 				puntero+=1;
 				puntero+=longitud_bloque;
+				//printf ("puntero: %d\n",puntero);
 			break;
 
                         case 0x31:
