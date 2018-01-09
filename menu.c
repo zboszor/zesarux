@@ -90,6 +90,7 @@
 #include "spritefinder.h"
 #include "snap_spg.h"
 #include "betadisk.h"
+#include "tape_tzx.h" 
 
 
 #if defined(__APPLE__)
@@ -17244,7 +17245,7 @@ void menu_file_tzx_browser_show(char *filename)
         	return;
         }
 
-	char buffer_texto[64]; //2 lineas, por si acaso
+	char buffer_texto[300]; //Para poder contener info de tzx extensa
 
 	//int longitud_bloque;
 
@@ -17271,6 +17272,7 @@ void menu_file_tzx_browser_show(char *filename)
 		z80_int longitud_bloque,longitud_sub_bloque;
 		int longitud_larga;
 		char buffer_bloque[256];
+
 
 		//int subsalir;
 
@@ -17304,18 +17306,19 @@ void menu_file_tzx_browser_show(char *filename)
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 				longitud_larga=tzx_file_mem[puntero+15]+256*tzx_file_mem[puntero+16]+65536*tzx_file_mem[puntero+17];
-				printf("longitud larga: %d\n",longitud_larga);
+				//printf("longitud larga: %d\n",longitud_larga);
 
 				//Longitud en este tipo de bloque es de 3 bytes, saltamos el primero para que la rutina
 				//de obtener cabecera de tap siga funcionando
-				puntero+=16;
+				puntero+=18;
 
 				//Lo escribimos con espacio
 				buffer_bloque[0]=' ';
-			        longitud_sub_bloque=util_tape_tap_get_info(&tzx_file_mem[puntero],&buffer_bloque[1]);
+			        //longitud_sub_bloque=util_tape_tap_get_info(&tzx_file_mem[puntero],&buffer_bloque[1]);
+				util_tape_get_info_tapeblock(&tzx_file_mem[puntero+3],tzx_file_mem[puntero+2],longitud_larga-2,&buffer_bloque[1]);
+
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
 
-				puntero +=2;
 				puntero +=longitud_larga;
 				
 
@@ -17346,6 +17349,32 @@ void menu_file_tzx_browser_show(char *filename)
 
                                 puntero+=2;
                                 puntero+=longitud_bloque;
+                        break;
+
+                        case 0x32:
+                                sprintf(buffer_texto,"ID 32 Archive info:");
+                                indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+                                longitud_bloque=tzx_file_mem[puntero]+256*tzx_file_mem[puntero+1];
+                                puntero+=2;
+
+                                z80_byte nstrings=tzx_file_mem[puntero++];
+
+                                char buffer_text_id[256];
+                                char buffer_text_text[256];
+
+                                for (;nstrings;nstrings--) {
+                                	z80_byte text_type=tzx_file_mem[puntero++];
+                                	z80_byte longitud_texto=tzx_file_mem[puntero++];
+                                	tape_tzx_get_archive_info(text_type,buffer_text_id);
+                                	util_binary_to_ascii(&tzx_file_mem[puntero],buffer_text_text,longitud_texto,longitud_texto);
+                                	sprintf (buffer_texto,"%s: %s",buffer_text_id,buffer_text_text);
+
+                                	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+                                	puntero +=longitud_texto;
+                                }
+
                         break;
 
 			default:

@@ -36,5 +36,7 @@ extern int tape_block_tzx_save(void *dir,int longitud);
 extern void tape_block_tzx_begin_save(void);
 extern z80_bit tzx_read_returned_unknown_id;
 
+extern void tape_tzx_get_archive_info(z80_byte type_text,char *buffer_text_description);
+
 
 #endif

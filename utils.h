@@ -601,4 +601,6 @@ extern void util_binary_to_hex(z80_byte *origen, char *destino, int longitud_max
 
 extern void util_binary_to_ascii(z80_byte *origen, char *destino, int longitud_max, int longitud);
 
+extern void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int longitud,char *texto);
+
 #endif

@@ -8584,20 +8584,12 @@ void util_tape_get_name_header(z80_byte *tape,char *texto)
 	*texto=0;
 }
 
-//Retorna texto descriptivo de informacion de cinta en texto. Cinta tipo tap
-//Retorna longitud del bloque
-int util_tape_tap_get_info(z80_byte *tape,char *texto)
-{
-	int longitud=value_8_to_16(tape[1],tape[0]);
-	//Si longitud<2, es error
-	int flag=tape[2];
-	tape+=3;
 
+void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int longitud,char *texto)
+{
 	char buffer_nombre[11];
 
-	if (longitud<2) strcpy(texto,"Corrupt tape");
-	else {
-		z80_byte first_byte=tape[0];
+	z80_byte first_byte=tape[0];
 		if (flag==0 && first_byte<=3 && longitud==19) {
 			//Posible cabecera
 			util_tape_get_name_header(&tape[1],buffer_nombre);
@@ -8624,6 +8616,24 @@ int util_tape_tap_get_info(z80_byte *tape,char *texto)
 		}
 
 		else sprintf(texto,"Flag: %d Length: %d",flag,longitud-2); //Saltar los 2 bytes de flag y checksum
+}
+
+//Retorna texto descriptivo de informacion de cinta en texto. Cinta tipo tap
+//Retorna longitud del bloque
+int util_tape_tap_get_info(z80_byte *tape,char *texto)
+{
+	int longitud=value_8_to_16(tape[1],tape[0]);
+	//Si longitud<2, es error
+	int flag=tape[2];
+	tape+=3;
+
+	//char buffer_nombre[11];
+
+	if (longitud<2) strcpy(texto,"Corrupt tape");
+	else {
+		util_tape_get_info_tapeblock(tape,flag,longitud,texto);
+
+		
 	}
 
 

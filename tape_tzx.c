@@ -115,6 +115,58 @@ int last_tzx_pause=0;
 //tzx se reconoce toda o tiene tags desconocidos
 z80_bit tzx_read_returned_unknown_id;
 
+
+void tape_tzx_get_archive_info(z80_byte type_text,char *buffer_text_description)
+{
+	switch (type_text) {
+							case 0:	
+								sprintf(buffer_text_description,"Full title");
+							break;					
+
+							case 1:	
+								sprintf(buffer_text_description,"Software house/publisher");
+							break;					
+
+							case 2:	
+								sprintf(buffer_text_description,"Author(s)");
+							break;					
+							
+							case 3:	
+								sprintf(buffer_text_description,"Year of publication");
+							break;					
+
+							case 4:	
+								sprintf(buffer_text_description,"Language");
+							break;					
+
+							case 5:	
+								sprintf(buffer_text_description,"Game/utility type");
+							break;					
+
+							case 6:	
+								sprintf(buffer_text_description,"Price");
+							break;					
+
+							case 7:	
+								sprintf(buffer_text_description,"Protection scheme/loader");
+							break;					
+
+							case 8:	
+								sprintf(buffer_text_description,"Origin");
+							break;					
+					
+							case 0xFF:	
+								sprintf(buffer_text_description,"Comment(s)");
+							break;					
+					
+
+
+							default:
+								sprintf(buffer_text_description,"unknown");
+							break;
+						}
+}
+
 int tape_block_tzx_read(void *dir,int longitud)
 {
 
@@ -226,55 +278,8 @@ int tape_block_tzx_read(void *dir,int longitud)
 					
 					for (;text_strings;text_strings--) {
 						fread(&type_text,1,1,ptr_mycinta_tzx);
-						switch (type_text) {
-							case 0:	
-								sprintf(buffer_text_description,"Full title");
-							break;					
-
-							case 1:	
-								sprintf(buffer_text_description,"Software house/publisher");
-							break;					
-
-							case 2:	
-								sprintf(buffer_text_description,"Author(s)");
-							break;					
-							
-							case 3:	
-								sprintf(buffer_text_description,"Year of publication");
-							break;					
-
-							case 4:	
-								sprintf(buffer_text_description,"Language");
-							break;					
-
-							case 5:	
-								sprintf(buffer_text_description,"Game/utility type");
-							break;					
-
-							case 6:	
-								sprintf(buffer_text_description,"Price");
-							break;					
-
-							case 7:	
-								sprintf(buffer_text_description,"Protection scheme/loader");
-							break;					
-
-							case 8:	
-								sprintf(buffer_text_description,"Origin");
-							break;					
-					
-							case 0xFF:	
-								sprintf(buffer_text_description,"Comment(s)");
-							break;					
-					
-
-
-							default:
-								sprintf(buffer_text_description,"unknown");
-							break;
-						}
-
-
+						tape_tzx_get_archive_info(type_text,buffer_text_description);
+						
 						//leemos long
 						fread(&long_text,1,1,ptr_mycinta_tzx);
 						//texto longitud

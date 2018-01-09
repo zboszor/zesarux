@@ -1329,7 +1329,7 @@ snap_zx8081.o: snap_zx8081.c snap_zx8081.h cpu.h debug.h operaciones.h zx8081.h 
 snap_rzx.o: snap_rzx.c snap_rzx.h snap.h cpu.h debug.h operaciones.h utils.h menu.h screen.h
 	\$(CC) \$(CFLAGS) -c snap_rzx.c
 
-menu.o: menu.c menu.h screen.h cpu.h debug.h zx8081.h ay38912.h compileoptions.h tape.h audio.h timer.h snap.h operaciones.h disassemble.h utils.h contend.h joystick.h ula.h printers.h realjoystick.h scrstdout.h z88.h ulaplus.h autoselectoptions.h zxuno.h charset.h chardetect.h textspeech.h  mmc.h ide.h divmmc.h divide.h diviface.h zxpand.h spectra.h spritechip.h jupiterace.h timex.h chloe.h cpc.h prism.h sam.h if1.h pd765.h atomlite.h tbblue.h dandanator.h kartusho.h spritefinder.h multiface.h superupgrade.h m68k.h remote.h snap_rzx.h multiface.h scmp.h esxdos_handler.h tsconf.h snap_spg.h betadisk.h
+menu.o: menu.c menu.h screen.h cpu.h debug.h zx8081.h ay38912.h compileoptions.h tape.h audio.h timer.h snap.h operaciones.h disassemble.h utils.h contend.h joystick.h ula.h printers.h realjoystick.h scrstdout.h z88.h ulaplus.h autoselectoptions.h zxuno.h charset.h chardetect.h textspeech.h  mmc.h ide.h divmmc.h divide.h diviface.h zxpand.h spectra.h spritechip.h jupiterace.h timex.h chloe.h cpc.h prism.h sam.h if1.h pd765.h atomlite.h tbblue.h dandanator.h kartusho.h spritefinder.h multiface.h superupgrade.h m68k.h remote.h snap_rzx.h multiface.h scmp.h esxdos_handler.h tsconf.h snap_spg.h betadisk.h tape_tzx.h
 	\$(CC) \$(CFLAGS) -c menu.c
 
 disassemble.o: disassemble.c disassemble.h cpu.h operaciones.h debug.h ql.h utils.h scmp.h menu.h
