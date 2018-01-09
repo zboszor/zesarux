@@ -17275,6 +17275,7 @@ void menu_file_tzx_browser_show(char *filename)
 				sprintf(buffer_texto,"ID 10 Standard Speed Data Block");
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 				longitud_bloque=tzx_file_mem[puntero+2]+256*tzx_file_mem[puntero+3];
+
 				puntero+=4;
 				puntero+=longitud_bloque;
 			break;
