@@ -17253,6 +17253,7 @@ void menu_file_tzx_browser_show(char *filename)
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
+	//TODO. controlar que no se salga del maximo de texto_browser
 	
 	z80_byte tzx_version_major=tzx_file_mem[8];
 	z80_byte tzx_version_minor=tzx_file_mem[9];
@@ -17268,44 +17269,61 @@ void menu_file_tzx_browser_show(char *filename)
 	for (;puntero<filesize && !salir;) {
 		z80_byte tzx_id=tzx_file_mem[puntero++];
 		z80_int longitud_bloque,longitud_sub_bloque;
+		int longitud_larga;
 		char buffer_bloque[256];
-		int subsalir;
+
+		//int subsalir;
 
 		switch (tzx_id) {
 
 			case 0x10:
-				sprintf(buffer_texto,"ID 10 Standard Speed Data Block");
-				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
-				longitud_bloque=tzx_file_mem[puntero+2]+256*tzx_file_mem[puntero+3];
 
-				puntero+=4;
-				//puntero+=longitud_bloque;
-				subsalir=0;
+				//Es un poco molesto mostrar el texto cada vez
+				//sprintf(buffer_texto,"ID 10 Std. Speed Data Block");
+				//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
-				while (longitud_bloque>0 && !subsalir) {
-			                longitud_sub_bloque=util_tape_tap_get_info(&tzx_file_mem[puntero],buffer_bloque);
-					printf ("longitud sub bloque: %d\n",longitud_sub_bloque);
-					if (longitud_sub_bloque<4) {
-						//Cinta corrupta
-						//sprintf(buffer_texto,"Corrupt tape");
-						//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
-						subsalir=1;
-					}
+
+				puntero+=2;
+			
+
+			        longitud_sub_bloque=util_tape_tap_get_info(&tzx_file_mem[puntero],buffer_bloque);
+				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
 					
-					else {	
-						indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
-						printf ("%s\n",buffer_bloque);
+				puntero +=longitud_sub_bloque;
+				
 
-        		        		longitud_bloque-=longitud_sub_bloque;
-				                puntero +=longitud_sub_bloque;
-					}
-				}
+
+			break;
+
+
+			case 0x11:
+
+				
+				sprintf(buffer_texto,"ID 11 - Turbo Sp. Data Block:");
+				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+				longitud_larga=tzx_file_mem[puntero+15]+256*tzx_file_mem[puntero+16]+65536*tzx_file_mem[puntero+17];
+				printf("longitud larga: %d\n",longitud_larga);
+
+				//Longitud en este tipo de bloque es de 3 bytes, saltamos el primero para que la rutina
+				//de obtener cabecera de tap siga funcionando
+				puntero+=16;
+
+				//Lo escribimos con espacio
+				buffer_bloque[0]=' ';
+			        longitud_sub_bloque=util_tape_tap_get_info(&tzx_file_mem[puntero],&buffer_bloque[1]);
+				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
+				puntero +=2;
+				puntero +=longitud_larga;
+				
 
 
 			break;
 
 			case 0x30:
-				sprintf(buffer_texto,"ID 30 Text description");
+				sprintf(buffer_texto,"ID 30 Text description:");
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 				longitud_bloque=tzx_file_mem[puntero];
@@ -17319,7 +17337,7 @@ void menu_file_tzx_browser_show(char *filename)
 			break;
 
                         case 0x31:
-                                sprintf(buffer_texto,"ID 31 Message block");
+                                sprintf(buffer_texto,"ID 31 Message block:");
                                 indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
                                 longitud_bloque=tzx_file_mem[puntero+1];
