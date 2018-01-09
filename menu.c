@@ -17269,6 +17269,8 @@ void menu_file_tzx_browser_show(char *filename)
 		z80_byte tzx_id=tzx_file_mem[puntero++];
 		z80_int longitud_bloque,longitud_sub_bloque;
 		char buffer_bloque[256];
+		int subsalir;
+
 		switch (tzx_id) {
 
 			case 0x10:
@@ -17278,13 +17280,24 @@ void menu_file_tzx_browser_show(char *filename)
 
 				puntero+=4;
 				//puntero+=longitud_bloque;
+				subsalir=0;
 
-				while (longitud_bloque>0) {
+				while (longitud_bloque>0 && !subsalir) {
 			                longitud_sub_bloque=util_tape_tap_get_info(&tzx_file_mem[puntero],buffer_bloque);
-					indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+					if (longitud_sub_bloque==0) {
+						//Cinta corrupta
+						//sprintf(buffer_texto,"Corrupt tape");
+						//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+						subsalir=1;
+					}
+					
+					else {	
+						indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+						printf ("%s\n",buffer_bloque);
 
-        	        		longitud_bloque-=longitud_sub_bloque;
-			                puntero +=longitud_sub_bloque;
+        		        		longitud_bloque-=longitud_sub_bloque;
+				                puntero +=longitud_sub_bloque;
+					}
 				}
 
 
