@@ -16818,10 +16818,14 @@ void menu_file_hexdump_browser_show(char *filename)
  	sprintf(buffer_texto,"Hexadecimal view");
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
-	if (leidos>bytes_to_load) leidos=bytes_to_load;
-
-	sprintf(buffer_texto,"Showing first %d bytes",leidos);
+ 	sprintf(buffer_texto,"File size: %ld bytes",get_file_size(filename));
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	if (leidos>bytes_to_load) {
+		leidos=bytes_to_load;
+		sprintf(buffer_texto,"Showing first %d bytes",leidos);
+		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	}
 
 	int i;
 	//char buffer_indice[5];
