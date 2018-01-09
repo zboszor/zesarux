@@ -17321,7 +17321,7 @@ void menu_file_tzx_browser_show(char *filename)
 				//Lo escribimos con espacio
 				buffer_bloque[0]=' ';
 			        //longitud_sub_bloque=util_tape_tap_get_info(&tzx_file_mem[puntero],&buffer_bloque[1]);
-				util_tape_get_info_tapeblock(&tzx_file_mem[puntero+3],tzx_file_mem[puntero+2],longitud_larga-2,&buffer_bloque[1]);
+				util_tape_get_info_tapeblock(&tzx_file_mem[puntero+3],tzx_file_mem[puntero+2],longitud_larga,&buffer_bloque[1]);
 
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
 
