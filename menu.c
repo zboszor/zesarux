@@ -17203,6 +17203,16 @@ void menu_file_z80_browser_show(char *filename)
 
 void menu_file_tzx_browser_show(char *filename)
 {
+
+	int filesize=get_file_size(filename);
+	z80_byte *tzx_file_mem;
+
+	tzx_file_mem=malloc(filesize);
+	if (tzx_file_mem==NULL) {
+		debug_printf(VERBOSE_ERR,"Can not allocate memory for tzx browser");
+		return;
+	}
+
 	
 	//Leemos cabecera archivo tzx
         FILE *ptr_file_tzx_browser;
@@ -17213,13 +17223,11 @@ void menu_file_tzx_browser_show(char *filename)
 		return;
 	}
 
-	//Leer cabecera
-	z80_byte tzx_header[10];
+        int leidos=fread(tzx_file_mem,1,filesize,ptr_file_tzx_browser);
 
-        int leidos=fread(tzx_header,1,10,ptr_file_tzx_browser);
-
-	if (leidos==0) {
+	if (leidos!=filesize) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
+		free(tzx_file_mem);
                 return;
         }
 
@@ -17228,10 +17236,11 @@ void menu_file_tzx_browser_show(char *filename)
 
         //Testear cabecera "ZXTape!" en los primeros bytes
 	char signature[8];
-	memcpy(signature,tzx_header,7);
+	memcpy(signature,tzx_file_mem,7);
 	signature[7]=0;
         if (strcmp(signature,"ZXTape!")) {
         	debug_printf(VERBOSE_ERR,"Invalid .TZX file");
+		free(tzx_file_mem);
         	return;
         }
 
@@ -17245,18 +17254,67 @@ void menu_file_tzx_browser_show(char *filename)
 	int indice_buffer=0;
 
 	
-	z80_byte tzx_version_major=tzx_header[8];
-	z80_byte tzx_version_minor=tzx_header[9];
+	z80_byte tzx_version_major=tzx_file_mem[8];
+	z80_byte tzx_version_minor=tzx_file_mem[9];
 	sprintf(buffer_texto,"TZX File version: %d.%d",tzx_version_major,tzx_version_minor);
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
 
+
+	int puntero=10;
+	int salir=0;
+
+	for (;puntero<filesize && !salir;puntero++) {
+		z80_byte tzx_id=tzx_file_mem[puntero++];
+		z80_int longitud_bloque;
+		char buffer_bloque[256];
+		switch (tzx_id) {
+
+			case 0x10:
+				sprintf(buffer_texto,"ID 10 Standard Speed Data Block");
+				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+				longitud_bloque=tzx_file_mem[puntero+2]+256*tzx_file_mem[puntero+3];
+				puntero+=4;
+				puntero+=longitud_bloque;
+			break;
+
+			case 0x30:
+				sprintf(buffer_texto,"ID 30 Text description");
+				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+				longitud_bloque=tzx_file_mem[puntero];
+				util_binary_to_ascii(&tzx_file_mem[puntero+1],buffer_bloque,longitud_bloque,longitud_bloque);
+				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
+				puntero+=1;
+				puntero+=longitud_bloque;
+			break;
+
+                        case 0x31:
+                                sprintf(buffer_texto,"ID 31 Message block");
+                                indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+                                longitud_bloque=tzx_file_mem[puntero+1];
+                                util_binary_to_ascii(&tzx_file_mem[puntero+2],buffer_bloque,longitud_bloque,longitud_bloque);
+                                indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
+
+                                puntero+=2;
+                                puntero+=longitud_bloque;
+                        break;
+
+			default:
+				sprintf(buffer_texto,"Unknown TZX ID %02XH",tzx_id);
+				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+				salir=1;
+			break;
+		}
+	}
+
 	texto_browser[indice_buffer]=0;
 	menu_generic_message_tooltip("TZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
-
+	free(tzx_file_mem);
 
 }
 
