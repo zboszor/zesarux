@@ -597,8 +597,8 @@ extern void util_string_replace_char(char *s,char orig,char dest);
 
 extern int util_add_string_newline(char *destination,char *text_to_add);
 
-extern void util_binary_to_hex(z80_byte *origen, char *destino, int longitud);
+extern void util_binary_to_hex(z80_byte *origen, char *destino, int longitud_max, int longitud);
 
-extern void util_binary_to_ascii(z80_byte *origen, char *destino, int longitud);
+extern void util_binary_to_ascii(z80_byte *origen, char *destino, int longitud_max, int longitud);
 
 #endif

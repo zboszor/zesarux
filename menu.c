@@ -16829,8 +16829,8 @@ void menu_file_hexdump_browser_show(char *filename)
 	char buffer_ascii[8+1];
 
 	for (i=0;i<leidos;i+=8) {
-		util_binary_to_hex(&hexdump_file_memory[i],buffer_hex,8);
-		util_binary_to_ascii(&hexdump_file_memory[i],buffer_ascii,8);
+		util_binary_to_hex(&hexdump_file_memory[i],buffer_hex,8,leidos-i);
+		util_binary_to_ascii(&hexdump_file_memory[i],buffer_ascii,8,leidos-i);
 		sprintf(buffer_texto,"%04X %s %s",i,buffer_hex,buffer_ascii);
 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 	}
