@@ -17331,6 +17331,21 @@ void menu_file_tzx_browser_show(char *filename)
 
 			break;
 
+
+
+			case 0x20:
+
+				
+				sprintf(buffer_texto,"ID 20 - Pause");
+				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+				puntero+=2;
+				
+
+
+			break;
+
 			case 0x30:
 				sprintf(buffer_texto,"ID 30 Text description:");
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
