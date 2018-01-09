@@ -17384,7 +17384,7 @@ void menu_file_tzx_browser_show(char *filename)
                         break;
 
 			default:
-				sprintf(buffer_texto,"Unknown TZX ID %02XH",tzx_id);
+				sprintf(buffer_texto,"Unhandled TZX ID %02XH",tzx_id);
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 				salir=1;
 			break;
