@@ -17312,7 +17312,7 @@ void menu_file_tzx_browser_show(char *filename)
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 				longitud_larga=tzx_file_mem[puntero+15]+256*tzx_file_mem[puntero+16]+65536*tzx_file_mem[puntero+17];
-				printf("longitud larga: %d\n",longitud_larga);
+				//printf("longitud larga: %d\n",longitud_larga);
 
 				//Longitud en este tipo de bloque es de 3 bytes, saltamos el primero para que la rutina
 				//de obtener cabecera de tap siga funcionando
