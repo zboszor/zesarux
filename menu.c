@@ -17284,7 +17284,8 @@ void menu_file_tzx_browser_show(char *filename)
 
 				while (longitud_bloque>0 && !subsalir) {
 			                longitud_sub_bloque=util_tape_tap_get_info(&tzx_file_mem[puntero],buffer_bloque);
-					if (longitud_sub_bloque==0) {
+					printf ("longitud sub bloque: %d\n",longitud_sub_bloque);
+					if (longitud_sub_bloque<4) {
 						//Cinta corrupta
 						//sprintf(buffer_texto,"Corrupt tape");
 						//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
