@@ -34,13 +34,10 @@ extern void ide_flush_flash_to_disk(void);
 
 extern char ide_file_name[];
 
-extern int ide_operating_counter;
-
 extern z80_byte ide_read(void);
 
 extern void ide_write(z80_byte value);
 
-extern void delete_ide_text(void);
 
 extern void ide_write_command_block_register(z80_byte ide_register,z80_byte value);
 extern z80_byte ide_read_command_block_register(z80_byte ide_register);

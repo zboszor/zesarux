@@ -583,37 +583,14 @@ void timer_check_interrupt(void)
                                         }
                                 }
 
-																//temporizador de impresion para escribir texto flash superupgrade en pantalla
-																if (superupgrade_flash_operating_counter) {
-																        superupgrade_flash_operating_counter--;
-																        if (superupgrade_flash_operating_counter==0) {
-																                delete_superupgrade_flash_text();
-																        }
-																}
-
-                                //temporizador de impresion para escribir texto MMC en pantalla
-                                if (mmc_operating_counter) {
-                                        mmc_operating_counter--;
-                                        if (mmc_operating_counter==0) {
-                                                delete_mmc_text();
-                                        }
-                                }
-
-				//temporizador de impresion para escribir texto IDE en pantalla
-                                if (ide_operating_counter) {
-                                        ide_operating_counter--;
-                                        if (ide_operating_counter==0) {
-                                                delete_ide_text();
-                                        }
-                                }
-
-																//temporizador de impresion para escribir texto MMC en pantalla
-                                if (esxdos_handler_operating_counter) {
-                                        esxdos_handler_operating_counter--;
-                                        if (esxdos_handler_operating_counter==0) {
-                                                esxdos_handler_delete_esx_text();
-                                        }
-                                }
+				//temporizador de impresion para escribir texto flash superupgrade en pantalla
+				if (superupgrade_flash_operating_counter) {
+							        superupgrade_flash_operating_counter--;
+								if (superupgrade_flash_operating_counter==0) {
+									                delete_superupgrade_flash_text();
+								}
+				}
+				
 
                                 //temporizador de impresion para escribir texto ZXPAND en pantalla
                                 if (zxpand_operating_counter) {

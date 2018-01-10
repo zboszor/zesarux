@@ -426,7 +426,8 @@ HL = dirección de memoria para carga o lectura de los sectores
 	//numero_sectores &=15;
 
 	//temp prueba. con paralact consigue cargar el basic y el resto
-	if (sector==0 && pista==1) {
+	//if (sector==0 && pista==1) {
+	if (destino>0x5d25) {
 		printf ("\nHACK for paralactika basic. increment number of sectors to read\n");
 		numero_sectores++;
 	}

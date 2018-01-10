@@ -122,44 +122,24 @@ cat tab para ver contenido disco
 */
 
 
-int mmc_operating_counter=0;
 
 
 //0: primera tarjeta
 //1: segunda tarjeta (no implementada)
 int mmc_card_selected=0;
 
-void mmc_footer_print_mmc_operating(void)
-{
-        if (mmc_operating_counter) {
-                //color inverso
-                menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_MMC,1," MMC ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
-        }
-}
+
 
 void mmc_footer_mmc_operating(void)
 {
 
-        //Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
-        if (!mmc_operating_counter) {
-		mmc_operating_counter=2;
-                mmc_footer_print_mmc_operating();
-
-        }
-	mmc_operating_counter=2;
+	generic_footertext_print_operating("MMC");
 }
 
 
 
 
 
-
-
-void delete_mmc_text(void)
-{
-
-        menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_MMC,1,"     ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
-}
 
 
 void mmc_flush_flash_to_disk(void)

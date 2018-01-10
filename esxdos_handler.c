@@ -47,36 +47,18 @@
 char esxdos_handler_root_dir[PATH_MAX]="";
 char esxdos_handler_cwd[PATH_MAX]="";
 
-int esxdos_handler_operating_counter=0;
+
 
 
 z80_int *registro_parametros_hl_ix;
 
 
-void esxdos_handler_delete_esx_text(void)
-{
 
-        menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_ESX,1,"     ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
-}
-
-void esxdos_handler_footer_print_esxdos_handler_operating(void)
-{
-        if (esxdos_handler_operating_counter) {
-                //color inverso
-                menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_ESX,1," ESX ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
-        }
-}
 
 void esxdos_handler_footer_esxdos_handler_operating(void)
 {
 
-        //Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
-        if (!esxdos_handler_operating_counter) {          
-		esxdos_handler_operating_counter=2;
-                esxdos_handler_footer_print_esxdos_handler_operating();
-
-        }
-	esxdos_handler_operating_counter=2;
+        generic_footertext_print_operating("ESX");
 }
 
 

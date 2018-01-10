@@ -81,7 +81,6 @@ int ide_disk_cylinders=490;
 
 z80_byte *ide_memory_pointer;
 
-int ide_operating_counter=0;
 int ide_flash_must_flush_to_disk=0;
 
 
@@ -447,31 +446,15 @@ int ide_set_image_parameters(void)
 	return 0;
 }
 
-void ide_footer_print_ide_operating(void)
-{
-        if (ide_operating_counter) {
-                //color inverso
-                menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_IDE,1," IDE ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
-        }
-}
+
 
 void ide_footer_ide_operating(void)
 {
 
-        //Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
-        if (!ide_operating_counter) {
-		ide_operating_counter=2;
-                ide_footer_print_ide_operating();
-
-        }
-	ide_operating_counter=2;
+	generic_footertext_print_operating("IDE");
 }
 
-void delete_ide_text(void)
-{
 
-        menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_IDE,1,"     ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
-}
 
 z80_byte ide_read_byte_memory(unsigned int address)
 {

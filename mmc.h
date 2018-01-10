@@ -34,13 +34,9 @@ extern void mmc_flush_flash_to_disk(void);
 
 extern char mmc_file_name[];
 
-extern int mmc_operating_counter;
-
 extern z80_byte mmc_read(void);
 
 extern void mmc_write(z80_byte value);
-
-extern void delete_mmc_text(void);
 
 extern void mmc_reset(void);
 
