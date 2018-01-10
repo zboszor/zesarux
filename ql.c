@@ -91,34 +91,14 @@ z80_byte ql_keyboard_table[8]={
 };
 
 
-int ql_mdflp_operating_counter=0;
 
-void ql_footer_print_mdflp_operating(void)
-{
-        if (ql_mdflp_operating_counter) {
-                //color inverso
-                menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_MDFLP,1," MDFLP ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
-        }
-}
 
 void ql_footer_mdflp_operating(void)
 {
-
-        //Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
-        if (!ql_mdflp_operating_counter) {    
-		ql_mdflp_operating_counter=2;
-                ql_footer_print_mdflp_operating();
-
-        }
-
-	ql_mdflp_operating_counter=2;
+	generic_footertext_print_operating("MDFLP");
 }
 
 
-void delete_ql_mdflp_text(void)
-{
-        menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_MDFLP,1,"       ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
-}
 
 //adicionales
 int ql_pressed_backspace=0;
@@ -781,6 +761,8 @@ kbdr_cmd equ    9       keyboard direct read
 	// | Shift   Ctrl    Alt      x      v      /      n      ,
 	Por ejemplo, para leer si se pulsa Space, tenemos que leer row 1, y ver luego si bit 6 está a 1 (40H)
 	*/
+
+	if (menu_abierto)  resultado_row=255;
 
 	debug_printf (VERBOSE_PARANOID,"Reading ipc command 9: read keyrow. row %d returning %02XH",row,resultado_row);
 

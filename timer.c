@@ -573,11 +573,13 @@ void timer_check_interrupt(void)
                                         }
                                 }
 
-				//temporizador de impresion para escribir texto mdflp ql en pantalla
-                                if (ql_mdflp_operating_counter) {
-                                        ql_mdflp_operating_counter--;
-                                        if (ql_mdflp_operating_counter==0) {
-                                                delete_ql_mdflp_text();
+			
+
+                                //temporizador de impresion para escribir generico footer en pantalla
+                                if (generic_footertext_operating_counter) {
+                                        generic_footertext_operating_counter--;
+                                        if (generic_footertext_operating_counter==0) {
+                                                delete_generic_footertext();
                                         }
                                 }
 

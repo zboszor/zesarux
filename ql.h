@@ -92,9 +92,6 @@ extern int ql_pulsado_tecla(void);
 
 extern void ql_rom_traps(void);
 
-extern int ql_mdflp_operating_counter;
-
-extern void delete_ql_mdflp_text(void);
 
 extern void qltraps_init_fopen_files_array(void);
 

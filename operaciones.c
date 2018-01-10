@@ -174,10 +174,11 @@ void set_visualmemreadbuffer(int dir)
 void set_visualmemopcodebuffer(int dir)
 {
 	//visualmem_buffer[dir]=1;
+    //printf ("dir: %d\n",dir);
 	z80_byte valor=visualmem_opcode_buffer[dir];
 	if (valor<255) visualmem_opcode_buffer[dir]=valor+1;
 
-	//printf ("dir: %d\n",dir);
+
 }
 
 void clear_visualmembuffer(int dir)

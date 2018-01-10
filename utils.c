@@ -2696,6 +2696,9 @@ void reset_keyboard_ports(void)
 	int i=0;
 	for (i=0;i<16;i++) cpc_keyboard_table[i]=255;
 
+	//De QL
+	for (i=0;i<8;i++) ql_keyboard_table[i]=255;
+
 
 }
 

@@ -13209,3 +13209,54 @@ TBBLUE:
 
 
 }
+
+
+
+int generic_footertext_operating_counter=0;
+
+void generic_footertext_print_operating_aux(char *s)
+{
+
+        if (generic_footertext_operating_counter) {
+        			//01234567
+        	char string_aux[]="        "; //2 espacios, 6 caracteres y 0 final
+        	int longitud=strlen(s);
+        	if (longitud>6) longitud=6;
+
+        	int indice_string=0;
+
+        	string_aux[indice_string++]=' ';
+
+        	//printf ("texto: %s\n",s);
+        	for (;longitud;indice_string++,longitud--,s++) {
+        		//printf ("[%d] [%d] [%c] [%c]\n",indice_string,longitud,string_aux[indice_string],*s);
+        		string_aux[indice_string]=*s;
+        	}
+
+        	string_aux[indice_string++]=' ';
+        	string_aux[indice_string]=0;
+
+                //		      					       01234567
+                //menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1," 123456 ",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+                menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1,string_aux,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+        }
+}
+
+void generic_footertext_print_operating(char *s)
+{
+
+        //Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
+        if (!generic_footertext_operating_counter) {    
+		generic_footertext_operating_counter=2;
+                generic_footertext_print_operating_aux(s);
+
+        }
+
+	generic_footertext_operating_counter=2;
+}
+
+
+void delete_generic_footertext(void)
+{
+        menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1,"        ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+}

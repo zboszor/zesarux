@@ -615,6 +615,10 @@ extern z80_bit zxuno_tbblue_disparada_raster;
 extern z80_byte get_zxuno_tbblue_rasterctrl(void);
 extern void zxuno_tbblue_handle_raster_interrupts();
 
+extern int generic_footertext_operating_counter;
+extern void generic_footertext_print_operating(char *s);
+extern void delete_generic_footertext(void);
+
 
 
 /*

@@ -35,6 +35,7 @@
 #include "operaciones.h"
 #include "ula.h"
 #include "mem128.h"
+#include "screen.h"
 
 
 z80_bit betadisk_enabled={0};
@@ -226,6 +227,7 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 				print_registers(buffer_registros);
 				printf ("\n\nHandler for transfer_sectors\n");
 				printf ("%s\n",buffer_registros);
+				generic_footertext_print_operating("TRD");
 				betadisk_trdoshandler_read_sectors();
 			}
 
