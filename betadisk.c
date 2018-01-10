@@ -427,7 +427,8 @@ HL = dirección de memoria para carga o lectura de los sectores
 
 	//temp prueba. con paralact consigue cargar el basic y el resto
 	//if (sector==0 && pista==1) {
-	if (destino>0x5d25) {
+	if (destino>0x5d25) { //con esto paralaktika perfecto, agressor.trd perfecto, metalmanru.trd perfecto, seto.trd, recycler.trd
+	//if (destino==0x5E3C) {
 		printf ("\nHACK for paralactika basic. increment number of sectors to read\n");
 		numero_sectores++;
 	}

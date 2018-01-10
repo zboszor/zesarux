@@ -12942,8 +12942,32 @@ void menu_storage_trd_file(MENU_ITEM_PARAMETERS)
         filtros[0]="trd";
         filtros[1]=0;
 
+        //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
 
-        if (menu_filesel("Select TRD File",filtros,trd_file_name)==1) {
+              //Obtenemos directorio de trd
+        //si no hay directorio, vamos a rutas predefinidas
+        if (trd_file_name[0]==0) menu_chdir_sharedfiles();
+
+        else {
+                char directorio[PATH_MAX];
+                util_get_dir(trd_file_name,directorio);
+                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+                //cambiamos a ese directorio, siempre que no sea nulo
+                if (directorio[0]!=0) {
+                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+                        menu_filesel_chdir(directorio);
+                }
+        }
+
+
+        int ret=menu_filesel("Select TRD File",filtros,trd_file_name);
+        //volvemos a directorio inicial
+        menu_filesel_chdir(directorio_actual);
+
+        if (ret==1) {
 		if (!si_existe_archivo(trd_file_name)) {
 			if (menu_confirm_yesno_texto("File does not exist","Create?")==0) {
                                 trd_file_name[0]=0;
@@ -12969,6 +12993,7 @@ void menu_storage_trd_file(MENU_ITEM_PARAMETERS)
 
 		}
 
+		trd_enable();
 		
 
 
