@@ -436,7 +436,9 @@ HL = dirección de memoria para carga o lectura de los sectores
 	//temp
 	//if (numero_sectores) numero_sectores=1;
 
-
+	//carga bytes 1024 bytes-> 4 sectores
+	//carga bytes 1025 bytes-> 4 sectores
+	//->tiene que haber otra rutina que cargue el sector final que no estamos capturando
 
 
 	int leidos=0;
