@@ -222,6 +222,18 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 
 
 			//Si A=0, lectura. Si A=255, escritura
+			/*
+			Trapping 1e67H:
+			transfer_B_sectors_first_sector_DE_address_HL:
+transfer_sectors:
+  ld (trdos_variable.sector_rw_flag),a
+l1e67h:
+  ld (trdos_variable.current_sector),de
+  push bc
+  push hl
+  call sub_1e36h
+  
+			*/
 			if (reg_pc==0x1e67 && reg_a==0) {
 				char buffer_registros[8192];
 				print_registers(buffer_registros);
