@@ -27459,7 +27459,7 @@ void menu_filesel_print_legend(void)
 		menu_writing_inverse_color.v=1;
 
 		menu_escribe_linea_opcion(FILESEL_POS_FILTER-1,-1,1,"~~View ~~Truncate ~~Delete m~~Kdir");
-		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Copy ~~Move ~~Rename ~~Paste");
+		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Copy ~~Move ~~Rename ~~Pasteclip");
 
 		//Restaurar comportamiento mostrar atajos
 		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;

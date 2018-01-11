@@ -222,7 +222,7 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 
 
 			//Si A=0, lectura. Si A=255, escritura
-			if (reg_pc==0x1e64 && reg_a==0) {
+			if (reg_pc==0x1e67 && reg_a==0) {
 				char buffer_registros[8192];
 				print_registers(buffer_registros);
 				printf ("\n\nHandler for transfer_sectors\n");
@@ -416,7 +416,7 @@ HL = dirección de memoria para carga o lectura de los sectores
 	printf ("Reading %d sectors from track %d sector %d to address %04XH\n",numero_sectores,pista,sector,destino);
 
 
-		poke_byte_no_time(TRD_SYM_trdos_variable_sector_rw_flag,reg_a);
+		//poke_byte_no_time(TRD_SYM_trdos_variable_sector_rw_flag,reg_a);
 
 	//prueba
 	//if (numero_sectores>1) numero_sectores=1;
@@ -427,10 +427,14 @@ HL = dirección de memoria para carga o lectura de los sectores
 
 	//temp prueba. con paralact consigue cargar el basic y el resto
 	//if (sector==0 && pista==1) {
+
 	if (destino>0x5d25) { //con esto paralaktika perfecto, agressor.trd perfecto, metalmanru.trd perfecto, seto.trd, recycler.trd
+
+
 	//if (destino==0x5E3C) {
-		printf ("\nHACK for paralactika basic. increment number of sectors to read\n");
-		numero_sectores++;
+		
+		//printf ("\nHACK for paralactika basic. increment number of sectors to read\n");
+		//numero_sectores++;
 	}
 
 	//temp
