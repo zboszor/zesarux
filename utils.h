@@ -603,4 +603,6 @@ extern void util_binary_to_ascii(z80_byte *origen, char *destino, int longitud_m
 
 extern void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int longitud,char *texto);
 
+extern void util_file_save(char *filename,z80_byte *puntero, int tamanyo);
+
 #endif

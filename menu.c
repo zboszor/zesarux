@@ -306,6 +306,12 @@ int draw_cpu_use=0;
 int draw_cpu_temp=0;
 int draw_fps=0;
 
+//Portapapeles del menu
+z80_byte *menu_clipboard_pointer=NULL;
+
+//tamanyo del portapapeles
+int menu_clipboard_size=0;
+
 //Si driver de video soporta lectura de teclas F
 int f_functions;
 
@@ -24131,6 +24137,38 @@ void menu_simple_ventana(char *titulo,char *texto)
 
 }
 
+void menu_copy_clipboard(char *texto)
+{
+
+	//Si puntero no NULL, liberamos clipboard anterior
+	if (menu_clipboard_pointer!=NULL) {
+		debug_printf(VERBOSE_INFO,"Freeing previous clipboard memory");
+		free(menu_clipboard_pointer);
+		menu_clipboard_pointer=NULL;
+	}
+
+	//Si puntero NULL, asignamos memoria
+	if (menu_clipboard_pointer==NULL) {
+		menu_clipboard_size=strlen(texto);
+		debug_printf(VERBOSE_INFO,"Allocating %d bytes to clipboard",menu_clipboard_size+1);
+		menu_clipboard_pointer=malloc(menu_clipboard_size+1); //+1 del 0 final
+		if (menu_clipboard_pointer==NULL) {
+			debug_printf(VERBOSE_ERR,"Error allocating clipboard memory");
+			return;
+		}
+		strcpy((char *)menu_clipboard_pointer,texto);
+	}
+
+	
+}
+
+void menu_paste_clipboard_to_file(char *destination_file)
+{
+	util_file_save(destination_file,menu_clipboard_pointer,menu_clipboard_size);
+}
+
+
+
 
 //Muestra un mensaje en ventana troceando el texto en varias lineas de texto de maximo 25 caracteres
 void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...)
@@ -24144,6 +24182,7 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
         vsprintf (texto,texto_format, args);
 	va_end (args);
 
+	//printf ("input text: %s\n",texto);
 
 	if (volver_timeout) menu_window_splash_counter=0;
 	//linea cursor en el caso que se muestre cursor
@@ -24193,6 +24232,25 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 	int ultimo_indice_texto=0;
 	int longitud=strlen(texto);
 
+
+	//Copia del texto de entrada (ya formateado con vsprintf) que se leera solo al copiar clipboard
+	//Al pulsar tecla de copy a cliboard, se lee el texto que haya aqui,
+	//y no el contenido en el char *texto, pues ese se ha alterado quitando saltos de linea y otros caracteres
+	char *menu_generic_message_tooltip_text_initial;
+
+
+	debug_printf(VERBOSE_INFO,"Allocating %d bytes to initial text",longitud+1);
+	menu_generic_message_tooltip_text_initial=malloc(longitud+1);
+	if (menu_generic_message_tooltip_text_initial==NULL) {
+		debug_printf(VERBOSE_ERR,"Can not allocate buffer for initial text");
+	}
+
+
+	//En caso que se haya podido asignar el buffer de clonado
+	if (menu_generic_message_tooltip_text_initial!=NULL) {
+		strcpy(menu_generic_message_tooltip_text_initial,texto);
+	}
+
 	int ultima_linea_buscada=-1;
 	char buffer_texto_buscado[33];
 
@@ -24240,6 +24298,9 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 		//printf ("ultimo indice: %d %c\n",ultimo_indice_texto,texto[ultimo_indice_texto]);
 
 	} while (indice_texto<longitud);
+
+
+	//printf ("\ntext after converting to lines: %s\n",texto);
 
 
 	debug_printf (VERBOSE_INFO,"Read %d lines (word wrapped)",indice_linea);
@@ -24456,6 +24517,11 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 						menu_speech_tecla_pulsada=0;
                                         break;
 
+                                        case 'c':
+                                        	menu_copy_clipboard(menu_generic_message_tooltip_text_initial);
+                                        	menu_generic_message_splash("Clipboard","Text copied to ZEsarUX clipboard");
+                                        break;
+
 
 					//Buscar texto
 					case 'f':
@@ -24534,6 +24600,10 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 	cls_menu_overlay();
 
 
+	if (menu_generic_message_tooltip_text_initial!=NULL) {
+		debug_printf(VERBOSE_INFO,"Freeing previous buffer for initial text");
+		free(menu_generic_message_tooltip_text_initial);
+	}
 	//if (tooltip_enabled==0)
 
 
@@ -27389,7 +27459,7 @@ void menu_filesel_print_legend(void)
 		menu_writing_inverse_color.v=1;
 
 		menu_escribe_linea_opcion(FILESEL_POS_FILTER-1,-1,1,"~~View ~~Truncate ~~Delete m~~Kdir");
-		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Copy ~~Move ~~Rename");
+		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Copy ~~Move ~~Rename ~~Paste");
 
 		//Restaurar comportamiento mostrar atajos
 		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
@@ -27733,6 +27803,34 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 		//Move
 		else menu_generic_message("Move file","OK. File moved");
 	}
+}
+
+
+
+void file_utils_paste_clipboard(void)
+{
+
+	if (menu_clipboard_pointer==NULL) {
+		debug_printf(VERBOSE_ERR,"Clipboard is empty, you can fill it from a text window and press key c");
+		return;
+	}
+
+	char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
+
+	char nombre_sin_dir[PATH_MAX];
+	char nombre_final[PATH_MAX];
+
+
+	nombre_sin_dir[0]=0;
+	menu_ventana_scanf("Filename for clipboard",nombre_sin_dir,PATH_MAX);
+	sprintf(nombre_final,"%s/%s",directorio_actual,nombre_sin_dir);
+
+	menu_paste_clipboard_to_file(nombre_final);
+
+	menu_generic_message_splash("Clipboard","File saved with ZEsarUX clipboard contents. Go to file utils and press P to paste to a file");
+
+
 }
 
 
@@ -28492,7 +28590,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_reset_counters_tecla_repeticion();
 						
 						//Comun para acciones que usan archivo seleccionado
-						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R' || tecla=='C') {
+						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R' || tecla=='C' || tecla=='P') {
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
@@ -28551,6 +28649,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 										releer_directorio=1;
 									}
 
+									
+
 								}
 							}
 
@@ -28566,6 +28666,15 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								menu_filesel_mkdir(string_carpeta);
 								releer_directorio=1;
 							}
+						}
+
+
+						//Paste text
+						if (tecla=='P') {
+							file_utils_paste_clipboard();
+										
+										
+							releer_directorio=1;
 						}
 			
 						
