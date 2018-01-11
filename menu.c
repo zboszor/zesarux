@@ -24519,7 +24519,7 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 
                                         case 'c':
                                         	menu_copy_clipboard(menu_generic_message_tooltip_text_initial);
-                                        	menu_generic_message_splash("Clipboard","Text copied to ZEsarUX clipboard");
+                                        	menu_generic_message_splash("Clipboard","Text copied to ZEsarUX clipboard. Go to file utils and press P to paste to a file");
                                         break;
 
 
@@ -24964,7 +24964,7 @@ void menu_about_read_file(char *title,char *aboutfile)
 		debug_printf (VERBOSE_INFO,"Read %d bytes of file: %s",leidos,aboutfile);
 
 		if (leidos==MAX_TEXTO_GENERIC_MESSAGE) {
-			debug_printf (VERBOSE_ERR,"Read max text buffer: %d bytes. Showing only these",leidos);
+			debug_printf (VERBOSE_ERR,"Reached maximum text buffer: %d bytes. Showing only these",leidos);
 			leidos--;
 		}
 
@@ -27828,7 +27828,7 @@ void file_utils_paste_clipboard(void)
 
 	menu_paste_clipboard_to_file(nombre_final);
 
-	menu_generic_message_splash("Clipboard","File saved with ZEsarUX clipboard contents. Go to file utils and press P to paste to a file");
+	menu_generic_message_splash("Clipboard","File saved with ZEsarUX clipboard contents");
 
 
 }

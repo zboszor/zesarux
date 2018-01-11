@@ -9544,7 +9544,7 @@ void util_binary_to_ascii(z80_byte *origen, char *destino, int longitud_max, int
 
 	for (i=0;i<longitud_max && i<longitud;i++) {
 		caracter=*origen;
-		if (caracter<32 || caracter>127) caracter='.';
+		if (caracter<32 || caracter>126) caracter='.';
 		*destino=caracter;
 
 		origen++;
