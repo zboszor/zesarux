@@ -65,12 +65,7 @@ int trd_must_flush_to_disk=0;
 
 //http://problemkaputt.de/zxdocs.htm#spectrumdiscbetabetaplusbeta128diskinterfacetrdos
 
-/*
-Estado actual de la emulación de floppy: parece que detecta el floppy aunque da siempre un disk error
-El único caso que no da disk error es al formatear
-*/
-
-
+void betadisk_format_disk(void);
 
 int betadisk_check_if_rom_area(z80_int dir)
 {
@@ -247,19 +242,13 @@ l1e67h:
 				}
 			}
 
-			/*if (reg_pc==0xef2) {
-				char buffer_registros[8192];
-				print_registers(buffer_registros);
-				printf ("read_sector_DE_into_tmp_buffer:  equ 0x03F2\n");
-				printf ("%s\n",buffer_registros);
-			}*/
 
-			/*if (reg_pc==0x1e36) {
-				char buffer_registros[8192];
-				print_registers(buffer_registros);
-				printf ("sub_1e36h\n");
-				printf ("%s\n",buffer_registros);
-			}*/
+			if (reg_pc==0x1ee8) {
+				//format
+				printf ("Possibly format call\n");
+				betadisk_format_disk();
+			}
+
 		}
 	}
 
@@ -414,6 +403,16 @@ void betadisk_put_byte_disk(int pista, int sector, int byte_en_sector,z80_byte b
 
 }
 
+void betadisk_format_disk(void)
+{
+	int offset=0;
+	for (offset=0;offset<TRD_FILE_SIZE;offset++) {
+		trd_memory_pointer[offset]=0;
+	}
+
+	trd_must_flush_to_disk=1;
+
+}
 
 void betadisk_trdoshandler_read_write_sectors(void)
 {
