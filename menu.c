@@ -13029,16 +13029,10 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
 
-                /*char string_betadisk_file_shown[13];
 
 
-                        menu_tape_settings_trunc_name(betadisk_rom_file_name,string_betadisk_file_shown,13);
-                        menu_add_item_menu_inicial_format(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_betadisk_rom_file,NULL,"~~ROM File: %s",string_betadisk_file_shown);
-                        menu_add_item_menu_shortcut(array_menu_betadisk,'r');
-                        menu_add_item_menu_tooltip(array_menu_betadisk,"ROM Emulation file");
-                        menu_add_item_menu_ayuda(array_menu_betadisk,"ROM Emulation file");*/
 
-        	char string_trd_file_shown[13];
+        	char string_trd_file_shown[17];
 						
 
 
@@ -13058,7 +13052,7 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_betadisk,"Allow autoboot on 48k machines");
 
 
-                                                menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,13);
+                                                menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
                         menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_file,NULL,"~~TRD File: %s",string_trd_file_shown);
                         menu_add_item_menu_shortcut(array_menu_betadisk,'t');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation file");
