@@ -75,6 +75,8 @@
 
 -Handles DCK Timex dock cartridges
 
+-Emulates Betadisk/TR-DOS
+
 -Emulates ZX Spectrum MMC Interfaces: ZXMMC, DivMMC
 
 -Emulates ZX Spectrum IDE Interface: DivIDE, 8-bit simple 

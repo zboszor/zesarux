@@ -5513,7 +5513,7 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
            if (puerto_l==0xFF) {
                return_value=255;
-               debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk Status PC=%04XH return=%02XH",puerto_h,puerto_l,reg_pc,return_value);
+               //debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk Status PC=%04XH return=%02XH",puerto_h,puerto_l,reg_pc,return_value);
                
                return return_value;
           }
@@ -5521,21 +5521,21 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
          if (puerto_l==0x1f) {
                 betadisk_temp_puerto_1f ^=2;
                 return_value=betadisk_temp_puerto_1f;
-                debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Status PC=%04XH return=%02XH",puerto_h,puerto_l,reg_pc,return_value);
+                //debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Status PC=%04XH return=%02XH",puerto_h,puerto_l,reg_pc,return_value);
               
               return return_value; //Parece que al conmutar bit 1 al menos detecta que hay disco, aunque luego da error
           }
 
          if (puerto_l==0x3f) {
                return_value=betadisk_temp_puerto_3f;
-               debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Track PC=%04XH return=%02XH",puerto_h,puerto_l,reg_pc,return_value);
+               //debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Track PC=%04XH return=%02XH",puerto_h,puerto_l,reg_pc,return_value);
                
                return return_value;
          }
 
          if (puerto_l==0x5f) {
                return_value=betadisk_temp_puerto_5f;
-               debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Sector PC=%04XH return=%02XH",puerto_h,puerto_l,reg_pc,return_value);
+               //debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Sector PC=%04XH return=%02XH",puerto_h,puerto_l,reg_pc,return_value);
                
                return return_value;
          }
@@ -5543,7 +5543,7 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
          if (puerto_l==0x7f) {
                 return_value=betadisk_temp_puerto_7f;
-                debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Data PC=%04XH return=%02XH",puerto_h,puerto_l,reg_pc,return_value);
+                //debug_printf (VERBOSE_DEBUG,"Reading port betadisk %02X%02XH Beta Disk FDC Data PC=%04XH return=%02XH",puerto_h,puerto_l,reg_pc,return_value);
                 
                return return_value;
          }
@@ -6550,26 +6550,26 @@ Port: 10-- ---- ---- --0-
 
 
          if (puerto_l==0xFF) {
-               debug_printf (VERBOSE_DEBUG,"Writing port betadisk %02X%02XH value %02XH Beta Disk Status PC=%04XH",puerto_h,puerto_l,value,reg_pc);
+               //debug_printf (VERBOSE_DEBUG,"Writing port betadisk %02X%02XH value %02XH Beta Disk Status PC=%04XH",puerto_h,puerto_l,value,reg_pc);
          }
 
          if (puerto_l==0x1f) {
-               debug_printf (VERBOSE_DEBUG,"Writing port betadisk %02X%02XH value %02XH Beta Disk FDC Status PC=%04XH",puerto_h,puerto_l,value,reg_pc);
+               //debug_printf (VERBOSE_DEBUG,"Writing port betadisk %02X%02XH value %02XH Beta Disk FDC Status PC=%04XH",puerto_h,puerto_l,value,reg_pc);
           }
 
          if (puerto_l==0x3f) {
-               debug_printf (VERBOSE_DEBUG,"Writing port betadisk %02X%02XH value %02XH Beta Disk FDC Track PC=%04XH",puerto_h,puerto_l,value,reg_pc);
+               //debug_printf (VERBOSE_DEBUG,"Writing port betadisk %02X%02XH value %02XH Beta Disk FDC Track PC=%04XH",puerto_h,puerto_l,value,reg_pc);
                betadisk_temp_puerto_3f=value;
          }
 
          if (puerto_l==0x5f) {
-               debug_printf (VERBOSE_DEBUG,"Writing port betadisk %02X%02XH value %02XH Beta Disk FDC Sector PC=%04XH",puerto_h,puerto_l,value,reg_pc);
+               //debug_printf (VERBOSE_DEBUG,"Writing port betadisk %02X%02XH value %02XH Beta Disk FDC Sector PC=%04XH",puerto_h,puerto_l,value,reg_pc);
                betadisk_temp_puerto_5f=value;
          }
 
 
          if (puerto_l==0x7f) {
-                debug_printf (VERBOSE_DEBUG,"Writing port betadisk %02X%02XH value %02XH Beta Disk FDC Data PC=%04XH",puerto_h,puerto_l,value,reg_pc);
+                //debug_printf (VERBOSE_DEBUG,"Writing port betadisk %02X%02XH value %02XH Beta Disk FDC Data PC=%04XH",puerto_h,puerto_l,value,reg_pc);
                 betadisk_temp_puerto_7f=value;
          }
      }

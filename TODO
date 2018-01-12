@@ -81,6 +81,7 @@ deberia verse bien, pues se usan funciones de putchar igual que en menu. si real
 Convertir archivo
 TAB conmutar a zona de acciones?
 
+-betadisk: nmi no parece guardar el snapshot, aunque lo intenta
 
 -It would be interesting if an emulator could provide FIFOs or shared memory that the host operating system could read/write to that were made available to the emulated machine.
 

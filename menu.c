@@ -12932,6 +12932,10 @@ void menu_storage_trd_emulation(MENU_ITEM_PARAMETERS)
 	else trd_enable();
 }
 
+void menu_storage_trd_write_protect(MENU_ITEM_PARAMETERS)
+{
+	trd_write_protection.v ^=1;
+}
 
 int menu_storage_trd_emulation_cond(void)
 {
@@ -13063,6 +13067,14 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_shortcut(array_menu_betadisk,'e');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation");
+
+
+			menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_write_protect,menu_storage_trd_emulation_cond,"~~Write protect: %s", (trd_write_protection.v ? "Yes" : "No"));
+			menu_add_item_menu_shortcut(array_menu_betadisk,'w');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"If TRD disk is write protected");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"If TRD disk is write protected");
+
+
 
                         menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_browser,menu_storage_trd_emulation_cond,"TRD B~~rowser");
                         menu_add_item_menu_shortcut(array_menu_betadisk,'b');

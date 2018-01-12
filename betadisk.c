@@ -63,6 +63,8 @@ void betadisk_trdoshandler_read_write_sectors(void);
 
 int trd_must_flush_to_disk=0;
 
+z80_bit trd_write_protection={1};
+
 //http://problemkaputt.de/zxdocs.htm#spectrumdiscbetabetaplusbeta128diskinterfacetrdos
 
 void betadisk_format_disk(void);
@@ -408,6 +410,8 @@ z80_byte betadisk_get_byte_disk(int pista, int sector, int byte_en_sector)
 void betadisk_put_byte_disk(int pista, int sector, int byte_en_sector,z80_byte byte_a_escribir)
 {
 
+	if (trd_write_protection.v) return;
+
 	int offset=betadisk_get_offset_tracksectorbyte(pista,sector,byte_en_sector);
         if (offset<0) return;
 
@@ -418,6 +422,9 @@ void betadisk_put_byte_disk(int pista, int sector, int byte_en_sector,z80_byte b
 
 void betadisk_format_disk(void)
 {
+
+	if (trd_write_protection.v) return;
+
 	int offset=0;
 	for (offset=0;offset<TRD_FILE_SIZE;offset++) {
 		trd_memory_pointer[offset]=0;

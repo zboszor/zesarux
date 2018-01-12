@@ -29,6 +29,7 @@
 #include "contend.h"
 #include "menu.h"
 #include "multiface.h"
+#include "betadisk.h"
 
 //¿Como? Pues creando un puerto de debug, que todo lo que se escriba vaya a parar a la consola, así de sencillo, haces OUT 55555, 65 y aparece una A en la consola
 //que ha lanzado ZesarUX. Alternativamente se podría poner algun puerto más, que lo escrito se interprete como un número,
@@ -216,8 +217,12 @@ void generate_nmi(void)
 	interrupcion_non_maskable_generada.v=1;
 	if (multiface_enabled.v) {
 		multiface_map_memory();
-    multiface_lockout=0;
+        multiface_lockout=0;
 	}
+
+    if (betadisk_enabled.v) {
+        betadisk_active.v=1;
+    }
 }
 
 

@@ -58,4 +58,6 @@ extern void trd_flush_contents_to_disk(void);
 #define TRD_SYM_trdos_variable_current_sector 23796
 #define TRD_SYM_trdos_variable_current_track 23797
 
+extern z80_bit trd_write_protection;
+
 #endif

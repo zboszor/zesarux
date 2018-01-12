@@ -1350,7 +1350,7 @@ contend.o: contend.c contend.h cpu.h debug.h screen.h compileoptions.h ulaplus.h
 joystick.o: joystick.c joystick.h cpu.h debug.h screen.h
 	\$(CC) \$(CFLAGS) -c joystick.c
 
-ula.o: ula.c ula.h cpu.h debug.h screen.h contend.h menu.h multiface.h
+ula.o: ula.c ula.h cpu.h debug.h screen.h contend.h menu.h multiface.h betadisk.h
 	\$(CC) \$(CFLAGS) -c ula.c
 
 mmc.o: mmc.c mmc.h cpu.h debug.h utils.h menu.h screen.h divmmc.h
