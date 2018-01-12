@@ -372,25 +372,41 @@ void trd_insert(void)
 
 }
 
+//Retorna -1 si error
+int betadisk_get_offset_tracksectorbyte(int pista, int sector, int byte_en_sector)
+{
+        int bytes_por_pista=betadisk_sectores_por_pista*betadisk_bytes_por_sector;
+        int offset=pista*bytes_por_pista+sector*betadisk_bytes_por_sector+byte_en_sector;
+
+        if (offset>=TRD_FILE_SIZE) {
+                debug_printf (VERBOSE_ERR,"Error. Trying to read beyond trd. Size: %ld Asked: %u. Disabling TRD",TRD_FILE_SIZE,offset);
+                trd_disable();
+                return -1;
+        }
+
+	return offset;
+}
+
 z80_byte betadisk_get_byte_disk(int pista, int sector, int byte_en_sector)
 {
 
-	int bytes_por_pista=betadisk_sectores_por_pista*betadisk_bytes_por_sector;
-	int offset=pista*bytes_por_pista+sector*betadisk_bytes_por_sector+byte_en_sector;
-
-	if (offset>=TRD_FILE_SIZE) {
-		debug_printf (VERBOSE_ERR,"Error. Trying to read beyond trd. Size: %ld Asked: %u. Disabling TRD",TRD_FILE_SIZE,offset);
-                trd_disable();
-                return 0;
-	}
+	int offset=betadisk_get_offset_tracksectorbyte(pista,sector,byte_en_sector);
+	if (offset<0) return 0;
 
 	z80_byte byte_leido=trd_memory_pointer[offset];
 	
-	//z80_byte caracter=byte_leido;
-	//if (caracter<32 || caracter>127) caracter='.';
-	//printf ("%c",caracter);
-
 	return byte_leido;
+}
+
+
+void betadisk_put_byte_disk(int pista, int sector, int byte_en_sector,z80_byte byte_a_escribir)
+{
+
+	int offset=betadisk_get_offset_tracksectorbyte(pista,sector,byte_en_sector);
+        if (offset<0) return;
+
+	trd_memory_pointer[offset]=byte_a_escribir;
+
 }
 
 
