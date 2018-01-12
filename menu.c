@@ -18370,11 +18370,11 @@ void menu_debug_load_binary(MENU_ITEM_PARAMETERS)
 
 		cls_menu_overlay();
 
-                char string_longitud[6];
+                char string_longitud[8];
 
 		sprintf (string_longitud,"%d",load_binary_last_length);
 
-                menu_ventana_scanf("Length: 0 - all",string_longitud,6);
+                menu_ventana_scanf("Length: 0 - all",string_longitud,8);
 
                 int valor_leido_longitud=parse_string_to_number(string_longitud);
 
@@ -18441,11 +18441,11 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
 
                 cls_menu_overlay();
 
-                char string_longitud[6];
+                char string_longitud[8];
 
                 sprintf (string_longitud,"%d",save_binary_last_length);
 
-                menu_ventana_scanf("Length: ",string_longitud,6);
+                menu_ventana_scanf("Length: ",string_longitud,8);
 
                 int valor_leido_longitud=parse_string_to_number(string_longitud);
 
