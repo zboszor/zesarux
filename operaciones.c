@@ -6919,13 +6919,14 @@ acts as expected unless this registe is explicitly changed by the user/software.
 						//printf ("Paginando mediante 32765. valor: %02XH\n",value);
 
 
-						if (1==1) {
-						//if ((puerto_32765 & 32)==0) {
+						//if (1==1) {
+						if ((puerto_32765 & 32)==0) {
+                        //if (puerto==32765) {
 
 							puerto_32765=value;
 
 							//Port 0x7FFD is an alias of Page3, page3=tsconf_af_ports[0x13];
-							tsconf_af_ports[0x13]=value;
+							tsconf_af_ports[0x13]=value&7;
 
 
 
@@ -6934,7 +6935,7 @@ acts as expected unless this registe is explicitly changed by the user/software.
 							memconfig &=(255-1); //Reset del bit 0
 
 							//Y ponemos a 1 si conviene
-							if (value&16) memconfig|=1;
+							if (value&16) memconfig |=1;
 
 							tsconf_af_ports[0x21]=memconfig;
 

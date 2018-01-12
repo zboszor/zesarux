@@ -324,6 +324,16 @@ mis opciones:
 void tsconf_reset_cpu(void)
 {
   tsconf_af_ports[0]=0;
+
+  //Bit 4 de 32765 es bit 0 de #21AF. Por tanto poner ese bit 0 a 0
+    tsconf_af_ports[0x21] &=(255-1);
+
+    //TODO. Que otros puertos de tsconf se ponen a 0 en el reset?
+
+    tsconf_set_memory_pages();
+
+    //De momento hacemos que cuando se haga un reset, no se vuelve a la system rom
+    temp_tsconf_in_system_rom_flag=0;
 }
 
 void tsconf_init_memory_tables(void)
@@ -419,8 +429,10 @@ Memconfig:
 - bit2 selects mapping mode (0 - map, 1 - no map),
 - bit3 selects what is in #0000..#3FFF (0 - ROM, 1 - RAM).
 
-In "no map" the page in the win0 (#0000..#3FFF) is set in Page0 directly. 8 bits are used if RAM, 5 lower bits - if ROM (ROM has 32 pages i.e. 512kB).
-In "map" mode Page0 selects ROM page bits 4..2 (which are set to 0 at reset) and bits 1..0 are taken from other sources, selecting one of four ROM pages, see table.
+In "no map" the page in the win0 (#0000..#3FFF) is set in Page0 directly. 8 bits are used if RAM, 5 lower bits - 
+if ROM (ROM has 32 pages i.e. 512kB).
+In "map" mode Page0 selects ROM page bits 4..2 (which are set to 0 at reset) and bits 1..0 are taken from other sources, 
+selecting one of four ROM pages, see table.
 
 bit1/0
 00 - after reset, only in "no map" mode, System ROM,
@@ -436,7 +448,9 @@ bit1/0
           //Modo no map
           //cpu_panic("No map mode not emulated yet");
           //solo para que no se queje el compilador
-          z80_byte banco=tsconf_af_ports[0x10]&31;
+          //bit3 selects what is in #0000..#3FFF (0 - ROM, 1 - RAM).
+
+          z80_byte banco=tsconf_af_ports[0x10]; //&31;  //KAKA
           return banco;
         }
         else {
@@ -576,8 +590,7 @@ void tsconf_hard_reset(void)
   debug_printf(VERBOSE_DEBUG,"TSconf Hard reset cpu");
  
   reset_cpu();
-  temp_tsconf_in_system_rom_flag=1;
-  tsconf_af_ports[0x21]=4;
+
 
 	int i;
 	for (i=0;i<TSCONF_FMAPS_SIZE;i++) tsconf_fmaps[i]=0;
@@ -613,6 +626,9 @@ void tsconf_hard_reset(void)
 
   tsconf_af_ports[0x15] &=(255-16);
   tsconf_af_ports[0x20]=1;
+
+  temp_tsconf_in_system_rom_flag=1;
+  tsconf_af_ports[0x21]=4;
 
   tsconf_af_ports[0x22]=1;
   tsconf_af_ports[0x23]=0;

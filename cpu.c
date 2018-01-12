@@ -899,17 +899,7 @@ util_stats_init();
 	}
 
 	if (MACHINE_IS_TSCONF) {
-		//Bit 4 de 32765 es bit 0 de #21AF. Por tanto poner ese bit 0 a 0
-		tsconf_af_ports[0x21] &=(255-1);
-
-		//TODO. Que otros puertos de tsconf se ponen a 0 en el reset?
-
-
-
-		tsconf_set_memory_pages();
-
-		//De momento hacemos que cuando se haga un reset, no se vuelve a la system rom
-		temp_tsconf_in_system_rom_flag=0;
+		
 
 
 		tsconf_reset_cpu();
