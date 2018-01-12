@@ -61,6 +61,8 @@ z80_bit trd_enabled={0};
 
 void betadisk_trdoshandler_read_write_sectors(void);
 
+int trd_must_flush_to_disk=0;
+
 //http://problemkaputt.de/zxdocs.htm#spectrumdiscbetabetaplusbeta128diskinterfacetrdos
 
 /*
@@ -408,6 +410,7 @@ void betadisk_put_byte_disk(int pista, int sector, int byte_en_sector,z80_byte b
         if (offset<0) return;
 
 	trd_memory_pointer[offset]=byte_a_escribir;
+	trd_must_flush_to_disk=1;
 
 }
 
@@ -476,7 +479,7 @@ A=0 read, A=255 write
 		sector++;
 	}
 
-	printf ("\ntotal leidos: %d\n",leidos);
+	//printf ("\ntotal leidos: %d\n",leidos);
 	
 	//No error
 	reg_a=0;
@@ -579,3 +582,52 @@ void trd_disable(void)
 
 
 
+void trd_flush_contents_to_disk(void)
+{
+
+        if (trd_enabled.v==0) return;
+
+        if (trd_must_flush_to_disk==0) {
+                debug_printf (VERBOSE_DEBUG,"Trying to flush TRD to disk but no changes made");
+                return;
+        }
+
+
+        debug_printf (VERBOSE_INFO,"Flushing TRD to disk");
+
+
+        FILE *ptr_trdfile;
+
+        debug_printf (VERBOSE_INFO,"Opening TRD File %s",trd_file_name);
+        ptr_trdfile=fopen(trd_file_name,"wb");
+
+
+
+        int escritos=0;
+        long int size;
+        size=TRD_FILE_SIZE;
+
+
+        if (ptr_trdfile!=NULL) {
+                z80_byte *puntero;
+                puntero=trd_memory_pointer;
+
+                //Justo antes del fwrite se pone flush a 0, porque si mientras esta el fwrite entra alguna operacion de escritura,
+                //metera flush a 1
+                trd_must_flush_to_disk=0;
+
+                escritos=fwrite(puntero,1,size,ptr_trdfile);
+
+                fclose(ptr_trdfile);
+
+
+        }
+
+        //printf ("ptr_trdfile: %d\n",ptr_trdfile);
+        //printf ("escritos: %d\n",escritos);
+
+        if (escritos!=size || ptr_trdfile==NULL) {
+                debug_printf (VERBOSE_ERR,"Error writing to TRD file");
+        }
+
+}

@@ -51,6 +51,7 @@
 #include "snap_rzx.h"
 #include "ql.h"
 #include "esxdos_handler.h"
+#include "betadisk.h"
 
 #include "autoselectoptions.h"
 
@@ -640,6 +641,8 @@ void timer_check_interrupt(void)
 				mmc_flush_flash_to_disk();
 				//escritura de contenido de IDE a disco
 				ide_flush_flash_to_disk();
+				//escritura de contenido de TRD a disco
+				trd_flush_contents_to_disk();
 
 				rzx_print_footer();
 
