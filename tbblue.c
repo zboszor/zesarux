@@ -360,6 +360,9 @@ int tbblue_get_offset_start_layer2(void)
 	//offset=tbblue_registers[18]&63;
 	offset*=16384;
 
+	//Y empezar en 0x040000 – 0x05FFFF (128K) => ZX Spectrum RAM
+	offset +=0x040000;
+
 	return offset;
 }
 
@@ -1931,8 +1934,8 @@ void tbblue_hard_reset(void)
 
 	//TODO. Temporal . pagina sram para layer2 forzada a 32. 32*16384=0x80000
 	//0x080000 – 0x0FFFFF (512K) => Extra RAM
-	tbblue_registers[18]=32;
-	tbblue_registers[19]=32;
+	tbblue_registers[18]=0;
+	tbblue_registers[19]=0;
 
 
 	tbblue_reset_common();
@@ -2716,9 +2719,13 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 				//Inicializar puntero a layer2 de tbblue, irlo incrementando a medida que se ponen pixeles
 				//Layer2 siempre se dibuja desde registro que indique pagina 18. Registro 19 es un backbuffer pero siempre se dibuja desde 18
-				int tbblue_layer2_offset=tbblue_registers[18]&63;
+				//int tbblue_layer2_offset=tbblue_registers[18]&63;
 
-				tbblue_layer2_offset*=16384;
+				//tbblue_layer2_offset*=16384;
+
+
+
+				int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
 
 
 				//Mantener el offset y en 0..255
