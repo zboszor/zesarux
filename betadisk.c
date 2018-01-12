@@ -593,7 +593,7 @@ void trd_disable(void)
 
 
 
-
+//TODO: siempre se hace flush de disco de 640 kb. Se deberia poder hacer flush de menos, para floppy mas pequenyo?
 void trd_flush_contents_to_disk(void)
 {
 
