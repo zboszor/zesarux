@@ -330,10 +330,12 @@ void tsconf_reset_cpu(void)
 
     //TODO. Que otros puertos de tsconf se ponen a 0 en el reset?
 
-    tsconf_set_memory_pages();
-
+  
     //De momento hacemos que cuando se haga un reset, no se vuelve a la system rom
     temp_tsconf_in_system_rom_flag=0;
+
+
+    tsconf_set_memory_pages();
 }
 
 void tsconf_init_memory_tables(void)
