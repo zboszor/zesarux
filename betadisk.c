@@ -430,31 +430,9 @@ HL = dirección de memoria para carga o lectura de los sectores
 
 		//poke_byte_no_time(TRD_SYM_trdos_variable_sector_rw_flag,reg_a);
 
-	//prueba
-	//if (numero_sectores>1) numero_sectores=1;
-	//if (numero_sectores==0) numero_sectores=1;
-
-	//numero_sectores++;
-	//numero_sectores &=15;
-
-	//temp prueba. con paralact consigue cargar el basic y el resto
-	//if (sector==0 && pista==1) {
-
-	if (destino>0x5d25) { //con esto paralaktika perfecto, agressor.trd perfecto, metalmanru.trd perfecto, seto.trd, recycler.trd
 
 
-	//if (destino==0x5E3C) {
-		
-		//printf ("\nHACK for paralactika basic. increment number of sectors to read\n");
-		//numero_sectores++;
-	}
 
-	//temp
-	//if (numero_sectores) numero_sectores=1;
-
-	//carga bytes 1024 bytes-> 4 sectores
-	//carga bytes 1025 bytes-> 4 sectores
-	//->tiene que haber otra rutina que cargue el sector final que no estamos capturando
 
 
 	int leidos=0;
