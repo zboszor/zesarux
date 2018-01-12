@@ -295,6 +295,8 @@ void menu_textspeech_send_text(char *texto);
 
 int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcion1,char *opcion2);
 
+void menu_file_trd_browser_show(char *filename,char *tipo_imagen);
+
 
 //si hay recuadro activo, y cuales son sus coordenadas y color
 
@@ -13014,6 +13016,11 @@ void menu_storage_trd_file(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_storage_trd_browser(MENU_ITEM_PARAMETERS)
+{
+	menu_file_trd_browser_show(trd_file_name,"TRD");
+}
+
 
 void menu_betadisk(MENU_ITEM_PARAMETERS)
 {
@@ -13062,6 +13069,11 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_shortcut(array_menu_betadisk,'e');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation");
+
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_browser,menu_storage_trd_emulation_cond,"TRD B~~rowser");
+                        menu_add_item_menu_shortcut(array_menu_betadisk,'b');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Browser");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Browser");
 
 
                                 menu_add_item_menu(array_menu_betadisk,"",MENU_OPCION_SEPARADOR,NULL,NULL);
