@@ -245,7 +245,8 @@ l1e67h:
 
 			if (reg_pc==0x1ee8) {
 				//format
-				printf ("Possibly format call\n");
+				debug_printf(VERBOSE_DEBUG,"Formating trd disk");
+				generic_footertext_print_operating("TRD");
 				betadisk_format_disk();
 			}
 
