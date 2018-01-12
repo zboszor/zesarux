@@ -361,7 +361,13 @@ void trd_insert(void)
         int leidos=fread(trd_memory_pointer,1,TRD_FILE_SIZE,ptr_trdfile);
 
 	//TODO gestion de tamanyos validos
-	if (leidos<1) {
+	/*
+	- Logical sectors per track are 16
+	- Sector dimension is 256 bytes
+	*/
+	//Minimo 1 pista, 16 sectores
+	int minsize=16*256;
+	if (leidos<minsize) {
 		debug_printf (VERBOSE_ERR,"Error reading trd file");
 		trd_disable();
 	}
