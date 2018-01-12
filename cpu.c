@@ -6556,9 +6556,14 @@ void end_emulator(void)
 	close_vofile();
 	close_zxprinter_bitmap_file();
 	close_zxprinter_ocr_file();
+
+	//Flush write devices
+	zxuno_flush_flash_to_disk();	
 	z88_flush_eprom_or_flash_to_disk();
 	mmc_flush_flash_to_disk();
 	ide_flush_flash_to_disk();
+	trd_flush_contents_to_disk();
+	superupgrade_flush_flash_to_disk();
 
 
 	audio_thread_finish();
