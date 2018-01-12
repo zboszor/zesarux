@@ -336,6 +336,7 @@ void tsconf_reset_cpu(void)
 
 
     tsconf_set_memory_pages();
+    tsconf_set_sizes_display();
 }
 
 void tsconf_init_memory_tables(void)
@@ -448,11 +449,9 @@ bit1/0
         z80_byte memconfig=tsconf_get_memconfig();
         if (memconfig & 4) {
           //Modo no map
-          //cpu_panic("No map mode not emulated yet");
-          //solo para que no se queje el compilador
           //bit3 selects what is in #0000..#3FFF (0 - ROM, 1 - RAM).
 
-          z80_byte banco=tsconf_af_ports[0x10]; //&31;  //KAKA
+          z80_byte banco=tsconf_af_ports[0x10]; 
           return banco;
         }
         else {
@@ -543,15 +542,15 @@ void tsconf_set_memory_pages(void)
 {
 	z80_byte rom_page=tsconf_get_rom_bank();
 
-  //z80_byte ram_page_c0=tsconf_get_ram_bank_c0();
-  //temp
-  z80_byte ram_page_c0=tsconf_af_ports[19];
+  
 
   z80_byte ram_page_40=tsconf_af_ports[17];
   z80_byte ram_page_80=tsconf_af_ports[18];
+  z80_byte ram_page_c0=tsconf_af_ports[19];
 
 
 	/*
+  TODO
 	Port 1FFDh (read/write)
 	Bit 0 If 1 maps banks 8 or 9 at 0000h (switch off rom).
 	Bit 1 High bit of ROM selection and bank 8 (0) or 9 (1) if bit0 = 1.

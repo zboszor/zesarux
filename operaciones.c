@@ -6946,7 +6946,7 @@ acts as expected unless this registe is explicitly changed by the user/software.
 						}
 
 						else {
-							printf ("Paginacion 32765 desactivada\n");
+							//printf ("Paginacion 32765 desactivada\n");
 						}
 			    }
 
