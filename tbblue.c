@@ -361,6 +361,26 @@ int tbblue_get_offset_start_layer2(void)
 	offset*=16384;
 
 	//Y empezar en 0x040000 – 0x05FFFF (128K) => ZX Spectrum RAM
+	/*
+	recordemos
+	    0x040000 – 0x05FFFF (128K) => ZX Spectrum RAM			(16 paginas) 
+    0x060000 – 0x07FFFF (128K) => Extra RAM				(16 paginas)
+
+    0x080000 – 0x0FFFFF (512K) => 1st Extra IC RAM (if present)		(64 paginas)
+    0x100000 – 0x17FFFF (512K) => 2nd Extra IC RAM (if present)		(64 paginas)
+    0x180000 – 0xFFFFFF (512K) => 3rd Extra IC RAM (if present)		(64 paginas)
+
+    0x200000 (2 MB)
+
+    	Con and 63, maximo layer 2 son 64 paginas
+    	64*16384=1048576  -> 1 mb total
+    	empezando en 0x040000 + 1048576 = 0x140000 y no nos salimos de rango (estariamos en el 2nd Extra IC RAM)
+    	Dado que siempre asigno 2 mb para tbblue, no hay problema
+
+    	*/
+
+
+
 	offset +=0x040000;
 
 	return offset;
@@ -1932,8 +1952,7 @@ void tbblue_hard_reset(void)
 	tbblue_registers[7]=0;
 	tbblue_registers[8]=0;
 
-	//TODO. Temporal . pagina sram para layer2 forzada a 32. 32*16384=0x80000
-	//0x080000 – 0x0FFFFF (512K) => Extra RAM
+
 	tbblue_registers[18]=0;
 	tbblue_registers[19]=0;
 
