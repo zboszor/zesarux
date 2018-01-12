@@ -353,12 +353,18 @@ void trd_insert(void)
 	ptr_trdfile=fopen(trd_file_name,"rb");
 
         if (!ptr_trdfile) {
-                debug_printf (VERBOSE_ERR,"Unable to open trd file file");
+                debug_printf (VERBOSE_ERR,"Unable to open trd file");
                 trd_disable();
                 return;
         }
 
         int leidos=fread(trd_memory_pointer,1,TRD_FILE_SIZE,ptr_trdfile);
+
+	//TODO gestion de tamanyos validos
+	if (leidos<1) {
+		debug_printf (VERBOSE_ERR,"Error reading trd file");
+		trd_disable();
+	}
 
         fclose(ptr_trdfile);
 
