@@ -1,4 +1,4 @@
-Version 6.1. 26 December 2017 - Xeno edition
+Version 6.1. 12 January 2018 - Xeno edition
 
 Added setting to exit emulator after a number of seconds (--exit-after)
 Added setting to show changelog when updating emulator version
@@ -6,7 +6,7 @@ Added Spectrum keyboard ghosting error feature
 Added ZX Spectrum Recreated keyboard support
 Added actions to file utilities: Copy, Move, Rename
 Added second Easter Egg ;)
-Added BetaDisk emulation. Only ROM emulation, no disk interface yet
+Added BetaDisk and TR-DOS emulation
 Improved sound: Silence detector does not activate on pthreads versions
 Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
 Improved joystick support: 
