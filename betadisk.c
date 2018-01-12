@@ -59,7 +59,7 @@ char *betadisk_rom_file_name="trdos.rom";
 
 z80_bit trd_enabled={0};
 
-void betadisk_trdoshandler_read_sectors(void);
+void betadisk_trdoshandler_read_write_sectors(void);
 
 //http://problemkaputt.de/zxdocs.htm#spectrumdiscbetabetaplusbeta128diskinterfacetrdos
 
@@ -217,7 +217,7 @@ z80_byte cpu_core_loop_betadisk(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSE
 				print_registers(buffer_registros);
 				printf ("Handler for read sectors\n");
 				printf ("%s\n",buffer_registros);
-				betadisk_trdoshandler_read_sectors();
+				betadisk_trdoshandler_read_write_sectors();
 			}*/
 
 
@@ -240,7 +240,7 @@ l1e67h:
 				printf ("\n\nHandler for transfer_sectors\n");
 				printf ("%s\n",buffer_registros);
 				generic_footertext_print_operating("TRD");
-				betadisk_trdoshandler_read_sectors();
+				betadisk_trdoshandler_read_write_sectors();
 			}
 
 			/*if (reg_pc==0xef2) {
@@ -379,7 +379,7 @@ int betadisk_get_offset_tracksectorbyte(int pista, int sector, int byte_en_secto
         int offset=pista*bytes_por_pista+sector*betadisk_bytes_por_sector+byte_en_sector;
 
         if (offset>=TRD_FILE_SIZE) {
-                debug_printf (VERBOSE_ERR,"Error. Trying to read beyond trd. Size: %ld Asked: %u. Disabling TRD",TRD_FILE_SIZE,offset);
+                debug_printf (VERBOSE_ERR,"Error. Trying to access beyond trd. Size: %ld Asked: %u. Disabling TRD",TRD_FILE_SIZE,offset);
                 trd_disable();
                 return -1;
         }
@@ -410,7 +410,7 @@ void betadisk_put_byte_disk(int pista, int sector, int byte_en_sector,z80_byte b
 }
 
 
-void betadisk_trdoshandler_read_sectors(void)
+void betadisk_trdoshandler_read_write_sectors(void)
 {
 	/*
 
@@ -418,13 +418,13 @@ void betadisk_trdoshandler_read_sectors(void)
 read_sectors:                                               equ 0x1E3D
 write_sectors:                                              equ 0x1E4D
 
-A = número de sectores
+B = número de sectores
 D = pista del primer sector a usar (0..159)
 E = primer sector a usar de la pista (0..15)
 HL = dirección de memoria para carga o lectura de los sectores
 
 
-
+A=0 read, A=255 write
 
 	#05 - Read group of sectors. In HL must be  loaded address where  sector data
        should  be readed, B must be  loaded with  number of sectors to read, D
@@ -455,8 +455,19 @@ HL = dirección de memoria para carga o lectura de los sectores
 
 	for (;numero_sectores>0;numero_sectores--) {
 		for (byte_en_sector=0;byte_en_sector<betadisk_bytes_por_sector;byte_en_sector++) {
+
+			if (reg_a==0) {
 			z80_byte byte_leido=betadisk_get_byte_disk(pista,sector,byte_en_sector);
-			poke_byte_no_time(destino++,byte_leido);
+			poke_byte_no_time(destino,byte_leido);
+			}
+
+			if (reg_a==255) {
+			z80_byte byte_leido=peek_byte_no_time(destino);
+			betadisk_put_byte_disk(pista,sector,byte_en_sector,byte_leido);
+			}
+
+			destino++;
+
 			leidos++;
 		}
 		sector++;
