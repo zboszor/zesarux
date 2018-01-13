@@ -525,7 +525,7 @@ z80_byte mmc_read(void)
 		case 0x48:
 			debug_printf (VERBOSE_PARANOID,"MMC Read command CMD8 SEND_IF_COND unhandled");
 			
-
+ 
 			//mmc_r1 |=4; //Devolver error
 			return 0;
 		break;
