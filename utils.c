@@ -90,6 +90,7 @@
 #include "kartusho.h"
 #include "mdvtool.h"
 #include "betadisk.h"
+#include "multiface.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -9038,6 +9039,21 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     	}
     break;
 
+
+    //Multiface rom
+    case 12:
+    	if (multiface_enabled.v) {
+    		size=8192;
+    	}
+    break;
+
+    //Multiface ram
+    case 13:
+    	if (multiface_enabled.v) {
+    		size=8192;
+    	}
+    break;
+
   }
 
   return size;
@@ -9200,13 +9216,28 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
     break;
 
 
+    //Multiface rom
+    case 12:
+    	if (multiface_enabled.v) {
+    		p=&multiface_memory_pointer[address];
+    	}
+    break;
+
+    //Multiface ram
+    case 13:
+    	if (multiface_enabled.v) {
+    		p=&multiface_memory_pointer[address+8192];
+    	}
+    break;
+
+
   }
 
   return p;
 
 }
 
-//ZXUNO_SPI_SIZE
+//Maximo texto: 15 de longitud
 
 void machine_get_memory_zone_name(int zone, char *name)
 {
@@ -9308,6 +9339,24 @@ void machine_get_memory_zone_name(int zone, char *name)
 		strcpy(name,"Betadisk rom");
 	}
     break;
+
+
+    //Multiface rom
+    case 12:
+    	if (multiface_enabled.v) {
+    			   //123456789012345
+		strcpy(name,"Multiface rom");
+        }
+    break;
+
+    
+    //Multiface ram
+    case 13:
+    	if (multiface_enabled.v) {
+    			   //123456789012345
+		strcpy(name,"Multiface ram");
+        }
+    break;    
 
 
   }

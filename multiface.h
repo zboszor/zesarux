@@ -60,5 +60,7 @@ extern int multiface_lockout;
 
 extern z80_bit multiface_switched_on;
 
+extern z80_byte *multiface_memory_pointer;
+
 
 #endif
