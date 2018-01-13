@@ -13055,8 +13055,10 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_tooltip(array_menu_betadisk,"Allow autoboot on 48k machines");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"Allow autoboot on 48k machines");
 
+                        menu_add_item_menu(array_menu_betadisk,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-                                                menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
+
+                        menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
                         menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_file,NULL,"~~TRD File: %s",string_trd_file_shown);
                         menu_add_item_menu_shortcut(array_menu_betadisk,'t');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation file");
@@ -13069,7 +13071,7 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation");
 
 
-			menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_write_protect,menu_storage_trd_emulation_cond,"~~Write protect: %s", (trd_write_protection.v ? "Yes" : "No"));
+			menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_write_protect,menu_storage_trd_emulation_cond,"TRD ~~Write protect: %s", (trd_write_protection.v ? "Yes" : "No"));
 			menu_add_item_menu_shortcut(array_menu_betadisk,'w');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"If TRD disk is write protected");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"If TRD disk is write protected");
@@ -17507,7 +17509,7 @@ void menu_tape_browser_show(char *filename)
 
 	//tapefile
 	if (util_compare_file_extension(filename,"tap")!=0) {
-		debug_printf(VERBOSE_ERR,"Tape browser not supported for this tape type (yet)");
+		debug_printf(VERBOSE_ERR,"Tape browser not supported for this tape type");
 		return;
 	}
 
@@ -17691,37 +17693,6 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_tape_settings,"Start playing the audio tape");
 		menu_add_item_menu_ayuda(array_menu_tape_settings,"Start playing the audio tape");
 
-/*
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_loading_sound,NULL,"Loading sound: %s", (realtape_loading_sound.v==1 ? "Yes" : "No"));
-		menu_add_item_menu_tooltip(array_menu_tape_settings,"Enable loading sound");
-		menu_add_item_menu_ayuda(array_menu_tape_settings,"Enable loading sound. With sound disabled, the tape is also loaded");
-
-
-
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_volumen,NULL,"Volume bit 1 range: %s%d",(realtape_volumen>0 ? "+" : ""),realtape_volumen);
-		menu_add_item_menu_tooltip(array_menu_tape_settings,"Volume bit 1 starting range value");
-		menu_add_item_menu_ayuda(array_menu_tape_settings,"The input audio value read (considering range from -128 to +127) is treated "
-					"normally as 1 if the value is in range 0...+127, and 0 if it is in range -127...-1. This setting "
-					"increases this 0 (of range 0...+127) to consider it is a bit 1. I have found this value is better to be 0 "
-					"on Spectrum, and 2 on ZX80/81");
-
-
-
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_wave_offset,NULL,"Level Offset: %d",realtape_wave_offset);
-		menu_add_item_menu_tooltip(array_menu_tape_settings,"Apply offset to sound value read");
-		menu_add_item_menu_ayuda(array_menu_tape_settings,"Indicates some value (positive or negative) to sum to the raw value read "
-					"(considering range from -128 to +127) to the input audio value read");
-
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_accelerate_loaders,NULL,"A~~ccelerate loaders: %s",
-				(accelerate_loaders.v==1 ? "Yes" : "No"));
-			menu_add_item_menu_shortcut(array_menu_tape_settings,'c');
-			menu_add_item_menu_tooltip(array_menu_tape_settings,"Set top speed setting when loading a real tape");
-			menu_add_item_menu_ayuda(array_menu_tape_settings,"Set top speed setting when loading a real tape");
-		}
-
-
-*/
 
 
                 menu_add_item_menu(array_menu_tape_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -17732,7 +17703,7 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_tape_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_tape_settings);
 
-                retorno_menu=menu_dibuja_menu(&tape_settings_opcion_seleccionada,&item_seleccionado,array_menu_tape_settings,"Tape Settings" );
+                retorno_menu=menu_dibuja_menu(&tape_settings_opcion_seleccionada,&item_seleccionado,array_menu_tape_settings,"Tape" );
 
                 cls_menu_overlay();
 
