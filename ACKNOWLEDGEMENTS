@@ -1,14 +1,14 @@
-I want to thank the help and the collaboration of the following people:
+I want to thank the help and the collaboration of the following people (date sorted list):
      
 -To my parents and brothers. I remember very fondly the advices of my father to my first programs. Rest in peace
--Ivan Daunis Llobet, for the PCGPE and the INTERVUE
+-Ivan Daunis Llobet, for the PCGPE and the INTERVUE, which were very useful on creating my first emulator, ZXSpectr
 -Ruben Parra Martinez, for the Spectrum +2A
 -To my friends at Mexico
 -To Auro and Gui, for their patience and suggestions
 -To Amstrad, for permitting to use the ROMS to someone who makes an emulator
--Samir Ribic, for helping me with the uploading of my first emulator (ZXSpectr), and for all the information included in his Warajevo emulator.
--Martijn van der Heide, for uploading my ZXSpectr on http://worldofspectrum.org/
--Phillip Kendall, for telling me a bug with the BIT instruction. I also use some code from his Fuse emulator (opcode timings & disassemble function)
+-Samir Ribic, for helping me with the uploading of ZXSpectr, and for all the information included in his Warajevo emulator.
+-Martijn van der Heide, for uploading ZXSpectr on http://worldofspectrum.org/
+-Phillip Kendall, for telling me a bug with the BIT instruction on ZXSpectr. I also use some code from his Fuse emulator (opcode timings & disassemble function)
 -Pedro Gimeno, for the timings of some instructions.
 -Rodolfo Edison Guerra, for including ZXSpectr in his SpecBase and for all the information about TK90X and TK95
 -Paul Farrow, for the information and games for the ZX80 and ZX81 and Spectra Video modes. See http://www.fruitcake.plus.com/
