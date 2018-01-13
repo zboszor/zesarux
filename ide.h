@@ -54,4 +54,6 @@ extern void eight_bit_simple_ide_disable(void);
 
 extern int ide_read_file_to_memory(void);
 
+extern z80_bit ide_write_protection;
+
 #endif

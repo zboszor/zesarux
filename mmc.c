@@ -129,6 +129,8 @@ cat tab para ver contenido disco
 int mmc_card_selected=0;
 
 
+z80_bit mmc_write_protection={0};
+
 
 void mmc_footer_mmc_operating(void)
 {
@@ -476,6 +478,8 @@ void mmc_write_byte_memory(unsigned int address,z80_byte value)
 		return;
 	}
 
+	if (mmc_write_protection.v) return;
+
 	mmc_memory_pointer[address]=value;
 	mmc_flash_must_flush_to_disk=1;
 }
@@ -523,9 +527,8 @@ z80_byte mmc_read(void)
 		//0x48=CMD8=SEND_IF_COND. For only SDC V2. Check voltage range.
 		//Parece que es de deteccion de MMC/SD
 		case 0x48:
-			debug_printf (VERBOSE_PARANOID,"MMC Read command CMD8 SEND_IF_COND unhandled");
+			debug_printf (VERBOSE_DEBUG,"MMC Read command CMD8 SEND_IF_COND unhandled");
 			
- 
 			//mmc_r1 |=4; //Devolver error
 			return 0;
 		break;
@@ -878,7 +881,7 @@ void mmc_write(z80_byte value)
 			//0x48=CMD8=SEND_IF_COND. For only SDC V2. Check voltage range.
 			//Parece que es de deteccion de MMC/SD
 			case 0x48:
-				debug_printf (VERBOSE_PARANOID,"MMC Write command CMD8 SEND_IF_COND unhandled");
+				debug_printf (VERBOSE_DEBUG,"MMC Write command CMD8 SEND_IF_COND unhandled");
 				//mmc_r1 |=4; //devolver error
 			break;
 
@@ -1062,6 +1065,7 @@ void mmc_write(z80_byte value)
 				/*
 Similarly, if an illegal command has been received, a card shall not change its state, shall not response and shall set the ILLEGAL_COMMAND error bit in the status register.
 				*/
+				//mmc_r1 |=4;
 			break;
 
 		}

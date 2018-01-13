@@ -98,6 +98,8 @@ int ide_index_write_buffer=0;
 char ide_file_name[PATH_MAX]="";
 
 
+z80_bit ide_write_protection={0};
+
 
 int ide_set_image_parameters(void);
 int ide_check_card_size(void);
@@ -481,6 +483,9 @@ void ide_write_byte_memory(unsigned int address,z80_byte value)
                 ide_disable();
                 return;
         }
+
+
+        if (ide_write_protection.v) return;
 
         ide_memory_pointer[address]=value;
         ide_flash_must_flush_to_disk=1;

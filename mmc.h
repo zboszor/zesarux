@@ -42,4 +42,6 @@ extern void mmc_reset(void);
 
 extern int mmc_read_file_to_memory(void);
 
+extern z80_bit mmc_write_protection;
+
 #endif

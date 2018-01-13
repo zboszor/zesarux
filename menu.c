@@ -13325,6 +13325,11 @@ void menu_storage_diviface_eprom_write_jumper(MENU_ITEM_PARAMETERS)
 	diviface_eprom_write_jumper.v ^=1;
 }
 
+void menu_storage_mmc_write_protect(MENU_ITEM_PARAMETERS)
+{
+	mmc_write_protection.v ^=1;
+}
+
 //menu MMC/Divmmc
 void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 {
@@ -13349,12 +13354,18 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"MMC Emulation");
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"MMC Emulation");
 
-												if (mmc_enabled.v) {
-												menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_reload,NULL,"Reload MMC file");
-												menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Reload MMC contents from MMC file to emulator memory");
-												menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Reload MMC contents from MMC file to emulator memory. You can modify the MMC file "
+
+                        menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_write_protect,menu_storage_mmc_emulation_cond,"MMC ~~Write protect: %s", (mmc_write_protection.v ? "Yes" : "No"));
+			menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'w');
+                        menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"If MMC disk is write protected");
+                        menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"If MMC disk is write protected");
+
+			if (mmc_enabled.v) {
+				menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_reload,NULL,"Reload MMC file");
+				menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Reload MMC contents from MMC file to emulator memory");
+				menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Reload MMC contents from MMC file to emulator memory. You can modify the MMC file "
 																								"outside the emulator, and reload its contents without having to disable and enable MM.");
-												}
+			}
 
 			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_divmmc_diviface,NULL,"~~DIVMMC paging: %s",(divmmc_diviface_enabled.v ? "Yes" : "No") );
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'d');
@@ -13619,6 +13630,11 @@ void menu_divide_rom_file(MENU_ITEM_PARAMETERS)
 				menu_generic_message("Change DIVIDE ROM","OK. Remember to enable DIVIDE paging to load the firmware");
 }
 
+void menu_storage_ide_write_protect(MENU_ITEM_PARAMETERS)
+{
+	ide_write_protection.v ^=1;
+}
+
 //menu IDE/Divide
 void menu_ide_divide(MENU_ITEM_PARAMETERS)
 {
@@ -13645,6 +13661,12 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_shortcut(array_menu_ide_divide,'e');
                         menu_add_item_menu_tooltip(array_menu_ide_divide,"IDE Emulation");
                         menu_add_item_menu_ayuda(array_menu_ide_divide,"IDE Emulation");
+
+
+                        menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_write_protect,menu_storage_ide_emulation_cond,"IDE ~~Write protect: %s", (ide_write_protection.v ? "Yes" : "No"));
+			menu_add_item_menu_shortcut(array_menu_ide_divide,'w');
+                        menu_add_item_menu_tooltip(array_menu_ide_divide,"If IDE disk is write protected");
+                        menu_add_item_menu_ayuda(array_menu_ide_divide,"If IDE disk is write protected");
 
 												if (ide_enabled.v) {
 												menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_reload,NULL,"Reload IDE file");
