@@ -515,6 +515,21 @@ z80_byte mmc_read(void)
 			return 1;
 		break;
 
+		/* Este comando lo usa +3e / NextOS. Ya sea que le devuelva error como si no, sigue reintenando
+		y acaba haciendo timeout y arranca la rom
+		Quiza esto ya sucederia en un entorno real: este comando lo soportan las tarjetas SD pero no las MMC,
+		por lo que deduzco que en un entorno real con MMC, también hace monton de reintentos y acaba haciendo timeout
+		*/
+		//0x48=CMD8=SEND_IF_COND. For only SDC V2. Check voltage range.
+		//Parece que es de deteccion de MMC/SD
+		case 0x48:
+			debug_printf (VERBOSE_PARANOID,"MMC Read command CMD8 SEND_IF_COND unhandled");
+			
+
+			//mmc_r1 |=4; //Devolver error
+			return 0;
+		break;
+
 		case 0x49:
 			debug_printf (VERBOSE_PARANOID,"MMC Read command SEND_CSD");
 			if (mmc_csd_index>=0) {
@@ -855,6 +870,18 @@ void mmc_write(z80_byte value)
 				else mmc_index_command++;
 			break;
 
+			/* Este comando lo usa +3e / NextOS. Ya sea que le devuelva error como si no, sigue reintenando
+			y acaba haciendo timeout y arranca la rom
+			Quiza esto ya sucederia en un entorno real: este comando lo soportan las tarjetas SD pero no las MMC,
+			por lo que deduzco que en un entorno real con MMC, también hace monton de reintentos y acaba haciendo timeout
+			*/
+			//0x48=CMD8=SEND_IF_COND. For only SDC V2. Check voltage range.
+			//Parece que es de deteccion de MMC/SD
+			case 0x48:
+				debug_printf (VERBOSE_PARANOID,"MMC Write command CMD8 SEND_IF_COND unhandled");
+				//mmc_r1 |=4; //devolver error
+			break;
+
 			//RESERVED. TBBLUE Genera este. Que es???
 			/*
 			case 0x48:
@@ -862,8 +889,7 @@ void mmc_write(z80_byte value)
 			break;
 			*/
 
-			//0x48=CMD8=SEND_IF_COND. For only SDC V2. Check voltage range.
-			//Parece que es de deteccion de MMC/SD
+
 
 			//SEND_CSD
 			case 0x49:
