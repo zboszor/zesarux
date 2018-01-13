@@ -48,7 +48,6 @@ archivo se llama spacepods.bas y hace lbytes mdv1_spacepods_bas -> lo normal
 
 -implementar exec_mdv1_... mismo ejemplo con cueshell, va a   Returning header for file on address 00100H y ahi peta
 
--mejorar visor .tzx
 
 
 IMPORTANTE: ruido al iniciar emulador, no siempre, debido al agregar rutina de autoresize audio puntero
@@ -67,7 +66,6 @@ overlay y todo queda por encima del texto del osd
 
 -quiza compilar sin soporte libsssl en linux
 
--quiza en file utils, view file, detecta por ejemplo si es .tap, hace un tap browser. si es otra extension conocida, un visor adecuado
 
 -Quizá resetear puntero escritura latencia siempre que carga, graba, etc
 
@@ -135,7 +133,6 @@ render de sprites / tiles se hace de momento al final de cada frame de pantalla 
 *seguir nuevos opcodes next https://dailly.blogspot.com.es/2017/08/version-04-of-cspect.html?m=1  ,  https://github.com/z88dk/z88dk/issues/312
 *probar que pasa cuando llega a mas de 12 sprites en linea tbblue
 *eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
-*TODO. Temporal . pagina sram y shadow para layer2 forzada a 32 en reset. 32*16384=0x80000
 *y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
 *Desactivar puertos viejos de establecer paleta sprites get/set
 *Color border tbblue debe venir de paper , supongo que en modo extendido

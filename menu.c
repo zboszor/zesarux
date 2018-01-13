@@ -13683,10 +13683,12 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 												                        "outside the emulator, and reload its contents without having to disable and enable IDE");
 												}
 
-			menu_add_item_menu(array_menu_ide_divide,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+			
 
 
 			if (MACHINE_IS_SPECTRUM) {
+
+				menu_add_item_menu(array_menu_ide_divide,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 	                       menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_divide_diviface,NULL,"~~DIVIDE paging: %s",(divide_diviface_enabled.v ? "Yes" : "No") );
         	                menu_add_item_menu_shortcut(array_menu_ide_divide,'d');
@@ -13726,11 +13728,15 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 			}
 
 			if (MACHINE_IS_SPECTRUM) {
+				menu_add_item_menu(array_menu_ide_divide,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+				
 				menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_eightbitsimple_enable,menu_storage_ide_if_enabled_cond,"8-bit simple IDE: %s",(eight_bit_simple_ide_enabled.v ? "Yes" : "No") );
 			}
 
 
         if (MACHINE_IS_SAM) {
+        		menu_add_item_menu(array_menu_ide_divide,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
                         menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_atomlite_enable,NULL,"~~Atom Lite enabled: %s",(atomlite_enabled.v ? "Yes" : "No" ) );
                         menu_add_item_menu_shortcut(array_menu_ide_divide,'a');
                         menu_add_item_menu_tooltip(array_menu_ide_divide,"Enable Atom Lite");
