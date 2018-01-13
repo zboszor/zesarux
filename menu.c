@@ -12772,7 +12772,7 @@ void menu_dandanator(MENU_ITEM_PARAMETERS)
 
                 menu_add_ESC_item(array_menu_dandanator);
 
-                retorno_menu=menu_dibuja_menu(&dandanator_opcion_seleccionada,&item_seleccionado,array_menu_dandanator,"ZX Dandanator settings" );
+                retorno_menu=menu_dibuja_menu(&dandanator_opcion_seleccionada,&item_seleccionado,array_menu_dandanator,"ZX Dandanator" );
 
                 cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -12894,7 +12894,7 @@ void menu_kartusho(MENU_ITEM_PARAMETERS)
 
                 menu_add_ESC_item(array_menu_kartusho);
 
-                retorno_menu=menu_dibuja_menu(&kartusho_opcion_seleccionada,&item_seleccionado,array_menu_kartusho,"Kartusho settings" );
+                retorno_menu=menu_dibuja_menu(&kartusho_opcion_seleccionada,&item_seleccionado,array_menu_kartusho,"Kartusho" );
 
                 cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -13086,7 +13086,7 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
 
                 menu_add_ESC_item(array_menu_betadisk);
 
-                retorno_menu=menu_dibuja_menu(&betadisk_opcion_seleccionada,&item_seleccionado,array_menu_betadisk,"Betadisk settings" );
+                retorno_menu=menu_dibuja_menu(&betadisk_opcion_seleccionada,&item_seleccionado,array_menu_betadisk,"Betadisk" );
 
                 cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -13206,7 +13206,7 @@ void menu_superupgrade(MENU_ITEM_PARAMETERS)
                 menu_add_ESC_item(array_menu_superupgrade);
 
 
-retorno_menu=menu_dibuja_menu(&superupgrade_opcion_seleccionada,&item_seleccionado,array_menu_superupgrade,"Superupgrade settings" );
+retorno_menu=menu_dibuja_menu(&superupgrade_opcion_seleccionada,&item_seleccionado,array_menu_superupgrade,"Superupgrade" );
 
                 cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -13367,6 +13367,9 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 																								"outside the emulator, and reload its contents without having to disable and enable MM.");
 			}
 
+
+			menu_add_item_menu(array_menu_mmc_divmmc,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
 			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_divmmc_diviface,NULL,"~~DIVMMC paging: %s",(divmmc_diviface_enabled.v ? "Yes" : "No") );
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'d');
 			menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Enables DIVMMC paging and firmware, and DIVMMC access ports if MMC emulation is enabled");
@@ -13401,6 +13404,9 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Enables DIVMMC access ports. Requires enabling MMC Emulation");
 
 
+                        menu_add_item_menu(array_menu_mmc_divmmc,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
                         menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_zxmmc_emulation,menu_storage_mmc_if_enabled_cond,"~~ZXMMC Enabled: %s",(zxmmc_emulation.v ? "Yes" : "No") );
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'z');
                         menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Access MMC using ZXMMC");
@@ -13412,7 +13418,7 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_mmc_divmmc,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
                 menu_add_ESC_item(array_menu_mmc_divmmc);
 
-                retorno_menu=menu_dibuja_menu(&mmc_divmmc_opcion_seleccionada,&item_seleccionado,array_menu_mmc_divmmc,"MMC settings" );
+                retorno_menu=menu_dibuja_menu(&mmc_divmmc_opcion_seleccionada,&item_seleccionado,array_menu_mmc_divmmc,"MMC" );
 
                 cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -13675,6 +13681,8 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 												                        "outside the emulator, and reload its contents without having to disable and enable IDE");
 												}
 
+			menu_add_item_menu(array_menu_ide_divide,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
 
 			if (MACHINE_IS_SPECTRUM) {
 
@@ -13733,7 +13741,7 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_ide_divide,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
                 menu_add_ESC_item(array_menu_ide_divide);
 
-                retorno_menu=menu_dibuja_menu(&ide_divide_opcion_seleccionada,&item_seleccionado,array_menu_ide_divide,"IDE settings" );
+                retorno_menu=menu_dibuja_menu(&ide_divide_opcion_seleccionada,&item_seleccionado,array_menu_ide_divide,"IDE" );
 
                 cls_menu_overlay();
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
