@@ -2747,9 +2747,12 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 				int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
 
 
-				//Mantener el offset y en 0..255
+				//Mantener el offset y en 0..191
 				z80_byte tbblue_reg_23=tbblue_registers[23];
+
+
 				tbblue_reg_23 +=scanline_copia;
+				tbblue_reg_23=tbblue_reg_23 % 192;
 
 				tbblue_layer2_offset +=tbblue_reg_23*256;
 
@@ -2759,8 +2762,8 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 (R/W) 22 => Layer2 Offset X
   bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
 
-(R/W) 23 => Layer2 Offset Y
-  bist 7-0 = Y Offset (0-255)(Reset to 0 after a reset)
+(R/W) 0x17 (23) => Layer2 Offset Y
+  bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 */
 
 
