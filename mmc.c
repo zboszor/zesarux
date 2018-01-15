@@ -132,6 +132,11 @@ int mmc_card_selected=0;
 z80_bit mmc_write_protection={0};
 
 
+
+//Si cambios en escritura se hace flush a disco
+z80_bit mmc_persistent_writes={1};
+
+
 void mmc_footer_mmc_operating(void)
 {
 
@@ -151,6 +156,11 @@ void mmc_flush_flash_to_disk(void)
 
         if (mmc_flash_must_flush_to_disk==0) {
                 debug_printf (VERBOSE_DEBUG,"Trying to flush MMC to disk but no changes made");
+                return;
+        }
+
+	if (mmc_persistent_writes.v==0) {
+                debug_printf (VERBOSE_DEBUG,"Trying to flush MMC to disk but persistent writes disabled");
                 return;
         }
 
