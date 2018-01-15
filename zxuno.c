@@ -1190,7 +1190,7 @@ void zxuno_flush_flash_to_disk(void)
 
 
 	if (zxuno_flash_persistent_writes.v==0) {
-		debug_printf (VERBOSE_DEBUG,"Trying to flush SPI FLASH to file but write disabled");
+		debug_printf (VERBOSE_DEBUG,"Trying to flush SPI FLASH to file but persistent writes disabled");
 		return;
 	}
 
