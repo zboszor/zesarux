@@ -13371,7 +13371,7 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"If MMC disk is write protected");
 
 
-			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_persistent_writes,NULL,"Persistent ~~Writes: %s", 	(mmc_persistent_writes.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_persistent_writes,menu_storage_mmc_emulation_cond,"Persistent Writes: %s",(mmc_persistent_writes.v ? "Yes" : "No") );
 			menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Tells if MMC writes are saved to disk");
 			menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Tells if MMC writes are saved to disk. "
 			"Note: all writing operations to MMC are always saved to internal memory (unless you disable write permission), but this setting "
