@@ -121,4 +121,6 @@ extern z80_int zxuno_radasoffset;
 
 extern z80_bit zxuno_radasoffset_high_byte;
 
+extern z80_bit zxuno_flash_write_protection;
+
 #endif

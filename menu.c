@@ -12379,7 +12379,7 @@ void menu_spritechip(MENU_ITEM_PARAMETERS)
 	else spritechip_enable();
 }
 
-void menu_zxuno_spi_write_enable(MENU_ITEM_PARAMETERS)
+void menu_zxuno_spi_persistent_writes(MENU_ITEM_PARAMETERS)
 {
 	if (zxuno_flash_persistent_writes.v==0) {
            if (menu_confirm_yesno_texto("Will flush prev. changes","Enable?")==1) zxuno_flash_persistent_writes.v=1;
@@ -25509,6 +25509,11 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_zxuno_spi_write_protect(MENU_ITEM_PARAMETERS)
+{
+	zxuno_flash_write_protection.v ^=1;
+}
+
 
 //menu storage settings
 void menu_settings_storage(MENU_ITEM_PARAMETERS)
@@ -25555,8 +25560,12 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 										menu_add_item_menu_tooltip(array_menu_settings_storage,"File used for the ZX-Uno SPI Flash");
 										menu_add_item_menu_ayuda(array_menu_settings_storage,"File used for the ZX-Uno SPI Flash");
 
+			menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_zxuno_spi_write_protect,NULL,"SPI Write protect: %s", (zxuno_flash_write_protection.v ? "Yes" : "No"));
+			//menu_add_item_menu_shortcut(array_menu_settings_storage,'w');
+                        menu_add_item_menu_tooltip(array_menu_settings_storage,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_ayuda(array_menu_settings_storage,"If ZX-Uno SPI Flash is write protected");
 
-										menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_zxuno_spi_write_enable,NULL,"Persistent ~~Writes: %s",
+										menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_zxuno_spi_persistent_writes,NULL,"Persistent ~~Writes: %s",
 										(zxuno_flash_persistent_writes.v ? "Yes" : "No") );
 										menu_add_item_menu_shortcut(array_menu_settings_storage,'w');
 										menu_add_item_menu_tooltip(array_menu_settings_storage,"Tells if ZX-Uno SPI Flash writes are saved to disk");

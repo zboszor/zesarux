@@ -106,6 +106,10 @@ int zxuno_flash_must_flush_to_disk=0;
 z80_bit zxuno_flash_persistent_writes={0};
 
 
+//si se permiten escrituras a la flash
+z80_bit zxuno_flash_write_protection={0};
+
+
 //Nombre de la flash. Si "", nombre y ruta por defecto
 char zxuno_flash_spi_name[PATH_MAX]="";
 
@@ -279,6 +283,8 @@ void zxuno_spi_page_program(int address,z80_byte valor_a_escribir)
 	//Solo 1 MB de la spi
 	int indice_spi=address & ZXUNO_SPI_SIZE_BYTES_MASK;
 
+	if (zxuno_flash_write_protection.v) return;
+
 	memoria_spectrum[ (ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE)*1024 + indice_spi ]=valor_a_escribir;
 
 	zxuno_flash_must_flush_to_disk=1;
@@ -397,12 +403,18 @@ void zxuno_write_spi(z80_byte value)
 				//Y borrar (poner a 255)
 				int len;
 				for (len=0;len<4096;len++) {
-				        memoria_spectrum[ (ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE)*1024 + sector_erase_address ]=255;
+				        //memoria_spectrum[ (ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE)*1024 + sector_erase_address ]=255;
+/*
+        int indice_spi=address & ZXUNO_SPI_SIZE_BYTES_MASK;
+        memoria_spectrum[ (ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE)*1024 + indice_spi ]=valor_a_escribir;
+*/
+					zxuno_spi_page_program(sector_erase_address,255);
+					
 					debug_printf (VERBOSE_PARANOID,"Sector Erase in progress. Address: 0x%06x",sector_erase_address);
 					sector_erase_address++;
 				}
 
-			        zxuno_flash_must_flush_to_disk=1;
+			        //zxuno_flash_must_flush_to_disk=1;
 
 			}
 
