@@ -297,6 +297,7 @@ int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcio
 
 void menu_file_trd_browser_show(char *filename,char *tipo_imagen);
 void menu_file_mmc_browser_show(char *filename,char *tipo_imagen);
+void menu_file_viewer_read_file(char *title,char *file_name);
 
 
 //si hay recuadro activo, y cuales son sus coordenadas y color
@@ -13023,7 +13024,8 @@ void menu_storage_trd_file(MENU_ITEM_PARAMETERS)
 
 void menu_storage_trd_browser(MENU_ITEM_PARAMETERS)
 {
-	menu_file_trd_browser_show(trd_file_name,"TRD");
+	//menu_file_trd_browser_show(trd_file_name,"TRD");
+	menu_file_viewer_read_file("TRD file browser",trd_file_name);
 }
 
 
@@ -13046,27 +13048,8 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
         	char string_trd_file_shown[17];
 						
 
-
-
-
-
-
-                        menu_add_item_menu_inicial_format(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_emulation,NULL,"~~Betadisk Enabled: %s", (betadisk_enabled.v ? "Yes" : "No"));
-                        menu_add_item_menu_shortcut(array_menu_betadisk,'k');
-                        menu_add_item_menu_tooltip(array_menu_betadisk,"Enable betadisk");
-                        menu_add_item_menu_ayuda(array_menu_betadisk,"Enable betadisk");
-
-
-			menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_allow_boot,NULL,"~~Allow Boot: %s", (betadisk_allow_boot_48k.v ? "Yes" : "No"));
-			menu_add_item_menu_shortcut(array_menu_betadisk,'a');
-                        menu_add_item_menu_tooltip(array_menu_betadisk,"Allow autoboot on 48k machines");
-                        menu_add_item_menu_ayuda(array_menu_betadisk,"Allow autoboot on 48k machines");
-
-                        menu_add_item_menu(array_menu_betadisk,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-                        menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
-                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_file,NULL,"~~TRD File: %s",string_trd_file_shown);
+menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
+                        menu_add_item_menu_inicial_format(&array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_file,NULL,"~~TRD File: %s",string_trd_file_shown);
                         menu_add_item_menu_shortcut(array_menu_betadisk,'t');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Emulation file");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation file");
@@ -13099,6 +13082,25 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Browser");
 
 
+
+                        menu_add_item_menu(array_menu_betadisk,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_emulation,NULL,"~~Betadisk Enabled: %s", (betadisk_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_shortcut(array_menu_betadisk,'k');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"Enable betadisk");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"Enable betadisk");
+
+
+			menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_betadisk_allow_boot,NULL,"~~Allow Boot: %s", (betadisk_allow_boot_48k.v ? "Yes" : "No"));
+			menu_add_item_menu_shortcut(array_menu_betadisk,'a');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"Allow autoboot on 48k machines");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"Allow autoboot on 48k machines");
+
+                        
+
+
+                        
                                 menu_add_item_menu(array_menu_betadisk,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
                 menu_add_ESC_item(array_menu_betadisk);
@@ -13355,7 +13357,8 @@ void menu_storage_mmc_persistent_writes(MENU_ITEM_PARAMETERS)
 
 void menu_storage_mmc_browser(MENU_ITEM_PARAMETERS)
 {
-	menu_file_mmc_browser_show(mmc_file_name,"MMC");
+	//menu_file_mmc_browser_show(mmc_file_name,"MMC");
+	menu_file_viewer_read_file("MMC file browser",mmc_file_name);
 }
 
 //menu MMC/Divmmc
@@ -13690,6 +13693,13 @@ void menu_storage_ide_persistent_writes(MENU_ITEM_PARAMETERS)
 	ide_persistent_writes.v ^=1;
 }
 
+
+void menu_storage_ide_browser(MENU_ITEM_PARAMETERS)
+{
+	//menu_file_mmc_browser_show(ide_file_name,"IDE");
+	menu_file_viewer_read_file("IDE file browser",ide_file_name);
+}
+
 //menu IDE/Divide
 void menu_ide_divide(MENU_ITEM_PARAMETERS)
 {
@@ -13730,6 +13740,12 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 			"Note: all writing operations to IDE are always saved to internal memory (unless you disable write permission), but this setting "
 			"tells if these changes are written to disk or not."
 			);
+
+
+			menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_browser,menu_storage_ide_emulation_cond,"IDE B~~rowser");
+                        menu_add_item_menu_shortcut(array_menu_ide_divide,'b');
+                        menu_add_item_menu_tooltip(array_menu_ide_divide,"IDE Browser");
+                        menu_add_item_menu_ayuda(array_menu_ide_divide,"IDE Browser");
 
 
 												if (ide_enabled.v) {
