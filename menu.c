@@ -298,6 +298,7 @@ int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcio
 void menu_file_trd_browser_show(char *filename,char *tipo_imagen);
 void menu_file_mmc_browser_show(char *filename,char *tipo_imagen);
 void menu_file_viewer_read_file(char *title,char *file_name);
+void menu_file_viewer_read_text_file(char *title,char *file_name);
 
 
 //si hay recuadro activo, y cuales son sus coordenadas y color
@@ -16929,7 +16930,185 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 
 }
 
+void menu_file_zxuno_flash_browser_show(char *filename)
+{
 
+
+	//Asignar 4 mb
+
+	
+	int bytes_to_load=4*1024*1024;
+
+	z80_byte *zxuno_flash_file_memory;
+	zxuno_flash_file_memory=malloc(bytes_to_load);
+	if (zxuno_flash_file_memory==NULL) {
+		debug_printf(VERBOSE_ERR,"Unable to assign memory");
+		return;
+	}
+	
+	//Leemos cabecera archivo zxuno_flash
+        FILE *ptr_file_zxuno_flash_browser;
+        ptr_file_zxuno_flash_browser=fopen(filename,"rb");
+
+        if (!ptr_file_zxuno_flash_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		free(zxuno_flash_file_memory);
+		return;
+	}
+
+
+        int leidos=fread(zxuno_flash_file_memory,1,bytes_to_load,ptr_file_zxuno_flash_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_zxuno_flash_browser);
+
+
+        
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 8192
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	
+
+
+ 	sprintf(buffer_texto,"ZX-Uno Flash image");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+/*
+00006000  00 01 3c 3c 00 00 00 00  fd 5e 00 00 00 00 00 00  |..<<.....^......|
+00006010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00006020  5a 58 20 53 70 65 63 74  72 75 6d 20 34 38 4b 20  |ZX Spectrum 48K |
+00006030  20 20 20 20 20 20 20 20  20 20 20 20 20 20 20 20  |                |
+00006040  01 04 3d 00 00 00 00 00  be eb f9 91 e7 97 39 98  |..=...........9.|
+00006050  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00006060  5a 58 20 53 70 65 63 74  72 75 6d 20 2b 32 41 20  |ZX Spectrum +2A |
+00006070  45 4e 20 20 20 20 20 20  20 20 20 20 20 20 20 20  |EN              |
+00006080  05 02 3d 28 00 00 00 00  dc ec ef fc 00 00 00 00  |..=(............|
+00006090  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+000060a0  5a 58 20 53 70 65 63 74  72 75 6d 20 31 32 38 4b  |ZX Spectrum 128K|
+000060b0  20 45 4e 20 20 20 20 20  20 20 20 20 20 20 20 20  | EN             |
+000060c0  07 01 3c 3c 00 00 00 00  8e f2 00 00 00 00 00 00  |..<<............|
+000060d0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+000060e0  49 6e 76 65 73 20 53 70  65 63 74 72 75 6d 2b 20  |Inves Spectrum+ |
+000060f0  20 20 20 20 20 20 20 20  20 20 20 20 20 20 20 20  |                |
+
+*/
+
+
+ 	sprintf(buffer_texto,"\nROMS:");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	int total_roms_show=32;
+	int i;
+	for (i=0;i<total_roms_show;i++) {
+		util_binary_to_ascii(&zxuno_flash_file_memory[0x6020+i*64],buffer_texto,30,30);
+		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	}
+
+
+/*
+Bitstreams
+00007100  53 61 6d 20 43 6f 75 70  65 20 20 20 20 20 20 20  |Sam Coupe       |
+00007110  20 20 20 20 20 20 00 20  20 20 20 20 20 20 20 20  |      .         |
+00007120  4a 75 70 69 74 65 72 20  41 43 45 20 20 20 20 20  |Jupiter ACE     |
+00007130  20 20 20 20 20 20 00 20  20 20 20 20 20 20 20 20  |      .         |
+00007140  4d 61 73 74 65 72 20 53  79 73 74 65 6d 20 20 20  |Master System   |
+00007150  20 20 20 20 20 20 00 20  20 20 20 20 20 20 20 20  |      .         |
+00007160  42 42 43 20 4d 69 63 72  6f 20 20 20 20 20 20 20  |BBC Micro       |
+00007170  20 20 20 20 20 20 00 20  20 20 20 20 20 20 20 20  |      .         |
+00007180  50 61 63 20 4d 61 6e 20  20 20 20 20 20 20 20 20  |Pac Man         |
+00007190  20 20 20 20 20 20 00 20  20 20 20 20 20 20 20 20  |      .         |
+000071a0  4f 72 69 63 20 41 74 6d  6f 73 20 20 20 20 20 20  |Oric Atmos      |
+000071b0  20 20 20 20 20 20 00 20  20 20 20 20 20 20 20 20  |      .         |
+000071c0  41 70 70 6c 65 20 32 20  28 56 47 41 29 20 20 20  |Apple 2 (VGA)   |
+000071d0  20 20 20 20 20 20 00 20  20 20 20 20 20 20 20 20  |      .         |
+000071e0  4e 45 53 20 28 56 47 41  29 20 20 20 20 20 20 20  |NES (VGA)       |
+000071f0  20 20 20 20 20 20 00 20  20 20 20 20 20 20 20 20  |      .         |
+
+*/
+        
+
+	sprintf(buffer_texto,"\nBitstreams:");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	int total_bitstream_show=8;
+
+	for (i=0;i<total_bitstream_show;i++) {
+		util_binary_to_ascii(&zxuno_flash_file_memory[0x7100+i*32],buffer_texto,30,30);
+		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	}
+
+
+	menu_generic_message_tooltip("ZX-Uno Flash browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+	free(zxuno_flash_file_memory);
+
+}
+
+
+
+
+
+
+void menu_file_flash_browser_show(char *filename)
+{
+
+
+	
+	//Leemos cabecera archivo flash
+	z80_byte flash_cabecera[256];
+
+        FILE *ptr_file_flash_browser;
+        ptr_file_flash_browser=fopen(filename,"rb");
+
+        if (!ptr_file_flash_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+
+        int leidos=fread(flash_cabecera,1,256,ptr_file_flash_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_flash_browser);
+
+
+        if (get_file_size(filename)==4*1024*1024
+        	&& flash_cabecera[1]==0xff
+        	&& flash_cabecera[1]==0xff
+        	&& flash_cabecera[2]==0xff
+        	&& flash_cabecera[3]==0xff
+        	) {
+        	menu_file_zxuno_flash_browser_show(filename);
+       	}
+
+
+       	else {
+       		//binario
+       		 menu_file_viewer_read_text_file("Flash file",filename);
+       	}
+
+}
 
 void menu_file_hexdump_browser_show(char *filename)
 {
@@ -20002,6 +20181,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"tzx")) menu_file_tzx_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"cdt")) menu_file_tzx_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"flash")) menu_file_flash_browser_show(file_name);
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);
@@ -25631,6 +25812,9 @@ void menu_zxuno_spi_flash(MENU_ITEM_PARAMETERS)
 			"Note: all writing operations to SPI Flash are always saved to internal memory (unless you disable write permission), but this setting "
 			"tells if these changes are written to disk or not.");
 							
+
+                   
+
 
 				menu_add_item_menu(array_menu_zxuno_spi_flash,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_zxuno_spi_flash,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
