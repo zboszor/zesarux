@@ -559,6 +559,8 @@ void menu_hardware_memory_settings(MENU_ITEM_PARAMETERS);
 
 int menu_tape_settings_cond(void);
 
+void menu_zxuno_spi_flash(MENU_ITEM_PARAMETERS);
+
 int menu_inicio_opcion_seleccionada=0;
 int machine_selection_opcion_seleccionada=0;
 int machine_selection_por_fabricante_opcion_seleccionada=0;
@@ -624,6 +626,7 @@ int ay_player_opcion_seleccionada=0;
 int esxdos_traps_opcion_seleccionada=0;
 
 int colour_settings_opcion_seleccionada=0;
+int zxuno_spi_flash_opcion_seleccionada=0;
 
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
@@ -14150,6 +14153,12 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
+		if (MACHINE_IS_ZXUNO) {
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_zxuno_spi_flash,NULL,"~~ZX-Uno Flash SPI");
+			menu_add_item_menu_shortcut(array_menu_storage_settings,'z');
+		}
+							
+
 
      		if (MACHINE_IS_SPECTRUM && !MACHINE_IS_ZXUNO) {
 
@@ -25587,6 +25596,67 @@ void menu_zxuno_spi_write_protect(MENU_ITEM_PARAMETERS)
 }
 
 
+
+
+void menu_zxuno_spi_flash(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_zxuno_spi_flash;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                     char string_spi_flash_file_shown[12]; //,string_mmc_file_shown[13];            
+			if (zxuno_flash_spi_name[0]==0) sprintf (string_spi_flash_file_shown,"Default");
+			else menu_tape_settings_trunc_name(zxuno_flash_spi_name,string_spi_flash_file_shown,12);
+
+			menu_add_item_menu_inicial_format(&array_menu_zxuno_spi_flash,MENU_OPCION_NORMAL,menu_zxuno_spi_flash_file,NULL,"ZX-Uno ~~Flash File: %s",string_spi_flash_file_shown);
+			menu_add_item_menu_shortcut(array_menu_zxuno_spi_flash,'f');
+			menu_add_item_menu_tooltip(array_menu_zxuno_spi_flash,"File used for the ZX-Uno SPI Flash");
+			menu_add_item_menu_ayuda(array_menu_zxuno_spi_flash,"File used for the ZX-Uno SPI Flash");
+
+			menu_add_item_menu_format(array_menu_zxuno_spi_flash,MENU_OPCION_NORMAL,menu_zxuno_spi_write_protect,NULL,"Write protect: %s", (zxuno_flash_write_protection.v ? "Yes" : "No"));
+			//menu_add_item_menu_shortcut(array_menu_zxuno_spi_flash,'w');
+                        menu_add_item_menu_tooltip(array_menu_zxuno_spi_flash,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_ayuda(array_menu_zxuno_spi_flash,"If ZX-Uno SPI Flash is write protected");
+
+
+
+			menu_add_item_menu_format(array_menu_zxuno_spi_flash,MENU_OPCION_NORMAL,menu_zxuno_spi_persistent_writes,NULL,"Persistent ~~Writes: %s",
+					(zxuno_flash_persistent_writes.v ? "Yes" : "No") );
+			menu_add_item_menu_shortcut(array_menu_zxuno_spi_flash,'w');
+			menu_add_item_menu_tooltip(array_menu_zxuno_spi_flash,"Tells if ZX-Uno SPI Flash writes are saved to disk");
+			menu_add_item_menu_ayuda(array_menu_zxuno_spi_flash,"Tells if ZX-Uno SPI Flash writes are saved to disk. "
+			"When you enable it, all previous changes (before enable it and since machine boot) and "
+			"future changes made to spi flash will be saved to disk.\n"
+			"Note: all writing operations to SPI Flash are always saved to internal memory (unless you disable write permission), but this setting "
+			"tells if these changes are written to disk or not.");
+							
+
+				menu_add_item_menu(array_menu_zxuno_spi_flash,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_zxuno_spi_flash,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                menu_add_ESC_item(array_menu_zxuno_spi_flash);
+
+                retorno_menu=menu_dibuja_menu(&zxuno_spi_flash_opcion_seleccionada,&item_seleccionado,array_menu_zxuno_spi_flash,"ZX-Uno Flash" );
+
+                cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+}
+
+
+
 //menu storage settings
 void menu_settings_storage(MENU_ITEM_PARAMETERS)
 {
@@ -25595,7 +25665,7 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
 
-                char string_spi_flash_file_shown[12]; //,string_mmc_file_shown[13];
+                
 
 
 
@@ -25622,32 +25692,8 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 						}
 
 
-						if (MACHINE_IS_ZXUNO) {
-						menu_add_item_menu(array_menu_settings_storage,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-										if (zxuno_flash_spi_name[0]==0) sprintf (string_spi_flash_file_shown,"Default");
-										else menu_tape_settings_trunc_name(zxuno_flash_spi_name,string_spi_flash_file_shown,12);
-
-										menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_zxuno_spi_flash_file,NULL,"ZX-Uno ~~Flash File: %s",string_spi_flash_file_shown);
-										menu_add_item_menu_shortcut(array_menu_settings_storage,'f');
-										menu_add_item_menu_tooltip(array_menu_settings_storage,"File used for the ZX-Uno SPI Flash");
-										menu_add_item_menu_ayuda(array_menu_settings_storage,"File used for the ZX-Uno SPI Flash");
-
-			menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_zxuno_spi_write_protect,NULL,"Write protect: %s", (zxuno_flash_write_protection.v ? "Yes" : "No"));
-			//menu_add_item_menu_shortcut(array_menu_settings_storage,'w');
-                        menu_add_item_menu_tooltip(array_menu_settings_storage,"If ZX-Uno SPI Flash is write protected");
-                        menu_add_item_menu_ayuda(array_menu_settings_storage,"If ZX-Uno SPI Flash is write protected");
-
-										menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_zxuno_spi_persistent_writes,NULL,"Persistent ~~Writes: %s",
-										(zxuno_flash_persistent_writes.v ? "Yes" : "No") );
-										menu_add_item_menu_shortcut(array_menu_settings_storage,'w');
-										menu_add_item_menu_tooltip(array_menu_settings_storage,"Tells if ZX-Uno SPI Flash writes are saved to disk");
-						menu_add_item_menu_ayuda(array_menu_settings_storage,"Tells if ZX-Uno SPI Flash writes are saved to disk. "
-			"When you enable it, all previous changes (before enable it and since machine boot) and "
-			"future changes made to spi flash will be saved to disk.\n"
-			"Note: all writing operations to SPI Flash are always saved to internal memory (unless you disable write permission), but this setting "
-			"tells if these changes are written to disk or not."
-																						);
-						}
+																			
+						
 
                 menu_add_item_menu(array_menu_settings_storage,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_settings_storage,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
