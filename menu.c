@@ -12381,12 +12381,12 @@ void menu_spritechip(MENU_ITEM_PARAMETERS)
 
 void menu_zxuno_spi_write_enable(MENU_ITEM_PARAMETERS)
 {
-	if (zxuno_flash_write_to_disk_enable.v==0) {
-           if (menu_confirm_yesno_texto("Will flush prev. changes","Enable?")==1) zxuno_flash_write_to_disk_enable.v=1;
+	if (zxuno_flash_persistent_writes.v==0) {
+           if (menu_confirm_yesno_texto("Will flush prev. changes","Enable?")==1) zxuno_flash_persistent_writes.v=1;
 
 	}
 
-	else zxuno_flash_write_to_disk_enable.v=0;
+	else zxuno_flash_persistent_writes.v=0;
 }
 
 void menu_zxuno_spi_flash_file(MENU_ITEM_PARAMETERS)
@@ -12436,7 +12436,7 @@ void menu_zxuno_spi_flash_file(MENU_ITEM_PARAMETERS)
 		zxuno_flash_spi_name[0]=0;
 
 		//Y por defecto solo lectura
-		zxuno_flash_write_to_disk_enable.v=0;
+		zxuno_flash_persistent_writes.v=0;
 
 		if (menu_confirm_yesno_texto("Default SPI Flash file","Reload SPI Flash from file?")) {
 			zxuno_load_spi_flash();
@@ -25556,15 +25556,15 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 										menu_add_item_menu_ayuda(array_menu_settings_storage,"File used for the ZX-Uno SPI Flash");
 
 
-										menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_zxuno_spi_write_enable,NULL,"ZX-Uno Flash ~~Write: %s",
-										(zxuno_flash_write_to_disk_enable.v ? "Yes" : "No") );
+										menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_zxuno_spi_write_enable,NULL,"Persistent ~~Writes: %s",
+										(zxuno_flash_persistent_writes.v ? "Yes" : "No") );
 										menu_add_item_menu_shortcut(array_menu_settings_storage,'w');
 										menu_add_item_menu_tooltip(array_menu_settings_storage,"Tells if ZX-Uno SPI Flash writes are saved to disk");
-										menu_add_item_menu_ayuda(array_menu_settings_storage,"Tells if ZX-Uno SPI Flash writes are saved to disk. "
-																						"When you enable it, all previous changes (before enable it and since machine boot) and "
-																						"future changes made to spi flash will be saved to disk.\n"
-																						"Note: all writing operations to SPI Flash are always saved to internal memory, but this setting "
-																						"tells if these changes are written to disk or not."
+						menu_add_item_menu_ayuda(array_menu_settings_storage,"Tells if ZX-Uno SPI Flash writes are saved to disk. "
+			"When you enable it, all previous changes (before enable it and since machine boot) and "
+			"future changes made to spi flash will be saved to disk.\n"
+			"Note: all writing operations to SPI Flash are always saved to internal memory (unless you disable write permission), but this setting "
+			"tells if these changes are written to disk or not."
 																						);
 						}
 

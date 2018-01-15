@@ -103,7 +103,7 @@ int zxuno_flash_must_flush_to_disk=0;
 
 
 //Si las escrituras de la spi flash luego se hacen flush a disco
-z80_bit zxuno_flash_write_to_disk_enable={0};
+z80_bit zxuno_flash_persistent_writes={0};
 
 
 //Nombre de la flash. Si "", nombre y ruta por defecto
@@ -1177,7 +1177,7 @@ void zxuno_flush_flash_to_disk(void)
 	}
 
 
-	if (zxuno_flash_write_to_disk_enable.v==0) {
+	if (zxuno_flash_persistent_writes.v==0) {
 		debug_printf (VERBOSE_DEBUG,"Trying to flush SPI FLASH to file but write disabled");
 		return;
 	}
@@ -1220,7 +1220,7 @@ void zxuno_flush_flash_to_disk(void)
 
 	if (escritos!=size || ptr_spiflashfile==NULL) {
 		debug_printf (VERBOSE_ERR,"Error writing to SPI Flash file. Disabling write file operations");
-		zxuno_flash_write_to_disk_enable.v=0;
+		zxuno_flash_persistent_writes.v=0;
 	}
 
 }

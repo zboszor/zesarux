@@ -4654,7 +4654,7 @@ void parse_cmdline_options(void) {
                         }
 
 			else if (!strcmp(argv[puntero_parametro],"--zxunospiwriteenable")) {
-                                zxuno_flash_write_to_disk_enable.v=1;
+                                zxuno_flash_persistent_writes.v=1;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--printerbitmapfile")) {
