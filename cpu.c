@@ -1476,6 +1476,8 @@ printf (
 
 		"--mmc-file f               Set mmc image file\n"
 		"--enable-mmc               Enable MMC emulation. Usually requires --mmc-file\n"
+		"--mmc-write-protection     Enable MMC write protection\n"
+		"--mmc-no-persistent-writes Disable MMC persistent writes\n"
 
 		"--enable-divmmc-ports      Enable DIVMMC emulation ports only, but not paging. Usually requires --enable-mmc\n"
 		"--enable-divmmc-paging     Enable DIVMMC paging only\n"
@@ -1486,6 +1488,8 @@ printf (
 
 		"--ide-file f               Set ide image file\n"
 		"--enable-ide               Enable IDE emulation. Usually requires --ide-file\n"
+		"--ide-write-protection     Enable IDE write protection\n"
+		"--ide-no-persistent-writes Disable IDE persistent writes\n"		
 
 		"--enable-divide-ports      Enable DIVIDE emulation ports only, but not paging. Usually requires --enable-ide\n"
 		"--enable-divide-paging     Enable DIVIDE paging only\n"
@@ -1520,6 +1524,8 @@ printf (
                 "--enable-betadisk          Enable Betadisk emulation\n"
                 "--trd-file f               Set trd image file\n"
                 "--enable-trd               Enable TRD emulation. Usually requires --trd-file\n"
+                "--trd-write-protection     Enable TRD write protection\n"
+		"--trd-no-persistent-writes Disable TRD persistent writes\n"
 
 		"--enable-ql-mdv-flp        Enable QL Microdrive & Floppy emulation\n"
 		"--ql-mdv1-root-dir p       Set QL mdv1 root directory\n"
@@ -4959,6 +4965,15 @@ void parse_cmdline_options(void) {
 				command_line_mmc.v=1;
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--mmc-write-protection")) {
+				mmc_write_protection.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--mmc-no-persistent-writes")) {
+				mmc_persistent_writes.v=0;
+			}
+
+
 			else if (!strcmp(argv[puntero_parametro],"--enable-divmmc-ports")) {
 				command_line_divmmc_ports.v=1;
 			}
@@ -5105,6 +5120,14 @@ void parse_cmdline_options(void) {
                         else if (!strcmp(argv[puntero_parametro],"--enable-ide")) {
                                 command_line_ide.v=1;
                         }
+
+                        else if (!strcmp(argv[puntero_parametro],"--ide-write-protection")) {
+				ide_write_protection.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--ide-no-persistent-writes")) {
+				ide_persistent_writes.v=0;
+			}
 
                         else if (!strcmp(argv[puntero_parametro],"--enable-divide")) {
                                 command_line_divide.v=1;

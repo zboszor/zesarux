@@ -56,4 +56,6 @@ extern int ide_read_file_to_memory(void);
 
 extern z80_bit ide_write_protection;
 
+extern z80_bit ide_persistent_writes;
+
 #endif

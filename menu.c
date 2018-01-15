@@ -13071,7 +13071,7 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Emulation");
 
 
-			menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_write_protect,menu_storage_trd_emulation_cond,"TRD ~~Write protect: %s", (trd_write_protection.v ? "Yes" : "No"));
+			menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_write_protect,NULL,"~~Write protect: %s", (trd_write_protection.v ? "Yes" : "No"));
 			menu_add_item_menu_shortcut(array_menu_betadisk,'w');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"If TRD disk is write protected");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"If TRD disk is write protected");
@@ -13365,13 +13365,13 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 
 
 
-                        menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_write_protect,menu_storage_mmc_emulation_cond,"MMC ~~Write protect: %s", (mmc_write_protection.v ? "Yes" : "No"));
+                        menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_write_protect,NULL,"~~Write protect: %s", (mmc_write_protection.v ? "Yes" : "No"));
 			menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'w');
                         menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"If MMC disk is write protected");
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"If MMC disk is write protected");
 
 
-			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_persistent_writes,menu_storage_mmc_emulation_cond,"Persistent Writes: %s",(mmc_persistent_writes.v ? "Yes" : "No") );
+			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_persistent_writes,NULL,"Persistent Writes: %s",(mmc_persistent_writes.v ? "Yes" : "No") );
 			menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Tells if MMC writes are saved to disk");
 			menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Tells if MMC writes are saved to disk. "
 			"Note: all writing operations to MMC are always saved to internal memory (unless you disable write permission), but this setting "
@@ -13661,6 +13661,11 @@ void menu_storage_ide_write_protect(MENU_ITEM_PARAMETERS)
 	ide_write_protection.v ^=1;
 }
 
+void menu_storage_ide_persistent_writes(MENU_ITEM_PARAMETERS)
+{
+	ide_persistent_writes.v ^=1;
+}
+
 //menu IDE/Divide
 void menu_ide_divide(MENU_ITEM_PARAMETERS)
 {
@@ -13689,10 +13694,19 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_ide_divide,"IDE Emulation");
 
 
-                        menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_write_protect,menu_storage_ide_emulation_cond,"IDE ~~Write protect: %s", (ide_write_protection.v ? "Yes" : "No"));
+                        menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_write_protect,NULL,"~~Write protect: %s", (ide_write_protection.v ? "Yes" : "No"));
 			menu_add_item_menu_shortcut(array_menu_ide_divide,'w');
                         menu_add_item_menu_tooltip(array_menu_ide_divide,"If IDE disk is write protected");
                         menu_add_item_menu_ayuda(array_menu_ide_divide,"If IDE disk is write protected");
+
+
+			menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_persistent_writes,NULL,"Persistent Writes: %s",(ide_persistent_writes.v ? "Yes" : "No") );
+			menu_add_item_menu_tooltip(array_menu_ide_divide,"Tells if IDE writes are saved to disk");
+			menu_add_item_menu_ayuda(array_menu_ide_divide,"Tells if IDE writes are saved to disk. "
+			"Note: all writing operations to IDE are always saved to internal memory (unless you disable write permission), but this setting "
+			"tells if these changes are written to disk or not."
+			);
+
 
 												if (ide_enabled.v) {
 												menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_reload,NULL,"Reload IDE file");
@@ -25578,7 +25592,7 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 										menu_add_item_menu_tooltip(array_menu_settings_storage,"File used for the ZX-Uno SPI Flash");
 										menu_add_item_menu_ayuda(array_menu_settings_storage,"File used for the ZX-Uno SPI Flash");
 
-			menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_zxuno_spi_write_protect,NULL,"SPI Write protect: %s", (zxuno_flash_write_protection.v ? "Yes" : "No"));
+			menu_add_item_menu_format(array_menu_settings_storage,MENU_OPCION_NORMAL,menu_zxuno_spi_write_protect,NULL,"Write protect: %s", (zxuno_flash_write_protection.v ? "Yes" : "No"));
 			//menu_add_item_menu_shortcut(array_menu_settings_storage,'w');
                         menu_add_item_menu_tooltip(array_menu_settings_storage,"If ZX-Uno SPI Flash is write protected");
                         menu_add_item_menu_ayuda(array_menu_settings_storage,"If ZX-Uno SPI Flash is write protected");

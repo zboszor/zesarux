@@ -3091,6 +3091,8 @@ int util_write_configfile(void)
   if (mmc_enabled.v)                          ADD_STRING_CONFIG,"--enable-mmc");
   if (divmmc_mmc_ports_enabled.v)             ADD_STRING_CONFIG,"--enable-divmmc-ports");
 
+  if (mmc_write_protection.v)		      ADD_STRING_CONFIG,"--mmc-write-protection");
+  if (mmc_persistent_writes.v==0)	      ADD_STRING_CONFIG,"--mmc-no-persistent-writes");
 
   //Los settings de  mmc paging no guardarlo si maquina es tbblue, pues acaba activando el divmmc paging en tbblue y entonces esto provoca que no arranque la tbblue rom
   if (!MACHINE_IS_TBBLUE) {
@@ -3106,6 +3108,8 @@ int util_write_configfile(void)
 
   if (ide_file_name[0]!=0)                    ADD_STRING_CONFIG,"--ide-file \"%s\"",ide_file_name);
   if (ide_enabled.v)                          ADD_STRING_CONFIG,"--enable-ide");
+  if (ide_write_protection.v)		      ADD_STRING_CONFIG,"--ide-write-protection");
+  if (ide_persistent_writes.v==0)	      ADD_STRING_CONFIG,"--ide-no-persistent-writes");
   if (divide_ide_ports_enabled.v)             ADD_STRING_CONFIG,"--enable-divide-ports");
   if (divide_diviface_enabled.v)              ADD_STRING_CONFIG,"--enable-divide-paging");
 

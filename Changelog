@@ -7,7 +7,8 @@ Added ZX Spectrum Recreated keyboard support
 Added actions to file utilities: Copy, Move, Rename
 Added second Easter Egg ;)
 Added BetaDisk and TR-DOS emulation
-Added setting to write protect IDE, MMC
+Added setting to write protect IDE, MMC, ZX-Uno Flash
+Added setting to disable persistent writes IDE, MMC
 Improved sound: Silence detector does not activate on pthreads versions
 Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
 Improved joystick support: 

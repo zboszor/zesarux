@@ -101,6 +101,10 @@ char ide_file_name[PATH_MAX]="";
 z80_bit ide_write_protection={0};
 
 
+//Si cambios en escritura se hace flush a disco
+z80_bit ide_persistent_writes={1};
+
+
 int ide_set_image_parameters(void);
 int ide_check_card_size(void);
 
@@ -144,6 +148,11 @@ void ide_flush_flash_to_disk(void)
 
         if (ide_flash_must_flush_to_disk==0) {
                 debug_printf (VERBOSE_DEBUG,"Trying to flush IDE to disk but no changes made");
+                return;
+        }
+
+        if (ide_persistent_writes.v==0) {
+                debug_printf (VERBOSE_DEBUG,"Trying to flush IDE to disk but persistent writes disabled");
                 return;
         }
 
