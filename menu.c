@@ -296,6 +296,7 @@ void menu_textspeech_send_text(char *texto);
 int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcion1,char *opcion2);
 
 void menu_file_trd_browser_show(char *filename,char *tipo_imagen);
+void menu_file_mmc_browser_show(char *filename,char *tipo_imagen);
 
 
 //si hay recuadro activo, y cuales son sus coordenadas y color
@@ -13026,6 +13027,12 @@ void menu_storage_trd_browser(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_storage_trd_persistent_writes(MENU_ITEM_PARAMETERS)
+{
+	trd_persistent_writes.v ^=1;
+}
+
+
 void menu_betadisk(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_betadisk;
@@ -13075,6 +13082,14 @@ void menu_betadisk(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_betadisk,'w');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"If TRD disk is write protected");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"If TRD disk is write protected");
+
+
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_persistent_writes,NULL,"Persistent Writes: %s",(trd_persistent_writes.v ? "Yes" : "No") );
+			menu_add_item_menu_tooltip(array_menu_betadisk,"Tells if TRD writes are saved to disk");
+			menu_add_item_menu_ayuda(array_menu_betadisk,"Tells if TRD writes are saved to disk. "
+			"Note: all writing operations to TRD are always saved to internal memory (unless you disable write permission), but this setting "
+			"tells if these changes are written to disk or not."
+			);
 
 
 
@@ -13338,6 +13353,11 @@ void menu_storage_mmc_persistent_writes(MENU_ITEM_PARAMETERS)
 	mmc_persistent_writes.v ^=1;
 }
 
+void menu_storage_mmc_browser(MENU_ITEM_PARAMETERS)
+{
+	menu_file_mmc_browser_show(mmc_file_name,"MMC");
+}
+
 //menu MMC/Divmmc
 void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 {
@@ -13378,6 +13398,10 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 			"tells if these changes are written to disk or not."
 			);
 
+  			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_browser,menu_storage_mmc_emulation_cond,"MMC B~~rowser");
+                        menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'b');
+                        menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"MMC Browser");
+                        menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"MMC Browser");
 
 
 			if (mmc_enabled.v) {

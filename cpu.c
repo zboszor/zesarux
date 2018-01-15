@@ -4938,6 +4938,15 @@ void parse_cmdline_options(void) {
                                 command_line_trd.v=1;
                         }
 
+
+                        else if (!strcmp(argv[puntero_parametro],"--trd-write-protection")) {
+				trd_write_protection.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--trd-no-persistent-writes")) {
+				trd_persistent_writes.v=0;
+			}
+
 			else if (!strcmp(argv[puntero_parametro],"--mmc-file")) {
 				siguiente_parametro_argumento();
 

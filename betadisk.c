@@ -65,6 +65,10 @@ int trd_must_flush_to_disk=0;
 
 z80_bit trd_write_protection={0};
 
+
+//Si cambios en escritura se hace flush a disco
+z80_bit trd_persistent_writes={1};
+
 //http://problemkaputt.de/zxdocs.htm#spectrumdiscbetabetaplusbeta128diskinterfacetrdos
 
 void betadisk_format_disk(void);
@@ -611,6 +615,13 @@ void trd_flush_contents_to_disk(void)
                 debug_printf (VERBOSE_DEBUG,"Trying to flush TRD to disk but no changes made");
                 return;
         }
+
+
+        if (trd_persistent_writes.v==0) {
+                debug_printf (VERBOSE_DEBUG,"Trying to flush TRD to disk but persistent writes disabled");
+                return;
+        }
+
 
 
         debug_printf (VERBOSE_INFO,"Flushing TRD to disk");

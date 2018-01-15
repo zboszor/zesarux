@@ -3141,6 +3141,8 @@ int util_write_configfile(void)
   if (betadisk_enabled.v)                   ADD_STRING_CONFIG,"--enable-betadisk");
   if (trd_file_name[0]!=0)                    ADD_STRING_CONFIG,"--trd-file \"%s\"",trd_file_name);
   if (trd_enabled.v)                          ADD_STRING_CONFIG,"--enable-trd");
+  if (trd_write_protection.v)		      ADD_STRING_CONFIG,"--trd-write-protection");
+  if (trd_persistent_writes.v==0)	      ADD_STRING_CONFIG,"--trd-no-persistent-writes");
 
 
   if (superupgrade_rom_file_name[0]!=0)       ADD_STRING_CONFIG,"--superupgrade-flash \"%s\"",superupgrade_rom_file_name);

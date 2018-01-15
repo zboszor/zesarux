@@ -60,4 +60,6 @@ extern void trd_flush_contents_to_disk(void);
 
 extern z80_bit trd_write_protection;
 
+extern z80_bit trd_persistent_writes;
+
 #endif
