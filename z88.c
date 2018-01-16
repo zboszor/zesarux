@@ -2235,9 +2235,13 @@ void z88_return_eprom_flash_file (z88_dir *dir,z88_eprom_flash_file *file)
 //Llena estructura file con el nombre al que apunta dir
 //z88_dir queda incrementado y posicionado justo donde empiezan los datos
 //Misma funcion que z88_return_eprom_flash_file pero usando punteros a memoria
-void z88_return_new_ptr_eprom_flash_file (z80_byte *dir,z88_eprom_flash_file *file)
+void z88_return_new_ptr_eprom_flash_file (z80_byte **ptr_dir,z88_eprom_flash_file *file)
 {
 	//z80_byte namelength=peek_byte_no_time_z88_bank_no_check_low(dir->dir,dir->bank);
+
+	z80_byte *dir;
+	dir=*ptr_dir;
+
 	z80_byte namelength=*dir;
 
 	file->namelength=namelength;
@@ -2272,7 +2276,11 @@ void z88_return_new_ptr_eprom_flash_file (z80_byte *dir,z88_eprom_flash_file *fi
 	//file->datos.bank=dir->bank;
 	//file->datos.dir=dir->dir;
 
+        //Atencion! Esta guardando en la estructura file el puntero hacia la direccion del nombre,
+        //esto no tiene que suponer un problema siempre que no se liberen los datos del puntero ptr_dir (cosa que no debe suceder)
 	file->datos_ptr=dir;
+
+	*ptr_dir=dir;
 
 }		
 
@@ -2551,11 +2559,14 @@ void z88_eprom_flash_find_init(z88_dir *dir,int slot)
  
 //Retorna 0 si no hay mas archivos.
 //Funcion similar a z88_eprom_flash_find_next pero las funciones usan punteros de memoria en vez de variables z88_dir
-int z88_eprom_new_ptr_flash_find_next(z80_byte *dir,z88_eprom_flash_file *file)
+int z88_eprom_new_ptr_flash_find_next(z80_byte **ptr_dir,z88_eprom_flash_file *file)
 {
 
+		z80_byte *dir;
+		dir=*ptr_dir;
+
                 //z88_return_eprom_flash_file(dir,file);
-                z88_return_new_ptr_eprom_flash_file(dir,file);
+                z88_return_new_ptr_eprom_flash_file(&dir,file);
 
                 //el nombre al menos debe ocupar 1 byte
                 if (file->namelength==0) {
@@ -2596,6 +2607,9 @@ int z88_eprom_new_ptr_flash_find_next(z80_byte *dir,z88_eprom_flash_file *file)
                         }*/
 
                 }
+
+
+                *ptr_dir=dir;
 
 
 	if (file->namelength==255) return 0;

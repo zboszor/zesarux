@@ -10712,7 +10712,7 @@ void menu_z88_new_ptr_card_browser(char *archivo)
         int indice_buffer=0;
 
         do {
-                retorno=z88_eprom_new_ptr_flash_find_next(dir,&file);
+                retorno=z88_eprom_new_ptr_flash_find_next(&dir,&file);
                 if (retorno) {
                         z88_eprom_flash_get_file_name(&file,buffer_nombre);
 
@@ -10731,6 +10731,7 @@ void menu_z88_new_ptr_card_browser(char *archivo)
 
         texto_buffer[indice_buffer]=0;
 
+	menu_generic_message_tooltip("Z88 Card Browser", 0, 0, 1, NULL, "%s", texto_buffer);
 
         free(flash_file_memory);
 
@@ -17182,7 +17183,7 @@ void menu_file_flash_browser_show(char *filename)
 
 
         if (get_file_size(filename)==4*1024*1024
-        	&& flash_cabecera[1]==0xff
+        	&& flash_cabecera[0]==0xff
         	&& flash_cabecera[1]==0xff
         	&& flash_cabecera[2]==0xff
         	&& flash_cabecera[3]==0xff
@@ -17191,15 +17192,25 @@ void menu_file_flash_browser_show(char *filename)
        	}
 
 
-       	else { //TODO adivinar que es z88 flash
+       	else if (
+       		   flash_cabecera[0]==1
+        	&& flash_cabecera[1]==0
+        	&& flash_cabecera[2]==0
+        	&& flash_cabecera[3]==0
+        	&& flash_cabecera[4]==0
+        	&& flash_cabecera[5]==0
+       	 	) { 
+       		//adivinar que es z88 flash
+       		//01 00 00 00 00 00
+
        		menu_z88_new_ptr_card_browser(filename);
        	}
 
 
-       	/*else {
+       	else {
        		//binario
        		 menu_file_viewer_read_text_file("Flash file",filename);
-       	}*/
+       	}
 
 }
 
@@ -20276,6 +20287,11 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"cdt")) menu_file_tzx_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"flash")) menu_file_flash_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"epr")) menu_z88_new_ptr_card_browser(file_name);
+
+	else if (!util_compare_file_extension(file_name,"eprom")) menu_z88_new_ptr_card_browser(file_name);
+
 
 	//Por defecto, texto
 	else menu_file_viewer_read_text_file(title,file_name);

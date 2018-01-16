@@ -303,7 +303,7 @@ extern void notificar_tecla_interrupcion_si_z88(void);
 
 extern int z88_return_card_type (int slot);
 
-extern int z88_eprom_new_ptr_flash_find_next(z80_byte *dir,z88_eprom_flash_file *file);
+extern int z88_eprom_new_ptr_flash_find_next(z80_byte **ptr_dir,z88_eprom_flash_file *file);
 
 
 #define BM_INTKWAIT 0x80
