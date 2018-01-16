@@ -25790,21 +25790,20 @@ void menu_zxuno_spi_flash(MENU_ITEM_PARAMETERS)
 			if (zxuno_flash_spi_name[0]==0) sprintf (string_spi_flash_file_shown,"Default");
 			else menu_tape_settings_trunc_name(zxuno_flash_spi_name,string_spi_flash_file_shown,12);
 
-			menu_add_item_menu_inicial_format(&array_menu_zxuno_spi_flash,MENU_OPCION_NORMAL,menu_zxuno_spi_flash_file,NULL,"ZX-Uno ~~Flash File: %s",string_spi_flash_file_shown);
+			menu_add_item_menu_inicial_format(&array_menu_zxuno_spi_flash,MENU_OPCION_NORMAL,menu_zxuno_spi_flash_file,NULL,"~~Flash File: %s",string_spi_flash_file_shown);
 			menu_add_item_menu_shortcut(array_menu_zxuno_spi_flash,'f');
 			menu_add_item_menu_tooltip(array_menu_zxuno_spi_flash,"File used for the ZX-Uno SPI Flash");
 			menu_add_item_menu_ayuda(array_menu_zxuno_spi_flash,"File used for the ZX-Uno SPI Flash");
 
-			menu_add_item_menu_format(array_menu_zxuno_spi_flash,MENU_OPCION_NORMAL,menu_zxuno_spi_write_protect,NULL,"Write protect: %s", (zxuno_flash_write_protection.v ? "Yes" : "No"));
-			//menu_add_item_menu_shortcut(array_menu_zxuno_spi_flash,'w');
+			menu_add_item_menu_format(array_menu_zxuno_spi_flash,MENU_OPCION_NORMAL,menu_zxuno_spi_write_protect,NULL,"~~Write protect: %s", (zxuno_flash_write_protection.v ? "Yes" : "No"));
+			menu_add_item_menu_shortcut(array_menu_zxuno_spi_flash,'w');
                         menu_add_item_menu_tooltip(array_menu_zxuno_spi_flash,"If ZX-Uno SPI Flash is write protected");
                         menu_add_item_menu_ayuda(array_menu_zxuno_spi_flash,"If ZX-Uno SPI Flash is write protected");
 
 
 
-			menu_add_item_menu_format(array_menu_zxuno_spi_flash,MENU_OPCION_NORMAL,menu_zxuno_spi_persistent_writes,NULL,"Persistent ~~Writes: %s",
+			menu_add_item_menu_format(array_menu_zxuno_spi_flash,MENU_OPCION_NORMAL,menu_zxuno_spi_persistent_writes,NULL,"Persistent Writes: %s",
 					(zxuno_flash_persistent_writes.v ? "Yes" : "No") );
-			menu_add_item_menu_shortcut(array_menu_zxuno_spi_flash,'w');
 			menu_add_item_menu_tooltip(array_menu_zxuno_spi_flash,"Tells if ZX-Uno SPI Flash writes are saved to disk");
 			menu_add_item_menu_ayuda(array_menu_zxuno_spi_flash,"Tells if ZX-Uno SPI Flash writes are saved to disk. "
 			"When you enable it, all previous changes (before enable it and since machine boot) and "
