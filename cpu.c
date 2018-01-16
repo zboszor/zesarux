@@ -1513,7 +1513,8 @@ printf (
 
 
 		"--zxunospifile path        File to use on ZX-Uno as SPI Flash. Default: zxuno.flash\n"
-		"--zxunospiwriteenable      Enable writing to disk on ZX-Uno SPI Flash\n"
+		//"--zxunospiwriteenable      Enable writing to disk on ZX-Uno SPI Flash\n"
+		"--zxunospi-persistent-writes  Enable ZX-Uno SPI Flash persistent writes\n"
                 "--dandanator-rom f         Set ZX Dandanator rom file\n"
                 "--enable-dandanator        Enable ZX Dandanator emulation. Requires --dandanator-rom\n"
                 "--dandanator-press-button  Simulates pressing button on ZX Dandanator. Requires --enable-dandanator\n"
@@ -4659,7 +4660,11 @@ void parse_cmdline_options(void) {
 				sprintf(zxuno_flash_spi_name,"%s",argv[puntero_parametro]);
                         }
 
-			else if (!strcmp(argv[puntero_parametro],"--zxunospiwriteenable")) {
+			else if (
+			         !strcmp(argv[puntero_parametro],"--zxunospi-persistent-writes")
+			      ||
+				 !strcmp(argv[puntero_parametro],"--zxunospiwriteenable")     //opcion obsoleta
+				) {
                                 zxuno_flash_persistent_writes.v=1;
 			}
 

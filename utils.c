@@ -3046,7 +3046,9 @@ int util_write_configfile(void)
   //TODO smartloadpath
   //TODO loadbinarypath
   if (zxuno_flash_spi_name[0])                ADD_STRING_CONFIG,"--zxunospifile \"%s\"",zxuno_flash_spi_name);
-  if (zxuno_flash_persistent_writes.v)     ADD_STRING_CONFIG,"--zxunospiwriteenable");
+  if (zxuno_flash_persistent_writes.v)     ADD_STRING_CONFIG,"--zxunospi-persistent-writes");
+
+
   //TODO printerbitmapfile
   //TODO printertextfile
   //TODO redefinekey
