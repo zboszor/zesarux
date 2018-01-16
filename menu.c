@@ -10649,6 +10649,94 @@ void menu_z88_slot_copy_to_eprom_flash(MENU_ITEM_PARAMETERS)
 }
 
 
+//Funcion de card browser pero las funciones usan punteros de memoria en vez de variables z88_dir
+void menu_z88_new_ptr_card_browser(char *archivo)
+{
+
+
+        //Asignar 1 mb
+
+        
+        int bytes_to_load=1024*1024;
+
+        z80_byte *flash_file_memory;
+        flash_file_memory=malloc(bytes_to_load);
+        if (flash_file_memory==NULL) {
+                debug_printf(VERBOSE_ERR,"Unable to assign memory");
+                return;
+        }
+        
+        //Leemos cabecera archivo 
+        FILE *ptr_file_flash_browser;
+        ptr_file_flash_browser=fopen(archivo,"rb");
+
+        if (!ptr_file_flash_browser) {
+                debug_printf(VERBOSE_ERR,"Unable to open file");
+                free(flash_file_memory);
+                return;
+        }
+
+
+        int leidos=fread(flash_file_memory,1,bytes_to_load,ptr_file_flash_browser);
+
+        if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_flash_browser);
+
+
+	#define MAX_TEXTO 4096
+        char texto_buffer[MAX_TEXTO];
+
+        int max_texto=MAX_TEXTO;
+
+
+        //z88_dir dir;
+        z88_eprom_flash_file file;
+
+        //z88_eprom_flash_find_init(&dir,slot);
+
+        z80_byte *dir;
+
+        dir=flash_file_memory;
+
+        char buffer_nombre[Z88_MAX_CARD_FILENAME+1];
+
+        int retorno;
+        int longitud;
+
+
+        int indice_buffer=0;
+
+        do {
+                retorno=z88_eprom_new_ptr_flash_find_next(dir,&file);
+                if (retorno) {
+                        z88_eprom_flash_get_file_name(&file,buffer_nombre);
+
+			if (buffer_nombre[0]=='.') buffer_nombre[0]='D'; //archivo borrado
+
+			//printf ("nombre: %s c1: %d\n",buffer_nombre,buffer_nombre[0]);
+                        longitud=strlen(buffer_nombre)+1; //Agregar salto de linea
+                        if (indice_buffer+longitud>max_texto-1) retorno=0;
+                        else {
+                                sprintf (&texto_buffer[indice_buffer],"%s\n",buffer_nombre);
+                                indice_buffer +=longitud;
+                        }
+
+                }
+        } while (retorno!=0);
+
+        texto_buffer[indice_buffer]=0;
+
+
+        free(flash_file_memory);
+
+}
+
+
 void menu_z88_slot_card_browser_aux(int slot,char *texto_buffer,int max_texto)
 {
         z88_dir dir;
@@ -17103,10 +17191,15 @@ void menu_file_flash_browser_show(char *filename)
        	}
 
 
-       	else {
+       	else { //TODO adivinar que es z88 flash
+       		menu_z88_new_ptr_card_browser(filename);
+       	}
+
+
+       	/*else {
        		//binario
        		 menu_file_viewer_read_text_file("Flash file",filename);
-       	}
+       	}*/
 
 }
 

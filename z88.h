@@ -165,6 +165,9 @@ displayed by either the Filer nor FlashStore. It's an end-user secret.
 	//Puntero a donde estan los datos
 	z88_dir datos;
 
+	//Mismo puntero a datos pero direccion de memoria, para funciones _new_ptr
+	z80_byte *datos_ptr;
+
 };
 
 typedef struct s_z88_eprom_flash_file z88_eprom_flash_file;
@@ -299,6 +302,8 @@ extern z80_byte z88_get_bank_slot(int slot);
 extern void notificar_tecla_interrupcion_si_z88(void);
 
 extern int z88_return_card_type (int slot);
+
+extern int z88_eprom_new_ptr_flash_find_next(z80_byte *dir,z88_eprom_flash_file *file);
 
 
 #define BM_INTKWAIT 0x80

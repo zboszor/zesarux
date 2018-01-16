@@ -2228,7 +2228,53 @@ void z88_return_eprom_flash_file (z88_dir *dir,z88_eprom_flash_file *file)
 	file->datos.bank=dir->bank;
 	file->datos.dir=dir->dir;
 
-}	
+}
+
+
+//Nota: las rutinas de manipulacion del filesystem eprom tambien sirven para flash
+//Llena estructura file con el nombre al que apunta dir
+//z88_dir queda incrementado y posicionado justo donde empiezan los datos
+//Misma funcion que z88_return_eprom_flash_file pero usando punteros a memoria
+void z88_return_new_ptr_eprom_flash_file (z80_byte *dir,z88_eprom_flash_file *file)
+{
+	//z80_byte namelength=peek_byte_no_time_z88_bank_no_check_low(dir->dir,dir->bank);
+	z80_byte namelength=*dir;
+
+	file->namelength=namelength;
+
+	
+	if (namelength==255) return;
+
+	//z88_increment_pointer(dir);
+	dir++;
+
+	int i;
+
+	//copiar nombre
+	for (i=0;i<namelength;i++) {
+		//file->name[i]=peek_byte_no_time_z88_bank_no_check_low(dir->dir,dir->bank);
+		file->name[i]=*dir;
+		
+		//z88_increment_pointer(dir);
+		dir++;
+	}	
+
+	//copiar tamanyo
+	for (i=0;i<4;i++) {
+		//file->size[i]=peek_byte_no_time_z88_bank_no_check_low(dir->dir,dir->bank);
+		file->size[i]=*dir;
+		
+		//z88_increment_pointer(dir);
+		dir++;
+        }
+
+	//Indicar donde estan los datos
+	//file->datos.bank=dir->bank;
+	//file->datos.dir=dir->dir;
+
+	file->datos_ptr=dir;
+
+}		
 
 
 //Funcion auxiliar. Retorna tamanyo eprom/flash total (tamanyo EPROM/FLASH), ocupado (segun puntero actual dir) y disponible (restando incluso bytes de final)
@@ -2502,6 +2548,61 @@ void z88_eprom_flash_find_init(z88_dir *dir,int slot)
         dir->dir=0;
 
 }
+ 
+//Retorna 0 si no hay mas archivos.
+//Funcion similar a z88_eprom_flash_find_next pero las funciones usan punteros de memoria en vez de variables z88_dir
+int z88_eprom_new_ptr_flash_find_next(z80_byte *dir,z88_eprom_flash_file *file)
+{
+
+                //z88_return_eprom_flash_file(dir,file);
+                z88_return_new_ptr_eprom_flash_file(dir,file);
+
+                //el nombre al menos debe ocupar 1 byte
+                if (file->namelength==0) {
+                        debug_printf (VERBOSE_INFO,"Invalid EPROM/FLASH Card when getting free space");
+                        return 0;
+                }
+
+
+
+                if (file->namelength==255) {
+                        //printf ("no hay mas archivos. bank: %x dir: %x\n",dir->bank,dir->dir);
+                }
+
+                else {
+
+                        z80_long_int size=file->size[0]+(file->size[1]*256)+(file->size[2]*65536)+(file->size[3]*16777216);
+
+                        z88_debug_print_eprom_flash_file(file);
+
+
+
+                        //siguiente direccion
+                        dir=file->datos_ptr;
+                        //dir->bank=file->datos.bank;
+                        //dir->dir=file->datos.dir;
+
+                        //printf ("z88_find_eprom_free_space size: %d\n",size);
+
+                        //z88_add_pointer (dir,size);
+                        dir +=size;
+
+                        //Si hay una eprom corrupta, acabara pasando que excedera la memoria y el banco se ira a 0
+                        //printf ("bank: %x\n",dir->bank);
+
+                        /* TODO if (dir->bank < 0x40) {
+                                debug_printf (VERBOSE_INFO,"Memory Bank < 40H when getting free space");
+                                return 0;
+                        }*/
+
+                }
+
+
+	if (file->namelength==255) return 0;
+	else return 1;
+
+}
+
 
 //Retorna 0 si no hay mas archivos
 int z88_eprom_flash_find_next(z88_dir *dir,z88_eprom_flash_file *file)
@@ -2571,6 +2672,9 @@ void z88_eprom_flash_get_file_name(z88_eprom_flash_file *file,char *nombre)
                         nombre[i]=0;
 
 }
+
+
+
 
 
 
