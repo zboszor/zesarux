@@ -10687,6 +10687,13 @@ void menu_z88_new_ptr_card_browser(char *archivo)
 
         fclose(ptr_file_flash_browser);
 
+        //El segundo byte tiene que ser 0 (archivo borrado) o '/'
+        if (flash_file_memory[1]!=0 && flash_file_memory[1]!='/') {
+        	menu_file_viewer_read_text_file("Flash file",archivo);
+        	free(flash_file_memory);
+        	return;
+        }
+
 
 	#define MAX_TEXTO 4096
         char texto_buffer[MAX_TEXTO];

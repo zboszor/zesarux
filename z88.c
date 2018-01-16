@@ -2565,6 +2565,9 @@ int z88_eprom_new_ptr_flash_find_next(z80_byte **ptr_dir,z88_eprom_flash_file *f
 		z80_byte *dir;
 		dir=*ptr_dir;
 
+		z80_byte *dir_tope; //Para controlar si puntero se sale de madre
+		dir_tope=dir+1024*1024; //1 mb mas alla
+
                 //z88_return_eprom_flash_file(dir,file);
                 z88_return_new_ptr_eprom_flash_file(&dir,file);
 
@@ -2601,10 +2604,11 @@ int z88_eprom_new_ptr_flash_find_next(z80_byte **ptr_dir,z88_eprom_flash_file *f
                         //Si hay una eprom corrupta, acabara pasando que excedera la memoria y el banco se ira a 0
                         //printf ("bank: %x\n",dir->bank);
 
-                        /* TODO if (dir->bank < 0x40) {
-                                debug_printf (VERBOSE_INFO,"Memory Bank < 40H when getting free space");
+                        if (dir>dir_tope) {
+                        // TODO if (dir->bank < 0x40) {
+                                debug_printf (VERBOSE_INFO,"Going beyond memory card");
                                 return 0;
-                        }*/
+                        }
 
                 }
 
