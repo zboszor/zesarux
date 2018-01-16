@@ -1512,9 +1512,11 @@ printf (
 
 
 
-		"--zxunospifile path        File to use on ZX-Uno as SPI Flash. Default: zxuno.flash\n"
-		//"--zxunospiwriteenable      Enable writing to disk on ZX-Uno SPI Flash\n"
-		"--zxunospi-persistent-writes  Enable ZX-Uno SPI Flash persistent writes\n"
+		"--zxunospifile path          File to use on ZX-Uno as SPI Flash. Default: zxuno.flash\n"
+		"--zxunospi-write-protection  Enable ZX-Uno SPI Flash write protection\n"
+		"--zxunospi-persistent-writes Enable ZX-Uno SPI Flash persistent writes\n"
+
+
                 "--dandanator-rom f         Set ZX Dandanator rom file\n"
                 "--enable-dandanator        Enable ZX Dandanator emulation. Requires --dandanator-rom\n"
                 "--dandanator-press-button  Simulates pressing button on ZX Dandanator. Requires --enable-dandanator\n"
@@ -4667,6 +4669,12 @@ void parse_cmdline_options(void) {
 				) {
                                 zxuno_flash_persistent_writes.v=1;
 			}
+
+
+                        else if (!strcmp(argv[puntero_parametro],"--zxunospi-write-protection")) {
+				zxuno_flash_write_protection.v=1;
+                        }
+
 
 			else if (!strcmp(argv[puntero_parametro],"--printerbitmapfile")) {
 				siguiente_parametro_argumento();

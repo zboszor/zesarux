@@ -3049,6 +3049,8 @@ int util_write_configfile(void)
   if (zxuno_flash_persistent_writes.v)     ADD_STRING_CONFIG,"--zxunospi-persistent-writes");
 
 
+  if (zxuno_flash_write_protection.v)         ADD_STRING_CONFIG,"--zxunospi-write-protection");
+
   //TODO printerbitmapfile
   //TODO printertextfile
   //TODO redefinekey
