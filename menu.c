@@ -17264,7 +17264,6 @@ void menu_file_superupgrade_flash_browser_show(char *filename)
 
 	menu_generic_message_tooltip("Superupgrade Flash browser", 0, 0, 1, NULL, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
 	free(superupgrade_flash_file_memory);
 
