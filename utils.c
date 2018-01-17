@@ -9716,7 +9716,13 @@ int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longit
 				destino[0]=magic_byte;
 				destino[1]=magic_byte;
 				destino[2]=byte_repetido;
-				destino[3]=(repeticiones&255);
+				z80_byte brep;
+				if (repeticiones>255) brep=0;
+				else brep=repeticiones;
+
+				destino[3]=brep;
+
+				//printf ("rep: %d %d\n",repeticiones,brep);
 
 				destino +=4;
 				longitud_destino +=4;

@@ -78,7 +78,7 @@ void codetests_repetitions(void)
 void coretests_dumphex(z80_byte *ptr,int longitud)
 {
 	while (longitud) {
-		printf ("%02XH ",*ptr);
+		printf ("%02X ",*ptr);
 		ptr++;
 		longitud--;
 	}
@@ -89,7 +89,7 @@ void coretests_compress_repetitions(void)
 {
 
 
-#define MAX_COMP_REP_ARRAY 512
+#define MAX_COMP_REP_ARRAY 1024
 
 	z80_byte repetitions[MAX_COMP_REP_ARRAY];
 
@@ -99,9 +99,9 @@ void coretests_compress_repetitions(void)
 
         int i;
 
-	int max_veces=512; //Siempre menor o igual que MAX_COMP_REP_ARRAY. cuantos bytes repetimos
+	int max_veces=MAX_COMP_REP_ARRAY; //Siempre menor o igual que MAX_COMP_REP_ARRAY. cuantos bytes repetimos
 
-        for (i=0;i<max_veces;i++) {
+        for (i=1;i<=max_veces;i++) {
 
 		int j;
 
@@ -126,7 +126,7 @@ void coretests_compress_repetitions(void)
 		int mostrar_hexa;
 		mostrar_hexa=max_array;
 
-		if (max_array>16) mostrar_hexa=16;
+		if (max_array>20) mostrar_hexa=20;
 
 		coretests_dumphex(repetitions,mostrar_hexa);
 		if (max_array>40) {
@@ -146,7 +146,11 @@ void coretests_compress_repetitions(void)
 
 		//Validacion solo de longitud comprimida. El contenido, hacer una validacion manual
 		int valor_esperado_comprimido=max_array;
-		if (i>4) valor_esperado_comprimido=max_array-(i-4)*2;
+		if (i>4) {
+			int valor_minimo=max_array/42;
+			valor_esperado_comprimido=max_array-(i-4)*2;
+			if (valor_esperado_comprimido<valor_minimo) valor_esperado_comprimido=valor_minimo;
+		}
 
 		printf ("Expected length: %d\n",valor_esperado_comprimido);
 
