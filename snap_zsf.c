@@ -77,6 +77,7 @@
 #define ZSF_RAMBLOCK 4
 
 
+int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
 
 /*
 Format ZSF:
@@ -122,6 +123,27 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 
 */
 
+//Maxima longitud de los bloques de descripcion
+#define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
+
+//Total de nombres sin contar el unknown final
+#define MAX_ZSF_BLOCK_ID_NAMES 5
+char *zsf_block_id_names[]={
+ //123456789012345678901234567890
+  "ZSF_NOOP",
+  "ZSF_MACHINEID",
+  "ZSF_Z80_REGS",
+  "ZSF_MOTO_REGS",
+  "ZSF_RAMBLOCK",
+
+  "Unknown"  //Este siempre al final
+};
+
+char *zsf_get_block_id_name(int block_id)
+{
+  if (block_id>=MAX_ZSF_BLOCK_ID_NAMES) return zsf_block_id_names[MAX_ZSF_BLOCK_ID_NAMES];
+  else return zsf_block_id_names[block_id];
+}
 
 int zsf_write_block(FILE *ptr_zsf_file, z80_byte *source,z80_int block_id, unsigned int lenght)
 {
@@ -138,7 +160,7 @@ int zsf_write_block(FILE *ptr_zsf_file, z80_byte *source,z80_int block_id, unsig
   fwrite(block_header, 1, 6, ptr_zsf_file);
 
   //Write data block
-  fwrite(source, 1, lenght, ptr_zsf_file);
+  if (lenght) fwrite(source, 1, lenght, ptr_zsf_file);
 
   return 0;
 
@@ -184,15 +206,38 @@ void load_zsf_snapshot_z80_regs(z80_byte *header)
         iff1.v=iff2.v=header[26] &1;
 }
 
+
+/*
+Cargar bloque de datos en destino indicado
+block_length: usado en bloques no comprimidos (lo que dice la cabecera que ocupa)
+longitud_original: usado en bloques comprimidos (lo que ocupan los bloques comprimidos)
+*/
+void load_zsf_snapshot_block_data_addr(z80_byte *block_data,z80_byte *destino,int block_lenght, int longitud_original,int si_comprimido)
+{
+  
+  //printf ("load_zsf_snapshot_block_data_addr block_lenght: %d longitud_original: %d si_comprimido: %d\n",block_lenght,longitud_original,si_comprimido);
+
+  if (si_comprimido) {
+    //Comprimido
+    util_uncompress_data_repetitions(block_data,destino,longitud_original,0xDD);
+  }
+
+
+  else {
+    int i=0;
+    while (block_lenght) {
+      //poke_byte_no_time(block_start++,block_data[i++]);
+      *destino=block_data[i++];
+      destino++;
+      block_lenght--;
+    }
+  }
+}
+
 void load_zsf_snapshot_block_data(z80_byte *block_data,int longitud_original)
 {
-  /*
-  ramblock[0]=0;
-  ramblock[1]=value_16_to_8l(16384);
-  ramblock[2]=value_16_to_8h(16384);
-  ramblock[3]=value_16_to_8l(49152);
-  ramblock[4]=value_16_to_8h(49152);
-  */
+
+
 
   int i=0;
   z80_byte block_flags=block_data[i];
@@ -206,10 +251,15 @@ void load_zsf_snapshot_block_data(z80_byte *block_data,int longitud_original)
   i+=2;
 
   debug_printf (VERBOSE_DEBUG,"Block start: %d Lenght: %d Compressed: %d Length_source: %d",block_start,block_lenght,block_flags&1,longitud_original);
+  //printf ("Block start: %d Lenght: %d Compressed: %d Length_source: %d\n",block_start,block_lenght,block_flags&1,longitud_original);
+
 
   longitud_original -=5;
 
-  if (block_flags&1) {
+
+  load_zsf_snapshot_block_data_addr(&block_data[i],&memoria_spectrum[block_start],block_lenght,longitud_original,block_flags&1);
+
+  /*if (block_flags&1) {
     //Comprimido
     util_uncompress_data_repetitions(&block_data[i],&memoria_spectrum[block_start],longitud_original,0xDD);
     return;
@@ -222,6 +272,7 @@ void load_zsf_snapshot_block_data(z80_byte *block_data,int longitud_original)
       block_lenght--;
     }
   }
+  */
 }
 
 
@@ -253,7 +304,7 @@ void load_zsf_snapshot(char *filename)
     block_id=value_8_to_16(block_header[1],block_header[0]);
     unsigned int block_lenght=block_header[2]+(block_header[3]*256)+(block_header[4]*65536)+(block_header[5]*16777216);
 
-    debug_printf (VERBOSE_INFO,"Block id: %u Lenght: %u",block_id,block_lenght);
+    debug_printf (VERBOSE_INFO,"Block id: %u (%s) Lenght: %u",block_id,zsf_get_block_id_name(block_id),block_lenght);
 
     z80_byte *block_data;
 
@@ -281,6 +332,11 @@ void load_zsf_snapshot(char *filename)
     //switch for every possible block id
     switch(block_id)
     {
+
+      case ZSF_NOOP_ID:
+        //no hacer nada
+      break;
+
       case ZSF_MACHINEID:
         current_machine_type=*block_data;
         set_machine(NULL);
@@ -302,7 +358,7 @@ void load_zsf_snapshot(char *filename)
     }
 
 
-    free(block_data);
+    if (block_lenght) free(block_data);
 
   }
 
@@ -371,7 +427,7 @@ int save_zsf_copyblock_compress_uncompres(z80_byte *origen,z80_byte *destino,int
 
   int longitud_comprimido=util_compress_data_repetitions(origen,destino,tamanyo_orig,0xDD);
 
-  if (longitud_comprimido>tamanyo_orig) {
+  if (zsf_force_uncompressed || longitud_comprimido>tamanyo_orig) {
     *si_comprimido=0;
     memcpy(destino,origen,tamanyo_orig);
     return tamanyo_orig;
@@ -455,7 +511,9 @@ void save_zsf_snapshot(char *filename)
   free(ramblock);
 
   //test
-  save_zsf_snapshot_cpuregs(ptr_zsf_file);
+  //save_zsf_snapshot_cpuregs(ptr_zsf_file);
+  //test meter un NOOP
+  zsf_write_block(ptr_zsf_file, NULL,0, 0);
 
 
   fclose(ptr_zsf_file);

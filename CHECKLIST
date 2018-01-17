@@ -4,6 +4,8 @@
 
 -ejecutar tests automatic_tests.sh
 
+-ejecutar ./zesarux --codetests
+
 Drivers video:
 -probar drivers video xwindows, sdl, fbdev, curses, aa, caca, stdout, simpletext, null. desde dentro de xwindows y desde consola de texto real
 *por cada driver (incluido null) y con y sin pthreads:

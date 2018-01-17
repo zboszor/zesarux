@@ -91,6 +91,7 @@
 #include "snap_spg.h"
 #include "betadisk.h"
 #include "tape_tzx.h" 
+#include "snap_zsf.h"
 
 
 #if defined(__APPLE__)
@@ -17026,6 +17027,107 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 
 }
 
+
+void menu_file_zsf_browser_show(char *filename)
+{
+
+
+	long int bytes_to_load=get_file_size(filename);
+
+	z80_byte *zsf_file_memory;
+	zsf_file_memory=malloc(bytes_to_load);
+	if (zsf_file_memory==NULL) {
+		debug_printf(VERBOSE_ERR,"Unable to assign memory");
+		return;
+	}
+	
+	//Leemos archivo zsf
+        FILE *ptr_file_zsf_browser;
+        ptr_file_zsf_browser=fopen(filename,"rb");
+
+        if (!ptr_file_zsf_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		free(zsf_file_memory);
+		return;
+	}
+
+
+        int leidos=fread(zsf_file_memory,1,bytes_to_load,ptr_file_zsf_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_zsf_browser);
+
+
+        
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 8192
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	
+
+
+ 	sprintf(buffer_texto,"ZSF ZEsarUX Snapshot");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+
+
+/*
+Format ZSF:
+* All numbers are LSB
+
+Every block is defined with a header:
+
+2 bytes - 16 bit: block ID
+4 bytes - 32 bit: block Lenght
+After these 6 bytes, the data for the block comes.
+*/
+	int indice_zsf=0;
+
+	while (bytes_to_load>0) {
+		    z80_int block_id;
+    			block_id=value_8_to_16(zsf_file_memory[indice_zsf+1],zsf_file_memory[indice_zsf+0]);
+    			unsigned int block_lenght=zsf_file_memory[indice_zsf+2]+(zsf_file_memory[indice_zsf+3]*256)+(zsf_file_memory[indice_zsf+4]*65536)+(zsf_file_memory[indice_zsf+5]*16777216);
+
+    			debug_printf (VERBOSE_INFO,"Block id: %u Lenght: %u",block_id,block_lenght);
+
+    			sprintf(buffer_texto,"Block id: %u (%s) Lenght: %u",block_id,zsf_get_block_id_name(block_id),block_lenght);
+    			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    			bytes_to_load -=6;
+    			bytes_to_load -=block_lenght;
+
+
+    			indice_zsf +=6;
+    			indice_zsf +=block_lenght;
+
+	}
+
+	
+	
+
+
+	texto_browser[indice_buffer]=0;
+
+	menu_generic_message_tooltip("ZSF file browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+	free(zsf_file_memory);
+
+}
+
 void menu_file_zxuno_flash_browser_show(char *filename)
 {
 
@@ -17677,7 +17779,7 @@ void menu_file_zx_browser_show(char *filename)
 
 
 	texto_browser[indice_buffer]=0;
-	menu_generic_message_tooltip("ZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	menu_generic_message_tooltip("ZEsarUX ZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
 
 	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
@@ -20419,6 +20521,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"epr")) menu_z88_new_ptr_card_browser(file_name);
 
 	else if (!util_compare_file_extension(file_name,"eprom")) menu_z88_new_ptr_card_browser(file_name);
+
+	else if (!util_compare_file_extension(file_name,"zsf")) menu_file_zsf_browser_show(file_name);
 
 
 	//Por defecto, texto

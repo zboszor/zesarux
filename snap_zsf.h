@@ -25,4 +25,6 @@
 extern void load_zsf_snapshot(char *filename);
 extern void save_zsf_snapshot(char *filename);
 
+extern char *zsf_get_block_id_name(int block_id);
+
 #endif

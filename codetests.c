@@ -305,11 +305,11 @@ void coretests_compress_uncompress_repetitions(char *archivo)
 
 void codetests_main(int main_argc,char *main_argv[])
 {
-	/*printf ("\nRunning repetitions code\n");
+	printf ("\nRunning repetitions code\n");
 	codetests_repetitions();
 
 	printf ("\nRunning compress repetitions code\n");
-	coretests_compress_repetitions();*/
+	coretests_compress_repetitions();
 
 	printf ("\nRunning compress/uncompress repetitions code\n");
 	coretests_compress_uncompress_repetitions(main_argv[2]);
