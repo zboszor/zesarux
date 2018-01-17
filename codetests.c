@@ -113,7 +113,7 @@ void coretests_compress_repetitions(void)
 {
 
 
-#define MAX_COMP_REP_ARRAY 1024
+#define MAX_COMP_REP_ARRAY 2048
 
 	z80_byte repetitions[MAX_COMP_REP_ARRAY];
 
