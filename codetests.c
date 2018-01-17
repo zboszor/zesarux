@@ -220,10 +220,47 @@ void coretests_compress_uncompress_repetitions_aux(char *filename)
 		exit(1);
 	}
 
+        memoria_file_compressed=malloc(tamanyo*2);
+        if (memoria_file_compressed==NULL) {
+                printf("Error allocating memory\n");
+                exit(1);
+        }
+
+        memoria_file_uncompressed=malloc(tamanyo*2);
+        if (memoria_file_uncompressed==NULL) {
+                printf("Error allocating memory\n");
+                exit(1);
+        }
+
+	coretests_read_file_memory(filename,memoria_file_orig);
+
+/*
+extern int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longitud,z80_byte magic_byte);
+
+extern int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,int longitud,z80_byte magic_byte);
+*/
+
+	z80_byte magic_byte=0xDD;
+
+	int longitud_comprido=util_compress_data_repetitions(memoria_file_orig,memoria_file_compressed,tamanyo,magic_byte);
+
+	int longitud_descomprido=util_uncompress_data_repetitions(memoria_file_compressed,memoria_file_uncompressed,longitud_comprido,magic_byte);
+
+	printf ("Original size: %ld Compressed size: %d Uncompressed size: %d\n",tamanyo,longitud_comprido,longitud_descomprido);
+
+	//Primera comprobacion de tamanyo
+	if (tamanyo!=longitud_descomprido) {
+		printf ("Original size and uncompressed size doesnt match\n");
+		exit(1);
+	}
+	
+
+
 }
 
 void coretests_compress_uncompress_repetitions(void)
 {
+	coretests_compress_uncompress_repetitions_aux("prueba.raw");
 }
 
 void codetests_main(void)
