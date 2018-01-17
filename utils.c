@@ -9712,7 +9712,7 @@ int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longit
 		) {
 			//Escribir magic byte dos veces, byte a repetir, y numero repeticiones
 			//Si repeticiones > 256, trocear
-			while (repeticiones>256) {
+			while (repeticiones>0) {
 				destino[0]=magic_byte;
 				destino[1]=magic_byte;
 				destino[2]=byte_repetido;
