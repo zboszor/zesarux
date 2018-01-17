@@ -9648,3 +9648,14 @@ Retorna: numero de repeticiones (minimo 1) y el byte que es (modifica contenido 
 int util_get_byte_repetitions(z80_byte *memoria,int longitud,z80_byte *byte_repetido)
 {
 }
+
+
+/*
+Funcion de compresion de datos
+Dado un puntero de entrada, la longitud del bloque, y el byte "magico" de repeticion (normalmente DD), y el puntero de salida, retorna esos datos comprimidos, mediante:
+siendo XX el byte magico, cuando hay un bloque con repeticion (minimo 5 repeticiones) se retorna como:
+XX XX YY ZZ, siendo YY el byte a repetir y ZZ el numero de repeticiones
+Si no hay repeticiones, se retornan los bytes tal cual
+*casos a considerar:
+**si en entrada hay byte XX repetido al menos 2 veces, se trata como repeticion, sin tener que llegar al minimo de 5
+*/
