@@ -609,4 +609,6 @@ extern int util_get_byte_repetitions(z80_byte *memoria,int longitud,z80_byte *by
 
 extern int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longitud,z80_byte magic_byte);
 
+extern int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,int longitud,z80_byte magic_byte);
+
 #endif

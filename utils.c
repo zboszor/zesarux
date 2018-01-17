@@ -9745,3 +9745,54 @@ int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longit
 	
 }
 
+
+
+/*
+Funcion de descompresion de datos
+siendo XX el byte magico, cuando hay un bloque con repeticion (minimo 5 repeticiones) se retorna como:
+XX XX YY ZZ, siendo YY el byte a repetir y ZZ el numero de repeticiones (0 veces significa 256 veces)
+
+Retorna: longitud del bloque destino
+*/
+
+int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,int longitud,z80_byte magic_byte)
+{
+        int longitud_destino=0;
+
+        while (longitud) {
+		//Si primer y segundo byte son el byte magic
+		int repeticion=0;
+		if (longitud>=4) {
+			if (origen[0]==magic_byte && origen[1]==magic_byte) {
+				repeticion=1;
+
+				z80_byte byte_a_repetir=origen[2];
+
+				int longitud_repeticion;
+				longitud_repeticion=origen[3];
+
+				if (longitud_repeticion==0) longitud_repeticion=256;
+
+				util_write_repeated_byte(destino,byte_a_repetir,longitud_repeticion);
+
+				origen+=4;
+				longitud-=4;
+
+				destino+=longitud_repeticion;
+				longitud_destino+=longitud_repeticion;
+			}
+		}
+
+		if (!repeticion) {
+			*destino=*origen;
+			
+			origen++;
+			longitud--;
+
+			destino++;
+			longitud_destino++;
+		}
+	}
+
+	return longitud_destino;
+}

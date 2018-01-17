@@ -180,6 +180,51 @@ void coretests_compress_repetitions(void)
 
 }
 
+void coretests_read_file_memory(char *filename,z80_byte *memoria)
+{
+		long int tamanyo;
+		tamanyo=get_file_size(filename);
+
+
+                FILE *ptr_file;
+                ptr_file=fopen(filename,"rb");
+
+                if (!ptr_file) {
+                        printf ("Unable to open file %s",filename);
+                        exit(1);
+                }
+
+
+
+
+                fread(memoria,1,tamanyo,ptr_file);
+
+
+                fclose(ptr_file);
+}
+
+void coretests_compress_uncompress_repetitions_aux(char *filename)
+{
+	z80_byte *memoria_file_orig;
+	z80_byte *memoria_file_compressed;
+	z80_byte *memoria_file_uncompressed;
+
+	long int tamanyo=get_file_size(filename);
+
+	//Memoria para lectura, comprimir y descomprimir
+	//tamanyo, tamanyo*2, tamanyo*2
+
+	memoria_file_orig=malloc(tamanyo);
+	if (memoria_file_orig==NULL) {
+		printf("Error allocating memory\n");
+		exit(1);
+	}
+
+}
+
+void coretests_compress_uncompress_repetitions(void)
+{
+}
 
 void codetests_main(void)
 {
@@ -188,5 +233,8 @@ void codetests_main(void)
 
 	printf ("\nRunning compress repetitions code\n");
 	coretests_compress_repetitions();
+
+	printf ("\nRunning compress/uncompress repetitions code\n");
+	coretests_compress_uncompress_repetitions();
 
 }
