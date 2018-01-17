@@ -101,6 +101,7 @@
 #include "esxdos_handler.h"
 #include "kartusho.h"
 #include "betadisk.h"
+#include "codetests.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -1623,6 +1624,7 @@ printf (
 		"--exit-after n             Exit emulator after n seconds\n"
 		"--last-version s           String which identifies last version run. Usually doesnt need to change it, used to show the start popup of the new version changes\n"
 		"--no-show-changelog        Do not show changelog when updating version\n"
+		"--codetests                Run develoment code tests\n"
 
 
 		"\n\n"
@@ -5797,6 +5799,7 @@ void parse_cmdline_options(void) {
 
 
 
+
 			//autodetectar que el parametro es un snap o cinta. Esto tiene que ser siempre el ultimo else if
 			else if (quickload_valid_extension(argv[puntero_parametro])) {
 			        quickload_inicial.v=1;
@@ -5901,6 +5904,16 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 			exit(0);
 		}
 	}
+
+
+                if (main_argc>1) {
+                        if (!strcmp(main_argv[1],"--codetests")) {
+                                codetests_main();
+                                exit(1);
+                        }
+
+                }
+
 
 	//de momento ponemos esto a null y los mensajes siempre saldran por un printf normal
 	scr_messages_debug=NULL;
