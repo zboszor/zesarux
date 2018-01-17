@@ -73,9 +73,66 @@ void codetests_repetitions(void)
 	}
 }
 
+void coretests_dumphex(z80_byte *ptr,int longitud)
+{
+	while (longitud) {
+		printf ("%02XH ",*ptr);
+		ptr++;
+		longitud--;
+	}
+}
+
+
+void coretests_compress_repetitions(void)
+{
+
+
+
+        z80_byte repetitions0[]={1,2,3,4,5,6,7,8,9,10};
+        z80_byte repetitions1[]={1,1,3,4,5,6,7,8,9,10};
+        z80_byte repetitions2[]={1,1,1,4,5,6,7,8,9,10};
+        z80_byte repetitions3[]={1,1,1,1,5,6,7,8,9,10};
+        z80_byte repetitions4[]={1,1,1,1,1,6,7,8,9,10};
+
+        //int util_get_byte_repetitions(z80_byte *memoria,int longitud,z80_byte *byte_repetido)
+
+        int repeticiones[5];
+        z80_byte byte_repetido[5];
+
+	z80_byte compressed_data[1024];
+
+        int i;
+        z80_byte *puntero=NULL;
+
+        for (i=0;i<5;i++) {
+                if      (i==0) puntero=repetitions0;
+                else if (i==1) puntero=repetitions1;
+                else if (i==2) puntero=repetitions2;
+                else if (i==3) puntero=repetitions3;
+                else if (i==4) puntero=repetitions4;
+
+                //repeticiones[i]=util_get_byte_repetitions(puntero,10,&byte_repetido[i]);
+		int longitud_destino=util_compress_data_repetitions(puntero,compressed_data,10,0xDD);
+
+		printf ("step %d\n",i);
+		coretests_dumphex(compressed_data,longitud_destino);
+		printf ("\n");
+
+                //if (byte_repetido[i]!=1 || repeticiones[i]!=i+1) {
+                //        printf ("error\n");
+                //        exit(1);
+                //}
+        }
+
+}
+
 
 void codetests_main(void)
 {
 	printf ("Running repetitions code\n");
 	codetests_repetitions();
+
+	printf ("Running compress repetitions code\n");
+	coretests_compress_repetitions();
+
 }
