@@ -605,4 +605,6 @@ extern void util_tape_get_info_tapeblock(z80_byte *tape,z80_byte flag,z80_int lo
 
 extern void util_file_save(char *filename,z80_byte *puntero, int tamanyo);
 
+extern int util_get_byte_repetitions(z80_byte *memoria,int longitud,z80_byte *byte_repetido);
+
 #endif
