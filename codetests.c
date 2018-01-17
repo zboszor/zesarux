@@ -41,20 +41,29 @@
 void codetests_repetitions(void)
 {
 
-	z80_byte repetitions1[]={1,2,3,4,5,6,7,8,9,10};
-	z80_byte repetitions2[]={1,1,3,4,5,6,7,8,9,10};
-	z80_byte repetitions3[]={1,1,1,4,5,6,7,8,9,10};
-	z80_byte repetitions4[]={1,1,1,1,5,6,7,8,9,10};
-	z80_byte repetitions5[]={1,1,1,1,1,6,7,8,9,10};
+	z80_byte repetitions0[]={1,2,3,4,5,6,7,8,9,10};
+	z80_byte repetitions1[]={1,1,3,4,5,6,7,8,9,10};
+	z80_byte repetitions2[]={1,1,1,4,5,6,7,8,9,10};
+	z80_byte repetitions3[]={1,1,1,1,5,6,7,8,9,10};
+	z80_byte repetitions4[]={1,1,1,1,1,6,7,8,9,10};
 
 	//int util_get_byte_repetitions(z80_byte *memoria,int longitud,z80_byte *byte_repetido)
-	z80_byte byte_repetido;
+
 	int repeticiones[5];
+	z80_byte byte_repetido[5];
 
 	int i;
+	z80_byte *puntero=NULL;
 	for (i=0;i<5;i++) {
-	repeticiones[i]=util_get_byte_repetitions(repetitions1,10,&byte_repetido);
-	printf ("repetitions: %d byte_repeated: %d\n",repeticiones[i],byte_repetido);
+		if (i==0) puntero=repetitions0;
+		else if (i==1) puntero=repetitions1;
+		else if (i==2) puntero=repetitions2;
+		else if (i==3) puntero=repetitions3;
+		else if (i==4) puntero=repetitions4;
+
+		repeticiones[i]=util_get_byte_repetitions(puntero,10,&byte_repetido[i]);
+
+		printf ("step %d repetitions: %d byte_repeated: %d\n",i,repeticiones[i],byte_repetido[i]);
 	}
 }
 
