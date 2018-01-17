@@ -38,8 +38,7 @@
 #include "screen.h"
 
 
-
-void codetests_main(void)
+void codetests_repetitions(void)
 {
 
 	z80_byte repetitions1[]={1,2,3,4,5,6,7,8,9,10};
@@ -49,4 +48,19 @@ void codetests_main(void)
 	z80_byte repetitions5[]={1,1,1,1,1,6,7,8,9,10};
 
 	//int util_get_byte_repetitions(z80_byte *memoria,int longitud,z80_byte *byte_repetido)
+	z80_byte byte_repetido;
+	int repeticiones[5];
+
+	int i;
+	for (i=0;i<5;i++) {
+	repeticiones[i]=util_get_byte_repetitions(repetitions1,10,&byte_repetido);
+	printf ("repetitions: %d byte_repeated: %d\n",repeticiones[i],byte_repetido);
+	}
+}
+
+
+void codetests_main(void)
+{
+	printf ("Running repetitions code\n");
+	codetests_repetitions();
 }
