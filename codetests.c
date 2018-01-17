@@ -66,6 +66,8 @@ void codetests_repetitions(void)
 
 		printf ("step %d repetitions: %d byte_repeated: %d\n",i,repeticiones[i],byte_repetido[i]);
 
+		//Validar cantidad de valores repetidos y que byte repetido
+		printf ("expected: repetitions: %d byte_repeated: 1\n",i+1);
 		if (byte_repetido[i]!=1 || repeticiones[i]!=i+1) {
 			printf ("error\n");
 			exit(1);
@@ -87,44 +89,72 @@ void coretests_compress_repetitions(void)
 {
 
 
+#define MAX_COMP_REP_ARRAY 512
 
-	z80_byte repetitions[512];
+	z80_byte repetitions[MAX_COMP_REP_ARRAY];
 
-	z80_byte compressed_data[1024];
+	z80_byte compressed_data[MAX_COMP_REP_ARRAY*2];
 
-	int max_array=50; //siempre menor que 512
+	int max_array=MAX_COMP_REP_ARRAY; //siempre menor o igual que MAX_COMP_REP_ARRAY. tamanyo de los datos a analizar
 
         int i;
 
-	int max_veces=10;
+	int max_veces=512; //Siempre menor o igual que MAX_COMP_REP_ARRAY. cuantos bytes repetimos
 
         for (i=0;i<max_veces;i++) {
 
 		int j;
+
+		//Inicializar con valores consecutivos
 		for (j=0;j<max_array;j++) {
 			repetitions[j]=j&255;
 		}
 
+		//Meter valores "1" al principio
 		for (j=0;j<i;j++) {
 			repetitions[j]=1;
 		}
 
+		//Meter valores "2" al final 
+		for (j=0;j<i;j++) {
+			repetitions[max_array-1-j]=2;
+		}
+
                 //repeticiones[i]=util_get_byte_repetitions(puntero,10,&byte_repetido[i]);
-		printf ("step %d\n",i);
-		coretests_dumphex(repetitions,max_array);
+		printf ("step %d length: %d\n",i,max_array);
+
+		int mostrar_hexa;
+		if (max_array>16) mostrar_hexa=16;
+		else mostrar_hexa=max_array;
+
+		coretests_dumphex(repetitions,mostrar_hexa);
+		if (max_array>40) {
+			printf (" ... ");
+			coretests_dumphex(repetitions+max_array-mostrar_hexa,mostrar_hexa);
+		}
+
 		printf ("\n");
 
 		int longitud_destino=util_compress_data_repetitions(repetitions,compressed_data,max_array,0xDD);
 
-		printf ("longitud comprimido: %d\n",longitud_destino);
+		printf ("compressed length: %d\n",longitud_destino);
 
 		coretests_dumphex(compressed_data,longitud_destino);
 		printf ("\n");
 
-                //if (byte_repetido[i]!=1 || repeticiones[i]!=i+1) {
-                //        printf ("error\n");
-                //        exit(1);
-                //}
+
+		//Validacion solo de longitud comprimida. El contenido, hacer una validacion manual
+		int valor_esperado_comprimido=512;
+		if (i>4) valor_esperado_comprimido=512-(i-4)*2;
+
+		printf ("Expected length: %d\n",valor_esperado_comprimido);
+
+		if (valor_esperado_comprimido!=longitud_destino) {
+                        printf ("error\n");
+                        exit(1);
+                }
+
+		printf ("\n");
         }
 
 }
@@ -132,10 +162,10 @@ void coretests_compress_repetitions(void)
 
 void codetests_main(void)
 {
-	printf ("Running repetitions code\n");
+	printf ("\nRunning repetitions code\n");
 	codetests_repetitions();
 
-	printf ("Running compress repetitions code\n");
+	printf ("\nRunning compress repetitions code\n");
 	coretests_compress_repetitions();
 
 }

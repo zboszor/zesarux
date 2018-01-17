@@ -607,4 +607,6 @@ extern void util_file_save(char *filename,z80_byte *puntero, int tamanyo);
 
 extern int util_get_byte_repetitions(z80_byte *memoria,int longitud,z80_byte *byte_repetido);
 
+extern int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longitud,z80_byte magic_byte);
+
 #endif
