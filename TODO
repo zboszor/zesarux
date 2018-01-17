@@ -77,7 +77,17 @@ deberia verse bien, pues se usan funciones de putchar igual que en menu. si real
 
 -Menú utilidades archivos
 Convertir archivo
-TAB conmutar a zona de acciones?
+TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, que permita:
+*diferentes textos de acciones en ventana activa: posicion x,y,texto,accion a ejecutar, condicion para activo
+*quiza demasiado lio? se va a usar para algo mas? quiza se puede reusar para el AY Player
+*quiza se pueda usar misma estructura de acciones de menu, pero simplemente mostrarlo diferente:
+**sin tooltip (o si?)
+**sin ayuda (o si?)
+**mover con cursor abajo/arriba e izquierda/derecha. TAB o ESC permite salir
+**no mostrar en linea, sino en coordenadas x,y
+**hotkeys son importantes
+**en AY player quiza seria un problema, pues necesito mostrar en pantalla texto continuamente. Quiza se puede agregar un handler al que se llame a cada X frames
+**en file utils, por su parte, tambien permito acciones directas como ahora con shift+tecla. o no?
 
 -betadisk: nmi no parece guardar el snapshot, aunque lo intenta
 
@@ -209,7 +219,8 @@ http://forum.tslabs.info/viewtopic.php?f=12&t=157
 teclas F en general en fbdev driver no raw
 
 
--seguir formato zsf
+-seguir formato zsf:
+*comprimir datos mediante DD DD. se permiten bloques sin comprimir o con comprimir. que permita comprimir bloque de X de longitud
 
 -Opción para poder cargar snapshot pero sin cambiar la rom actual... útil por si grabamos un snapshot por ejemplo en máquina 128kb pero la rom era la del opense: quiza esto quedara para formato zsf?
 ->esto ya esta para .sna
@@ -220,12 +231,8 @@ teclas F en general en fbdev driver no raw
 reducir fifo por defecto de alsa? de 4 a 2?
 
 
-
-
 -revisar mezclado ay+beeper . posiblemente set_value_beeper acaba sacando algun valor beeper 50*2 y se sale todo de rango?
 o bien el mezclado de chip ay
-
-
 
 
 -probar a reducir buffer sonido en otros drivers: dsp, alsa, pulse
@@ -345,7 +352,6 @@ browser para flash. primer archivo es de “truco”
 
 -blue display en aalib no se ve nada
 
--fadeout en aalib muy lento. de momento desactivamos
 
 -mac os x: tecla borrar en curses no va. Parece que es codigo 127 pero solo en mac...hay que probarlo mas para saber que no haya otra tecla que tambien genere 127
 
@@ -1141,6 +1147,8 @@ probar con over128
 
 -footer para cacalib, aalib
 
+-fadeout en aalib muy lento. de momento desactivamos
+
 -al cambiar de cpc a z88 en aa, peta
 
 -cambiar en aa, caca de cpc464 a timex peta el emulador
@@ -1314,7 +1322,6 @@ Otros TODO menos prioritarios, de aqui hasta el final del archivo:
 
 
 *** Proceso compilacion ***
--mostrar mensaje ok cuando acaba compilar
 
 * probar en html ->emscripten
 http://kripken.github.io/emscripten-site/
@@ -1493,6 +1500,8 @@ Etc...
 
 -AY piano pero que vaya mostrando las notas en scroll, y quiza guardando notas en archivo de texto?
 
+-AY piano notas en pentagrama. maximo canales en pantalla? quiza 1 solo e ir conmutando con una tecla
+
 -Paso a paso cuando hay condición de debug activa no deja salir (en menú) : ocurre porque sale y al momento salta 
 breakpoint y vuelve a entrar. Es normal->opcion para poder salir de ahi aun con breakpoint activo? tiene sentido?
 
@@ -1513,18 +1522,6 @@ estamos en full ram en zxuno, vamos a la direccion donde empieza propiamente la 
 
 Este JR NZ deberia aparecer como 20004
 
--Menú utilidades archivos
-
-Ver archivos
-Borrar
-Renombrar
-Crear/truncar
-Mover 
-Duplicar
-Crear carpeta
-Convertir archivo
-->como asignar teclas a acciones? desactivar hotkeys de acceso a archivos? o simplemente enter y luego se escoge accion? o numeros? ...
-
 -Archivos recientes. Solo para smartload ?
 
 -Otra mejora: poder mover ventanas menu con ratón 
@@ -1533,6 +1530,7 @@ Convertir archivo
 opcion tambien para bajar bit 7 final
 
 -Agregar ensamblador
+
 -Agregar cambiar valor registros en menú debug 
 
 -Mostrar juego cargado en titulo ventana. Desaparece al hacer reset 
