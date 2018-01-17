@@ -242,11 +242,13 @@ extern int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,i
 
 	z80_byte magic_byte=0xDD;
 
+	printf ("Original size: %ld\n",tamanyo);
+
 	int longitud_comprido=util_compress_data_repetitions(memoria_file_orig,memoria_file_compressed,tamanyo,magic_byte);
+	printf ("Compressed size: %d\n",longitud_comprido);
 
 	int longitud_descomprido=util_uncompress_data_repetitions(memoria_file_compressed,memoria_file_uncompressed,longitud_comprido,magic_byte);
-
-	printf ("Original size: %ld Compressed size: %d Uncompressed size: %d\n",tamanyo,longitud_comprido,longitud_descomprido);
+	printf ("Uncompressed size: %d\n",longitud_descomprido);
 
 	int error=0;
 
