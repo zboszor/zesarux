@@ -125,6 +125,8 @@ void coretests_compress_repetitions(void)
 
 	int max_veces=MAX_COMP_REP_ARRAY; //Siempre menor o igual que MAX_COMP_REP_ARRAY. cuantos bytes repetimos
 
+	z80_byte magic_byte=0xDD;
+
         for (i=0;i<=max_veces;i++) {
 
 		int j;
@@ -151,7 +153,7 @@ void coretests_compress_repetitions(void)
 
 		printf ("\n");
 
-		int longitud_destino=util_compress_data_repetitions(repetitions,compressed_data,max_array,0xDD);
+		int longitud_destino=util_compress_data_repetitions(repetitions,compressed_data,max_array,magic_byte);
 
 		printf ("compressed length: %d\n",longitud_destino);
 
@@ -162,7 +164,13 @@ void coretests_compress_repetitions(void)
 
 
 		//Validar, pero solo para iteraciones < 256. mas alla de ahi, dificil de calcular
-		if (i<256-4) {
+		int limite=256-4-magic_byte;
+		//A partir de 33 con magic_byte=0xDD falla el calculo porque hay:
+		//D8 D9 DA DB DC DD 1 1 1 1 1 1 1 1 ....... Ese DD aislado hay que escaparlo como 1 sola repeticion
+		//que se traduce en:
+		//D8 D9 DA DB DC DD DD DD 01 DD DD 01 22 
+
+		if (i<limite) {
 			//Validacion solo de longitud comprimida. El contenido, hacer una validacion manual
 			int valor_esperado_comprimido=max_array;
 			if (i>3) valor_esperado_comprimido=max_array-(i-3)*2;
@@ -276,7 +284,9 @@ extern int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,i
 	}
 	
 
-	if (error) exit(1);
+	if (error) {
+		exit(1);
+	}
 
 }
 
@@ -299,9 +309,4 @@ void codetests_main(void)
 }
 
 
-//Considerar casos 03 20 DD DD ... o combinaciones que generan DD sin querer
-//Ejemplo: DD 00 00 00 00 00  -> genera DD    DD DD 00 5
-//Habria que ver al generar repeticion, si anterior era DD, hay que convertir el DD anterior en DD DD DD 01
 
-
-//Segfault con cp zesarux.xcf prueba.raw

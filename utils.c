@@ -9661,6 +9661,7 @@ int util_get_byte_repetitions(z80_byte *memoria,int longitud,z80_byte *byte_repe
 		//printf ("longitud: %d memoria: %p\n",longitud,memoria);
 		repeticiones++;
 		memoria++;
+		longitud--;
 	}
 
 	*byte_repetido=byte_anterior;
@@ -9691,6 +9692,17 @@ Si no hay repeticiones, se retornan los bytes tal cual
 **si se repite mas de 256 veces, trocear en varios
 
 Retorna: longitud del bloque destino
+
+
+Considerar caso DD 00 00 00 00 00 ...  -> genera DD    DD DD 00 5 
+Habria que ver al generar repeticion, si anterior era DD, hay que convertir el DD anterior en DD DD DD 01
+Debe generar:
+DD DD DD 01  DD DD 00 05
+
+O sea, tenemos el DD anterior, agregamos DD DD 01
+
+con zxuno.flash es uno de estos casos
+
 */
 
 int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longitud,z80_byte magic_byte)
@@ -9698,9 +9710,13 @@ int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longit
 
 	int longitud_destino=0;
 
-	while (longitud) {
+	int antes_es_magic_aislado=0; //Si el de antes era un byte magic (normalmente DD) asilado
+
+	while (longitud) {		
 		z80_byte byte_repetido;
 		int repeticiones=util_get_byte_repetitions(origen,longitud,&byte_repetido);
+		//printf ("Remaining size: %d Byte: %02X Repetitions: %d\n",longitud,byte_repetido,repeticiones);
+		//if (longitud<0) exit(1);
 
 		origen +=repeticiones;
 		longitud -=repeticiones;
@@ -9713,6 +9729,15 @@ int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longit
 			//Escribir magic byte dos veces, byte a repetir, y numero repeticiones
 			//Si repeticiones > 256, trocear
 			while (repeticiones>0) {
+				if (antes_es_magic_aislado) {
+					destino[0]=magic_byte;
+					destino[1]=magic_byte;
+					destino[2]=1;
+
+					destino +=3;
+					longitud_destino +=3;
+				}
+
 				destino[0]=magic_byte;
 				destino[1]=magic_byte;
 				destino[2]=byte_repetido;
@@ -9722,19 +9747,25 @@ int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longit
 
 				destino[3]=brep;
 
-				printf ("%p %02X %02X %02X %02X\n",destino,magic_byte,magic_byte,byte_repetido,brep);
+				//printf ("%d %02X %02X %02X %02X\n",longitud,magic_byte,magic_byte,byte_repetido,brep);
 
 				destino +=4;
 				longitud_destino +=4;
 
 				repeticiones -=256;
 			}
+
+			antes_es_magic_aislado=0;
 		}
 
 		else {
 			//No hay repeticiones
+			if (repeticiones==1 && byte_repetido==magic_byte) antes_es_magic_aislado=1;
+			else antes_es_magic_aislado=0;
+
+
 			util_write_repeated_byte(destino,byte_repetido,repeticiones);
-			printf ("%p %02X(%d)\n",destino,byte_repetido,repeticiones);
+			//printf ("%d %02X(%d)\n",longitud,byte_repetido,repeticiones);
 
 			destino +=repeticiones;
 			longitud_destino +=repeticiones;
