@@ -1970,6 +1970,7 @@ int scrcocoa_antespulsadoctrl=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsado
 - (void)showQEMUDoc:(id)sender;
 - (void)showQEMUTec:(id)sender;
 - (void)openzesaruxmenu:(id)sender;
+- (void)setzoomone:(id)sender;
 
 @end
 
@@ -2109,6 +2110,12 @@ int scrcocoa_antespulsadoctrl=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsado
         menu_abierto=1;
 }
 
+- (void) setzoomone:(id)sender
+{
+	screen_set_window_zoom(1);
+}
+
+
 @end
 
 
@@ -2241,6 +2248,8 @@ if (!GetCurrentProcess(&psn))
     menu = [[NSMenu alloc] initWithTitle:@"Window"];
     [menu addItem: [[[NSMenuItem alloc] initWithTitle:@"Minimize" action:@selector(performMiniaturize:) keyEquivalent:@""] autorelease]]; // Miniaturize
     //[menu addItem: [[[NSMenuItem alloc] initWithTitle:@"Minimize" action:@selector(performMiniaturize:) ] autorelease]]; // Miniaturize
+    [menu addItem: [[[NSMenuItem alloc] initWithTitle:@"Set Zoom 1" action:@selector(setzoomone:) keyEquivalent:@""] autorelease]];
+
     menuItem = [[[NSMenuItem alloc] initWithTitle:@"Window" action:nil keyEquivalent:@""] autorelease];
     [menuItem setSubmenu:menu];
     [[NSApp mainMenu] addItem:menuItem];
@@ -2250,7 +2259,6 @@ if (!GetCurrentProcess(&psn))
     //menu = [[NSMenu alloc] initWithTitle:@"Help"];
     //[menu addItem: [[[NSMenuItem alloc] initWithTitle:@"QEMU Documentation" action:@selector(showQEMUDoc:) keyEquivalent:@""] autorelease]]; // QEMU Help
     //[menu addItem: [[[NSMenuItem alloc] initWithTitle:@"QEMU Technology" action:@selector(showQEMUTec:) keyEquivalent:@""] autorelease]]; // QEMU Help
-    //[menu addItem: [[[NSMenuItem alloc] initWithTitle:@"Open ZEsarUX menu" action:@selector(openzesaruxmenu:) keyEquivalent:@""] autorelease]];
     //menuItem = [[[NSMenuItem alloc] initWithTitle:@"Window" action:nil keyEquivalent:@""] autorelease];
     //[menuItem setSubmenu:menu];
     //[[NSApp mainMenu] addItem:menuItem];
