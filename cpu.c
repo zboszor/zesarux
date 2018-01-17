@@ -5908,7 +5908,7 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 
                 if (main_argc>1) {
                         if (!strcmp(main_argv[1],"--codetests")) {
-                                codetests_main();
+                                codetests_main(main_argc,main_argv);
                                 exit(1);
                         }
 

@@ -25,6 +25,6 @@
 #include "cpu.h"
 
 
-extern void codetests_main(void);
+extern void codetests_main(int main_argc,char *main_argv[]);
 
 #endif

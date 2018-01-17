@@ -252,10 +252,13 @@ extern int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,i
 
 	printf ("Original size: %ld\n",tamanyo);
 
-	int longitud_comprido=util_compress_data_repetitions(memoria_file_orig,memoria_file_compressed,tamanyo,magic_byte);
-	printf ("Compressed size: %d\n",longitud_comprido);
+	int longitud_comprimido=util_compress_data_repetitions(memoria_file_orig,memoria_file_compressed,tamanyo,magic_byte);
+	int porcentaje;
+	if (tamanyo==0) porcentaje=100;
+	else porcentaje=(longitud_comprimido*100)/tamanyo;
+	printf ("Compressed size: %d (%d%%)\n",longitud_comprimido,porcentaje);
 
-	int longitud_descomprido=util_uncompress_data_repetitions(memoria_file_compressed,memoria_file_uncompressed,longitud_comprido,magic_byte);
+	int longitud_descomprido=util_uncompress_data_repetitions(memoria_file_compressed,memoria_file_uncompressed,longitud_comprimido,magic_byte);
 	printf ("Uncompressed size: %d\n",longitud_descomprido);
 
 	int error=0;
@@ -274,7 +277,7 @@ extern int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,i
 		byte_uncompress=memoria_file_uncompressed[i];
 		if (byte_orig!=byte_uncompress) {
 			printf("Difference in offset %XH. Original byte: %02XH Uncompressed byte: %02XH\n",i,byte_orig,byte_uncompress);
-			//error++;
+			error++;
 		}
 
 		if (error>=10) {
@@ -288,24 +291,30 @@ extern int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,i
 		exit(1);
 	}
 
+	else {
+		printf ("Compress/Uncompress ok\n");
+	}
+
 }
 
-void coretests_compress_uncompress_repetitions(void)
+void coretests_compress_uncompress_repetitions(char *archivo)
 {
-	coretests_compress_uncompress_repetitions_aux("prueba.raw");
+	printf ("Testing compression routine with file %s\n",archivo);
+	coretests_compress_uncompress_repetitions_aux(archivo);
 }
 
-void codetests_main(void)
+void codetests_main(int main_argc,char *main_argv[])
 {
-	printf ("\nRunning repetitions code\n");
+	/*printf ("\nRunning repetitions code\n");
 	codetests_repetitions();
 
 	printf ("\nRunning compress repetitions code\n");
-	coretests_compress_repetitions();
+	coretests_compress_repetitions();*/
 
 	printf ("\nRunning compress/uncompress repetitions code\n");
-	coretests_compress_uncompress_repetitions();
+	coretests_compress_uncompress_repetitions(main_argv[2]);
 
+	exit(0);
 }
 
 
