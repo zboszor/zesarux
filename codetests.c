@@ -62,14 +62,14 @@ void codetests_repetitions(void)
 		else if (i==3) puntero=repetitions3;
 		else if (i==4) puntero=repetitions4;
 
-		printf ("step %d repetitions: %d byte_repeated: %d puntero=%p\n",i,repeticiones[i],byte_repetido[i],puntero);
+		repeticiones[i]=util_get_byte_repetitions(puntero,10,&byte_repetido[i]);
 
+		printf ("step %d repetitions: %d byte_repeated: %d\n",i,repeticiones[i],byte_repetido[i]);
 
-		z80_byte c;
-		//repeticiones[i]=util_get_byte_repetitions(puntero,10,&byte_repetido[i]);
-		util_get_byte_repetitions(puntero,10,&c);
-
-		printf ("step %d repetitions: %d byte_repeated: %d puntero=%p\n",i,repeticiones[i],byte_repetido[i],puntero);
+		if (byte_repetido[i]!=1 || repeticiones[i]!=i+1) {
+			printf ("error\n");
+			exit(1);
+		}
 	}
 }
 
