@@ -248,13 +248,28 @@ extern int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,i
 
 	printf ("Original size: %ld Compressed size: %d Uncompressed size: %d\n",tamanyo,longitud_comprido,longitud_descomprido);
 
+	int error=0;
+
 	//Primera comprobacion de tamanyo
 	if (tamanyo!=longitud_descomprido) {
 		printf ("Original size and uncompressed size doesnt match\n");
-		exit(1);
+		error=1;
+	}
+
+	//Y luego comparar byte a byte
+	int i;
+	for (i=0;i<tamanyo;i++) {
+		z80_byte byte_orig,byte_uncompress;
+		byte_orig=memoria_file_orig[i];
+		byte_uncompress=memoria_file_uncompressed[i];
+		if (byte_orig!=byte_uncompress) {
+			printf("Difference in offset %XH. Original byte: %02XH Uncompressed byte: %02XH\n",i,byte_orig,byte_uncompress);
+			error=1;
+		}
 	}
 	
 
+	if (error) exit(1);
 
 }
 
