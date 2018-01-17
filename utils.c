@@ -9652,12 +9652,15 @@ int util_get_byte_repetitions(z80_byte *memoria,int longitud,z80_byte *byte_repe
 	//Primer byte
 	z80_byte byte_anterior;
 	byte_anterior=*memoria;
+	//printf ("byte anterior: %d\n",byte_anterior);
 
 	memoria++;
 	longitud--;
 
-	while (longitud && (*memoria)==byte_anterior) {
+	while (longitud>0 && (*memoria)==byte_anterior) {
+		//printf ("longitud: %d memoria: %p\n",longitud,memoria);
 		repeticiones++;
+		memoria++;
 	}
 
 	*byte_repetido=byte_anterior;
