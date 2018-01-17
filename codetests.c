@@ -85,6 +85,30 @@ void coretests_dumphex(z80_byte *ptr,int longitud)
 }
 
 
+
+//mostrar unos cuantos del inicio y del final
+void coretests_dumphex_inicio_fin(z80_byte *ptr,int longitud,int max_mostrar)
+{
+
+	int mostrar;
+	int cortado=0;
+	if (longitud>max_mostrar*2) {
+		mostrar=max_mostrar;
+		cortado=1;
+	}
+	else mostrar=longitud;
+
+	coretests_dumphex(ptr,mostrar);
+
+
+	if (cortado) {
+		printf (" ... ");
+		coretests_dumphex(ptr+longitud-mostrar,mostrar);
+	}
+
+}
+
+
 void coretests_compress_repetitions(void)
 {
 
@@ -101,7 +125,7 @@ void coretests_compress_repetitions(void)
 
 	int max_veces=MAX_COMP_REP_ARRAY; //Siempre menor o igual que MAX_COMP_REP_ARRAY. cuantos bytes repetimos
 
-        for (i=1;i<=max_veces;i++) {
+        for (i=0;i<=max_veces;i++) {
 
 		int j;
 
@@ -110,29 +134,20 @@ void coretests_compress_repetitions(void)
 			repetitions[j]=j&255;
 		}
 
-		//Meter valores "1" al principio
-		for (j=0;j<i;j++) {
-			repetitions[j]=1;
+		//Meter valores "0" al principio
+		for (j=0;j<=i;j++) {
+			repetitions[j]=0;
 		}
 
-		//Meter valores "2" al final 
-		for (j=0;j<i;j++) {
-			repetitions[max_array-1-j]=2;
+		//Meter valores "1" al final 
+		for (j=0;j<=i;j++) {
+			repetitions[max_array-1-j]=1;
 		}
 
                 //repeticiones[i]=util_get_byte_repetitions(puntero,10,&byte_repetido[i]);
-		printf ("step %d length: %d\n",i,max_array);
+		printf ("step %d length: %d. 0's at beginning: %d. 1's at end: %d\n",i,max_array,i+1,i+1);
 
-		int mostrar_hexa;
-		mostrar_hexa=max_array;
-
-		if (max_array>20) mostrar_hexa=20;
-
-		coretests_dumphex(repetitions,mostrar_hexa);
-		if (max_array>40) {
-			printf (" ... ");
-			coretests_dumphex(repetitions+max_array-mostrar_hexa,mostrar_hexa);
-		}
+		coretests_dumphex_inicio_fin(repetitions,max_array,20);
 
 		printf ("\n");
 
@@ -140,24 +155,25 @@ void coretests_compress_repetitions(void)
 
 		printf ("compressed length: %d\n",longitud_destino);
 
-		coretests_dumphex(compressed_data,longitud_destino);
+		//coretests_dumphex(compressed_data,longitud_destino);
+		coretests_dumphex_inicio_fin(compressed_data,longitud_destino,20);
 		printf ("\n");
 
 
-		//Validacion solo de longitud comprimida. El contenido, hacer una validacion manual
-		int valor_esperado_comprimido=max_array;
-		if (i>4) {
-			int valor_minimo=max_array/42;
-			valor_esperado_comprimido=max_array-(i-4)*2;
-			if (valor_esperado_comprimido<valor_minimo) valor_esperado_comprimido=valor_minimo;
+
+		//Validar, pero solo para iteraciones < 256. mas alla de ahi, dificil de calcular
+		if (i<256-4) {
+			//Validacion solo de longitud comprimida. El contenido, hacer una validacion manual
+			int valor_esperado_comprimido=max_array;
+			if (i>3) valor_esperado_comprimido=max_array-(i-3)*2;
+
+			printf ("Expected length: %d\n",valor_esperado_comprimido);
+
+			if (valor_esperado_comprimido!=longitud_destino) {
+                	        printf ("error\n");
+                        	exit(1);
+	                }
 		}
-
-		printf ("Expected length: %d\n",valor_esperado_comprimido);
-
-		if (valor_esperado_comprimido!=longitud_destino) {
-                        printf ("error\n");
-                        //exit(1);
-                }
 
 		printf ("\n");
         }
