@@ -9668,6 +9668,16 @@ int util_get_byte_repetitions(z80_byte *memoria,int longitud,z80_byte *byte_repe
 
 }
 
+void util_write_repeated_byte(z80_byte *memoria,z80_byte byte_a_repetir,int longitud)
+{
+	while (longitud>0) {
+		*memoria=byte_a_repetir;
+
+		longitud--;
+		memoria++;
+	}
+}
+
 
 /*
 Funcion de compresion de datos
@@ -9679,4 +9689,53 @@ Si no hay repeticiones, se retornan los bytes tal cual
 **si en entrada hay byte XX repetido al menos 2 veces, se trata como repeticion, sin tener que llegar al minimo de 5
 **si el bloque de salida ocupa mas que el de entrada (que hubiesen muchos XX XX en la entrada) , el proceso que llama aqui lo debe considerar, para dejar el bloque sin comprimir
 **si se repite mas de 256 veces, trocear en varios
+
+Retorna: longitud del bloque destino
 */
+
+int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longitud,z80_byte magic_byte)
+{
+
+	int longitud_destino=0;
+
+	while (longitud) {
+		z80_byte byte_repetido;
+		int repeticiones=util_get_byte_repetitions(origen,longitud,&byte_repetido);
+
+		origen +=repeticiones;
+		longitud -=repeticiones;
+		
+		//Hay repeticiones
+		if (repeticiones>=5
+			||
+		(byte_repetido==magic_byte && repeticiones>1)
+		) {
+			//Escribir magic byte dos veces, byte a repetir, y numero repeticiones
+			//Si repeticiones > 256, trocear
+			while (repeticiones>256) {
+				destino[0]=magic_byte;
+				destino[1]=magic_byte;
+				destino[2]=byte_repetido;
+				destino[3]=(repeticiones&255);
+
+				destino +=4;
+				longitud_destino +=4;
+
+				repeticiones -=256;
+			}
+		}
+
+		else {
+			//No hay repeticiones
+			util_write_repeated_byte(destino,byte_repetido,repeticiones);
+			destino +=repeticiones;
+			longitud_destino +=repeticiones;
+
+
+		}
+	}
+
+	return longitud_destino;
+	
+}
+
