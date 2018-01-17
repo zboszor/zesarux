@@ -264,7 +264,12 @@ extern int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,i
 		byte_uncompress=memoria_file_uncompressed[i];
 		if (byte_orig!=byte_uncompress) {
 			printf("Difference in offset %XH. Original byte: %02XH Uncompressed byte: %02XH\n",i,byte_orig,byte_uncompress);
-			error=1;
+			//error++;
+		}
+
+		if (error>=10) {
+			printf ("And more errors.... showing only first 10\n");
+			exit(1);
 		}
 	}
 	
