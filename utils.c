@@ -9703,6 +9703,19 @@ O sea, tenemos el DD anterior, agregamos DD DD 01
 
 con zxuno.flash es uno de estos casos
 
+
+Peor de los casos:
+
+A)
+DD DD 00  DD DD 00  ....  6 bytes
+DD DD DD 02     DD DD DD 02   8 bytes
+
+B)
+DD 00 00 00 00 00   DD 00 00 00 00 00  ... 12 bytes
+DD DD DD 01  DD DD 00 5    DD DD DD 01  DD DD 00 5   .... 16 bytes
+
+consideramos lo peor que sea el doble
+
 */
 
 int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longitud,z80_byte magic_byte)

@@ -109,8 +109,9 @@ Motorola CPU Registers
 -Block ID 4: ZSF_RAMBLOCK
 A ram binary block
 Byte Fields:
-0: Flags. Currently: bit 0: if compressed
-1,2: Block start
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where 
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address
 3,4: Block lenght
 5 and next bytes: data bytes
 
@@ -183,7 +184,7 @@ void load_zsf_snapshot_z80_regs(z80_byte *header)
         iff1.v=iff2.v=header[26] &1;
 }
 
-void load_zsf_snapshot_block_data(z80_byte *block_data)
+void load_zsf_snapshot_block_data(z80_byte *block_data,int longitud_original)
 {
   /*
   ramblock[0]=0;
@@ -196,9 +197,7 @@ void load_zsf_snapshot_block_data(z80_byte *block_data)
   int i=0;
   z80_byte block_flags=block_data[i];
 
-  if (block_flags&1) {
-    debug_printf(VERBOSE_ERR,"Error. Compressed block not supported yet");
-  }
+  //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 5 bytes
 
   i++;
   z80_int block_start=value_8_to_16(block_data[i+1],block_data[i]);
@@ -206,10 +205,22 @@ void load_zsf_snapshot_block_data(z80_byte *block_data)
   z80_int block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
   i+=2;
 
-  debug_printf (VERBOSE_DEBUG,"Block start: %d Lenght: %d",block_start,block_lenght);
-  while (block_lenght) {
-    poke_byte_no_time(block_start++,block_data[i++]);
-    block_lenght--;
+  debug_printf (VERBOSE_DEBUG,"Block start: %d Lenght: %d Compressed: %d Length_source: %d",block_start,block_lenght,block_flags&1,longitud_original);
+
+  longitud_original -=5;
+
+  if (block_flags&1) {
+    //Comprimido
+    util_uncompress_data_repetitions(&block_data[i],&memoria_spectrum[block_start],longitud_original,0xDD);
+    return;
+  }
+
+
+  else {
+    while (block_lenght) {
+      poke_byte_no_time(block_start++,block_data[i++]);
+      block_lenght--;
+    }
   }
 }
 
@@ -281,7 +292,7 @@ void load_zsf_snapshot(char *filename)
       break;
 
       case ZSF_RAMBLOCK:
-        load_zsf_snapshot_block_data(block_data);
+        load_zsf_snapshot_block_data(block_data,block_lenght);
       break;
 
       default:
@@ -351,6 +362,27 @@ void save_zsf_snapshot_cpuregs(FILE *ptr)
 
 }
 
+//Guarda en destino el bloque de memoria comprimido, siempre que salga a cuenta comprimirlo. 
+//Si ocupa mas que el original, lo guardara comprimido
+//Retorna longitud en valor retorno, flag indicando si esta comprimido o no
+//Tener en cuenta que el destino sea al menos de tamanyo el doble que origen
+int save_zsf_copyblock_compress_uncompres(z80_byte *origen,z80_byte *destino,int tamanyo_orig,int *si_comprimido)
+{
+
+  int longitud_comprimido=util_compress_data_repetitions(origen,destino,tamanyo_orig,0xDD);
+
+  if (longitud_comprimido>tamanyo_orig) {
+    *si_comprimido=0;
+    memcpy(destino,origen,tamanyo_orig);
+    return tamanyo_orig;
+  }
+
+  else {
+    *si_comprimido=1;
+    return longitud_comprimido;
+  }
+}
+
 void save_zsf_snapshot(char *filename)
 {
 
@@ -387,6 +419,14 @@ void save_zsf_snapshot(char *filename)
     return;
   }
 
+
+  //Para el bloque comprimido
+   z80_byte *compressed_ramblock=malloc(49152*2);
+  if (ramblock==NULL) {
+    debug_printf (VERBOSE_ERR,"Error allocating memory");
+    return;
+  }
+
   /*
   0: Flags. Currently: bit 0: if compressed
   1,2: Block start
@@ -394,20 +434,28 @@ void save_zsf_snapshot(char *filename)
   5 and next bytes: data bytes
   */
 
-  ramblock[0]=0;
-  ramblock[1]=value_16_to_8l(16384);
-  ramblock[2]=value_16_to_8h(16384);
-  ramblock[3]=value_16_to_8l(49152);
-  ramblock[4]=value_16_to_8h(49152);
+  compressed_ramblock[0]=0;
+  compressed_ramblock[1]=value_16_to_8l(16384);
+  compressed_ramblock[2]=value_16_to_8h(16384);
+  compressed_ramblock[3]=value_16_to_8l(49152);
+  compressed_ramblock[4]=value_16_to_8h(49152);
 
   //Copy spectrum memory to ramblock
   int i;
   for (i=0;i<49152;i++) ramblock[5+i]=peek_byte_no_time(16384+i);
 
+  int si_comprimido;
+  int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[16384],&compressed_ramblock[5],49152,&si_comprimido);
+  if (si_comprimido) compressed_ramblock[0]|=1;
+
   //Store block to file
-  zsf_write_block(ptr_zsf_file, ramblock,ZSF_RAMBLOCK, 49152+5);
+  zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_RAMBLOCK, longitud_bloque+5);
+
 
   free(ramblock);
+
+  //test
+  save_zsf_snapshot_cpuregs(ptr_zsf_file);
 
 
   fclose(ptr_zsf_file);
