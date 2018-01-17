@@ -54,14 +54,20 @@ void codetests_repetitions(void)
 
 	int i;
 	z80_byte *puntero=NULL;
+
 	for (i=0;i<5;i++) {
-		if (i==0) puntero=repetitions0;
+		if      (i==0) puntero=repetitions0;
 		else if (i==1) puntero=repetitions1;
 		else if (i==2) puntero=repetitions2;
 		else if (i==3) puntero=repetitions3;
 		else if (i==4) puntero=repetitions4;
 
-		repeticiones[i]=util_get_byte_repetitions(puntero,10,&byte_repetido[i]);
+		printf ("step %d repetitions: %d byte_repeated: %d\n",i,repeticiones[i],byte_repetido[i]);
+
+
+		z80_byte c;
+		//repeticiones[i]=util_get_byte_repetitions(puntero,10,&byte_repetido[i]);
+		util_get_byte_repetitions(puntero,10,&c);
 
 		printf ("step %d repetitions: %d byte_repeated: %d\n",i,repeticiones[i],byte_repetido[i]);
 	}
