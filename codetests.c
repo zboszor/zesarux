@@ -297,3 +297,11 @@ void codetests_main(void)
 	coretests_compress_uncompress_repetitions();
 
 }
+
+
+//Considerar casos 03 20 DD DD ... o combinaciones que generan DD sin querer
+//Ejemplo: DD 00 00 00 00 00  -> genera DD    DD DD 00 5
+//Habria que ver al generar repeticion, si anterior era DD, hay que convertir el DD anterior en DD DD DD 01
+
+
+//Segfault con cp zesarux.xcf prueba.raw

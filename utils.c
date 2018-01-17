@@ -9722,7 +9722,7 @@ int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longit
 
 				destino[3]=brep;
 
-				//printf ("rep: %d %d\n",repeticiones,brep);
+				printf ("%p %02X %02X %02X %02X\n",destino,magic_byte,magic_byte,byte_repetido,brep);
 
 				destino +=4;
 				longitud_destino +=4;
@@ -9734,8 +9734,11 @@ int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int longit
 		else {
 			//No hay repeticiones
 			util_write_repeated_byte(destino,byte_repetido,repeticiones);
+			printf ("%p %02X(%d)\n",destino,byte_repetido,repeticiones);
+
 			destino +=repeticiones;
 			longitud_destino +=repeticiones;
+
 
 
 		}
