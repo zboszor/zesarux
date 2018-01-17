@@ -9638,3 +9638,13 @@ void util_file_save(char *filename,z80_byte *puntero, int tamanyo)
                                 }
 
 }
+
+/*
+Funcion usada en compresion de datos
+Dado un puntero de entrada, y la longitud del bloque, dice cuantas veces aparecer el primer byte, y que byte es
+Retorna: numero de repeticiones (minimo 1) y el byte que es (modifica contenido puntero *byte_repetido)
+*/
+
+int util_get_byte_repetitions(z80_byte *memoria,int longitud,z80_byte *byte_repetido)
+{
+}
