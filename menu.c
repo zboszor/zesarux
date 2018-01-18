@@ -4242,6 +4242,14 @@ menu_restore_overlay_text_contents(copia_overlay);
 
 }
 
+int menu_dibuja_menu_permite_repeticiones=0;
+
+void menu_dibuja_menu_espera_no_tecla(void)
+{
+	if (menu_dibuja_menu_permite_repeticiones) menu_espera_no_tecla_con_repeticion();
+	else menu_espera_no_tecla();
+}
+
 //Funcion de gestion de menu
 //Entrada: opcion_inicial: puntero a opcion inicial seleccionada
 //m: estructura de menu (estructura en forma de lista con punteros)
@@ -4284,7 +4292,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	//esto lo haremos ligeramente despues menu_speech_tecla_pulsada=0;
 
-	menu_reset_counters_tecla_repeticion();
+	if (!menu_dibuja_menu_permite_repeticiones) menu_reset_counters_tecla_repeticion();
 
 
 	//nota: parece que scr_actualiza_tablas_teclado se debe llamar en el caso de xwindows para que refresque la pantalla->seguramente viene por un evento
@@ -4395,7 +4403,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		//Si se estaba escuchando speech y se pulsa una tecla, esa tecla debe entrar aqui tal cual y por tanto, no hacemos espera_no_tecla
 		//temp menu_espera_no_tecla();
 		if (menu_speech_tecla_pulsada==0) {
-			menu_espera_no_tecla();
+			//menu_espera_no_tecla();
+			menu_dibuja_menu_espera_no_tecla();
 		}
 		menu_speech_tecla_pulsada=0;
 
@@ -4405,6 +4414,12 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 			//leemos tecla de momento de dos maneras, con puerto y con get_pressed_key
 			tecla_leida=menu_get_pressed_key();
+
+			//Para poder usar repeticiones
+			//if (tecla==0) {
+			//	printf ("reset counter\n");
+			//	menu_reset_counters_tecla_repeticion();
+			//}
 
 			//printf ("tecla_leida: %d\n",tecla_leida);
 			if (mouse_movido) {
@@ -4614,7 +4629,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				menu_writing_inverse_color.v=1;
 				menu_escribe_opciones(m,entrada_atajo,max_opciones);
 				all_interlace_scr_refresca_pantalla();
-				menu_espera_no_tecla();
+				//menu_espera_no_tecla();
+				menu_dibuja_menu_espera_no_tecla();
 
 				//decimos que se ha pulsado Enter
 				tecla=13;
@@ -19805,6 +19821,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
         menu_espera_no_tecla();
 	//menu_debug_visualmem_dibuja_ventana();
 
+	menu_reset_counters_tecla_repeticion();
+
         z80_byte acumulado;
 
 
@@ -19815,7 +19833,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
         set_menu_overlay_function(menu_debug_draw_visualmem);
 
 
-
+	menu_dibuja_menu_permite_repeticiones=1;
 
 
 menu_item *array_menu_debug_new_visualmem;
@@ -19898,6 +19916,7 @@ menu_item *array_menu_debug_new_visualmem;
 
 
 
+	menu_dibuja_menu_permite_repeticiones=0;
 
 
 
