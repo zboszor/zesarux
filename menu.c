@@ -19642,6 +19642,12 @@ void menu_debug_new_visualmem_no_action(MENU_ITEM_PARAMETERS)
 {
 }
 
+void menu_debug_new_visualmem_looking(MENU_ITEM_PARAMETERS)
+{
+	menu_visualmem_donde++;
+	if (menu_visualmem_donde==3) menu_visualmem_donde=0;
+}
+
 void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 {
 
@@ -19653,7 +19659,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
         menu_espera_no_tecla();
-	menu_debug_visualmem_dibuja_ventana();
+	//menu_debug_visualmem_dibuja_ventana();
 
         z80_byte acumulado;
 
@@ -19662,8 +19668,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
         //Cambiamos funcion overlay de texto de menu
         //Se establece a la de funcion de visualmem + texto
-	//Temporalmente desactivado
-        //set_menu_overlay_function(menu_debug_draw_visualmem);
+        set_menu_overlay_function(menu_debug_draw_visualmem);
 
 
 
@@ -19673,6 +19678,10 @@ menu_item *array_menu_debug_new_visualmem;
         menu_item item_seleccionado;
         int retorno_menu;
         do {
+
+
+	  //Hay que redibujar la ventana desde este bucle
+	  menu_debug_visualmem_dibuja_ventana();
 
 
 //        char texto_linea[33];
@@ -19685,6 +19694,7 @@ menu_item *array_menu_debug_new_visualmem;
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"File used for the ZX-Uno SPI Flash");
 						//0123456789
 						// Size: OPQA
+						// Size: OPQA Bright: %d
 						// Looking
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,7,0);
 
@@ -19694,23 +19704,37 @@ menu_item *array_menu_debug_new_visualmem;
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,8,0);
 
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~Looking");
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~Q");
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'q');
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,9,0);
+
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~A");
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'a');
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,10,0);
+
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~Bright: %d",visualmem_bright_multiplier);
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'b');
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,12,0);
+
+
+			char texto_looking[32];
+	        	if (menu_visualmem_donde == 0) sprintf (texto_looking,"Written Mem");
+        		else if (menu_visualmem_donde == 1) sprintf (texto_looking,"Read Mem");
+		        else sprintf (texto_looking,"Opcode");
+
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
                         menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
                         menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,1);
 
 
-
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"Persistent Writes: %s",
-                                        (zxuno_flash_persistent_writes.v ? "Yes" : "No") );
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Tells if ZX-Uno SPI Flash writes are saved to disk");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Tells if ZX-Uno SPI Flash writes are saved to disk. "
-                        "When you enable it, all previous changes (before enable it and since machine boot) and "
-                        "future changes made to spi flash will be saved to disk.\n"
-                        "Note: all writing operations to SPI Flash are always saved to internal memory (unless you disable write permission), but this setting "
-                        "tells if these changes are written to disk or not.");
-			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,4,4);
 
 
                 retorno_menu=menu_dibuja_menu(&debug_new_visualmem_opcion_seleccionada,&item_seleccionado,array_menu_debug_new_visualmem,"Sin nombre" );
