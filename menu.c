@@ -3591,8 +3591,12 @@ void menu_espera_tecla_timeout_tooltip(void)
 
         acumulado=menu_da_todas_teclas();
 
+        int resetear_contadores=0;
+
         //Si se entra y no hay tecla pulsada, resetear contadores
-        if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA) return;
+        if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA) {
+        	resetear_contadores=1;
+        }
 
         do {
                 menu_cpu_core_loop();
@@ -3604,8 +3608,7 @@ void menu_espera_tecla_timeout_tooltip(void)
 
         } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && menu_tooltip_counter<TOOLTIP_SECONDS);
 
-	if ((acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA) {
-	        //Al salir del bucle, reseteamos contadores de repeticion
+	if (resetear_contadores) {
         	menu_reset_counters_tecla_repeticion();
 	}
 
