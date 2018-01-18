@@ -4394,7 +4394,9 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 		//Si se estaba escuchando speech y se pulsa una tecla, esa tecla debe entrar aqui tal cual y por tanto, no hacemos espera_no_tecla
 		//temp menu_espera_no_tecla();
-		if (menu_speech_tecla_pulsada==0) menu_espera_no_tecla();
+		if (menu_speech_tecla_pulsada==0) {
+			menu_espera_no_tecla();
+		}
 		menu_speech_tecla_pulsada=0;
 
 		while (tecla==0 && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
@@ -19753,10 +19755,6 @@ void menu_debug_visualmem(MENU_ITEM_PARAMETERS)
 }
 
 
-
-void menu_debug_new_visualmem_no_action(MENU_ITEM_PARAMETERS)
-{
-}
 
 void menu_debug_new_visualmem_looking(MENU_ITEM_PARAMETERS)
 {
