@@ -3040,6 +3040,50 @@ void menu_escribe_linea_opcion(z80_byte indice,int opcion_actual,int opcion_acti
 
 }
 
+//escribe opcion de texto tabulado
+//coordenadas "indice" relativa al interior de la ventana (0=inicio)
+//opcion_actual indica que numero de linea es la seleccionada
+//opcion activada indica a 1 que esa opcion es seleccionable
+void menu_escribe_linea_opcion_tabulado(z80_byte indice,int opcion_actual,int opcion_activada,char *texto,int x,int y)
+{
+
+        if (!strcmp(scr_driver_name,"stdout")) {
+                printf ("%s\n",texto);
+                scrstdout_menu_print_speech_macro (texto);
+                return;
+        }
+
+
+        z80_byte papel,tinta;
+        int i;
+
+        //tinta=0;
+
+
+        menu_retorna_colores_linea_opcion(indice,opcion_actual,opcion_activada,&papel,&tinta);
+
+
+        //linea entera con espacios
+        //for (i=0;i<ventana_ancho;i++) menu_escribe_texto_ventana(i,indice,0,papel," ");
+
+        //y texto propiamente
+
+        int startx=menu_escribe_linea_startx;
+        //menu_escribe_texto_ventana(startx,indice,tinta,papel,texto);
+        menu_escribe_texto_ventana(x,y,tinta,papel,texto);
+
+        //si el driver de video no tiene colores o si el estilo de gui lo indica, indicamos opcion activa con un cursor. De momento no
+	
+        /*if (!scr_tiene_colores || ESTILO_GUI_MUESTRA_CURSOR) {
+                if (opcion_actual==indice) {
+                        if (opcion_activada==1) menu_escribe_texto_ventana(0,indice,tinta,papel,">");
+                        else menu_escribe_texto_ventana(0,indice,tinta,papel,"x");
+                }
+        }*/
+        menu_textspeech_send_text(texto);
+
+}
+
 void menu_retorna_margenes_border(int *miz, int *mar)
 {
 	//margenes de zona interior de pantalla. para modo rainbow
@@ -4034,7 +4078,10 @@ void menu_escribe_opciones(menu_item *aux,int linea_seleccionada,int max_opcione
 				}
 			}
 
-                        menu_escribe_linea_opcion(i,linea_seleccionada,opcion_activa,aux->texto_opcion);
+			if (aux->es_menu_tabulado) {
+				menu_escribe_linea_opcion_tabulado(i,linea_seleccionada,opcion_activa,aux->texto_opcion,aux->menu_tabulado_x,aux->menu_tabulado_y);
+			}
+                        else menu_escribe_linea_opcion(i,linea_seleccionada,opcion_activa,aux->texto_opcion);
 
                         aux=aux->next;
 
@@ -19628,17 +19675,30 @@ menu_item *array_menu_debug_new_visualmem;
         do {
 
 
-                        menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~Flash File");
-                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'f');
+//        char texto_linea[33];
+//        sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
+//        menu_escribe_linea_opcion(VISUALMEM_Y,-1,1,texto_linea);
+
+                        menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~O");
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'o');
                         menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"File used for the ZX-Uno SPI Flash");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"File used for the ZX-Uno SPI Flash");
-			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,1);
+						//0123456789
+						// Size: OPQA
+						// Looking
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,7,0);
 
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~Write protect: %s", (zxuno_flash_write_protection.v ? "Yes" : "No"));
-                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'w');
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~P");
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'p');
                         menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
-			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,2,3);
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,8,0);
+
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~Looking");
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,1);
 
 
 
@@ -19650,7 +19710,7 @@ menu_item *array_menu_debug_new_visualmem;
                         "future changes made to spi flash will be saved to disk.\n"
                         "Note: all writing operations to SPI Flash are always saved to internal memory (unless you disable write permission), but this setting "
                         "tells if these changes are written to disk or not.");
-			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,4,5);
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,4,4);
 
 
                 retorno_menu=menu_dibuja_menu(&debug_new_visualmem_opcion_seleccionada,&item_seleccionado,array_menu_debug_new_visualmem,"Sin nombre" );
