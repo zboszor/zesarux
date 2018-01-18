@@ -19764,6 +19764,36 @@ void menu_debug_new_visualmem_looking(MENU_ITEM_PARAMETERS)
 	if (menu_visualmem_donde==3) menu_visualmem_donde=0;
 }
 
+
+void menu_debug_new_visualmem_bright(MENU_ITEM_PARAMETERS)
+{
+                        if (visualmem_bright_multiplier>=200) visualmem_bright_multiplier=1;
+                        else if (visualmem_bright_multiplier==1) visualmem_bright_multiplier=10;
+                        else visualmem_bright_multiplier +=10;
+}
+
+
+void menu_debug_new_visualmem_key_o(MENU_ITEM_PARAMETERS)
+{
+                        if (visualmem_ancho_variable>23) visualmem_ancho_variable--;
+}
+
+
+void menu_debug_new_visualmem_key_p(MENU_ITEM_PARAMETERS)
+{
+                        if (visualmem_ancho_variable<30) visualmem_ancho_variable++;
+}
+
+void menu_debug_new_visualmem_key_q(MENU_ITEM_PARAMETERS)
+{
+                        if (visualmem_alto_variable>7) visualmem_alto_variable--;
+}
+
+void menu_debug_new_visualmem_key_a(MENU_ITEM_PARAMETERS)
+{
+                        if (visualmem_alto_variable<VISUALMEM_MAX_ALTO) visualmem_alto_variable++;
+}
+
 void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 {
 
@@ -19804,7 +19834,7 @@ menu_item *array_menu_debug_new_visualmem;
 //        sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
 //        menu_escribe_linea_opcion(VISUALMEM_Y,-1,1,texto_linea);
 
-                        menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~O");
+                        menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_o,NULL,"~~O");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'o');
                         menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"File used for the ZX-Uno SPI Flash");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"File used for the ZX-Uno SPI Flash");
@@ -19814,25 +19844,25 @@ menu_item *array_menu_debug_new_visualmem;
 						// Looking
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,7,0);
 
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~P");
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_p,NULL,"~~P");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'p');
                         menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,8,0);
 
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~Q");
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_q,NULL,"~~Q");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'q');
                         menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,9,0);
 
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~A");
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_a,NULL,"~~A");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'a');
                         menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,10,0);
 
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~Bright: %d",visualmem_bright_multiplier);
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'b');
                         menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
