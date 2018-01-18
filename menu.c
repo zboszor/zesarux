@@ -4203,7 +4203,13 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	do {
 	redibuja_ventana=0;
 	//printf ("redibujar ventana\n");
-	menu_dibuja_ventana(x,y,ancho,alto,titulo);
+
+
+	//Dibujar ventana siempre que el tipo no sea tabular. Miramos el primer item
+	//printf ("menu pointer: %p\n",m);
+	if (m->es_menu_tabulado==0) {
+		menu_dibuja_ventana(x,y,ancho,alto,titulo);
+	}
 
 	menu_tooltip_counter=0;
 
@@ -4620,8 +4626,9 @@ void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion 
 
 	m->next=next;
 
-	//Si era menu tabulado. Heredamos la opcion
-	//int es_menu_tabulado=m->es_menu_tabulado;
+	//Si era menu tabulado. Heredamos la opcion. Aunque se debe establecer la x,y luego para cada item, lo mantenemos asi para que cada item,
+	//tengan ese parametro
+	int es_menu_tabulado=m->es_menu_tabulado;
 
 	//comprobacion de maximo
 	if (strlen(texto)>MAX_TEXTO_OPCION) cpu_panic ("Text item greater than maximum");
@@ -4636,7 +4643,7 @@ void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion 
 	next->texto_tooltip=NULL;
 	next->atajo_tecla=0;
 	next->menu_funcion_espacio=NULL;
-	//next->es_menu_tabulado=es_menu_tabulado;
+	next->es_menu_tabulado=es_menu_tabulado;
 	next->next=NULL;
 }
 
@@ -19616,11 +19623,13 @@ menu_item *array_menu_debug_new_visualmem;
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'f');
                         menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"File used for the ZX-Uno SPI Flash");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"File used for the ZX-Uno SPI Flash");
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,1);
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~Write protect: %s", (zxuno_flash_write_protection.v ? "Yes" : "No"));
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'w');
                         menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,2,3);
 
 
 
@@ -19632,12 +19641,8 @@ menu_item *array_menu_debug_new_visualmem;
                         "future changes made to spi flash will be saved to disk.\n"
                         "Note: all writing operations to SPI Flash are always saved to internal memory (unless you disable write permission), but this setting "
                         "tells if these changes are written to disk or not.");
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,4,5);
 
-
-
-                                menu_add_item_menu(array_menu_debug_new_visualmem,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_debug_new_visualmem,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-                menu_add_ESC_item(array_menu_debug_new_visualmem);
 
                 retorno_menu=menu_dibuja_menu(&debug_new_visualmem_opcion_seleccionada,&item_seleccionado,array_menu_debug_new_visualmem,"Sin nombre" );
 
