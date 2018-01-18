@@ -3589,6 +3589,11 @@ void menu_espera_tecla_timeout_tooltip(void)
         //Esperar a pulsar una tecla o timeout de tooltip
         z80_byte acumulado;
 
+        acumulado=menu_da_todas_teclas();
+
+        //Si se entra y no hay tecla pulsada, resetear contadores
+        if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA) return;
+
         do {
                 menu_cpu_core_loop();
 
@@ -3599,10 +3604,10 @@ void menu_espera_tecla_timeout_tooltip(void)
 
         } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && menu_tooltip_counter<TOOLTIP_SECONDS);
 
-	//if ((acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA) {
-	//        //Al salir del bucle, reseteamos contadores de repeticion
-        //	menu_reset_counters_tecla_repeticion();
-	//}
+	if ((acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA) {
+	        //Al salir del bucle, reseteamos contadores de repeticion
+        	menu_reset_counters_tecla_repeticion();
+	}
 
 }
 
@@ -3671,22 +3676,7 @@ void menu_espera_tecla_o_joystick(void)
 }
 
 
-void old_menu_espera_no_tecla(void)
-{
 
-        //Esperar a liberar teclas.
-        z80_byte acumulado;
-
-        do {
-		menu_cpu_core_loop();
-
-		acumulado=menu_da_todas_teclas();
-
-		//printf ("menu_espera_no_tecla pc: %d acumulado %d MENU_PUERTO_TECLADO_NINGUNA %d\n",reg_pc,acumulado,MENU_PUERTO_TECLADO_NINGUNA);
-
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) != MENU_PUERTO_TECLADO_NINGUNA);
-
-}
 
 void menu_espera_no_tecla(void)
 {
@@ -3727,6 +3717,7 @@ int menu_segundo_contador_teclas_repeticion;
 
 void menu_reset_counters_tecla_repeticion(void)
 {
+	//printf ("menu_reset_counters_tecla_repeticion\n");
                         menu_contador_teclas_repeticion=CONTADOR_HASTA_REPETICION;
                         menu_segundo_contador_teclas_repeticion=CONTADOR_ENTRE_REPETICION;
 }
@@ -3736,6 +3727,8 @@ void menu_espera_no_tecla_con_repeticion(void)
 
         //Esperar a liberar teclas, pero si se deja pulsada una tecla el tiempo suficiente, se retorna
         z80_byte acumulado;
+
+        //printf ("menu_espera_no_tecla_con_repeticion %d\n",menu_contador_teclas_repeticion);
 
 	//x frames de segundo entre repeticion
 	menu_segundo_contador_teclas_repeticion=CONTADOR_ENTRE_REPETICION;
@@ -4297,7 +4290,10 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	//esto lo haremos ligeramente despues menu_speech_tecla_pulsada=0;
 
-	if (!menu_dibuja_menu_permite_repeticiones) menu_reset_counters_tecla_repeticion();
+	if (!menu_dibuja_menu_permite_repeticiones) {
+		//printf ("llamar a menu_reset_counters_tecla_repeticion desde menu_dibuja_menu al inicio\n");
+		menu_reset_counters_tecla_repeticion();
+	}
 
 
 	//nota: parece que scr_actualiza_tablas_teclado se debe llamar en el caso de xwindows para que refresque la pantalla->seguramente viene por un evento
@@ -4421,13 +4417,13 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			tecla_leida=menu_get_pressed_key();
 
 			//Para poder usar repeticiones
-			if (tecla==0) {
-				printf ("reset counter\n");
+			if (tecla_leida==0) {
+				//printf ("llamar a menu_reset_counters_tecla_repeticion desde menu_dibuja_menu cuando tecla=0\n");
 				menu_reset_counters_tecla_repeticion();
 			}
 
 			else {
-				printf ("no reset counter tecla %d\n",tecla);
+				//printf ("no reset counter tecla %d\n",tecla);
 			}
 
 			//printf ("tecla_leida: %d\n",tecla_leida);
