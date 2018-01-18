@@ -4157,6 +4157,91 @@ int menu_dibuja_menu_cursor_abajo(int linea_seleccionada,int max_opciones,menu_i
 }
 
 
+
+
+void menu_dibuja_menu_help_tooltip(char *texto, int si_tooltip)
+{
+
+	//Para guardar estado ventana al abrir tooltips y menu ayuda-> util en menus tabulados
+	overlay_screen copia_overlay[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
+        int antes_cuadrado_activo;
+        z80_byte antes_cuadrado_x1,antes_cuadrado_y1,antes_cuadrado_x2,antes_cuadrado_y2,antes_cuadrado_color;
+	z80_byte antes_ventana_x,antes_ventana_y,antes_ventana_ancho,antes_ventana_alto;
+
+
+
+        //Guardamos contenido de la pantalla
+        menu_save_overlay_text_contents(copia_overlay);
+
+        //Guardamos linea cuadrado ventana
+        antes_cuadrado_activo=cuadrado_activo;
+        antes_cuadrado_x1=cuadrado_x1;
+        antes_cuadrado_y1=cuadrado_y1;
+        antes_cuadrado_x2=cuadrado_x2;
+        antes_cuadrado_y2=cuadrado_y2;
+        antes_cuadrado_color=cuadrado_color;
+
+        //Guardamos tamanyo ventana
+        antes_ventana_x=ventana_x;
+        antes_ventana_y=ventana_y;
+        antes_ventana_ancho=ventana_ancho;
+        antes_ventana_alto=ventana_alto;
+
+        //Comportamiento de 1 caracter de margen a la izquierda en ventana (lo altera hexdump)
+        //int antes_menu_escribe_linea_startx=menu_escribe_linea_startx;
+
+        //menu_escribe_linea_startx=1;
+
+
+        //Conservar setting salir_todos_menus, que lo cambia el osd
+        //int antes_salir_todos_menus=salir_todos_menus;
+
+
+                                        //Guardar funcion de texto overlay activo, para menus como el de visual memory por ejemplo, para desactivar temporalmente
+                                        void (*previous_function)(void);
+
+                                        previous_function=menu_overlay_function;
+
+                                       //restauramos modo normal de texto de menu
+                                       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+
+        if (si_tooltip) menu_generic_message_tooltip("Tooltip",0,1,0,NULL,"%s",texto);
+	else menu_generic_message("Help",texto);
+
+
+                                        //Restauramos funcion anterior de overlay
+                                        set_menu_overlay_function(previous_function);
+
+
+        //salir_todos_menus=antes_salir_todos_menus;
+
+        //menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
+
+        //Restaurar texto ventana
+menu_restore_overlay_text_contents(copia_overlay);
+
+        //Restaurar linea cuadrado ventana
+        cuadrado_activo=antes_cuadrado_activo;
+        cuadrado_x1=antes_cuadrado_x1;
+        cuadrado_y1=antes_cuadrado_y1;
+        cuadrado_x2=antes_cuadrado_x2;
+        cuadrado_y2=antes_cuadrado_y2;
+        cuadrado_color=antes_cuadrado_color;
+
+        //Restaurar tamanyo ventana
+        ventana_x=antes_ventana_x;
+        ventana_y=antes_ventana_y;
+        ventana_ancho=antes_ventana_ancho;
+        ventana_alto=antes_ventana_alto;
+
+        all_interlace_scr_refresca_pantalla();
+
+
+
+}
+
 //Funcion de gestion de menu
 //Entrada: opcion_inicial: puntero a opcion inicial seleccionada
 //m: estructura de menu (estructura en forma de lista con punteros)
@@ -4174,6 +4259,7 @@ int menu_dibuja_menu_cursor_abajo(int linea_seleccionada,int max_opciones,menu_i
 
 int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item *m,char *titulo)
 {
+
 
 	//no escribir letras de atajos de teclado al entrar en un menu
 	menu_writing_inverse_color.v=0;
@@ -4379,19 +4465,11 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 					menu_espera_no_tecla();
 					menu_speech_tecla_pulsada=0;
 
-					//Guardar funcion de texto overlay activo, para menus como el de visual memory por ejemplo, para desactivar temporalmente
-					void (*previous_function)(void);
 
-					previous_function=menu_overlay_function;
+					menu_dibuja_menu_help_tooltip(texto_ayuda,0);
 
-				       //restauramos modo normal de texto de menu
-				       set_menu_overlay_function(normal_overlay_texto_menu);
+					//menu_generic_message("Help",texto_ayuda);
 
-					menu_generic_message("Help",texto_ayuda);
-
-
-					//Restauramos funcion anterior de overlay
-					set_menu_overlay_function(previous_function);
 
 					redibuja_ventana=1;
 					menu_tooltip_counter=0;
@@ -4589,18 +4667,8 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				menu_speech_tecla_pulsada=0;
 
 
-//Guardar funcion de texto overlay activo, para menus como el de visual memory por ejemplo, para desactivar temporalmente
-                                        void (*previous_function)(void);
-
-                                        previous_function=menu_overlay_function;
-
-                                       //restauramos modo normal de texto de menu
-                                       set_menu_overlay_function(normal_overlay_texto_menu);
-
-				menu_generic_message_tooltip("Tooltip",0,1,0,NULL,"%s",texto_tooltip);
-
-                                        //Restauramos funcion anterior de overlay
-                                        set_menu_overlay_function(previous_function);
+					menu_dibuja_menu_help_tooltip(texto_tooltip,1);
+				//menu_generic_message_tooltip("Tooltip",0,1,0,NULL,"%s",texto_tooltip);
 
 
 				//Esperar no tecla
