@@ -3599,6 +3599,11 @@ void menu_espera_tecla_timeout_tooltip(void)
 
         } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && menu_tooltip_counter<TOOLTIP_SECONDS);
 
+	//if ((acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA) {
+	//        //Al salir del bucle, reseteamos contadores de repeticion
+        //	menu_reset_counters_tecla_repeticion();
+	//}
+
 }
 
 
