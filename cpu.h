@@ -286,13 +286,15 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 //fin valores para stdout
 
 
-#define MACHINE_ID_SPECTRUM_48 1
+#define MACHINE_ID_SPECTRUM_16	0
+#define MACHINE_ID_SPECTRUM_48	1
+#define MACHINE_ID_INVES	2
 
-#define MACHINE_ID_PENTAGON 21
-#define MACHINE_ID_CHROME 22
+#define MACHINE_ID_PENTAGON	21
+#define MACHINE_ID_CHROME	22
 
-#define MACHINE_ID_TSCONF 23
-#define MACHINE_ID_BASECONF 24
+#define MACHINE_ID_TSCONF	23
+#define MACHINE_ID_BASECONF	24
 
 
 #define MACHINE_ID_CPC_464     140
@@ -302,9 +304,9 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 
 //Condiciones de maquinas activas
 #define MACHINE_IS_SPECTRUM (current_machine_type<30)
-#define MACHINE_IS_SPECTRUM_16 (current_machine_type==0)
+#define MACHINE_IS_SPECTRUM_16 (current_machine_type==MACHINE_ID_SPECTRUM_16)
 #define MACHINE_IS_SPECTRUM_48 (current_machine_type==MACHINE_ID_SPECTRUM_48)
-#define MACHINE_IS_INVES (current_machine_type==2)
+#define MACHINE_IS_INVES (current_machine_type==MACHINE_ID_INVES)
 #define MACHINE_IS_SPECTRUM_16_48 ( (current_machine_type<=5) || current_machine_type==20 )
 #define MACHINE_IS_SPECTRUM_128_P2 ( (current_machine_type>=6 && current_machine_type<=10) || MACHINE_IS_PENTAGON)
 #define MACHINE_IS_SPECTRUM_P2A (current_machine_type>=11 && current_machine_type<=13)

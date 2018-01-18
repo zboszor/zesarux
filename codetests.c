@@ -303,8 +303,11 @@ void coretests_compress_uncompress_repetitions(char *archivo)
 	coretests_compress_uncompress_repetitions_aux(archivo);
 }
 
-void codetests_main(int main_argc,char *main_argv[])
+void codetests_main(int main_argc GCC_UNUSED,char *main_argv[])
 {
+
+	//de momento main_argc no se usa, de ahi que indique GCC_UNUSED, pero quiza en un futuro
+
 	printf ("\nRunning repetitions code\n");
 	codetests_repetitions();
 
