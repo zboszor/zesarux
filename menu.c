@@ -4421,10 +4421,14 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			tecla_leida=menu_get_pressed_key();
 
 			//Para poder usar repeticiones
-			//if (tecla==0) {
-			//	printf ("reset counter\n");
-			//	menu_reset_counters_tecla_repeticion();
-			//}
+			if (tecla==0) {
+				printf ("reset counter\n");
+				menu_reset_counters_tecla_repeticion();
+			}
+
+			else {
+				printf ("no reset counter tecla %d\n",tecla);
+			}
 
 			//printf ("tecla_leida: %d\n",tecla_leida);
 			if (mouse_movido) {
