@@ -4356,6 +4356,11 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			else if (tecla_leida==13) tecla=13;
 
 
+			//Teclas para menus tabulados
+			else if (tecla_leida==8) tecla='5';	
+			else if (tecla_leida==9) tecla='8';	
+
+
 			else if ((puerto_especial1 & 1)==0) {
 				//Enter
 				tecla=MENU_RETORNO_ESC;
@@ -4373,7 +4378,21 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 					//Esperamos antes a liberar tecla, sino lo que hara sera que esa misma tecla F1 cancelara el speech texto de ayuda
 					menu_espera_no_tecla();
 					menu_speech_tecla_pulsada=0;
+
+					//Guardar funcion de texto overlay activo, para menus como el de visual memory por ejemplo, para desactivar temporalmente
+					void (*previous_function)(void);
+
+					previous_function=menu_overlay_function;
+
+				       //restauramos modo normal de texto de menu
+				       set_menu_overlay_function(normal_overlay_texto_menu);
+
 					menu_generic_message("Help",texto_ayuda);
+
+
+					//Restauramos funcion anterior de overlay
+					set_menu_overlay_function(previous_function);
+
 					redibuja_ventana=1;
 					menu_tooltip_counter=0;
 					//Y volver a decir "active item"
@@ -4435,16 +4454,32 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				}
                         break;
 
+
+			//Mover abajo
+			case '8':
+				//en menus tabulados, misma funcion que abajo
+				if (m->es_menu_tabulado==0) break;
+
+				//Si es tabulado, seguira hasta la opcion '6'
 			case '6':
 				linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
 
 
 			break;
 
+
+			//Mover arriba
+                        case '5':
+                                //en menus tabulados, misma funcion que arriba
+                                if (m->es_menu_tabulado==0) break;
+
+                                //Si es tabulado, seguira hasta la opcion '7'
 			case '7':
 				linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
 
 			break;
+
+
 
 			case 32:
 				//Accion para tecla espacio
@@ -4552,7 +4587,20 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				//printf ("mostramos tooltip\n");
 				//Forzar que siempre suene
 				menu_speech_tecla_pulsada=0;
+
+
+//Guardar funcion de texto overlay activo, para menus como el de visual memory por ejemplo, para desactivar temporalmente
+                                        void (*previous_function)(void);
+
+                                        previous_function=menu_overlay_function;
+
+                                       //restauramos modo normal de texto de menu
+                                       set_menu_overlay_function(normal_overlay_texto_menu);
+
 				menu_generic_message_tooltip("Tooltip",0,1,0,NULL,"%s",texto_tooltip);
+
+                                        //Restauramos funcion anterior de overlay
+                                        set_menu_overlay_function(previous_function);
 
 
 				//Esperar no tecla
