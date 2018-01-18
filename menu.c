@@ -470,6 +470,16 @@ struct s_menu_item {
 	//un valor enviado a la opcion, que puede establecer la funcion que agrega el item
 	int valor_opcion;
 
+	//Para tipos de menus "tabulados", aquellos en que:
+	//-no se crea ventana al abrir
+	//-las opciones tienen coordenadas X e Y relativas a la ventana activa
+	//-se puede mover tambien usando teclas izquierda, derecha
+	//-el texto de las opciones no se rellena con espacios por la derecha, se muestra tal cual en las coordenadas X e Y indicadas
+
+	int es_menu_tabulado;
+	int menu_tabulado_x;
+	int menu_tabulado_y;
+
 	//tipo de la opcion
 	int tipo_opcion;
 	//funcion a la que debe saltar
@@ -530,6 +540,7 @@ void menu_add_item_menu_ayuda(menu_item *m,char *texto_ayuda);
 void menu_add_item_menu_tooltip(menu_item *m,char *texto_tooltip);
 void menu_add_item_menu_shortcut(menu_item *m,z80_byte tecla);
 void menu_add_item_menu_valor_opcion(menu_item *m,int valor_opcion);
+void menu_add_item_menu_tabulado(menu_item *m);
 
 int menu_tooltip_counter;
 #define TOOLTIP_SECONDS 4
@@ -4576,6 +4587,11 @@ void menu_add_item_menu_inicial(menu_item **p,char *texto,int tipo_opcion,t_menu
 	m->texto_tooltip=NULL;
 	m->atajo_tecla=0;
 	m->menu_funcion_espacio=NULL;
+
+
+	m->es_menu_tabulado=0; //por defecto no es menu tabulado. esta opcion se hereda en cada item, desde el primero
+
+
 	m->next=NULL;
 
 
@@ -4602,6 +4618,9 @@ void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion 
 
 	m->next=next;
 
+	//Si era menu tabulado. Heredamos la opcion
+	int es_menu_tabulado=m->es_menu_tabulado;
+
 	//comprobacion de maximo
 	if (strlen(texto)>MAX_TEXTO_OPCION) cpu_panic ("Text item greater than maximum");
 
@@ -4615,6 +4634,7 @@ void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion 
 	next->texto_tooltip=NULL;
 	next->atajo_tecla=0;
 	next->menu_funcion_espacio=NULL;
+	next->es_menu_tabulado=es_menu_tabulado;
 	next->next=NULL;
 }
 
@@ -4672,6 +4692,18 @@ void menu_add_item_menu_espacio(menu_item *m,t_menu_funcion menu_funcion_espacio
 }
 
 
+//Indicar que es menu tabulado. Se suele hacer solo en el primer item. En los demas, lo hereda
+void menu_add_item_menu_tabulado(menu_item *m)
+{
+//busca el ultimo item i le añade el indicado
+
+        while (m->next!=NULL)
+        {
+                m=m->next;
+        }
+
+        m->es_menu_tabulado=1;
+}
 
 
 //Agregar un valor como opcion al ultimo item de menu
