@@ -540,7 +540,7 @@ void menu_add_item_menu_ayuda(menu_item *m,char *texto_ayuda);
 void menu_add_item_menu_tooltip(menu_item *m,char *texto_tooltip);
 void menu_add_item_menu_shortcut(menu_item *m,z80_byte tecla);
 void menu_add_item_menu_valor_opcion(menu_item *m,int valor_opcion);
-void menu_add_item_menu_tabulado(menu_item *m);
+void menu_add_item_menu_tabulado(menu_item *m,int x,int y);
 
 int menu_tooltip_counter;
 #define TOOLTIP_SECONDS 4
@@ -640,6 +640,8 @@ int esxdos_traps_opcion_seleccionada=0;
 
 int colour_settings_opcion_seleccionada=0;
 int zxuno_spi_flash_opcion_seleccionada=0;
+
+int debug_new_visualmem_opcion_seleccionada=0;
 
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
@@ -4619,7 +4621,7 @@ void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion 
 	m->next=next;
 
 	//Si era menu tabulado. Heredamos la opcion
-	int es_menu_tabulado=m->es_menu_tabulado;
+	//int es_menu_tabulado=m->es_menu_tabulado;
 
 	//comprobacion de maximo
 	if (strlen(texto)>MAX_TEXTO_OPCION) cpu_panic ("Text item greater than maximum");
@@ -4634,7 +4636,7 @@ void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion 
 	next->texto_tooltip=NULL;
 	next->atajo_tecla=0;
 	next->menu_funcion_espacio=NULL;
-	next->es_menu_tabulado=es_menu_tabulado;
+	//next->es_menu_tabulado=es_menu_tabulado;
 	next->next=NULL;
 }
 
@@ -4692,8 +4694,8 @@ void menu_add_item_menu_espacio(menu_item *m,t_menu_funcion menu_funcion_espacio
 }
 
 
-//Indicar que es menu tabulado. Se suele hacer solo en el primer item. En los demas, lo hereda
-void menu_add_item_menu_tabulado(menu_item *m)
+//Indicar que es menu tabulado. Se hace para todos los items, dado que establece coordenada x,y
+void menu_add_item_menu_tabulado(menu_item *m,int x,int y)
 {
 //busca el ultimo item i le añade el indicado
 
@@ -4703,6 +4705,8 @@ void menu_add_item_menu_tabulado(menu_item *m)
         }
 
         m->es_menu_tabulado=1;
+	m->menu_tabulado_x=x;
+	m->menu_tabulado_y=y;
 }
 
 
@@ -19569,6 +19573,230 @@ void menu_debug_visualmem(MENU_ITEM_PARAMETERS)
 
 }
 
+
+
+void menu_debug_new_visualmem_no_action(MENU_ITEM_PARAMETERS)
+{
+}
+
+void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
+{
+
+        //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
+        z80_bit copia_video_interlaced_mode;
+        copia_video_interlaced_mode.v=video_interlaced_mode.v;
+
+        disable_interlace();
+
+
+        menu_espera_no_tecla();
+	menu_debug_visualmem_dibuja_ventana();
+
+        z80_byte acumulado;
+
+
+
+
+        //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de visualmem + texto
+	//Temporalmente desactivado
+        //set_menu_overlay_function(menu_debug_draw_visualmem);
+
+
+
+
+
+menu_item *array_menu_debug_new_visualmem;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+                        menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~Flash File");
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'f');
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"File used for the ZX-Uno SPI Flash");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"File used for the ZX-Uno SPI Flash");
+
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"~~Write protect: %s", (zxuno_flash_write_protection.v ? "Yes" : "No"));
+                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'w');
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+
+
+
+                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_no_action,NULL,"Persistent Writes: %s",
+                                        (zxuno_flash_persistent_writes.v ? "Yes" : "No") );
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Tells if ZX-Uno SPI Flash writes are saved to disk");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Tells if ZX-Uno SPI Flash writes are saved to disk. "
+                        "When you enable it, all previous changes (before enable it and since machine boot) and "
+                        "future changes made to spi flash will be saved to disk.\n"
+                        "Note: all writing operations to SPI Flash are always saved to internal memory (unless you disable write permission), but this setting "
+                        "tells if these changes are written to disk or not.");
+
+
+
+                                menu_add_item_menu(array_menu_debug_new_visualmem,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_debug_new_visualmem,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                menu_add_ESC_item(array_menu_debug_new_visualmem);
+
+                retorno_menu=menu_dibuja_menu(&debug_new_visualmem_opcion_seleccionada,&item_seleccionado,array_menu_debug_new_visualmem,"Sin nombre" );
+
+
+	cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+
+
+
+/*
+
+
+				int valor_contador_segundo_anterior;
+
+				valor_contador_segundo_anterior=contador_segundo;
+
+
+        do {
+
+          //esto hara ejecutar esto 2 veces por segundo
+                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+								if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+											valor_contador_segundo_anterior=contador_segundo;
+											//printf ("Refrescando contador_segundo=%d\n",contador_segundo);
+                       if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+
+                }
+
+                menu_cpu_core_loop();
+                acumulado=menu_da_todas_teclas();
+
+                //si no hay multitarea, esperar tecla y salir
+                if (menu_multitarea==0) {
+                        menu_espera_tecla();
+
+                        acumulado=0;
+                }
+
+		z80_byte tecla;
+		tecla=menu_get_pressed_key();
+
+
+		if (tecla=='b') {
+			menu_espera_no_tecla();
+			if (visualmem_bright_multiplier>=200) visualmem_bright_multiplier=1;
+			else if (visualmem_bright_multiplier==1) visualmem_bright_multiplier=10;
+			else visualmem_bright_multiplier +=10;
+
+			cls_menu_overlay();
+			menu_debug_visualmem_dibuja_ventana();
+
+			//decir que no hay tecla pulsada
+			acumulado = MENU_PUERTO_TECLADO_NINGUNA;
+
+
+		}
+
+
+		if (tecla=='l') {
+			menu_espera_no_tecla();
+
+			menu_visualmem_donde++;
+			if (menu_visualmem_donde==3) menu_visualmem_donde=0;
+
+			cls_menu_overlay();
+			menu_debug_visualmem_dibuja_ventana();
+
+			//decir que no hay tecla pulsada
+			acumulado = MENU_PUERTO_TECLADO_NINGUNA;
+
+
+		}
+
+		if (tecla=='o') {
+			menu_espera_no_tecla();
+			if (visualmem_ancho_variable>23) visualmem_ancho_variable--;
+
+			cls_menu_overlay();
+			menu_debug_visualmem_dibuja_ventana();
+
+			//decir que no hay tecla pulsada
+			acumulado = MENU_PUERTO_TECLADO_NINGUNA;
+
+
+		}
+
+                if (tecla=='p') {
+			menu_espera_no_tecla();
+                        if (visualmem_ancho_variable<30) visualmem_ancho_variable++;
+
+			cls_menu_overlay();
+			menu_debug_visualmem_dibuja_ventana();
+
+                        //decir que no hay tecla pulsada
+                        acumulado = MENU_PUERTO_TECLADO_NINGUNA;
+                }
+
+                if (tecla=='q') {
+                        menu_espera_no_tecla();
+                        if (visualmem_alto_variable>7) visualmem_alto_variable--;
+
+                        cls_menu_overlay();
+                        menu_debug_visualmem_dibuja_ventana();
+
+                        //decir que no hay tecla pulsada
+                        acumulado = MENU_PUERTO_TECLADO_NINGUNA;
+
+
+                }
+
+                if (tecla=='a') {
+                        menu_espera_no_tecla();
+                        if (visualmem_alto_variable<VISUALMEM_MAX_ALTO) visualmem_alto_variable++;
+
+                        cls_menu_overlay();
+                        menu_debug_visualmem_dibuja_ventana();
+
+                        //decir que no hay tecla pulsada
+                        acumulado = MENU_PUERTO_TECLADO_NINGUNA;
+                }
+
+								//Si tecla no es ESC, no salir
+								if (tecla!=2) {
+									acumulado = MENU_PUERTO_TECLADO_NINGUNA;
+								}
+
+
+        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
+
+*/
+
+        //Restauramos modo interlace
+        if (copia_video_interlaced_mode.v) enable_interlace();
+
+       //restauramos modo normal de texto de menu
+       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+        cls_menu_overlay();
+
+}
+
+
+
+
+
 #endif
 
 
@@ -20936,6 +21164,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'v');
 	                menu_add_item_menu_tooltip(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");
 	                menu_add_item_menu_ayuda(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");
+
+			menu_add_item_menu(array_menu_debug_settings,"New Visual memory",MENU_OPCION_NORMAL,menu_debug_new_visualmem,NULL);
 			//}
 #endif
 
