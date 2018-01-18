@@ -2959,14 +2959,51 @@ void menu_textspeech_send_text(char *texto)
 
 }
 
+void menu_retorna_colores_linea_opcion(z80_byte indice,int opcion_actual,int opcion_activada,z80_byte *papel_orig,z80_byte *tinta_orig)
+{
+	z80_byte papel,tinta;
 
+	/*
+	4 combinaciones:
+	opcion seleccionada, disponible (activada)
+	opcion seleccionada, no disponible
+	opcion no seleccionada, disponible
+	opcion no seleccionada, no disponible
+	*/
+
+        if (opcion_actual==indice) {
+                if (opcion_activada==1) {
+                        papel=ESTILO_GUI_PAPEL_SELECCIONADO;
+                        tinta=ESTILO_GUI_TINTA_SELECCIONADO;
+                }
+                else {
+                        papel=ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE;
+                        tinta=ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE;
+                }
+        }
+
+        else {
+                if (opcion_activada==1) {
+                        papel=ESTILO_GUI_PAPEL_NORMAL;
+                        tinta=ESTILO_GUI_TINTA_NORMAL;
+                }
+                else {
+                        papel=ESTILO_GUI_PAPEL_NO_DISPONIBLE;
+                        tinta=ESTILO_GUI_TINTA_NO_DISPONIBLE;
+                }
+        }
+
+	*papel_orig=papel;
+	*tinta_orig=tinta;
+
+}
 
 
 //escribe opcion de linea de texto
-//coordenadas y relativa al interior de la ventana (0=inicio)
+//coordenadas "indice" relativa al interior de la ventana (0=inicio)
 //opcion_actual indica que numero de linea es la seleccionada
 //opcion activada indica a 1 que esa opcion es seleccionable
-void menu_escribe_linea_opcion(z80_byte y,int opcion_actual,int opcion_activada,char *texto)
+void menu_escribe_linea_opcion(z80_byte indice,int opcion_actual,int opcion_activada,char *texto)
 {
 
         if (!strcmp(scr_driver_name,"stdout")) {
@@ -2981,50 +3018,22 @@ void menu_escribe_linea_opcion(z80_byte y,int opcion_actual,int opcion_activada,
 
 	//tinta=0;
 
-	/*
-	4 combinaciones:
-	opcion seleccionada, disponible (activada)
-	opcion seleccionada, no disponible
-	opcion no seleccionada, disponible
-	opcion no seleccionada, no disponible
-	*/
 
-	if (opcion_actual==y) {
-		if (opcion_activada==1) {
-			papel=ESTILO_GUI_PAPEL_SELECCIONADO;
-			tinta=ESTILO_GUI_TINTA_SELECCIONADO;
-		}
-		else {
-			papel=ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE;
-			tinta=ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE;
-		}
-	}
-
-	else {
-		if (opcion_activada==1) {
-                        papel=ESTILO_GUI_PAPEL_NORMAL;
-                        tinta=ESTILO_GUI_TINTA_NORMAL;
-                }
-                else {
-                        papel=ESTILO_GUI_PAPEL_NO_DISPONIBLE;
-                        tinta=ESTILO_GUI_TINTA_NO_DISPONIBLE;
-                }
-        }
-
+	menu_retorna_colores_linea_opcion(indice,opcion_actual,opcion_activada,&papel,&tinta);
 
 
 	//linea entera con espacios
-	for (i=0;i<ventana_ancho;i++) menu_escribe_texto_ventana(i,y,0,papel," ");
+	for (i=0;i<ventana_ancho;i++) menu_escribe_texto_ventana(i,indice,0,papel," ");
 
 	//y texto propiamente
 				int startx=menu_escribe_linea_startx;
-        menu_escribe_texto_ventana(startx,y,tinta,papel,texto);
+        menu_escribe_texto_ventana(startx,indice,tinta,papel,texto);
 
 	//si el driver de video no tiene colores o si el estilo de gui lo indica, indicamos opcion activa con un cursor
 	if (!scr_tiene_colores || ESTILO_GUI_MUESTRA_CURSOR) {
-		if (opcion_actual==y) {
-			if (opcion_activada==1) menu_escribe_texto_ventana(0,y,tinta,papel,">");
-			else menu_escribe_texto_ventana(0,y,tinta,papel,"x");
+		if (opcion_actual==indice) {
+			if (opcion_activada==1) menu_escribe_texto_ventana(0,indice,tinta,papel,">");
+			else menu_escribe_texto_ventana(0,indice,tinta,papel,"x");
 		}
 	}
 	menu_textspeech_send_text(texto);
