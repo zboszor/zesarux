@@ -642,6 +642,7 @@ int colour_settings_opcion_seleccionada=0;
 int zxuno_spi_flash_opcion_seleccionada=0;
 
 int debug_new_visualmem_opcion_seleccionada=0;
+int audio_new_waveform_opcion_seleccionada=0;
 
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
@@ -737,6 +738,7 @@ typedef struct s_generic_message_tooltip_return generic_message_tooltip_return;
 void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...);
 
 
+int menu_calcular_ancho_string_item(char *texto);
 
 int menu_debug_show_memory_zones=0;
 int menu_debug_memory_zone=-1;
@@ -4535,7 +4537,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 								}
 							}
 							else {
-								printf ("item no encontrado\n");
+								//printf ("item no encontrado\n");
 							}
 						}
 
@@ -8459,8 +8461,32 @@ int menu_sound_wave_llena=1;
 char menu_audio_draw_sound_wave_valor_medio,menu_audio_draw_sound_wave_valor_max,menu_audio_draw_sound_wave_valor_min;
 int menu_audio_draw_sound_wave_frecuencia_aproximada;
 
+
+//Usado dentro del overlay de waveform, para mostrar dos veces por segundo el texto que average, etc
+int menu_waveform_valor_contador_segundo_anterior;
+
 void menu_audio_draw_sound_wave(void)
 {
+
+
+
+	//esto hara ejecutar esto 2 veces por segundo
+	if ( ((contador_segundo%500) == 0 && menu_waveform_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+
+		menu_waveform_valor_contador_segundo_anterior=contador_segundo;
+		//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+                     
+			char buffer_texto_medio[40];
+			sprintf (buffer_texto_medio,"Av.: %d Min: %d Max: %d",
+				menu_audio_draw_sound_wave_valor_medio,menu_audio_draw_sound_wave_valor_min,menu_audio_draw_sound_wave_valor_max);
+			menu_escribe_linea_opcion(1,-1,1,buffer_texto_medio);
+			sprintf (buffer_texto_medio,"Average freq: %d Hz (%s)",
+				menu_audio_draw_sound_wave_frecuencia_aproximada,get_note_name(menu_audio_draw_sound_wave_frecuencia_aproximada));
+			menu_escribe_linea_opcion(2,-1,1,buffer_texto_medio);
+	}
+
+
+
 
 	normal_overlay_texto_menu();
 
@@ -8718,6 +8744,89 @@ void menu_audio_espectro_sonido(MENU_ITEM_PARAMETERS)
 
 	//Restauramos modo interlace
 	if (copia_video_interlaced_mode.v) enable_interlace();
+
+       //restauramos modo normal de texto de menu
+       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+        cls_menu_overlay();
+
+}
+
+
+void menu_audio_new_waveform_shape(MENU_ITEM_PARAMETERS)
+{
+	menu_sound_wave_llena ^=1;
+}
+
+
+
+void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
+{
+
+        //Desactivamos interlace - si esta. Con interlace la forma de onda se dibuja encima continuamente, sin borrar
+        z80_bit copia_video_interlaced_mode;
+        copia_video_interlaced_mode.v=video_interlaced_mode.v;
+
+        disable_interlace();
+
+
+        menu_espera_no_tecla();
+
+        z80_byte acumulado;
+
+
+
+        //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de audio waveform
+	set_menu_overlay_function(menu_audio_draw_sound_wave);
+
+
+
+	menu_item *array_menu_audio_new_waveform;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+	  //Hay que redibujar la ventana desde este bucle
+	menu_dibuja_ventana(SOUND_WAVE_X,SOUND_WAVE_Y-1,SOUND_WAVE_ANCHO,SOUND_WAVE_ALTO+3,"Waveform");
+
+
+                        menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"Change wave ~~Shape");
+                        menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
+                        menu_add_item_menu_tooltip(array_menu_audio_new_waveform,"Change wave Shape");
+                        menu_add_item_menu_ayuda(array_menu_audio_new_waveform,"Change wave Shape");
+						//0123456789
+						// Change wave Shape
+						
+			menu_add_item_menu_tabulado(array_menu_audio_new_waveform,1,0);
+
+
+
+
+                retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Sin nombre" );
+
+
+	cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+
+
+        //Restauramos modo interlace
+        if (copia_video_interlaced_mode.v) enable_interlace();
 
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
@@ -10131,7 +10240,9 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_pianokeyboard,menu_cond_ay_chip,"View AY P~~iano");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'i');
 
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_espectro_sonido,NULL,"View ~~Waveform");
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_espectro_sonido,NULL,"View old Waveform");
+
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_new_waveform,NULL,"View ~~Waveform");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'w');
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_player_player,NULL,"AY ~~Player");
