@@ -3280,16 +3280,67 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 
 }
 
+//Retorna el item i
 menu_item *menu_retorna_item(menu_item *m,int i)
 {
 
+	menu_item *item_next;
+
         while (i>0)
         {
-                m=m->next;
+        	//printf ("m: %p i: %d\n",m,i);
+        	item_next=m->next;
+        	if (item_next==NULL) return m;  //Controlar si final
+
+                m=item_next;
 		i--;
         }
 
 	return m;
+
+
+}
+
+
+//Retorna el item i
+menu_item *menu_retorna_item_tabulado_xy(menu_item *m,int x,int y,int *linea_buscada)
+{
+
+	menu_item *item_next;
+	int indice=0;
+	int encontrado=0;
+
+	//printf ("buscar item x: %d y: %d\n",x,y);
+
+        while (!encontrado)
+        {
+
+        	//Ver si coincide y. x tiene que estar en el rango del texto
+        	int longitud_texto=menu_calcular_ancho_string_item(m->texto_opcion);
+        	if (y==m->menu_tabulado_y && 
+        	    x>=m->menu_tabulado_x && x<m->menu_tabulado_x+longitud_texto) 
+        	{
+        		encontrado=1;
+        	}
+
+        	else {
+
+        		//printf ("m: %p i: %d\n",m,i);
+        		item_next=m->next;
+	        	if (item_next==NULL) return NULL;  //Controlar si final
+
+                	m=item_next;
+			//i--;
+			indice++;
+		}
+        }
+
+        if (encontrado) {
+        	*linea_buscada=indice;
+		return m;
+	}
+
+	else return NULL;
 
 
 }
@@ -4252,6 +4303,20 @@ void menu_dibuja_menu_espera_no_tecla(void)
 	else menu_espera_no_tecla();
 }
 
+int menu_calcular_ancho_string_item(char *texto)
+{
+	//Devuelve longitud de texto teniendo en cuenta de no sumar caracteres ~~ o ^^
+	unsigned int l;
+	int ancho_calculado=strlen(texto);
+
+	for (l=0;l<strlen(texto);l++) {
+			if (menu_escribe_texto_si_inverso(texto,l)) ancho_calculado-=2;
+			if (menu_escribe_texto_si_parpadeo(texto,l)) ancho_calculado-=2;
+	}
+
+	return ancho_calculado;
+}
+
 //Funcion de gestion de menu
 //Entrada: opcion_inicial: puntero a opcion inicial seleccionada
 //m: estructura de menu (estructura en forma de lista con punteros)
@@ -4324,13 +4389,17 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	max_opciones=0;
 	do {
-		ancho_calculado=strlen(aux->texto_opcion)+2;
+		/*ancho_calculado=strlen(aux->texto_opcion)+2;
 		//en calculo de ancho, tener en cuenta los "~~" del shortcut que no cuentan
 		unsigned int l;
 		for (l=0;l<strlen(aux->texto_opcion);l++) {
 			if (menu_escribe_texto_si_inverso(aux->texto_opcion,l)) ancho_calculado-=2;
 			if (menu_escribe_texto_si_parpadeo(aux->texto_opcion,l)) ancho_calculado-=2;
-		}
+		}*/
+
+
+		ancho_calculado=menu_calcular_ancho_string_item(aux->texto_opcion)+2; //+2 espacios
+
 
 		if (ancho_calculado>ancho) ancho=ancho_calculado;
 		//printf ("%s\n",aux->texto);
@@ -4443,13 +4512,31 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 						//Ver si hay que subir o bajar cursor
 						int posicion_raton_y=menu_mouse_y-1;
 
-						//Si no se selecciona separador
-						if (menu_retorna_item(m,posicion_raton_y)->tipo_opcion!=MENU_OPCION_SEPARADOR) {
-							linea_seleccionada=posicion_raton_y;
-							redibuja_ventana=1;
-							menu_tooltip_counter=0;
+						//Si no se selecciona separador. Menu no tabulado
+						if (m->es_menu_tabulado==0) {
+							if (menu_retorna_item(m,posicion_raton_y)->tipo_opcion!=MENU_OPCION_SEPARADOR) {
+								linea_seleccionada=posicion_raton_y;
+								redibuja_ventana=1;
+								menu_tooltip_counter=0;
+							}
+						}
+						else {
+							menu_item *buscar_tabulado;
+							int linea_buscada;
+							int posicion_raton_x=menu_mouse_x;
+							buscar_tabulado=menu_retorna_item_tabulado_xy(m,posicion_raton_x,posicion_raton_y,&linea_buscada);
 
-
+							if (buscar_tabulado!=NULL) {
+								//Buscar por coincidencia de coordenada x,y
+								if (buscar_tabulado->tipo_opcion!=MENU_OPCION_SEPARADOR) {
+									linea_seleccionada=linea_buscada;
+									redibuja_ventana=1;
+									menu_tooltip_counter=0;
+								}
+							}
+							else {
+								printf ("item no encontrado\n");
+							}
 						}
 
 					}
@@ -19858,8 +19945,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
                         menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_o,NULL,"~~O");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'o');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"File used for the ZX-Uno SPI Flash");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"File used for the ZX-Uno SPI Flash");
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Decrease window width");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Decrease window width");
 						//0123456789
 						// Size: OPQA
 						// Size: OPQA Bright: %d
@@ -19868,26 +19955,26 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_p,NULL,"~~P");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'p');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Increase window width");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Increase window width");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,8,0);
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_q,NULL,"~~Q");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'q');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Decrease window height");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Decrease window height");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,9,0);
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_a,NULL,"~~A");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'a');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Increase window height");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Increase window height");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,10,0);
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'b');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Change bright value");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Change bright value");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,12,0);
 
 
@@ -19898,8 +19985,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"If ZX-Uno SPI Flash is write protected");
+                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Which visualmem to look at");
+                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at");
                         menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,1);
 
 
@@ -19925,129 +20012,6 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	menu_dibuja_menu_permite_repeticiones_hotk=0;
 
 
-
-
-/*
-
-
-				int valor_contador_segundo_anterior;
-
-				valor_contador_segundo_anterior=contador_segundo;
-
-
-        do {
-
-          //esto hara ejecutar esto 2 veces por segundo
-                //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
-								if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-											valor_contador_segundo_anterior=contador_segundo;
-											//printf ("Refrescando contador_segundo=%d\n",contador_segundo);
-                       if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
-
-                }
-
-                menu_cpu_core_loop();
-                acumulado=menu_da_todas_teclas();
-
-                //si no hay multitarea, esperar tecla y salir
-                if (menu_multitarea==0) {
-                        menu_espera_tecla();
-
-                        acumulado=0;
-                }
-
-		z80_byte tecla;
-		tecla=menu_get_pressed_key();
-
-
-		if (tecla=='b') {
-			menu_espera_no_tecla();
-			if (visualmem_bright_multiplier>=200) visualmem_bright_multiplier=1;
-			else if (visualmem_bright_multiplier==1) visualmem_bright_multiplier=10;
-			else visualmem_bright_multiplier +=10;
-
-			cls_menu_overlay();
-			menu_debug_visualmem_dibuja_ventana();
-
-			//decir que no hay tecla pulsada
-			acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-
-
-		}
-
-
-		if (tecla=='l') {
-			menu_espera_no_tecla();
-
-			menu_visualmem_donde++;
-			if (menu_visualmem_donde==3) menu_visualmem_donde=0;
-
-			cls_menu_overlay();
-			menu_debug_visualmem_dibuja_ventana();
-
-			//decir que no hay tecla pulsada
-			acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-
-
-		}
-
-		if (tecla=='o') {
-			menu_espera_no_tecla();
-			if (visualmem_ancho_variable>23) visualmem_ancho_variable--;
-
-			cls_menu_overlay();
-			menu_debug_visualmem_dibuja_ventana();
-
-			//decir que no hay tecla pulsada
-			acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-
-
-		}
-
-                if (tecla=='p') {
-			menu_espera_no_tecla();
-                        if (visualmem_ancho_variable<30) visualmem_ancho_variable++;
-
-			cls_menu_overlay();
-			menu_debug_visualmem_dibuja_ventana();
-
-                        //decir que no hay tecla pulsada
-                        acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-                }
-
-                if (tecla=='q') {
-                        menu_espera_no_tecla();
-                        if (visualmem_alto_variable>7) visualmem_alto_variable--;
-
-                        cls_menu_overlay();
-                        menu_debug_visualmem_dibuja_ventana();
-
-                        //decir que no hay tecla pulsada
-                        acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-
-
-                }
-
-                if (tecla=='a') {
-                        menu_espera_no_tecla();
-                        if (visualmem_alto_variable<VISUALMEM_MAX_ALTO) visualmem_alto_variable++;
-
-                        cls_menu_overlay();
-                        menu_debug_visualmem_dibuja_ventana();
-
-                        //decir que no hay tecla pulsada
-                        acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-                }
-
-								//Si tecla no es ESC, no salir
-								if (tecla!=2) {
-									acumulado = MENU_PUERTO_TECLADO_NINGUNA;
-								}
-
-
-        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
-
-*/
 
         //Restauramos modo interlace
         if (copia_video_interlaced_mode.v) enable_interlace();
