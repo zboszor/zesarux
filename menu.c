@@ -4243,11 +4243,12 @@ menu_restore_overlay_text_contents(copia_overlay);
 
 }
 
-int menu_dibuja_menu_permite_repeticiones=0;
+//Indica que el menu permite repeticiones de teclas. Solo valido al pulsar hotkeys
+int menu_dibuja_menu_permite_repeticiones_hotk=0;
 
 void menu_dibuja_menu_espera_no_tecla(void)
 {
-	if (menu_dibuja_menu_permite_repeticiones) menu_espera_no_tecla_con_repeticion();
+	if (menu_dibuja_menu_permite_repeticiones_hotk) menu_espera_no_tecla_con_repeticion();
 	else menu_espera_no_tecla();
 }
 
@@ -4293,7 +4294,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	//esto lo haremos ligeramente despues menu_speech_tecla_pulsada=0;
 
-	if (!menu_dibuja_menu_permite_repeticiones) {
+	if (!menu_dibuja_menu_permite_repeticiones_hotk) {
 		//printf ("llamar a menu_reset_counters_tecla_repeticion desde menu_dibuja_menu al inicio\n");
 		menu_reset_counters_tecla_repeticion();
 	}
@@ -19827,12 +19828,9 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
         menu_espera_no_tecla();
-	//menu_debug_visualmem_dibuja_ventana();
-
 	menu_reset_counters_tecla_repeticion();
 
         z80_byte acumulado;
-
 
 
 
@@ -19841,10 +19839,10 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
         set_menu_overlay_function(menu_debug_draw_visualmem);
 
 
-	menu_dibuja_menu_permite_repeticiones=1;
+	menu_dibuja_menu_permite_repeticiones_hotk=1;
 
 
-menu_item *array_menu_debug_new_visualmem;
+	menu_item *array_menu_debug_new_visualmem;
         menu_item item_seleccionado;
         int retorno_menu;
         do {
@@ -19924,7 +19922,7 @@ menu_item *array_menu_debug_new_visualmem;
 
 
 
-	menu_dibuja_menu_permite_repeticiones=0;
+	menu_dibuja_menu_permite_repeticiones_hotk=0;
 
 
 
@@ -21429,12 +21427,14 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 #ifdef EMULATE_VISUALMEM
 			//if (!CPU_IS_MOTOROLA) {
-			menu_add_item_menu(array_menu_debug_settings,"~~Visual memory",MENU_OPCION_NORMAL,menu_debug_visualmem,NULL);
-			menu_add_item_menu_shortcut(array_menu_debug_settings,'v');
+			menu_add_item_menu(array_menu_debug_settings,"Old visual memory",MENU_OPCION_NORMAL,menu_debug_visualmem,NULL);
 	                menu_add_item_menu_tooltip(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");
 	                menu_add_item_menu_ayuda(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");
 
-			menu_add_item_menu(array_menu_debug_settings,"New Visual memory",MENU_OPCION_NORMAL,menu_debug_new_visualmem,NULL);
+			menu_add_item_menu(array_menu_debug_settings,"New ~~Visual memory",MENU_OPCION_NORMAL,menu_debug_new_visualmem,NULL);
+			menu_add_item_menu_shortcut(array_menu_debug_settings,'v');
+	                menu_add_item_menu_tooltip(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");
+	                menu_add_item_menu_ayuda(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");			
 			//}
 #endif
 
