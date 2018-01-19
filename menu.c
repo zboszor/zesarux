@@ -10315,30 +10315,72 @@ void menu_audio_new_ayplayer_stop(MENU_ITEM_PARAMETERS)
 
 }
 
-/*
-													
-													menu_espera_no_tecla();
-													acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+void menu_audio_new_ayplayer_repeat(MENU_ITEM_PARAMETERS)
+{
+	ay_player_repeat_file.v ^=1;
 
-												}
-
-												if (tecla=='p') {
-													ay_player_previous_track();
-													contador_string_author=contador_string_track_name=contador_string_misc=retardo_song_name=retardo_author=retardo_misc=0;
-													menu_espera_no_tecla();
-													acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-
-												}
-
-												if (tecla=='s') {
-													ay_player_stop_player();
-													contador_string_author=contador_string_track_name=contador_string_misc=retardo_song_name=retardo_author=retardo_misc=0;
-													menu_espera_no_tecla();
-													acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-												}
-*/
+}
 
 
+void menu_audio_new_ayplayer_exitend(MENU_ITEM_PARAMETERS)
+{
+	ay_player_exit_emulator_when_finish.v ^=1;
+}
+
+void menu_audio_new_ayplayer_cpcmode(MENU_ITEM_PARAMETERS)
+{
+	ay_player_cpc_mode.v ^=1;
+	audio_ay_player_play_song(ay_player_pista_actual);
+}
+
+												
+
+void menu_audio_new_ayplayer_inftracks(MENU_ITEM_PARAMETERS)
+{
+	//restauramos modo normal de texto de menu
+        set_menu_overlay_function(normal_overlay_texto_menu);
+
+	
+	char string_length[5];
+	sprintf(string_length,"%d",ay_player_limit_infinite_tracks/50);
+
+        menu_ventana_scanf("Length (0-1310)",string_length,5);
+	int l=parse_string_to_number(string_length);
+
+	if (l<0 || l>1310) {
+		menu_error_message("Invalid length value");
+	}
+
+	else ay_player_limit_infinite_tracks=l*50;
+
+	
+
+	//Restauramos funcion de overlay
+	set_menu_overlay_function(menu_audio_new_ayplayer_overlay);
+}
+
+void menu_audio_new_ayplayer_len_anytracks(MENU_ITEM_PARAMETERS)
+{
+
+	//restauramos modo normal de texto de menu
+        set_menu_overlay_function(normal_overlay_texto_menu);
+
+	char string_length[5];
+	sprintf(string_length,"%d",ay_player_limit_any_track/50);
+
+	menu_ventana_scanf("Length (0-1310)",string_length,5);
+	int l=parse_string_to_number(string_length);
+
+	if (l<0 || l>1310) {
+		menu_error_message("Invalid length value");
+	}
+
+	else ay_player_limit_any_track=l*50;
+
+
+	//Restauramos funcion de overlay
+	set_menu_overlay_function(menu_audio_new_ayplayer_overlay);
+}
 
 
 
@@ -10402,30 +10444,33 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'n');
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,11,7);
 
-				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_nada,NULL,"~~Repeat");
+				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_repeat,NULL,"~~Repeat: %s",
+					(ay_player_repeat_file.v ? "Yes" : "No"));
+
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'r');
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,8);	
 
-				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_nada,NULL,"~~Exit end: %s",
-				(ay_player_repeat_file.v ? "Yes" : "No"),(ay_player_exit_emulator_when_finish.v ? "Yes" : "No") );
-				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'r');
-				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,8,8);	
+				
+				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_exitend,NULL,"~~Exit end: %s",
+					(ay_player_exit_emulator_when_finish.v ? "Yes" : "No") );
+				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'e');
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,13,8);	
 
 
 				if (ay_player_limit_infinite_tracks==0) sprintf(textoplayer,"Length ~~infinite tracks: inf");
 				else sprintf(textoplayer,"Length ~~infinite tracks: %d s",ay_player_limit_infinite_tracks/50);
-				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_nada,NULL,textoplayer);
+				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_inftracks,NULL,textoplayer);
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'i');
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,9);			
 
 
 				if (ay_player_limit_any_track==0) sprintf(textoplayer,"Length ~~any track: No limit");
 				else sprintf(textoplayer,"Length ~~any track: %d s",ay_player_limit_any_track/50);
-				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_nada,NULL,textoplayer);
+				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_len_anytracks,NULL,textoplayer);
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'a');
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,10);
 
-				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_nada,NULL,"~~CPC mode: %s",
+				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_cpcmode,NULL,"~~CPC mode: %s",
 					(ay_player_cpc_mode.v ? "Yes" : "No"));
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'c');
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,11);		
