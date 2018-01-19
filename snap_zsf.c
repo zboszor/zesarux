@@ -147,7 +147,7 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 5
+#define MAX_ZSF_BLOCK_ID_NAMES 6
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -156,7 +156,7 @@ char *zsf_block_id_names[]={
   "ZSF_MOTO_REGS",
   "ZSF_RAMBLOCK",
   "ZSF_SPEC128_MEMCONF",
-  "ZSF_SPEC128_RAMBLOCK"
+  "ZSF_SPEC128_RAMBLOCK",
 
   "Unknown"  //Este siempre al final
 };
@@ -204,6 +204,7 @@ Byte Fields:
 
 //Distinguir entre 128/p2 y p2a
 	if (MACHINE_IS_SPECTRUM_128_P2) {
+		debug_printf(VERBOSE_DEBUG,"Paging 128k according to port 32765: %02XH",puerto_32765);
 		mem_page_ram_128k();
 		mem_page_rom_128k();
 	}
@@ -297,7 +298,6 @@ void load_zsf_snapshot_block_data_addr(z80_byte *block_data,z80_byte *destino,in
   else {
     int i=0;
     while (block_lenght) {
-      //poke_byte_no_time(block_start++,block_data[i++]);
       *destino=block_data[i++];
       destino++;
       block_lenght--;
@@ -321,7 +321,7 @@ void load_zsf_snapshot_block_data(z80_byte *block_data,int longitud_original)
   z80_int block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
   i+=2;
 
-  debug_printf (VERBOSE_DEBUG,"Block start: %d Lenght: %d Compressed: %d Length_source: %d",block_start,block_lenght,block_flags&1,longitud_original);
+  debug_printf (VERBOSE_DEBUG,"Block start: %d Lenght: %d Compressed: %s Length_source: %d",block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
   //printf ("Block start: %d Lenght: %d Compressed: %d Length_source: %d\n",block_start,block_lenght,block_flags&1,longitud_original);
 
 
@@ -330,20 +330,6 @@ void load_zsf_snapshot_block_data(z80_byte *block_data,int longitud_original)
 
   load_zsf_snapshot_block_data_addr(&block_data[i],&memoria_spectrum[block_start],block_lenght,longitud_original,block_flags&1);
 
-  /*if (block_flags&1) {
-    //Comprimido
-    util_uncompress_data_repetitions(&block_data[i],&memoria_spectrum[block_start],longitud_original,0xDD);
-    return;
-  }
-
-
-  else {
-    while (block_lenght) {
-      poke_byte_no_time(block_start++,block_data[i++]);
-      block_lenght--;
-    }
-  }
-  */
 }
 
 
@@ -366,8 +352,7 @@ void load_zsf_spec128_snapshot_block_data(z80_byte *block_data,int longitud_orig
   z80_byte ram_page=block_data[i];
   i++;
 
-  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Lenght: %d Compressed: %d Length_source: %d",ram_page,block_start,block_lenght,block_flags&1,longitud_original);
-  //printf ("Block start: %d Lenght: %d Compressed: %d Length_source: %d\n",block_start,block_lenght,block_flags&1,longitud_original);
+  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Lenght: %d Compressed: %s Length_source: %d",ram_page,block_start,(block_flags&1 ? "Yes" : "No"),block_flags&1,longitud_original);
 
 
   longitud_original -=6;
