@@ -3057,9 +3057,6 @@ void menu_escribe_linea_opcion_tabulado(z80_byte indice,int opcion_actual,int op
 
 
         z80_byte papel,tinta;
-        int i;
-
-        //tinta=0;
 
 
         menu_retorna_colores_linea_opcion(indice,opcion_actual,opcion_activada,&papel,&tinta);
@@ -8805,7 +8802,9 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
 
 
-                retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Sin nombre" );
+
+		//Nombre de ventana solo aparece en el caso de stdout
+                retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Waveform" );
 
 
 	cls_menu_overlay();
@@ -20102,8 +20101,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 
-
-                retorno_menu=menu_dibuja_menu(&debug_new_visualmem_opcion_seleccionada,&item_seleccionado,array_menu_debug_new_visualmem,"Sin nombre" );
+		//Nombre de ventana solo aparece en el caso de stdout
+                retorno_menu=menu_dibuja_menu(&debug_new_visualmem_opcion_seleccionada,&item_seleccionado,array_menu_debug_new_visualmem,"Visual memory" );
 
 
 	cls_menu_overlay();
