@@ -10165,6 +10165,11 @@ menu_escribe_linea_opcion(linea++,-1,1,"~~Load");
 }
 
 
+void menu_audio_new_ayplayer_dibuja_ventana(void)
+{
+	menu_dibuja_ventana(0,2,32,19,"AY Player");
+}
+
 int menu_audio_new_ayplayer_si_mostrar(void)
 {
 	int mostrar_player;
@@ -10188,10 +10193,36 @@ int ayplayer_new_retardo_song_name=0;
 int ayplayer_new_retardo_author=0;
 int ayplayer_new_retardo_misc=0;
 
+
+
 void menu_audio_new_ayplayer_overlay(void)
 {
 
     normal_overlay_texto_menu();
+
+                        int linea;
+
+
+    linea=7;
+
+    	if (menu_audio_new_ayplayer_si_mostrar()) {
+    	//Los volumenes mostrarlos siempre a cada refresco
+	char volumen[16],textovolumen[32];
+
+	
+
+	menu_string_volumen(volumen,ay_3_8912_registros[0][8]);
+			sprintf (textovolumen,"Volume A: %s",volumen);
+			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+
+			menu_string_volumen(volumen,ay_3_8912_registros[0][9]);
+			sprintf (textovolumen,"Volume B: %s",volumen);
+			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+
+			menu_string_volumen(volumen,ay_3_8912_registros[0][10]);
+			sprintf (textovolumen,"Volume C: %s",volumen);
+			menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+	}
 
 
     //esto hara ejecutar esto 2 veces por segundo
@@ -10232,12 +10263,14 @@ int mostrar_antes_player=-1;
 				mostrar_antes_player=mostrar_player;
 
 
-                        int linea=0;
+
 
          
 
 
 		if (mostrar_player) {
+
+			linea=0;
 
 			printf ("Dibujando player\n");
 
@@ -10270,7 +10303,8 @@ int mostrar_antes_player=-1;
 			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
 			ayplayer_new_contador_string_misc=menu_ay_player_get_continuous_string(ayplayer_new_contador_string_misc,28,ay_player_file_misc,&ayplayer_new_retardo_misc);
 
-		
+
+
 
 		}
 	}
@@ -10418,7 +10452,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
         	char textoplayer[40];
             //Hay que redibujar la ventana desde este bucle
-            menu_ay_player_player_dibuja_ventana();
+            menu_audio_new_ayplayer_dibuja_ventana();
 
 
 
@@ -10429,51 +10463,55 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 						//0123456789
 						// Change wave Shape
 						
-			menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,13);
+			
+
+			int lin=11;
+
+			menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+5);
 
 			if (menu_audio_new_ayplayer_si_mostrar() ) {
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_prev,NULL,"~~Prev");
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'p');
-				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,7);
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin);
 
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_stop,NULL,"~~Stop");
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'s');
-				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,6,7);	
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,6,lin);	
 
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_next,NULL,"~~Next");
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'n');
-				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,11,7);
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,11,lin);
 
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_repeat,NULL,"~~Repeat: %s",
 					(ay_player_repeat_file.v ? "Yes" : "No"));
 
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'r');
-				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,8);	
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+1);	
 
 				
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_exitend,NULL,"~~Exit end: %s",
 					(ay_player_exit_emulator_when_finish.v ? "Yes" : "No") );
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'e');
-				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,13,8);	
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,13,lin+1);	
 
 
 				if (ay_player_limit_infinite_tracks==0) sprintf(textoplayer,"Length ~~infinite tracks: inf");
 				else sprintf(textoplayer,"Length ~~infinite tracks: %d s",ay_player_limit_infinite_tracks/50);
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_inftracks,NULL,textoplayer);
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'i');
-				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,9);			
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+2);			
 
 
 				if (ay_player_limit_any_track==0) sprintf(textoplayer,"Length ~~any track: No limit");
 				else sprintf(textoplayer,"Length ~~any track: %d s",ay_player_limit_any_track/50);
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_len_anytracks,NULL,textoplayer);
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'a');
-				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,10);
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+3);
 
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_cpcmode,NULL,"~~CPC mode: %s",
 					(ay_player_cpc_mode.v ? "Yes" : "No"));
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'c');
-				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,11);		
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+4);		
 
 
 			}			
