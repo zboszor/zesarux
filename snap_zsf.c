@@ -176,6 +176,68 @@ int zsf_write_block(FILE *ptr_zsf_file, z80_byte *source,z80_int block_id, unsig
 
 }
 
+void load_zsf_spec128_memconf(z80_byte *header)
+{
+/*
+-Block ID 5: ZSF_SPEC128_MEMCONF
+Byte Fields:
+0: Port 32765 contents
+1: Port 8189 contents
+2: Total memory multiplier: 1 for 128kb ram, 2 for 256 kb ram, 4 for 512 kb ram
+*/
+
+	puerto_32765=header[0];
+	puerto_8189=header[1];
+	mem128_multiplicador=header[2];
+
+//Distinguir entre 128/p2 y p2a
+	if (MACHINE_IS_SPECTRUM_128_P2) {
+		mem_page_ram_128k();
+		mem_page_rom_128k();
+
+		//mem_init_memory_tables_128k();
+/*
+
+
+                                //asignar ram
+                                mem_page_ram_128k();
+
+                                //asignar rom
+                                mem_page_rom_128k();
+
+
+*/
+	}
+
+	if (MACHINE_IS_SPECTRUM_P2A) {
+		mem_page_ram_p2a();
+
+		if (puerto_8189&1) mem_page_ram_rom();
+		else mem_page_rom_p2a();
+
+
+		//mem_init_memory_tables_p2a();
+/*
+
+p2a
+32765:
+                        //asignar ram
+                        mem_page_ram_p2a();
+
+                        //asignar rom
+                        mem_page_rom_p2a();
+
+
+8189:
+
+ram in rom: mem_page_ram_rom();
+mem_page_rom_p2a();
+*/
+	}
+
+
+}
+
 void load_zsf_snapshot_z80_regs(z80_byte *header)
 {
   reg_c=header[0];
@@ -359,6 +421,10 @@ void load_zsf_snapshot(char *filename)
 
       case ZSF_RAMBLOCK:
         load_zsf_snapshot_block_data(block_data,block_lenght);
+      break;
+
+      case ZSF_SPEC128_MEMCONF:
+        load_zsf_spec128_memconf(block_data);
       break;
 
       default:
