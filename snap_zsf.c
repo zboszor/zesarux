@@ -76,6 +76,7 @@
 #define ZSF_MOTO_REGS_ID 3
 #define ZSF_RAMBLOCK 4
 #define ZSF_SPEC128_MEMCONF 5
+#define ZSF_SPEC128_RAMBLOCK 6
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -125,6 +126,16 @@ Byte Fields:
 1: Port 8189 contents
 2: Total memory multiplier: 1 for 128kb ram, 2 for 256 kb ram, 4 for 512 kb ram
 
+-Block ID 6: ZSF_SPEC128_RAMBLOCK
+A ram binary block for a spectrum 128, p2 or p2a machine
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address
+3,4: Block lenght
+5: ram block id (0..7) for a spectrum 128k for example
+6 and next bytes: data bytes
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -145,6 +156,7 @@ char *zsf_block_id_names[]={
   "ZSF_MOTO_REGS",
   "ZSF_RAMBLOCK",
   "ZSF_SPEC128_MEMCONF",
+  "ZSF_SPEC128_RAMBLOCK"
 
   "Unknown"  //Este siempre al final
 };
@@ -583,8 +595,8 @@ void save_zsf_snapshot(char *filename)
   compressed_ramblock[4]=value_16_to_8h(longitud_ram);
 
   //Copy spectrum memory to ramblock
-  int i;
-  for (i=0;i<longitud_ram;i++) ramblock[5+i]=peek_byte_no_time(16384+i);
+  //int i;
+  //for (i=0;i<longitud_ram;i++) ramblock[5+i]=peek_byte_no_time(16384+i);
 
   int si_comprimido;
   int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[16384],&compressed_ramblock[5],longitud_ram,&si_comprimido);
@@ -630,6 +642,66 @@ Byte Fields:
 	memconf[2]=mem128_multiplicador;
 
   	zsf_write_block(ptr_zsf_file, memconf,ZSF_SPEC128_MEMCONF, 3);
+
+
+   int longitud_ram=16384;
+
+  //Allocate 6+48kb bytes
+  z80_byte *ramblock=malloc(longitud_ram+6);
+  if (ramblock==NULL) {
+    debug_printf (VERBOSE_ERR,"Error allocating memory");
+    return;
+  }
+
+
+  //Para el bloque comprimido
+   z80_byte *compressed_ramblock=malloc(longitud_ram*2);
+  if (ramblock==NULL) {
+    debug_printf (VERBOSE_ERR,"Error allocating memory");
+    return;
+  }
+
+  /*
+
+-Block ID 6: ZSF_SPEC128_RAMBLOCK
+A ram binary block for a spectrum 128, p2 or p2a machine
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address
+3,4: Block lenght
+5: ram block id (0..7) for a spectrum 128k for example
+6 and next bytes: data bytes
+  */
+
+  int paginas=8*mem128_multiplicador;
+  z80_byte ram_page;
+
+  for (ram_page=0;ram_page<paginas;ram_page++) {
+
+	  compressed_ramblock[0]=0;
+	  compressed_ramblock[1]=value_16_to_8l(16384);
+	  compressed_ramblock[2]=value_16_to_8h(16384);
+	  compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+	  compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+	  compressed_ramblock[5]=ram_page;
+
+	  //Copy spectrum memory to ramblock
+	  //int i;
+	  //for (i=0;i<longitud_ram;i++) ramblock[6+i]=peek_byte_no_time(16384+i);
+
+	  int si_comprimido;
+	  int longitud_bloque=save_zsf_copyblock_compress_uncompres(ram_mem_table[ram_page],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+	  if (si_comprimido) compressed_ramblock[0]|=1;
+
+	  //Store block to file
+	  zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_SPEC128_RAMBLOCK, longitud_bloque+6);
+
+  }
+
+  free(ramblock);
+
+
   }
 
 
