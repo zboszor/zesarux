@@ -331,19 +331,21 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 #define MACHINE_IS_SPECTRUM_16 (current_machine_type==MACHINE_ID_SPECTRUM_16)
 #define MACHINE_IS_SPECTRUM_48 (current_machine_type==MACHINE_ID_SPECTRUM_48)
 #define MACHINE_IS_INVES (current_machine_type==MACHINE_ID_INVES)
-#define MACHINE_IS_SPECTRUM_16_48 ( (current_machine_type<=5) || current_machine_type==20 )
-#define MACHINE_IS_SPECTRUM_128_P2 ( (current_machine_type>=6 && current_machine_type<=10) || MACHINE_IS_PENTAGON)
-#define MACHINE_IS_SPECTRUM_P2A (current_machine_type>=11 && current_machine_type<=13)
-#define MACHINE_IS_SPECTRUM_128_P2_P2A ( (current_machine_type>=6 && current_machine_type<=13) || MACHINE_IS_PENTAGON)
-#define MACHINE_IS_ZXUNO (current_machine_type==14)
+#define MACHINE_IS_SPECTRUM_48_SPA (current_machine_type==MACHINE_ID_SPECTRUM_48_SPA)
+#define MACHINE_IS_SPECTRUM_16_48 ( (current_machine_type<=MACHINE_ID_MICRODIGITAL_TK95) || MACHINE_IS_SPECTRUM_48_SPA )
 
-#define MACHINE_IS_CHLOE_140SE (current_machine_type==15)
-#define MACHINE_IS_CHLOE_280SE (current_machine_type==16)
-#define MACHINE_IS_CHLOE (current_machine_type==15 || current_machine_type==16)
-#define MACHINE_IS_TIMEX_TS2068 (current_machine_type==17)
-#define MACHINE_IS_PRISM (current_machine_type==18)
-#define MACHINE_IS_TBBLUE (current_machine_type==19)
-#define MACHINE_IS_SPECTRUM_PLUS_SPA (current_machine_type==20)
+#define MACHINE_IS_SPECTRUM_128_P2 ( (current_machine_type>=MACHINE_ID_SPECTRUM_128 && current_machine_type<=MACHINE_ID_SPECTRUM_P2_SPA) || MACHINE_IS_PENTAGON)
+#define MACHINE_IS_SPECTRUM_P2A (current_machine_type>=MACHINE_ID_SPECTRUM_P2A_40 && current_machine_type<=MACHINE_ID_SPECTRUM_P2A_SPA)
+#define MACHINE_IS_SPECTRUM_128_P2_P2A ( MACHINE_IS_SPECTRUM_128_P2 || MACHINE_IS_SPECTRUM_P2A)
+
+#define MACHINE_IS_ZXUNO (current_machine_type==MACHINE_ID_ZXUNO)
+
+#define MACHINE_IS_CHLOE_140SE (current_machine_type==MACHINE_ID_CHLOE_140SE)
+#define MACHINE_IS_CHLOE_280SE (current_machine_type==MACHINE_ID_CHLOE_280SE)
+#define MACHINE_IS_CHLOE (MACHINE_IS_CHLOE_140SE || MACHINE_IS_CHLOE_280SE)
+#define MACHINE_IS_TIMEX_TS2068 (current_machine_type==MACHINE_ID_TIMEX_TS2068)
+#define MACHINE_IS_PRISM (current_machine_type==MACHINE_ID_PRISM)
+#define MACHINE_IS_TBBLUE (current_machine_type==MACHINE_ID_TBBLUE)
 #define MACHINE_IS_PENTAGON (current_machine_type==MACHINE_ID_PENTAGON)
 #define MACHINE_IS_CHROME (current_machine_type==MACHINE_ID_CHROME)
 
@@ -353,17 +355,17 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 
 #define MACHINE_IS_EVO (MACHINE_IS_TSCONF || MACHINE_IS_BASECONF)
 
-#define MACHINE_IS_ZX80 (current_machine_type==120)
-#define MACHINE_IS_ZX81 (current_machine_type==121)
-#define MACHINE_IS_ZX8081 (current_machine_type==120 || current_machine_type==121)
-#define MACHINE_IS_ACE (current_machine_type==122)
+#define MACHINE_IS_ZX80 (current_machine_type==MACHINE_ID_ZX80)
+#define MACHINE_IS_ZX81 (current_machine_type==MACHINE_ID_ZX81)
+#define MACHINE_IS_ZX8081 (MACHINE_IS_ZX80 || MACHINE_IS_ZX81)
+#define MACHINE_IS_ACE (current_machine_type==MACHINE_ID_ACE)
 #define MACHINE_IS_ZX8081ACE (MACHINE_IS_ZX8081 || MACHINE_IS_ACE)
 
-#define MACHINE_IS_Z88 (current_machine_type==130)
+#define MACHINE_IS_Z88 (current_machine_type==MACHINE_ID_Z88)
 
 #define MACHINE_IS_CPC_464 (current_machine_type==MACHINE_ID_CPC_464)
-#define MACHINE_IS_CPC (current_machine_type>=140 && current_machine_type<=149)
-#define MACHINE_IS_SAM (current_machine_type==150)
+#define MACHINE_IS_CPC (current_machine_type>=MACHINE_ID_CPC_464 && current_machine_type<=149)
+#define MACHINE_IS_SAM (current_machine_type==MACHINE_ID_SAM)
 
 /*
 160=QL
@@ -371,7 +373,7 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 */
 
 #define MACHINE_IS_QL_STANDARD (current_machine_type==MACHINE_ID_QL_STANDARD)
-#define MACHINE_IS_QL (current_machine_type>=160 && current_machine_type<=179)
+#define MACHINE_IS_QL (current_machine_type>=MACHINE_ID_QL_STANDARD && current_machine_type<=179)
 
 /*
 180=MK14 Standard
@@ -379,7 +381,7 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 */
 
 #define MACHINE_IS_MK14_STANDARD (current_machine_type==MACHINE_ID_MK14_STANDARD)
-#define MACHINE_IS_MK14 (current_machine_type>=180 && current_machine_type<=189)
+#define MACHINE_IS_MK14 (current_machine_type>=MACHINE_ID_MK14_STANDARD && current_machine_type<=189)
 
 
 #define CPU_IS_MOTOROLA (MACHINE_IS_QL)
