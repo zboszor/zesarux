@@ -148,7 +148,7 @@ Byte fields:
 
 -Block ID 8: ZSF_ULA
 Byte fields:
-0: Last out to port 254
+0: Border color (Last out to port 254 AND 7)
 
 
 
@@ -430,7 +430,11 @@ Byte fields:
 
 void load_zsf_ula(z80_byte *header)
 {
-  out_254=header[0];
+  out_254=header[0] & 7;
+  out_254_original_value=out_254;
+
+  printf ("border: %d\n",out_254);
+  modificado_border.v=1;
 }
 
 
@@ -823,9 +827,9 @@ Byte fields:
   //Ula block
   z80_byte ulablock[1];
 
-  ulablock[0]=out_254;
-  
-  zsf_write_block(ptr_zsf_file, &save_machine_id,ZSF_ULA, 1);
+  ulablock[0]=out_254 & 7;
+
+  zsf_write_block(ptr_zsf_file, ulablock,ZSF_ULA, 1);
 
 
   //test
