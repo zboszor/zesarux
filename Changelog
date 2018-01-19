@@ -24,7 +24,7 @@ Improved file viewer from file utilities:
 *specific file viewers for these kind of files: .tap, .zx, .zsf, .sp, .z80, .sna, .spg, .p, .o, .mmc/.ide (fat browser, plus3dos browser), .trd, .tzx, .cdt, .flash (zxuno flash, z88 flash, superupgrade flash), .epr, .eprom
 *default hexadecimal file viewer for unknown files
 Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
-Improved menus, a new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem
+Improved menus, a new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
 Fixed TBBlue MMU when using segment 0000-3FFFH
 Fixed ZX-Uno emulation: 128kb timings are the same as a Spectrum 128k. When port 1ffd enabled, port FF return FF
 Fixed window footer when running Pentagon
