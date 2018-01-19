@@ -206,19 +206,6 @@ Byte Fields:
 	if (MACHINE_IS_SPECTRUM_128_P2) {
 		mem_page_ram_128k();
 		mem_page_rom_128k();
-
-		//mem_init_memory_tables_128k();
-/*
-
-
-                                //asignar ram
-                                mem_page_ram_128k();
-
-                                //asignar rom
-                                mem_page_rom_128k();
-
-
-*/
 	}
 
 	if (MACHINE_IS_SPECTRUM_P2A) {
@@ -677,6 +664,9 @@ Byte Fields:
   	zsf_write_block(ptr_zsf_file, memconf,ZSF_SPEC128_MEMCONF, 3);
 
 
+
+
+
    int longitud_ram=16384;
 
   //Allocate 6+48kb bytes
@@ -719,13 +709,11 @@ Byte Fields:
 	  compressed_ramblock[4]=value_16_to_8h(longitud_ram);
 	  compressed_ramblock[5]=ram_page;
 
-	  //Copy spectrum memory to ramblock
-	  //int i;
-	  //for (i=0;i<longitud_ram;i++) ramblock[6+i]=peek_byte_no_time(16384+i);
-
 	  int si_comprimido;
 	  int longitud_bloque=save_zsf_copyblock_compress_uncompres(ram_mem_table[ram_page],&compressed_ramblock[6],longitud_ram,&si_comprimido);
 	  if (si_comprimido) compressed_ramblock[0]|=1;
+
+	  debug_printf(VERBOSE_DEBUG,"Saving ZSF_SPEC128_RAMBLOCK ram page: %d length: %d",ram_page,longitud_bloque);
 
 	  //Store block to file
 	  zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_SPEC128_RAMBLOCK, longitud_bloque+6);

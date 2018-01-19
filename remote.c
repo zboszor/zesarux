@@ -787,6 +787,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"set-verbose-level",NULL,NULL,"Sets verbose level for console output"},
 	{"set-window-zoom",NULL,"zoom","Sets window zoom"},
   {"smartload","|sl","file","Smart-loads a file. Use with care, may produce unexpected behaviour when emulator is doing a machine reset for example"},
+  {"snapshot-load",NULL,"file","Loads a snapshot"},
   {"snapshot-save",NULL,"file","Saves a snapshot"},
   {"speech-empty-fifo",NULL,NULL,"Empty speech fifo"},
   {"speech-send",NULL,"message","Sends message to speech"},
@@ -3908,10 +3909,14 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
 
   }
 
+  else if (!strcmp(comando_sin_parametros,"snapshot-load") ) {
+    strcpy(snapshot_load_file,parametros);
+    snapfile=snapshot_load_file;
+    snapshot_load();
+  }
+
   else if (!strcmp(comando_sin_parametros,"snapshot-save") ) {
-
     snapshot_save(parametros);
-
   }
 
   else if (!strcmp(comando_sin_parametros,"speech-empty-fifo") ) {

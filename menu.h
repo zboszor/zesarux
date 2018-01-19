@@ -353,6 +353,8 @@ extern void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS);
 
 extern int timer_osd_keyboard_menu;
 
+extern char snapshot_load_file[];
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \
