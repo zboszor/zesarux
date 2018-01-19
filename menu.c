@@ -285,6 +285,8 @@ int menu_confirm_yesno(char *texto_ventana);
 int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior);
 int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior);
 
+
+
 void menu_espera_tecla(void);
 void menu_espera_tecla_timeout_tooltip(void);
 z80_byte menu_da_todas_teclas(void);
@@ -551,6 +553,7 @@ int menu_window_splash_counter;
 z80_bit tooltip_enabled;
 
 
+void menu_add_ESC_item(menu_item *array_menu_item);
 
 
 void menu_ventana_scanf(char *titulo,char *texto,int max_length);
@@ -4346,6 +4349,10 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
         if (!strcmp(scr_driver_name,"stdout") ) {
                 //se abre menu con driver stdout. Llamar a menu alternativo
+
+		//si hay menu tabulado, agregamos ESC (pues no se incluye nunca)
+		if (m->es_menu_tabulado) menu_add_ESC_item(m);
+
                 return menu_dibuja_menu_stdout(opcion_inicial,item_seleccionado,m,titulo);
         }
 /*
