@@ -3910,9 +3910,18 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
   }
 
   else if (!strcmp(comando_sin_parametros,"snapshot-load") ) {
+    //Asegurarnos que congelamos el emulador: abrir menu con mutitarea desactivada
+    //Entramos en el mismo modo que cpu-step para poder congelar la emulacion
+    remote_cpu_enter_step(misocket);
+    if (menu_event_remote_protocol_enterstep.v==0) return;
+
+
     strcpy(snapshot_load_file,parametros);
     snapfile=snapshot_load_file;
     snapshot_load();
+
+
+    remote_cpu_exit_step(misocket);
   }
 
   else if (!strcmp(comando_sin_parametros,"snapshot-save") ) {

@@ -77,6 +77,7 @@
 #define ZSF_RAMBLOCK 4
 #define ZSF_SPEC128_MEMCONF 5
 #define ZSF_SPEC128_RAMBLOCK 6
+#define ZSF_AYCHIP 7
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -131,10 +132,18 @@ A ram binary block for a spectrum 128, p2 or p2a machine
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
-1,2: Block start address
+1,2: Block start address (currently unused)
 3,4: Block lenght
 5: ram block id (0..7) for a spectrum 128k for example
 6 and next bytes: data bytes
+
+
+-Block ID 7: ZSF_AYCHIP
+Byte fields:
+0: AY Chip number, starting at 0. A normal spectrum will be only the 0. A turbosound, 0 and 1, etc
+1: Current AY Chip selected (variable ay_chip_selected). Redundant in all ZSF_AYCHIP blocks
+2: AY Last Register selection
+3-18: AY Chip contents
 
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
@@ -147,7 +156,7 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 6
+#define MAX_ZSF_BLOCK_ID_NAMES 7
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -157,6 +166,7 @@ char *zsf_block_id_names[]={
   "ZSF_RAMBLOCK",
   "ZSF_SPEC128_MEMCONF",
   "ZSF_SPEC128_RAMBLOCK",
+  "ZSF_AYCHIP",
 
   "Unknown"  //Este siempre al final
 };
@@ -361,6 +371,57 @@ void load_zsf_spec128_snapshot_block_data(z80_byte *block_data,int longitud_orig
   load_zsf_snapshot_block_data_addr(&block_data[i],ram_mem_table[ram_page],block_lenght,longitud_original,block_flags&1);
 
 }
+
+
+
+void load_zsf_aychip(z80_byte *header)
+{
+
+  
+  ay_chip_present.v=1;
+
+  z80_byte header_aychip_number=header[0];
+  z80_byte header_aychip_selected=header[1];
+
+  //MAX_AY_CHIPS
+  debug_printf(VERBOSE_DEBUG,"Loading AY Chip number %d contents",header_aychip_number);
+
+  if (header_aychip_number>MAX_AY_CHIPS-1 || header_aychip_selected>MAX_AY_CHIPS-1) {
+    debug_printf(VERBOSE_DEBUG,"Snapshot uses more ay chips than we have, ignoring this ZSF_AYCHIP block");
+    return;
+  }
+
+  ay_chip_selected=header_aychip_selected;
+
+  //Si el numero de chip a cargar (0..) es mayor que el numero actual de chips (-1)
+  if (header_aychip_number>total_ay_chips-1) {
+    total_ay_chips=header_aychip_number+1;
+    debug_printf(VERBOSE_DEBUG,"Increasing total ay chips to %d",total_ay_chips);
+  }
+
+  ay_3_8912_registro_sel[header_aychip_number]=header[2];
+
+
+      int j;
+      for (j=0;j<16;j++) ay_3_8912_registros[header_aychip_number][j]=header[3+j];
+  
+
+/*
+      
+-Block ID 7: ZSF_AYCHIP
+Byte fields:
+0: AY Chip number, starting at 0. A normal spectrum will be only the 0. A turbosound, 0 and 1, etc
+1: Current AY Chip selected (variable ay_chip_selected). Redundant in all ZSF_AYCHIP blocks
+2: AY Last Register selection
+3-18: AY Chip contents
+      */
+  /*
+
+*/
+
+}
+
+
 void load_zsf_snapshot(char *filename)
 {
 
@@ -442,6 +503,11 @@ void load_zsf_snapshot(char *filename)
 
       case ZSF_SPEC128_RAMBLOCK:
         load_zsf_spec128_snapshot_block_data(block_data,block_lenght);
+      break;
+
+
+      case ZSF_AYCHIP:
+        load_zsf_aychip(block_data);
       break;
 
       default:
@@ -710,6 +776,33 @@ Byte Fields:
 
   }
 
+
+
+  //Registros chip AY
+  if (ay_chip_present.v) {
+    int i;
+    for (i=0;i<total_ay_chips;i++) {
+      z80_byte aycontents[19];
+
+      /*
+
+-Block ID 7: ZSF_AYCHIP
+Byte fields:
+0: AY Chip number, starting at 0. A normal spectrum will be only the 0. A turbosound, 0 and 1, etc
+1: Current AY Chip selected (variable ay_chip_selected). Redundant in all ZSF_AYCHIP blocks
+2: AY Last Register selection
+3-18: AY Chip contents
+      */
+      aycontents[0]=i;
+      aycontents[1]=ay_chip_selected;
+      aycontents[2]=ay_3_8912_registro_sel[i];
+
+      int j;
+      for (j=0;j<16;j++) aycontents[3+j]=ay_3_8912_registros[i][j];
+
+      zsf_write_block(ptr_zsf_file, aycontents,ZSF_AYCHIP, 19);
+    }
+  }
 
 
   //test
