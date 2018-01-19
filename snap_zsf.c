@@ -832,8 +832,6 @@ Byte fields:
   zsf_write_block(ptr_zsf_file, ulablock,ZSF_ULA, 1);
 
 
-  //test
-  //save_zsf_snapshot_cpuregs(ptr_zsf_file);
   //test meter un NOOP
   zsf_write_block(ptr_zsf_file, NULL,0, 0);
 

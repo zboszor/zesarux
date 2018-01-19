@@ -646,6 +646,7 @@ int zxuno_spi_flash_opcion_seleccionada=0;
 
 int debug_new_visualmem_opcion_seleccionada=0;
 int audio_new_waveform_opcion_seleccionada=0;
+int audio_new_ayplayer_opcion_seleccionada=0;
 
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
@@ -3070,7 +3071,7 @@ void menu_escribe_linea_opcion_tabulado(z80_byte indice,int opcion_actual,int op
 
         //y texto propiamente
 
-        int startx=menu_escribe_linea_startx;
+        //int startx=menu_escribe_linea_startx;
         //menu_escribe_texto_ventana(startx,indice,tinta,papel,texto);
         menu_escribe_texto_ventana(x,y,tinta,papel,texto);
 
@@ -8472,6 +8473,7 @@ int menu_waveform_valor_contador_segundo_anterior;
 void menu_audio_draw_sound_wave(void)
 {
 
+	normal_overlay_texto_menu();
 
 
 	//esto hara ejecutar esto 2 veces por segundo
@@ -8492,7 +8494,7 @@ void menu_audio_draw_sound_wave(void)
 
 
 
-	normal_overlay_texto_menu();
+
 
 
 
@@ -8777,7 +8779,7 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
         menu_espera_no_tecla();
 
-        z80_byte acumulado;
+        //z80_byte acumulado;
 
 
 
@@ -9953,22 +9955,9 @@ if (ay_player_playing.v==0) mostrar_player=0;
 
 
                         int linea=0;
-                        //int opcode;
 
-                        //unsigned int sumatotal;
-                        //sumatotal=util_stats_sum_all_counters();
-                        //sprintf (textostats,"Total opcodes run: %u",sumatotal);
-                        //menu_escribe_linea_opcion(linea++,-1,1,textostats);
+         
 
-
-                        //menu_escribe_linea_opcion(linea++,-1,1,"Most used op. for each preffix");
-/*
-	//Si es infinito, no saltar nunca a siguiente cancion
-	if (ay_song_length==0) return;
-	ay_song_length_counter++;
-
-	ay_player_pista_actual
-*/
 
 		if (mostrar_player) {
 
@@ -10176,60 +10165,240 @@ menu_escribe_linea_opcion(linea++,-1,1,"~~Load");
 }
 
 
-//menu audio ay player
-/*
-void menu_ay_player(MENU_ITEM_PARAMETERS)
+int menu_audio_new_ayplayer_si_mostrar(void)
 {
-        menu_item *array_menu_ay_player;
-	menu_item item_seleccionado;
-	int retorno_menu;
+	int mostrar_player;
 
+
+	mostrar_player=1;
+	if (audio_ay_player_mem==NULL) mostrar_player=0;
+	if (ay_player_playing.v==0) mostrar_player=0;
+
+	return mostrar_player;
+}
+
+
+//Usado dentro del overlay de ayplayer
+int menu_ayplayer_valor_contador_segundo_anterior;
+
+void menu_audio_new_ayplayer_overlay(void)
+{
+
+    normal_overlay_texto_menu();
+
+
+    //esto hara ejecutar esto 2 veces por segundo
+    if ( ((contador_segundo%500) == 0 && menu_ayplayer_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+
+        menu_ayplayer_valor_contador_segundo_anterior=contador_segundo;
+        printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+       
+    
+
+
+char textoplayer[40];
+
+       
+
+
+        z80_byte acumulado;
+
+        //char dumpassembler[32];
+
+        //Empezar con espacio
+        //dumpassembler[0]=' ';
+
+				int contador_string_author=0;
+				int contador_string_track_name=0;
+				int contador_string_misc=0;
+
+ 				int retardo_song_name=0;
+				int retardo_author=0;
+				int retardo_misc=0;
+
+
+
+				int valor_contador_segundo_anterior;
+
+				valor_contador_segundo_anterior=contador_segundo;
+
+int mostrar_player;
+
+int mostrar_antes_player=-1;
+
+	mostrar_player=menu_audio_new_ayplayer_si_mostrar();
+
+
+				mostrar_antes_player=mostrar_player;
+
+
+                        int linea=0;
+
+         
+
+
+		if (mostrar_player) {
+
+			printf ("Dibujando player\n");
+
+			z80_byte minutos,segundos,minutos_total,segundos_total;
+			minutos=ay_song_length_counter/60/50;
+			segundos=(ay_song_length_counter/50)%60;
+			minutos_total=ay_song_length/60/50;
+			segundos_total=(ay_song_length/50)%60;
+
+//printf ("segundo. contador segundo: %d\n",contador_segundo);
+
+			sprintf (textoplayer,"Track: %03d/%03d  (%02d:%02d/%02d:%02d)",ay_player_pista_actual,ay_player_total_songs(),minutos,segundos,minutos_total,segundos_total);
+			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
+
+
+			strncpy(textoplayer,&ay_player_file_song_name[contador_string_track_name],28);
+			textoplayer[28]=0;
+			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
+			contador_string_track_name=menu_ay_player_get_continuous_string(contador_string_track_name,28,ay_player_file_song_name,&retardo_song_name);
+
+			menu_escribe_linea_opcion(linea++,-1,1,"Author");
+			strncpy(textoplayer,&ay_player_file_author[contador_string_author],28);
+			textoplayer[28]=0;
+			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
+			contador_string_author=menu_ay_player_get_continuous_string(contador_string_author,28,ay_player_file_author,&retardo_author);
+
+			menu_escribe_linea_opcion(linea++,-1,1,"Misc");
+			strncpy(textoplayer,&ay_player_file_misc[contador_string_misc],28);
+			textoplayer[28]=0;
+			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
+			contador_string_misc=menu_ay_player_get_continuous_string(contador_string_misc,28,ay_player_file_misc,&retardo_misc);
+
+		
+
+		}
+	}
+}
+
+
+
+void menu_audio_new_ayplayer_nada(MENU_ITEM_PARAMETERS)
+{
+
+}
+
+void menu_audio_new_ayplayer_load(MENU_ITEM_PARAMETERS)
+{
+
+	                                       //restauramos modo normal de texto de menu
+                                       set_menu_overlay_function(normal_overlay_texto_menu);
+
+	
+	menu_ay_player_load(0);
+	//contador_string_author=contador_string_track_name=contador_string_misc=retardo_song_name=retardo_author=retardo_misc=0;
+
+	//Restauramos funcion de overlay
+	set_menu_overlay_function(menu_audio_new_ayplayer_overlay);
+
+}												
+
+void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
+{
+
+
+        menu_espera_no_tecla();
+
+        z80_byte acumulado;
+
+
+
+        //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de audio waveform
+	set_menu_overlay_function(menu_audio_new_ayplayer_overlay);
+
+
+
+	menu_item *array_menu_audio_new_ayplayer;
+        menu_item item_seleccionado;
+        int retorno_menu;
         do {
 
 
-					menu_add_item_menu_inicial_format(&array_menu_ay_player,MENU_OPCION_NORMAL,menu_ay_player_load,NULL,"~~Load ay file");
-					menu_add_item_menu_shortcut(array_menu_ay_player,'l');
-					menu_add_item_menu_tooltip(array_menu_ay_player,"You should reselect machine when finishing playing because the normal ROM is changed for the player");
-					menu_add_item_menu_ayuda(array_menu_ay_player,"You should reselect machine when finishing playing because the normal ROM is changed for the player");
-
-					if (audio_ay_player_mem!=NULL) {
-
-						menu_add_item_menu_format(array_menu_ay_player,MENU_OPCION_NORMAL,menu_ay_player_next_track,NULL,"~~Next track (%d/%d)",ay_player_pista_actual,ay_player_total_songs() );
-						menu_add_item_menu_shortcut(array_menu_ay_player,'n');
-
-						menu_add_item_menu_format(array_menu_ay_player,MENU_OPCION_NORMAL,menu_ay_player_exit_tracker,NULL,"~~Stop player");
-						menu_add_item_menu_shortcut(array_menu_ay_player,'s');
-
-					}
-
-
-		menu_add_item_menu_format(array_menu_ay_player,MENU_OPCION_NORMAL,menu_ay_player_player,NULL,"Player");
+            //Hay que redibujar la ventana desde este bucle
+            menu_ay_player_player_dibuja_ventana();
 
 
 
-                menu_add_item_menu(array_menu_ay_player,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+            menu_add_item_menu_inicial_format(&array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_load,NULL,"~~Load");
+            menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'l');
+            menu_add_item_menu_tooltip(array_menu_audio_new_ayplayer,"Load AY file");
+            menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Load AY file");
+						//0123456789
+						// Change wave Shape
+						
+			menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,13);
+
+			if (menu_audio_new_ayplayer_si_mostrar() ) {
+				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_nada,NULL,"~~Prev");
+				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'p');
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,7);
+
+				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_nada,NULL,"~~Stop");
+				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'s');
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,6,7);	
+
+				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_nada,NULL,"~~Next");
+				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'n');
+				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,11,7);					
 
 
-                //menu_add_item_menu(array_menu_ay_player,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-		menu_add_ESC_item(array_menu_ay_player);
+			}			
+/*
 
-                retorno_menu=menu_dibuja_menu(&ay_player_opcion_seleccionada,&item_seleccionado,array_menu_ay_player,"Audio" );
+			sprintf(textoplayer,"~~Repeat: %s  ~~Exit end: %s",
+				(ay_player_repeat_file.v ? "Yes" : "No"),(ay_player_exit_emulator_when_finish.v ? "Yes" : "No") );
+			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
 
-                cls_menu_overlay();
+			if (ay_player_limit_infinite_tracks==0) sprintf(textoplayer,"Length ~~infinite tracks: inf");
+			else sprintf(textoplayer,"Length ~~infinite tracks: %d s",ay_player_limit_infinite_tracks/50);
+			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
 
-		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-	                //llamamos por valor de funcion
-        	        if (item_seleccionado.menu_funcion!=NULL) {
-                	        //printf ("actuamos por funcion\n");
-	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				cls_menu_overlay();
-        	        }
-		}
+			if (ay_player_limit_any_track==0) sprintf(textoplayer,"Length ~~any track: No limit");
+			else sprintf(textoplayer,"Length ~~any track: %d s",ay_player_limit_any_track/50);
+			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
 
-	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+			sprintf(textoplayer,"~~CPC mode: %s",(ay_player_cpc_mode.v ? "Yes" : "No"));
+			menu_escribe_linea_opcion(linea++,-1,1,textoplayer);
+*/
+
+
+
+		//Nombre de ventana solo aparece en el caso de stdout
+                retorno_menu=menu_dibuja_menu(&audio_new_ayplayer_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_ayplayer,"AY Player" );
+
+
+	cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+       //restauramos modo normal de texto de menu
+       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+        cls_menu_overlay();
+
 }
 
-*/
+
+
+
+
 //menu audio settings
 void menu_audio_settings(MENU_ITEM_PARAMETERS)
 {
@@ -10251,8 +10420,13 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_new_waveform,NULL,"View ~~Waveform");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'w');
 
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_player_player,NULL,"AY ~~Player");
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_player_player,NULL,"OLD AY Player");
+
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_new_ayplayer,NULL,"AY ~~Player");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'p');
+
+
+					
 
 
                 //menu_add_item_menu(array_menu_audio_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
