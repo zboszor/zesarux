@@ -78,6 +78,7 @@
 #define ZSF_SPEC128_MEMCONF 5
 #define ZSF_SPEC128_RAMBLOCK 6
 #define ZSF_AYCHIP 7
+#define ZSF_ULA 8
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -145,6 +146,11 @@ Byte fields:
 2: AY Last Register selection
 3-18: AY Chip contents
 
+-Block ID 8: ZSF_ULA
+Byte fields:
+0: Last out to port 254
+
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -156,7 +162,7 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 7
+#define MAX_ZSF_BLOCK_ID_NAMES 8
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -167,6 +173,7 @@ char *zsf_block_id_names[]={
   "ZSF_SPEC128_MEMCONF",
   "ZSF_SPEC128_RAMBLOCK",
   "ZSF_AYCHIP",
+  "ZSF_ULA",
 
   "Unknown"  //Este siempre al final
 };
@@ -387,7 +394,7 @@ void load_zsf_aychip(z80_byte *header)
   debug_printf(VERBOSE_DEBUG,"Loading AY Chip number %d contents",header_aychip_number);
 
   if (header_aychip_number>MAX_AY_CHIPS-1 || header_aychip_selected>MAX_AY_CHIPS-1) {
-    debug_printf(VERBOSE_DEBUG,"Snapshot uses more ay chips than we have, ignoring this ZSF_AYCHIP block");
+    debug_printf(VERBOSE_ERR,"Snapshot uses more ay chips than we have (%d), ignoring this ZSF_AYCHIP block",MAX_AY_CHIPS);
     return;
   }
 
@@ -419,6 +426,11 @@ Byte fields:
 
 */
 
+}
+
+void load_zsf_ula(z80_byte *header)
+{
+  out_254=header[0];
 }
 
 
@@ -508,6 +520,10 @@ void load_zsf_snapshot(char *filename)
 
       case ZSF_AYCHIP:
         load_zsf_aychip(block_data);
+      break;
+
+      case ZSF_ULA:
+        load_zsf_ula(block_data);
       break;
 
       default:
@@ -803,6 +819,13 @@ Byte fields:
       zsf_write_block(ptr_zsf_file, aycontents,ZSF_AYCHIP, 19);
     }
   }
+
+  //Ula block
+  z80_byte ulablock[1];
+
+  ulablock[0]=out_254;
+  
+  zsf_write_block(ptr_zsf_file, &save_machine_id,ZSF_ULA, 1);
 
 
   //test
