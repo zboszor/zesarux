@@ -457,19 +457,30 @@ void save_zsf_snapshot(char *filename)
 
 
 
-  //Save cpu registers. Z80 or Moto
+  //Save cpu registers. Z80 or Moto or MK14
   if (CPU_IS_MOTOROLA) {
 
   }
+  else if (CPU_IS_SCMP) {
+  }
+
   else {
     save_zsf_snapshot_cpuregs(ptr_zsf_file);
   }
 
     //TODO: estado ula: puerto 254, etc
 
+
+  //Maquinas de 48kb
+
+  if (MACHINE_IS_SPECTRUM_16_48) {
+
+	int longitud_ram=49152;
+	if (MACHINE_IS_SPECTRUM_16) longitud_ram=16384;
+
   //Test. Save 48kb block
   //Allocate 5+48kb bytes
-  z80_byte *ramblock=malloc(49152+5);
+  z80_byte *ramblock=malloc(longitud_ram+5);
   if (ramblock==NULL) {
     debug_printf (VERBOSE_ERR,"Error allocating memory");
     return;
@@ -477,7 +488,7 @@ void save_zsf_snapshot(char *filename)
 
 
   //Para el bloque comprimido
-   z80_byte *compressed_ramblock=malloc(49152*2);
+   z80_byte *compressed_ramblock=malloc(longitud_ram*2);
   if (ramblock==NULL) {
     debug_printf (VERBOSE_ERR,"Error allocating memory");
     return;
@@ -493,19 +504,22 @@ void save_zsf_snapshot(char *filename)
   compressed_ramblock[0]=0;
   compressed_ramblock[1]=value_16_to_8l(16384);
   compressed_ramblock[2]=value_16_to_8h(16384);
-  compressed_ramblock[3]=value_16_to_8l(49152);
-  compressed_ramblock[4]=value_16_to_8h(49152);
+  compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+  compressed_ramblock[4]=value_16_to_8h(longitud_ram);
 
   //Copy spectrum memory to ramblock
   int i;
-  for (i=0;i<49152;i++) ramblock[5+i]=peek_byte_no_time(16384+i);
+  for (i=0;i<longitud_ram;i++) ramblock[5+i]=peek_byte_no_time(16384+i);
 
   int si_comprimido;
-  int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[16384],&compressed_ramblock[5],49152,&si_comprimido);
+  int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[16384],&compressed_ramblock[5],longitud_ram,&si_comprimido);
   if (si_comprimido) compressed_ramblock[0]|=1;
 
   //Store block to file
   zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_RAMBLOCK, longitud_bloque+5);
+
+
+  }
 
 
   free(ramblock);
