@@ -352,7 +352,7 @@ void load_zsf_spec128_snapshot_block_data(z80_byte *block_data,int longitud_orig
   z80_byte ram_page=block_data[i];
   i++;
 
-  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Lenght: %d Compressed: %s Length_source: %d",ram_page,block_start,(block_flags&1 ? "Yes" : "No"),block_flags&1,longitud_original);
+  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Lenght: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
 
 
   longitud_original -=6;
