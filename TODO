@@ -1,36 +1,30 @@
-       
+-Prioridades para la 6.1
+
+Recreated: que funcione en windows y linux
+QL: lectura de bloques basic no siempre funciona
+TsConf: dibujado sprites, tiles a cada scanline. dibujado border
+Next: implementar features que faltan: video offset
+ZX-Uno: implementar features que faltan: radaspaloffset
+Mas utilidades de visor archivos: convertir?
+Formato zsf: completar para mas maquinas
  
---- Estado funciones microdrive QL
-
---set-breakpoint 1 "pc=069D4H" 
---set-breakpoint 2 "D0=47H and PC=0032AH" 
-
-
-QL Estado a 15 diciembre
-
-
-
--Intento interceptar funciones de lectura de sectores de microdrive. MD.READ. aparentemente tiene que saltar desde la direccion 525CH pero ahi no parece saltar nunca,
-si desactivo todo trap de rom de ql, se queda colgado despues del menu inicial, seguramente intentando detectar microdrive
-si no desactivo traps, no parece llegar tampoco ahi, aunque esto me ha llevado a interceptar el trap FS.MDINF, que se usa en dir mdv1_,
-cosa que ahora consigo mostrar sectores libres/usados aunque no aparece el nombre del microdrive (registro A1 donde hay que guardar eso contiene direccion 100H !)
-
--Intento cargar programas basic con load/lrun interceptando IO.FLINE pero no consigo que al cargar vea los datos...
-
--teniendo desactivada la emulacion de microdrive , igualmente consulta cosas al root path
-Debug: Source path: MDV1_BOOT Device: mdv1 File: boot
-Paranoid: File /Users/chernandezba/Documents/ZEsarUX/zesarux/extras/media/ql/spacepods/boot not found
-
-
-
--- Fin estado funciones microdrive QL
-
 
 --- Cosas para la version 6.1
 
 QL:
 parece que los fallos de lectura en sentencias basic no son del archivo original sino que es algún tipo de error del emulador.
 No sera culpa de esa suma de punteros a1+a6 que no siempre se produce, y que depende de… lo de los traps que me dijeron en el foro
+
+-Intento interceptar funciones de lectura de sectores de microdrive. MD.READ. aparentemente tiene que saltar desde la direccion 525CH pero ahi no parece saltar nunca,
+si desactivo todo trap de rom de ql, se queda colgado despues del menu inicial, seguramente intentando detectar microdrive
+si no desactivo traps, no parece llegar tampoco ahi, aunque esto me ha llevado a interceptar el trap FS.MDINF, que se usa en dir mdv1_,
+cosa que ahora consigo mostrar sectores libres/usados aunque no aparece el nombre del microdrive (registro A1 donde hay que guardar eso contiene direccion 100H !)
+
+-teniendo desactivada la emulacion de microdrive , igualmente consulta cosas al root path
+Debug: Source path: MDV1_BOOT Device: mdv1 File: boot
+Paranoid: File /Users/chernandezba/Documents/ZEsarUX/zesarux/extras/media/ql/spacepods/boot not found
+
+
 
 Ejemplo:
 demos/cueshell.zip 
