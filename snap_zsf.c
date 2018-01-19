@@ -75,6 +75,7 @@
 #define ZSF_Z80_REGS_ID 2
 #define ZSF_MOTO_REGS_ID 3
 #define ZSF_RAMBLOCK 4
+#define ZSF_SPEC128_MEMCONF 5
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -117,6 +118,14 @@ Byte Fields:
 5 and next bytes: data bytes
 
 
+
+-Block ID 5: ZSF_SPEC128_MEMCONF
+Byte Fields:
+0: Port 32765 contents
+1: Port 8189 contents
+2: Total memory multiplier: 1 for 128kb ram, 2 for 256 kb ram, 4 for 512 kb ram
+
+
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
 Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
@@ -135,6 +144,7 @@ char *zsf_block_id_names[]={
   "ZSF_Z80_REGS",
   "ZSF_MOTO_REGS",
   "ZSF_RAMBLOCK",
+  "ZSF_SPEC128_MEMCONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -471,8 +481,7 @@ void save_zsf_snapshot(char *filename)
     //TODO: estado ula: puerto 254, etc
 
 
-  //Maquinas de 48kb
-
+  //Maquinas Spectrum de 48kb
   if (MACHINE_IS_SPECTRUM_16_48) {
 
 	int longitud_ram=49152;
@@ -518,11 +527,46 @@ void save_zsf_snapshot(char *filename)
   //Store block to file
   zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_RAMBLOCK, longitud_bloque+5);
 
+  free(ramblock);
 
   }
 
+/*
+  Maquinas Spectrum de 128kb (128, p2, p2a)
+  Permitir mas ram segun parametro 
+  int mem128_multiplicador;
+  Si hay mas de 128kb para maquinas tipo 128k y +2a
+  Si vale 1, solo 128k
+  Si vale 2, hay 256 kb
+  Si vale 4, hay 512 kb
+  Otros parametros implicados aqui
+  z80_byte *ram_mem_table[32];
 
-  free(ramblock);
+  z80_byte puerto_32765;
+  z80_byte puerto_8189;
+
+  Hay que crear trama nueva para guardar esos puertos de paginacion, y el valor del multiplicador
+
+
+
+*/
+  if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+/*
+-Block ID 5: ZSF_SPEC128_MEMCONF
+Byte Fields:
+0: Port 32765 contents
+1: Port 8189 contents
+2: Total memory multiplier: 1 for 128kb ram, 2 for 256 kb ram, 4 for 512 kb ram
+*/
+	z80_byte memconf[3];
+	memconf[0]=puerto_32765;
+	memconf[1]=puerto_8189;
+	memconf[2]=mem128_multiplicador;
+
+  	zsf_write_block(ptr_zsf_file, memconf,ZSF_SPEC128_MEMCONF, 3);
+  }
+
+
 
   //test
   //save_zsf_snapshot_cpuregs(ptr_zsf_file);

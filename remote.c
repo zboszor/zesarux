@@ -44,6 +44,7 @@
 #include "textspeech.h"
 #include "tsconf.h"
 #include "operaciones.h"
+#include "snap.h"
 
 
 
@@ -786,6 +787,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"set-verbose-level",NULL,NULL,"Sets verbose level for console output"},
 	{"set-window-zoom",NULL,"zoom","Sets window zoom"},
   {"smartload","|sl","file","Smart-loads a file. Use with care, may produce unexpected behaviour when emulator is doing a machine reset for example"},
+  {"snapshot-save",NULL,"file","Saves a snapshot"},
   {"speech-empty-fifo",NULL,NULL,"Empty speech fifo"},
   {"speech-send",NULL,"message","Sends message to speech"},
 
@@ -3903,6 +3905,12 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
     //remote_send_esc_close_menu();
 
     remote_cpu_exit_step(misocket);
+
+  }
+
+  else if (!strcmp(comando_sin_parametros,"snapshot-save") ) {
+
+    snapshot_save(parametros);
 
   }
 
