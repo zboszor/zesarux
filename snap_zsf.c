@@ -178,6 +178,9 @@ char *zsf_block_id_names[]={
   "Unknown"  //Este siempre al final
 };
 
+
+char zsf_magic_header[]="ZSF ZEsarUX new file format.";
+
 char *zsf_get_block_id_name(int block_id)
 {
   if (block_id>=MAX_ZSF_BLOCK_ID_NAMES) return zsf_block_id_names[MAX_ZSF_BLOCK_ID_NAMES];
@@ -433,7 +436,7 @@ void load_zsf_ula(z80_byte *header)
   out_254=header[0] & 7;
   out_254_original_value=out_254;
 
-  printf ("border: %d\n",out_254);
+  //printf ("border: %d\n",out_254);
   modificado_border.v=1;
 }
 
@@ -448,6 +451,33 @@ void load_zsf_snapshot(char *filename)
           debug_printf (VERBOSE_ERR,"Error reading snapshot file %s",filename);
           return;
   }
+
+
+  //Verificar que la cabecera inicial coincide
+  //zsf_magic_header
+
+  char buffer_magic_header[256];
+
+  int longitud_magic=strlen(zsf_magic_header);
+
+
+  int leidos=fread(buffer_magic_header,1,longitud_magic,ptr_zsf_file);
+
+  if (leidos!=longitud_magic) {
+    debug_printf(VERBOSE_ERR,"Invalid ZSF file, small magic header");
+    fclose(ptr_zsf_file);
+    return;
+  }
+
+  //Comparar texto
+  buffer_magic_header[longitud_magic]=0;
+
+  if (strcmp(buffer_magic_header,zsf_magic_header)) {
+    debug_printf(VERBOSE_ERR,"Invalid ZSF file, invalid magic header");
+    fclose(ptr_zsf_file);
+    return;
+  }
+
 
   z80_byte block_header[6];
 
@@ -623,12 +653,18 @@ void save_zsf_snapshot(char *filename)
 
   FILE *ptr_zsf_file;
 
-  //Save header File
+  //ZSF File
   ptr_zsf_file=fopen(filename,"wb");
   if (!ptr_zsf_file) {
           debug_printf (VERBOSE_ERR,"Error writing snapshot file %s",filename);
           return;
   }
+
+
+  //Save header
+  fwrite(zsf_magic_header, 1, strlen(zsf_magic_header), ptr_zsf_file);
+  
+
 
   //First save machine ID
   z80_byte save_machine_id=current_machine_type;

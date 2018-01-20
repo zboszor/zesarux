@@ -27,4 +27,6 @@ extern void save_zsf_snapshot(char *filename);
 
 extern char *zsf_get_block_id_name(int block_id);
 
+extern char zsf_magic_header[];
+
 #endif

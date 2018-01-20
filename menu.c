@@ -17944,6 +17944,33 @@ void menu_file_zsf_browser_show(char *filename)
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
+int indice_zsf=0;
+
+
+//Verificar que la cabecera inicial coincide
+  //zsf_magic_header
+
+  char buffer_magic_header[256];
+
+  int longitud_magic=strlen(zsf_magic_header);
+
+
+  if (leidos<longitud_magic) {
+    debug_printf(VERBOSE_ERR,"Invalid ZSF file, small magic header");
+    return;
+  }
+
+  //Comparar texto
+  memcpy(buffer_magic_header,zsf_file_memory,longitud_magic);
+  buffer_magic_header[longitud_magic]=0;
+
+  if (strcmp(buffer_magic_header,zsf_magic_header)) {
+    debug_printf(VERBOSE_ERR,"Invalid ZSF file, invalid magic header");
+    return;
+  }
+
+  indice_zsf+=longitud_magic;
+  bytes_to_load -=longitud_magic;
 
 
 /*
@@ -17956,7 +17983,7 @@ Every block is defined with a header:
 4 bytes - 32 bit: block Lenght
 After these 6 bytes, the data for the block comes.
 */
-	int indice_zsf=0;
+	
 
 	while (bytes_to_load>0) {
 		    z80_int block_id;
