@@ -1527,7 +1527,29 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	//Conservar setting salir_todos_menus, que lo cambia el osd
 	int antes_salir_todos_menus=salir_todos_menus;
 
-	menu_onscreen_keyboard(0);
+
+	//Cambiar funcion de overlay por la normal
+
+
+                              //Guardar funcion de texto overlay activo, para menus como el de visual memory por ejemplo, para desactivar  temporalmente
+                                        void (*previous_function)(void);
+
+                                        previous_function=menu_overlay_function;
+
+                                       //restauramos modo normal de texto de menu
+                                       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+
+       //
+         menu_onscreen_keyboard(0);                            
+
+
+                                        //Restauramos funcion anterior de overlay
+                                        set_menu_overlay_function(previous_function);
+
+
+	
 
 	salir_todos_menus=antes_salir_todos_menus;
 
