@@ -421,6 +421,16 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 					2,7+8		//Color para opcion marcada
 								},
 
+        {"Clean",7,0,
+                0,0,0,0,          //Mostrar cursor >, no mostrar recuadro, no mostrar rainbow
+                0,7,          //Colores para opcion seleccionada
+                7,0,0,7,      //Colores para opcion no disponible
+                0,7,          //Colores para el titulo y linea recuadro ventana
+                0,              //Color waveform
+                7,               //Color para zona no usada en visualmem
+                7,0		//Color para opcion marcada
+                },
+
 
 
 };
