@@ -4361,6 +4361,10 @@ int menu_calcular_ancho_string_item(char *texto)
 	return ancho_calculado;
 }
 
+
+z80_int menu_mouse_frame_counter=0;
+z80_int menu_mouse_frame_counter_anterior=0;
+
 //Funcion de gestion de menu
 //Entrada: opcion_inicial: puntero a opcion inicial seleccionada
 //m: estructura de menu (estructura en forma de lista con punteros)
@@ -4547,15 +4551,46 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				//printf ("no reset counter tecla %d\n",tecla);
 			}
 
+
+
+			/*
+			Evitar leer el raton siempre continuamente. Tener un contador que se incrementa a cada frame
+			Aunque el raton ya se lee cada frame, por lo que maximo hay 1 movimiento cada 20 ms
+			Luego se puede hacer que se lea cad 40 ms, o cada 80 ms, por ejemplo, pero luego sucede que si 
+			se lee el raton muy rapido, no se leera. Tendria que haber algo que detectase cuando el raton esta quieto
+			*/
+			/*int mouse_frame_read;
+
+
+			if (!menu_multitarea) mouse_frame_read=1;
+
+			else {
+				//Leemos raton cada 4 frames, es decir, cada 40 ms
+				if (menu_mouse_frame_counter_anterior==menu_mouse_frame_counter/2) {
+					printf ("MISMOOOOO frame. no leemos raton\n");
+					mouse_frame_read=0;
+				}
+				else {
+					menu_mouse_frame_counter_anterior=menu_mouse_frame_counter/2;
+					printf ("diferente frame. leemos raton\n");
+					mouse_frame_read=1;
+				}
+			}*/
+
+			//Siempre forzado de momento
+			int mouse_frame_read=1;
+
+
 			//printf ("tecla_leida: %d\n",tecla_leida);
-			if (mouse_movido) {
+			if (mouse_movido && mouse_frame_read) {
 				//printf ("mouse x: %d y: %d menu mouse x: %d y: %d\n",mouse_x,mouse_y,menu_mouse_x,menu_mouse_y);
 				//printf ("ventana x %d y %d ancho %d alto %d\n",ventana_x,ventana_y,ventana_ancho,ventana_alto);
 				if (si_menu_mouse_en_ventana() ) {
 				//if (menu_mouse_x>=0 && menu_mouse_y>=0 && menu_mouse_x<ventana_ancho && menu_mouse_y<ventana_alto ) {
 					//printf ("dentro ventana\n");
 					//Descartar linea titulo y ultima linea
-					if (menu_mouse_y>0 && menu_mouse_y<ventana_alto-1 ) {
+
+					if (menu_mouse_y>0 && menu_mouse_y<ventana_alto-1) {
 						//printf ("dentro espacio efectivo ventana\n");
 						//Ver si hay que subir o bajar cursor
 						int posicion_raton_y=menu_mouse_y-1;
@@ -10272,7 +10307,7 @@ void menu_audio_new_ayplayer_overlay(void)
     if ( ((contador_segundo%500) == 0 && menu_ayplayer_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 
         menu_ayplayer_valor_contador_segundo_anterior=contador_segundo;
-        printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
        
     
 
@@ -10282,7 +10317,7 @@ char textoplayer[40];
        
 
 
-        z80_byte acumulado;
+        //z80_byte acumulado;
 
         //char dumpassembler[32];
 
@@ -10315,7 +10350,7 @@ int mostrar_antes_player=-1;
 
 			linea=0;
 
-			printf ("Dibujando player\n");
+			//printf ("Dibujando player\n");
 
 			z80_byte minutos,segundos,minutos_total,segundos_total;
 			minutos=ay_song_length_counter/60/50;
@@ -10465,9 +10500,9 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 {
 
 
-        menu_espera_no_tecla();
+        //menu_espera_no_tecla();
 
-        z80_byte acumulado;
+        //z80_byte acumulado;
 
 
 
@@ -20415,7 +20450,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
         menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();
 
-        z80_byte acumulado;
+        //z80_byte acumulado;
 
 
 

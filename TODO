@@ -849,11 +849,7 @@ Ver si la simulación de pulsado de escape desde smartload de remote protocol no
 
 --- menu - mejoras ---
 
--Browser de cintas .tzx/.cdt
-
--Browser para imagenes sd, ide. tipo fat, plus3dos
-
--Browser de snapshots .zx, .sp, .z80, etc
+-Mouse: para que no haga framedrop al moverse sobre un menu, quiza se deberia considerar cada x frames de tiempo.
 
 -Quitar menu custom machine y meterlo dentro de machine selection, de tal manera que pida la ROM al seleccionar máquina
 

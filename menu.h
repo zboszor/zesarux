@@ -240,6 +240,8 @@ extern z80_bit force_confirm_yes;
 
 extern void draw_footer(void);
 
+extern z80_int menu_mouse_frame_counter;
+
 struct s_estilos_gui {
         char nombre_estilo[20];
         int papel_normal;

@@ -486,6 +486,10 @@ void timer_check_interrupt(void)
 				}
 			}
 
+
+			//temporizador para movimiento de mouse en menu
+                        menu_mouse_frame_counter++;
+
         //Si hay texto ahi acumulado pero no se ha recibido salto de linea, al cabo de un segundo, saltar
         if (textspeech_filter_program!=NULL) {
 	        scrtextspeech_filter_counter++;
@@ -627,6 +631,8 @@ void timer_check_interrupt(void)
                                                 delete_tape_options_set_second_message();
                                         }
                                 }
+
+
 
 				autosave_snapshot_at_fixed_interval();
 
