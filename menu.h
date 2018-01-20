@@ -278,7 +278,7 @@ struct s_estilos_gui {
 typedef struct s_estilos_gui estilos_gui;
 
 
-#define ESTILOS_GUI 9
+#define ESTILOS_GUI 10
 
 #define ESTILO_GUI_QL 7
 #define ESTILO_GUI_MANSOFTWARE 6

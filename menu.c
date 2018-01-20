@@ -431,6 +431,15 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7,0		//Color para opcion marcada
                 },
 
+        {"CleanInverse",0,7,
+                0,0,0,0,          //Mostrar cursor >, no mostrar recuadro, no mostrar rainbow
+                7,0,          //Colores para opcion seleccionada
+                0,7,7,0,      //Colores para opcion no disponible
+                7,0,          //Colores para el titulo y linea recuadro ventana
+                7,              //Color waveform
+                0,               //Color para zona no usada en visualmem
+                0,7		//Color para opcion marcada
+                },
 
 
 };
@@ -8833,8 +8842,10 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
                         menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"Change wave ~~Shape");
                         menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
-                        menu_add_item_menu_tooltip(array_menu_audio_new_waveform,"Change wave Shape");
-                        menu_add_item_menu_ayuda(array_menu_audio_new_waveform,"Change wave Shape");
+
+                        //Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
+                        //menu_add_item_menu_tooltip(array_menu_audio_new_waveform,"Change wave Shape");
+                        menu_add_item_menu_ayuda(array_menu_audio_new_waveform,"Change wave Shape: simple line or vertical fill");
 						//0123456789
 						// Change wave Shape
 						
@@ -10490,6 +10501,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
             menu_add_item_menu_inicial_format(&array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_load,NULL,"~~Load");
             menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'l');
+            menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Load AY file");
             //menu_add_item_menu_tooltip(array_menu_audio_new_ayplayer,"Load AY file");
             //menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Load AY file");
 						//0123456789
@@ -10504,26 +10516,31 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 			if (menu_audio_new_ayplayer_si_mostrar() ) {
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_prev,NULL,"~~Prev");
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'p');
+				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Previous song");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin);
 
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_stop,NULL,"~~Stop");
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'s');
+				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Stop song");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,6,lin);	
 
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_next,NULL,"~~Next");
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'n');
+				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Next song");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,11,lin);
 
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_repeat,NULL,"~~Repeat: %s",
 					(ay_player_repeat_file.v ? "Yes" : "No"));
 
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'r');
+				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Repeat from the beginning when finished all songs");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+1);	
 
 				
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_exitend,NULL,"~~Exit end: %s",
 					(ay_player_exit_emulator_when_finish.v ? "Yes" : "No") );
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'e');
+				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Exit emulator when finished all songs");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,13,lin+1);	
 
 
@@ -10531,6 +10548,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 				else sprintf(textoplayer,"Length ~~infinite tracks: %d s",ay_player_limit_infinite_tracks/50);
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_inftracks,NULL,textoplayer);
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'i');
+				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Time limit for songs which doesn't have time limit");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+2);			
 
 
@@ -10538,11 +10556,13 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 				else sprintf(textoplayer,"Length ~~any track: %d s",ay_player_limit_any_track/50);
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_len_anytracks,NULL,textoplayer);
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'a');
+				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Time limit for all songs");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+3);
 
 				menu_add_item_menu_format(array_menu_audio_new_ayplayer,MENU_OPCION_NORMAL,menu_audio_new_ayplayer_cpcmode,NULL,"~~CPC mode: %s",
 					(ay_player_cpc_mode.v ? "Yes" : "No"));
 				menu_add_item_menu_shortcut(array_menu_audio_new_ayplayer,'c');
+				menu_add_item_menu_ayuda(array_menu_audio_new_ayplayer,"Switch to AY CPC mode");
 				menu_add_item_menu_tabulado(array_menu_audio_new_ayplayer,1,lin+4);		
 
 
@@ -20433,25 +20453,26 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_p,NULL,"~~P");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'p');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Increase window width");
+                        //Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
+                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Increase window width");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Increase window width");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,8,0);
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_q,NULL,"~~Q");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'q');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Decrease window height");
+                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Decrease window height");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Decrease window height");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,9,0);
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_key_a,NULL,"~~A");
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'a');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Increase window height");
+                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Increase window height");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Increase window height");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,10,0);
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'b');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Change bright value");
+                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Change bright value");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Change bright value");
 			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,12,0);
 
@@ -20463,7 +20484,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
-                        menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Which visualmem to look at");
+                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Which visualmem to look at");
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at");
                         menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,1);
 
