@@ -179,7 +179,7 @@ char *zsf_block_id_names[]={
 };
 
 
-char zsf_magic_header[]="ZSF ZEsarUX new file format.";
+char zsf_magic_header[]="ZSF ZEsarUX Snapshot File.";
 
 char *zsf_get_block_id_name(int block_id)
 {
