@@ -8,6 +8,7 @@ Next: implementar features que faltan: video offset
 ZX-Uno: implementar features que faltan: radaspaloffset
 Mas utilidades de visor archivos: convertir?
 Formato zsf: completar para mas maquinas
+-recuadro para ventanas de ancho completo, en charsize<8, falla 1 pixel a la derecha
  
 
 --- Cosas para la version 6.1

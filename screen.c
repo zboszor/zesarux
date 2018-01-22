@@ -2771,6 +2771,7 @@ void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
 	int incx,incy;
 	for (incy=0;incy<zoom_level;incy++) {
 		for (incx=0;incx<zoom_level;incx++) {
+			//printf("putpixel %d,%d\n",x+incx,y+incy);
 			if (rainbow_enabled.v==1) scr_putpixel_zoom_rainbow(x+incx,y+incy,color);
 
 			else scr_putpixel_zoom(x+incx,y+incy,color);
