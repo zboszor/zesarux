@@ -9174,6 +9174,9 @@ void menu_ay_pianokeyboard_insert_inverse(char *origen_orig, int indice)
 
 int piano_graphic_base_y=0;
 
+#define PIANO_ZOOM_X ( menu_char_width>=7 ? 3 : 2 )
+#define PIANO_ZOOM_Y 3
+
 
 //Escala alto en vertical teclado piano segun si ay chip>2, para que el teclado sea mas pequeñito
 int scale_y_chip(int y)
@@ -9193,21 +9196,21 @@ int scale_y_chip(int y)
 
 void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int color)
 {
-	#define PIANO_ZOOM 3
+	//#define PIANO_ZOOM 3
 
 	int offsetx=PIANO_GRAPHIC_BASE_X*menu_char_width+12;
 	int offsety=piano_graphic_base_y*scale_y_chip(8)+18;
 
-	x=offsetx+x*PIANO_ZOOM;
-	y=offsety+y*PIANO_ZOOM;
+	x=offsetx+x*PIANO_ZOOM_X;
+	y=offsety+y*PIANO_ZOOM_Y;
 
 	int xorig=x;
 	int zx=0;
 	int zy=0;
 
-	for (zy=0;zy<PIANO_ZOOM;zy++) {
+	for (zy=0;zy<PIANO_ZOOM_Y;zy++) {
 		x=xorig;
-		for (zx=0;zx<PIANO_ZOOM;zx++) {
+		for (zx=0;zx<PIANO_ZOOM_X;zx++) {
 			menu_scr_putpixel(x,y,color);
 
 			x++;
