@@ -207,6 +207,10 @@ void (*menu_overlay_function)(void);
 //buffer de escritura por pantalla
 overlay_screen overlay_screen_array[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
 
+
+//buffer de texto usado 
+int overlay_usado_screen_array[OVERLAY_SCREEN_WIDTH*OVERLAY_SCREEN_HEIGTH];
+
 //Indica que hay una segunda capa de texto por encima de menu y por encima del juego incluso
 //util para mostrar indicadores de carga de cinta, por ejemplo
 //int menu_second_layer=0;
@@ -1756,6 +1760,13 @@ void reset_menu_overlay_function(void)
 //tinta y/o papel pueden tener brillo (color+8)
 void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel,z80_byte parpadeo)
 {
+
+	int xusado=x;
+
+	if (menu_char_width!=8) {
+		xusado=(xusado*menu_char_width)/8;		
+	}
+
 	int pos_array=y*32+x;
 	overlay_screen_array[pos_array].tinta=tinta;
 	overlay_screen_array[pos_array].papel=papel;
@@ -1765,17 +1776,16 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 	else overlay_screen_array[pos_array].caracter=caracter;
 
 
+	overlay_usado_screen_array[y*32+xusado]=1;
+
+
 	//Compabilidad con char size 7, 6. Ver si caracter finaliza en siguiente columna
 	if (menu_char_width!=8) {
-		int xorig=(x*menu_char_width)/8;
-		int xfinal=(x*menu_char_width+menu_char_width-1)/8;
-
-		if (xorig!=xfinal) {
+		int xfinal=(xusado*menu_char_width+menu_char_width-1)/8;
+		if (xfinal!=xusado) {
 			if (xfinal<32) {
-				int posfinal=y*32+xfinal;
-				if (overlay_screen_array[posfinal].caracter==0) {
-					overlay_screen_array[posfinal].caracter=255; //Reservar ese caracter
-				}
+				printf ("reservamos por la derecha %d,%d\n",xfinal,y);
+				overlay_usado_screen_array[y*32+xfinal]=1;
 			}
 		}
 	}
@@ -2019,7 +2029,10 @@ void cls_menu_overlay(void)
 	clear_putpixel_cache();
 
 	int i;
-	for (i=0;i<32*24;i++) overlay_screen_array[i].caracter=0;
+	for (i=0;i<32*24;i++) {
+		overlay_screen_array[i].caracter=0;
+		overlay_usado_screen_array[i]=0;
+	}
 
 	menu_desactiva_cuadrado();
 

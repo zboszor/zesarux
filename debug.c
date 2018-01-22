@@ -407,7 +407,8 @@ void cpu_panic(char *mensaje)
 
 			int i;
 			//reservar toda la pantalla, para poderla llenar con pixeles rojos de error
-		        for (i=0;i<32*24;i++) overlay_screen_array[i].caracter=255;
+		        //for (i=0;i<32*24;i++) overlay_screen_array[i].caracter=255;
+		        for (i=0;i<32*24;i++) overlay_usado_screen_array[i]=255;
 
 
 			menu_overlay_activo=1;

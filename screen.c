@@ -3129,7 +3129,7 @@ int scr_ver_si_refrescar_por_menu_activo(int x,int fila)
 	fila /=menu_gui_zoom;
 
 	//menu_char_width
-	x=(x*menu_char_width)/8;
+	//x=(x*menu_char_width)/8;
 
 	if (x>31 || fila>23) return 1;
 
@@ -3140,7 +3140,9 @@ int scr_ver_si_refrescar_por_menu_activo(int x,int fila)
                                 if (menu_overlay_activo==1) {
                                         //hay menu activo. no refrescar esa coordenada si hay texto del menu
 					int pos=fila*32+x;
-                                        if (overlay_screen_array[pos].caracter!=0) {
+
+					if (overlay_usado_screen_array[pos]) {
+                                        //if (overlay_screen_array[pos].caracter!=0) {
                                                 //no hay que repintar en esa zona
 						return 0;
                                         }

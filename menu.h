@@ -359,6 +359,8 @@ extern char snapshot_load_file[];
 
 extern int menu_char_width;
 
+extern int overlay_usado_screen_array[];
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \
