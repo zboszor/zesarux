@@ -24,6 +24,23 @@
 
 #include "compileoptions.h"
 
+/*
+Emulator version format:
+XX.Y-S
+
+XX: Major version number. 1 or 2 digits number. Currently using only one digit but could be greater (on ZEsarUX version 10 or higher)
+Y: Minor version number. 1 digit number
+-S: Optional string, only present on non-stable versions. S it's normally "SN" or "RC", where RC can also be RCX, being X a digit: RC1, RC2, etc
+
+Examples
+
+6.0: Means major version 6, minor version 0. It's a stable version (no suffix string -....)
+
+6.1-RC: Means major version 6, minor version 1, beta version: RC
+6.2-RC3: Means major version 6, minor version 2, beta version: RC3
+
+*/
+
 //#define EMULATOR_VERSION "6.1"
 
 //#define EMULATOR_VERSION "6.1-RC"

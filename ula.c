@@ -20,6 +20,7 @@
 */
 
 #include <stdio.h>
+#include <string.h>
 
 
 #include "ula.h"
@@ -205,8 +206,70 @@ Bit 1-7: Unused
 }
 
 
+z80_byte zesarux_zxi_read_string_register(char *s,z80_byte register_number)
+{
+	z80_byte register_value;
+	int longitud_string;
+
+	//Si indice esta fuera de rango de string (posicion longitud+1) resetear a 0
+	//Indice siempre apunta a siguiente posicion a leer
+	register_value=zesarux_zxi_registers_array[register_number]; 
+
+	longitud_string=strlen(s);  
+	//Ejemplo String longitud 3: ABC. Ultima posicion valida: 3 (caracter 0)
+	//Si se ha retornado toda la string, tendra valor posicion 4
+	//Esto tambien evita que el usuario meta el indice en posicion mayor a la longitud de la string
+
+	if (register_value>longitud_string) register_value=0;
+
+	//Caracter a retornar
+	z80_byte caracter_retorno=s[register_value];
+
+	//Aumentamos indice
+	register_value++;
+
+	//Guardamos indice
+	zesarux_zxi_registers_array[register_number]=register_value;
+
+	return caracter_retorno;
+}
+
 z80_byte zesarux_zxi_read_register_value(void)
 {
+
+/*
+* Reg 4: ZEsarUX version number
+
+Used to get ZEsarUX version number string. You must write first to this register (with value 0) to reset index string to position 0 (you could even write any value to change the index)
+Then read this register to get the string, every read will get a character (the index is incremented every read), finishing the string with character 0. When it reaches the end, the index string is reset to the beginning.
+Index is reset to 0 every reset
+
+* Reg 5: ZEsarUX build number
+
+Used to get ZEsarUX build number string. Same behaviour as "Reg 4: ZEsarUX version number": write value 0 here to reset string index.
+Every read will get a character, finishing the string with character 0. When it reaches the end, the index string is reset to t
+he beginning.
+Index is reset to 0 every reset
+*/
+
+
+//EMULATOR_VERSION
+//BUILDNUMBER
+
+
+	//Casos especiales
+	switch (zesarux_zxi_last_register) {
+		case 4:
+			return zesarux_zxi_read_string_register(EMULATOR_VERSION,4);
+		break;
+
+		case 5:
+			return zesarux_zxi_read_string_register(BUILDNUMBER,5);
+		break;
+
+	}
+
+
   return zesarux_zxi_registers_array[zesarux_zxi_last_register];
 }
 

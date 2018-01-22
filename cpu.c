@@ -756,6 +756,9 @@ void reset_cpu(void)
 	zesarux_zxi_last_register=0;
 	zesarux_zxi_registers_array[0]=0;
 
+	zesarux_zxi_registers_array[4]=0;
+	zesarux_zxi_registers_array[5]=0;
+
 
 	interrupcion_maskable_generada.v=0;
 	interrupcion_non_maskable_generada.v=0;
