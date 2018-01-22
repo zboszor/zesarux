@@ -45,10 +45,10 @@ Bit 1-7: Unused
 
 Used to get ZEsarUX version number string. 
 Emulator version format:
-XX.Y-S
+XX.YY-S
 
 XX: Major version number. 1 or 2 digits number. Currently using only one digit but could be greater (on ZEsarUX version 10 or higher)
-Y: Minor version number. 1 digit number
+YY: Minor version number. 1 or 2 digits number
 -S: Optional string, only present on non-stable versions. S it's normally "SN" or "RC", where RC can also be RCX, being X a digit: RC1, RC2, etc
 
 Examples
@@ -70,8 +70,7 @@ Index is reset to 0 every reset
 
 Used to get ZEsarUX build number string. Build number is the unix time of the ZEsarUX compilation
 Same behaviour as "Reg 4: ZEsarUX version number": write value 0 here to reset string index. 
-Every read will get a character, finishing the string with character 0. When it reaches the end, the index string is reset to t
-he beginning.
+Every read will get a character, finishing the string with character 0. When it reaches the end, the index string is reset to the beginning.
 Index is reset to 0 every reset
 
 ----

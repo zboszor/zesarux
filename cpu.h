@@ -26,10 +26,10 @@
 
 /*
 Emulator version format:
-XX.Y-S
+XX.YY-S
 
 XX: Major version number. 1 or 2 digits number. Currently using only one digit but could be greater (on ZEsarUX version 10 or higher)
-Y: Minor version number. 1 digit number
+YY: Minor version number. 1 or 2 digits number
 -S: Optional string, only present on non-stable versions. S it's normally "SN" or "RC", where RC can also be RCX, being X a digit: RC1, RC2, etc
 
 Examples
