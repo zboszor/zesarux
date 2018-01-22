@@ -1368,6 +1368,7 @@ printf (
 
 		"--zoomx n                  Horizontal Zoom Factor\n"
 		"--zoomy n                  Vertical Zoom Factor\n"
+		"--menucharwidth n          Character size width for menus valid values: 8,7,6 or 5\n"
 		"--frameskip n              Set frameskip (0=none, 1=25 FPS, 2=16 FPS, etc)\n"
 		"--disable-autoframeskip    Disable autoframeskip\n"
 
@@ -4222,6 +4223,16 @@ void parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--zoomy")) {
 				siguiente_parametro_argumento();
 				zoom_y=atoi(argv[puntero_parametro]);
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--menucharwidth")) {
+				siguiente_parametro_argumento();
+				int valor=atoi(argv[puntero_parametro]);
+				if (valor!=5 && valor!=6 && valor!=7 && valor!=8) {
+					printf ("Invalid value for character width\n");
+					exit(1);
+				}
+				menu_char_width=valor;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--zoom")) {

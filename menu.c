@@ -8606,9 +8606,9 @@ void menu_audio_draw_sound_wave(void)
 	int yorigen=(SOUND_WAVE_Y+4);
 
 	if (si_complete_video_driver() ) {
-        	ancho *=8;
+        	ancho *=menu_char_width;
 	        alto *=8;
-        	xorigen *=8;
+        	xorigen *=menu_char_width;
 	        yorigen *=8;
 	}
 
