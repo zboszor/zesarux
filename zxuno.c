@@ -114,14 +114,6 @@ z80_bit zxuno_flash_write_protection={0};
 char zxuno_flash_spi_name[PATH_MAX]="";
 
 
-//Paginas mapeadas en cada zona de RAM, en modo bootm=1. Se solamente usa en menu debug y breakpoints, no para el core de emulacion
-//Si numero pagina >=128, numero pagina=numero pagina-128 y se trata de ROM. Si no, es RAM
-//z80_byte zxuno_debug_paginas_memoria_mapeadas_bootm[4];
-
-
-//Paginas mapeadas en cada zona de RAM,. Se solamente usa en menu debug y breakpoints, no para el core de emulacion
-//Si numero pagina >=128, numero pagina=numero pagina-128 y se trata de ROM. Si no, es RAM
-z80_byte zxuno_debug_paginas_memoria_mapeadas_new[4];
 
 //Aviso de operacion de flash spi en footer
 int zxuno_flash_operating_counter=0;
@@ -1349,10 +1341,10 @@ void zxuno_set_memory_pages_ram_rom(void)
 		contend_pages_actual[2]=contend_pages_128k_p2a[pagina2];
 		contend_pages_actual[3]=contend_pages_128k_p2a[pagina3];
 
-		zxuno_debug_paginas_memoria_mapeadas_new[0]=pagina0;
-		zxuno_debug_paginas_memoria_mapeadas_new[1]=pagina1;
-		zxuno_debug_paginas_memoria_mapeadas_new[2]=pagina2;
-		zxuno_debug_paginas_memoria_mapeadas_new[3]=pagina3;
+		debug_paginas_memoria_mapeadas[0]=pagina0;
+		debug_paginas_memoria_mapeadas[1]=pagina1;
+		debug_paginas_memoria_mapeadas[2]=pagina2;
+		debug_paginas_memoria_mapeadas[3]=pagina3;
 
 
 
@@ -1384,10 +1376,10 @@ void zxuno_set_memory_pages(void)
 		contend_pages_actual[2]=contend_pages_128k_p2a[pagina2];
 		contend_pages_actual[3]=contend_pages_128k_p2a[pagina3&7];
 
-		zxuno_debug_paginas_memoria_mapeadas_new[0]=DEBUG_PAGINA_MAP_ES_ROM+pagina0;
-		zxuno_debug_paginas_memoria_mapeadas_new[1]=pagina1;
-		zxuno_debug_paginas_memoria_mapeadas_new[2]=pagina2;
-		zxuno_debug_paginas_memoria_mapeadas_new[3]=pagina3;
+		debug_paginas_memoria_mapeadas[0]=DEBUG_PAGINA_MAP_ES_ROM+pagina0;
+		debug_paginas_memoria_mapeadas[1]=pagina1;
+		debug_paginas_memoria_mapeadas[2]=pagina2;
+		debug_paginas_memoria_mapeadas[3]=pagina3;
 
 
 	}
@@ -1423,10 +1415,10 @@ void zxuno_set_memory_pages(void)
 			contend_pages_actual[2]=contend_pages_128k_p2a[pagina2];
 			contend_pages_actual[3]=contend_pages_128k_p2a[pagina3&7];
 
-			zxuno_debug_paginas_memoria_mapeadas_new[0]=DEBUG_PAGINA_MAP_ES_ROM+pagina0;
-			zxuno_debug_paginas_memoria_mapeadas_new[1]=pagina1;
-			zxuno_debug_paginas_memoria_mapeadas_new[2]=pagina2;
-			zxuno_debug_paginas_memoria_mapeadas_new[3]=pagina3;
+			debug_paginas_memoria_mapeadas[0]=DEBUG_PAGINA_MAP_ES_ROM+pagina0;
+			debug_paginas_memoria_mapeadas[1]=pagina1;
+			debug_paginas_memoria_mapeadas[2]=pagina2;
+			debug_paginas_memoria_mapeadas[3]=pagina3;
 
 
 		}

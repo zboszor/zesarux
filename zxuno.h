@@ -48,7 +48,7 @@ extern void zxuno_init_memory_tables(void);
 
 extern z80_byte last_port_FC3B;
 
-extern z80_byte zxuno_debug_paginas_memoria_mapeadas_new[];
+
 
 #define ZXUNO_BOOTM_DISABLED ( (zxuno_ports[0]&1)==0 )
 #define ZXUNO_BOOTM_ENABLED ( (zxuno_ports[0]&1)==1 )

@@ -3609,14 +3609,14 @@ void debug_registers_get_mem_page(z80_byte segmento,char *texto_pagina)
 //Retorna la pagina mapeada para el segmento en zxuno
 void debug_registers_get_mem_page_zxuno(z80_byte segmento,char *texto_pagina)
 {
-        if (zxuno_debug_paginas_memoria_mapeadas_new[segmento] & 128) {
+        if (debug_paginas_memoria_mapeadas[segmento] & 128) {
                 //ROM.
-                sprintf (texto_pagina,"RO%d",zxuno_debug_paginas_memoria_mapeadas_new[segmento] & 127);
+                sprintf (texto_pagina,"RO%d",debug_paginas_memoria_mapeadas[segmento] & 127);
         }
 
         else {
                 //RAM
-                sprintf (texto_pagina,"RA%02d",zxuno_debug_paginas_memoria_mapeadas_new[segmento]);
+                sprintf (texto_pagina,"RA%02d",debug_paginas_memoria_mapeadas[segmento]);
         }
 
 }
@@ -4033,16 +4033,16 @@ void debug_registers_get_mem_page_extended(z80_byte segmento,char *texto_pagina,
 //Retorna la pagina mapeada para el segmento en zxuno
 void debug_registers_get_mem_page_zxuno_extended(z80_byte segmento,char *texto_pagina,char *texto_pagina_short)
 {
-        if (zxuno_debug_paginas_memoria_mapeadas_new[segmento] & DEBUG_PAGINA_MAP_ES_ROM) {
+        if (debug_paginas_memoria_mapeadas[segmento] & DEBUG_PAGINA_MAP_ES_ROM) {
                 //ROM.
-                sprintf (texto_pagina_short,"RO%d",zxuno_debug_paginas_memoria_mapeadas_new[segmento] & DEBUG_PAGINA_MAP_MASK);
-                sprintf (texto_pagina,"ROM %d",zxuno_debug_paginas_memoria_mapeadas_new[segmento] & DEBUG_PAGINA_MAP_MASK);
+                sprintf (texto_pagina_short,"RO%d",debug_paginas_memoria_mapeadas[segmento] & DEBUG_PAGINA_MAP_MASK);
+                sprintf (texto_pagina,"ROM %d",debug_paginas_memoria_mapeadas[segmento] & DEBUG_PAGINA_MAP_MASK);
         }
 
         else {
                 //RAM
-                sprintf (texto_pagina_short,"RA%02d",zxuno_debug_paginas_memoria_mapeadas_new[segmento]);
-                sprintf (texto_pagina,"RAM %02d",zxuno_debug_paginas_memoria_mapeadas_new[segmento]);
+                sprintf (texto_pagina_short,"RA%02d",debug_paginas_memoria_mapeadas[segmento]);
+                sprintf (texto_pagina,"RAM %02d",debug_paginas_memoria_mapeadas[segmento]);
         }
 
 }
