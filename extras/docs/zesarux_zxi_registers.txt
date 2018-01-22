@@ -6,6 +6,8 @@ To read a register, first OUT to port register 0xCF3B and then IN from port data
 You can also read the register selection doing a IN from port 0xCF3B
 Port register 0xCF3B is set to zero when doing a reset
 
+You must enable these ports from menu->settings->debug->hardware debug ports (or command line --hardware-debug-ports)
+
 
 
 There are 256 possible registers:
