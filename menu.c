@@ -136,7 +136,7 @@ int menu_gui_zoom=1;
 
 
 //Ancho de caracter de menu
-int menu_char_width=4;
+int menu_char_width=8;
 
 defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"Default",F_FUNCION_DEFAULT},
