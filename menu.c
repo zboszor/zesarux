@@ -3502,10 +3502,10 @@ void menu_calculate_mouse_xy(void)
 	//Aqui puede dar negativo, en caso que cursor este en el border
 	//si esta justo en los ultimos 8 pixeles, dara entre -7 y -1. al dividir entre 8, retornaria 0, diciendo erroneamente que estamos dentro de ventana
 
-	if (x<0) x-=(8*menu_gui_zoom); //posicion entre -7 y -1 y demas, cuenta como -1, -2 al dividir entre 8
+	if (x<0) x-=(menu_char_width*menu_gui_zoom); //posicion entre -7 y -1 y demas, cuenta como -1, -2 al dividir entre 8
 	if (y<0) y-=(8*menu_gui_zoom);
 
-	x /=8;
+	x /=menu_char_width;
 	y /=8;
 
 	x /= menu_gui_zoom;
