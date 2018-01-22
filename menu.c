@@ -134,6 +134,10 @@ int menu_overlay_activo=0;
 //indica si el menu hace zoom. valores validos: 1 en adelante
 int menu_gui_zoom=1;
 
+
+//Ancho de caracter de menu
+int menu_char_width=8;
+
 defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"Default",F_FUNCION_DEFAULT},
 	{"Nothing",F_FUNCION_NOTHING},
@@ -3267,9 +3271,9 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 	ventana_ancho=ancho;
 	ventana_alto=alto;
 
-	xpixel=x*8;
+	xpixel=x*menu_char_width;
 	ypixel=y*8;
-	anchopixel=ancho*8;
+	anchopixel=ancho*menu_char_width;
 	altopixel=alto*8;
 
 	//contenido en blanco normalmente en estilo ZEsarUX

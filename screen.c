@@ -2856,7 +2856,8 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 		int xfinal,yfinal;
 
 		if (rainbow_enabled.v==1) {
-			xfinal=(((x*8)+bit)*zoom_level);
+			//xfinal=(((x*8)+bit)*zoom_level);
+			xfinal=(((x*menu_char_width)+bit)*zoom_level);
 			xfinal +=margenx_izq;
 
 			yfinal=y*zoom_level;
@@ -2864,13 +2865,28 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 		}
 
 		else {
-			xfinal=((x*8)+bit)*zoom_level;
+			//xfinal=((x*8)+bit)*zoom_level;
+			xfinal=((x*menu_char_width)+bit)*zoom_level;
 			yfinal=y*zoom_level;
 		}
 
 
 		//Hacer zoom de ese pixel si conviene
-		scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+
+		
+		//Ancho de caracter 8, 7 y 6 pixeles
+		if (menu_char_width==8) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+
+		//Si 7, saltar primer pixel a la izquierda
+		else if (menu_char_width==7) {
+			if (bit!=0) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+		}
+
+		//Si 6, saltar dos pixeles: primero izquierda y primero derecha
+		else if (menu_char_width==6) {
+			if (bit!=0 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+		}
+
 		/*int incx,incy;
 		for (incy=0;incy<zoom_level;incy++) {
 			for (incx=0;incx<zoom_level;incx++) {
