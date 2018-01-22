@@ -3180,6 +3180,10 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 	int margeny_arr;
 	menu_retorna_margenes_border(&margenx_izq,&margeny_arr);
 
+	//Para caracteres menos de 8 pixeles de ancho
+	int relleno_izquierda=x1 % 8;
+	int relleno_derecha=7-(x2 % 8);
+
 
 
 	//solo hacerlo en el caso de drivers completos
@@ -3192,9 +3196,21 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 
 			//izquierda
 			for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom,y*menu_gui_zoom,color,menu_gui_zoom);
+			if (menu_char_width!=8) {
+				printf ("Relleno izq: %d %d\n",x1,relleno_izquierda);
+				for (;relleno_izquierda>0;relleno_izquierda--) {
+					for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom-relleno_izquierda,y*menu_gui_zoom,color,menu_gui_zoom);
+				}
+			}
 
 			//derecha
 			for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x2*menu_gui_zoom,y*menu_gui_zoom,color,menu_gui_zoom);
+                        if (menu_char_width!=8) {
+                                printf ("Relleno der: %d %d\n",x2,relleno_derecha);
+                                for (;relleno_derecha>0;relleno_derecha--) {
+	                                for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x2*menu_gui_zoom+relleno_derecha,y*menu_gui_zoom,color,menu_gui_zoom);
+                                }
+                        }
 
 
 		}
@@ -3203,11 +3219,25 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
  	               //parte inferior
         	        for (x=x1;x<=x2;x++) scr_putpixel_gui_zoom(x*menu_gui_zoom+margenx_izq,y2*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
 
+
+
 	                //izquierda
         	        for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom+margenx_izq,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
+			if (menu_char_width!=8) {
+                                printf ("Relleno izq: %d %d\n",x1,relleno_izquierda);
+                                for (;relleno_izquierda>0;relleno_izquierda--) {
+					for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom+margenx_izq-relleno_izquierda,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
+                                }
+                        }
 
 	                //derecha
         	        for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x2*menu_gui_zoom+margenx_izq,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
+			if (menu_char_width!=8) {
+                                printf ("Relleno der: %d %d\n",x2,relleno_derecha);
+                                for (;relleno_derecha>0;relleno_derecha--) {
+					scr_putpixel_gui_zoom(x2*menu_gui_zoom+margenx_izq+relleno_derecha,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
+                                }
+                        }
 
 		}
 	}
