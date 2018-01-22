@@ -136,7 +136,7 @@ int menu_gui_zoom=1;
 
 
 //Ancho de caracter de menu
-int menu_char_width=8;
+int menu_char_width=4;
 
 defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"Default",F_FUNCION_DEFAULT},
@@ -1764,8 +1764,10 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 	int xusado=x;
 
 	if (menu_char_width!=8) {
-		xusado=(xusado*menu_char_width)/8;		
+		xusado=(x*menu_char_width)/8;		
 	}
+
+	int xfinal=((x*menu_char_width)+menu_char_width-1)/8;
 
 	int pos_array=y*32+x;
 	overlay_screen_array[pos_array].tinta=tinta;
@@ -1781,10 +1783,9 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 
 	//Compabilidad con char size 7, 6. Ver si caracter finaliza en siguiente columna
 	if (menu_char_width!=8) {
-		int xfinal=(xusado*menu_char_width+menu_char_width-1)/8;
 		if (xfinal!=xusado) {
 			if (xfinal<32) {
-				printf ("reservamos por la derecha %d,%d\n",xfinal,y);
+				printf ("reservamos por la derecha %d %d,%d\n",xusado,xfinal,y);
 				overlay_usado_screen_array[y*32+xfinal]=1;
 			}
 		}
