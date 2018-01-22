@@ -24003,8 +24003,8 @@ int menu_display_total_palette_lista_colores(int linea,int si_barras)
 
 					//dibujar la barra de color
 					if (si_barras) {
-						menu_dibuja_rectangulo_relleno(posicion_barra_color_x*8,posicion_barra_color_y*8,
-											8*(TOTAL_PALETTE_WINDOW_ANCHO-longitud_texto-3),8,indice_color_final_rgb);
+						menu_dibuja_rectangulo_relleno(posicion_barra_color_x*menu_char_width,posicion_barra_color_y*8,
+											menu_char_width*(TOTAL_PALETTE_WINDOW_ANCHO-longitud_texto-3),8,indice_color_final_rgb);
 					}
 
 			 		else {
