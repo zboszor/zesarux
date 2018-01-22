@@ -3185,6 +3185,7 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 	int relleno_derecha=7-(x2 % 8);
 
 
+	//printf ("Cuadrado %d,%d - %d,%d\n",x1,y1,x2,y2);
 
 	//solo hacerlo en el caso de drivers completos
 	if (si_complete_video_driver() ) {
@@ -3197,7 +3198,7 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 			//izquierda
 			for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom,y*menu_gui_zoom,color,menu_gui_zoom);
 			if (menu_char_width!=8) {
-				printf ("Relleno izq: %d %d\n",x1,relleno_izquierda);
+				//printf ("Relleno izq: %d %d\n",x1,relleno_izquierda);
 				for (;relleno_izquierda>0;relleno_izquierda--) {
 					for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom-relleno_izquierda,y*menu_gui_zoom,color,menu_gui_zoom);
 				}
@@ -3205,8 +3206,11 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 
 			//derecha
 			for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x2*menu_gui_zoom,y*menu_gui_zoom,color,menu_gui_zoom);
+
+			//printf ("x: %d\n",x2*menu_gui_zoom);
+
                         if (menu_char_width!=8) {
-                                printf ("Relleno der: %d %d\n",x2,relleno_derecha);
+                                //printf ("Relleno der: %d %d\n",x2,relleno_derecha);
                                 for (;relleno_derecha>0;relleno_derecha--) {
 	                                for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x2*menu_gui_zoom+relleno_derecha,y*menu_gui_zoom,color,menu_gui_zoom);
                                 }
@@ -3224,7 +3228,7 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 	                //izquierda
         	        for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom+margenx_izq,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
 			if (menu_char_width!=8) {
-                                printf ("Relleno izq: %d %d\n",x1,relleno_izquierda);
+                                //printf ("Relleno izq: %d %d\n",x1,relleno_izquierda);
                                 for (;relleno_izquierda>0;relleno_izquierda--) {
 					for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x1*menu_gui_zoom+margenx_izq-relleno_izquierda,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
                                 }
@@ -3233,7 +3237,7 @@ void menu_dibuja_cuadrado(z80_byte x1,z80_byte y1,z80_byte x2,z80_byte y2,z80_by
 	                //derecha
         	        for (y=y1;y<=y2;y++) scr_putpixel_gui_zoom(x2*menu_gui_zoom+margenx_izq,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
 			if (menu_char_width!=8) {
-                                printf ("Relleno der: %d %d\n",x2,relleno_derecha);
+                                //printf ("Relleno der: %d %d\n",x2,relleno_derecha);
                                 for (;relleno_derecha>0;relleno_derecha--) {
 					scr_putpixel_gui_zoom(x2*menu_gui_zoom+margenx_izq+relleno_derecha,y*menu_gui_zoom+margeny_arr,color,menu_gui_zoom);
                                 }
@@ -3302,6 +3306,7 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
 
 	//recuadro
 	//menu_establece_cuadrado(xpixel,ypixel,xpixel+anchopixel-1,ypixel+altopixel-1,0);
+	//printf ("cuadrado: %d,%d %dX%d\n",xpixel,ypixel,xpixel+anchopixel-1,ypixel+altopixel-1);
 	menu_establece_cuadrado(xpixel,ypixel,xpixel+anchopixel-1,ypixel+altopixel-1,ESTILO_GUI_PAPEL_TITULO);
 
 
