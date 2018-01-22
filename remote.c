@@ -716,6 +716,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"get-audio-buffer-info",NULL,NULL,"Get audio buffer information"},
   {"get-breakpoints","|gb","[index] [items]","Get breakpoints list. If set index, returns item at index. If set items, returns number of items list starting from index parameter"},
 	{"get-breakpointsactions","|gba","[index] [items]","Get breakpoints actions list. If set first, returns item at index. If set items, returns number of items list starting from index parameter"},
+	  {"get-buildnumber",NULL,NULL,"Shows build number. Useful on beta version, this build number is the compilation date of ZEsarUX in Unix time format"},
 	{"get-cpu-core-name",NULL,NULL,"Get emulation cpu core name"},
   {"get-crc32",NULL,"start_address length","Calculate crc32 checksum starting at address for defined length. It uses current memory zone"},
   {"get-current-machine","|gcm",NULL,"Returns current machine name"},
@@ -3268,6 +3269,10 @@ char buffer_retorno[2048];
 	    remote_get_breakpointsactions(misocket,inicio-1,items);
 	  }
 
+	else if (!strcmp(comando_sin_parametros,"get-buildnumber")) {
+                escribir_socket (misocket,BUILDNUMBER);
+	}
+
 
 	else if (!strcmp(comando_sin_parametros,"get-cpu-core-name")) {
 		if (cpu_core_loop_name!=NULL) escribir_socket(misocket,cpu_core_loop_name);
@@ -3448,7 +3453,6 @@ char buffer_retorno[2048];
 			}
 		}
 	}
-
 
 
 	else if (!strcmp(comando_sin_parametros,"get-version")) {
