@@ -1763,6 +1763,22 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 
 	if (ESTILO_GUI_SOLO_MAYUSCULAS) overlay_screen_array[pos_array].caracter=letra_mayuscula(caracter);
 	else overlay_screen_array[pos_array].caracter=caracter;
+
+
+	//Compabilidad con char size 7, 6. Ver si caracter finaliza en siguiente columna
+	if (menu_char_width!=8) {
+		int xorig=(x*menu_char_width)/8;
+		int xfinal=(x*menu_char_width+menu_char_width-1)/8;
+
+		if (xorig!=xfinal) {
+			if (xfinal<32) {
+				int posfinal=y*32+xfinal;
+				if (overlay_screen_array[posfinal].caracter==0) {
+					overlay_screen_array[posfinal].caracter=255; //Reservar ese caracter
+				}
+			}
+		}
+	}
 }
 
 
