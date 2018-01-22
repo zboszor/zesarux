@@ -4771,6 +4771,8 @@ void screen_store_scanline_rainbow_solo_display_ulaplus_lineal(void)
 
 	//printf ("y: %d pun: %ld\n",y,&screen[direccion]);
 
+	z80_byte radaspalbank_offset=zxuno_get_radaspalbank_offset();
+
 
         for (x=0;x<128;x+=incremento_x) {
 
@@ -4788,7 +4790,8 @@ void screen_store_scanline_rainbow_solo_display_ulaplus_lineal(void)
 			//else {
 	                        byte_leido=screen[direccion];
 			//}
-                        color_rada=ulaplus_palette_table[(byte_leido>>4)]+ULAPLUS_INDEX_FIRST_COLOR;
+                        color_rada=ulaplus_palette_table[radaspalbank_offset+(byte_leido>>4)]+ULAPLUS_INDEX_FIRST_COLOR;
+                        //if (color_rada>15) printf ("c: %d ",radaspalbank_offset+(byte_leido>>4));
 
 			int i;
 
@@ -4799,7 +4802,7 @@ void screen_store_scanline_rainbow_solo_display_ulaplus_lineal(void)
 
 
 
-                        color_rada=ulaplus_palette_table[(byte_leido&15)]+ULAPLUS_INDEX_FIRST_COLOR;
+                        color_rada=ulaplus_palette_table[radaspalbank_offset+(byte_leido&15)]+ULAPLUS_INDEX_FIRST_COLOR;
 
 
 			for (i=0;i<veces_ancho_pixel;i++) {

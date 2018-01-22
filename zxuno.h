@@ -123,4 +123,6 @@ extern z80_bit zxuno_radasoffset_high_byte;
 
 extern z80_bit zxuno_flash_write_protection;
 
+extern z80_byte zxuno_get_radaspalbank_offset(void);
+
 #endif

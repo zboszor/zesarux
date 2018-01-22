@@ -177,6 +177,7 @@ void init_ulaplus_table(void)
 void ulaplus_change_palette_colour(z80_byte index,z80_byte color)
 {
 	//Actualizamos entrada en tabla ulaplus
+    //printf ("change ulaplus color index: %d value: %02XH\n",index,color);
 	ulaplus_palette_table[index]=color;
 
 }

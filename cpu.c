@@ -689,6 +689,9 @@ void cold_start_cpu_registers(void)
 		//radaspadding
 		zxuno_ports[0x42]=0;
 
+		//radaspalbank
+		zxuno_ports[0x43]=0;
+
 	}
 
 	if (MACHINE_IS_PRISM) {

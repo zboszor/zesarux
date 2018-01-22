@@ -128,7 +128,11 @@ int zxuno_flash_operating_counter=0;
 
 /*
 Para registro de COREID:
-$FF	COREID	Lectura	Cada operación de lectura proporciona el siguiente carácter ASCII de la cadena que contiene la revisión actual del core del ZX-Uno. Cuando la cadena termina,lecturas posteriores emiten bytes con el valor 0 (al menos se emite uno de ellos) hasta que vuelve a comenzar la cadena. Este puntero vuelve a 0 automáticamente tras un reset o una escritura en el registro $FC3B. Los caracteres entregados que forman parte de la cadena son ASCII estándar imprimibles (códigos 32-127). Cualquier otro valor es indicativo de que este registro no está operativo.
+$FF	COREID	Lectura	Cada operación de lectura proporciona el siguiente carácter ASCII de la cadena que contiene 
+la revisión actual del core del ZX-Uno. Cuando la cadena termina,lecturas posteriores emiten bytes con el valor 0 
+(al menos se emite uno de ellos) hasta que vuelve a comenzar la cadena. Este puntero vuelve a 0 automáticamente 
+tras un reset o una escritura en el registro $FC3B. Los caracteres entregados que forman parte de la cadena 
+son ASCII estándar imprimibles (códigos 32-127). Cualquier otro valor es indicativo de que este registro no está operativo.
 */
 int zxuno_core_id_indice=0;
 //char *zxuno_core_id_message="ZEsarUX Z80 Spectrum core";
@@ -249,6 +253,10 @@ void hard_reset_cpu_zxuno(void)
 	zxuno_radasoffset=0;
 
 	zxuno_ports[0x42]=0;
+
+
+	//registro RADASPALBANK, el numero 0x43 (67)
+	zxuno_ports[0x43]=0;
 
 	//Y sincronizar parametros
         zxuno_set_emulator_setting_diven();
@@ -1424,5 +1432,31 @@ void zxuno_set_memory_pages(void)
 		}
 	}
 
+
+}
+
+
+z80_byte zxuno_get_radaspalbank_offset(void)
+{
+	/*
+
+	¿Se pueden usar distintos bancos de paleta en modo radastan?
+	Sí. Para ello se puede usar, desde el core EXP25, el registro RADASPALBANK, el numero 0x43 (67). Se usan los bits 2,1 y 0.
+
+La paleta de ULAPlus tiene 64 colores y a priori en el modo radastan podemos usar los 16 primeros, 
+con los bits 1 y 0 indicamos cual de los cuatro bancos de 16 colores de entre los 64 totales se usará, 
+si los 16 primeros (si valen 00), los 16 siguientes si vale 01, los 16 terceros si vale (10) o los 16 últimos si vale (00). 
+Por defecto es 00 y por eso se usan los 16 primeros.
+
+El bit 2 indica que mitad de la paleta del modo radastan se usará para fijar el color de borde, 
+indicando un 0 que se usa las primeras 8 entradas del bloque de 16 seleccionado, y un 1 las últimas 8. 
+Así un BORDER 7 usará el color 7 de la paleta si el bit es 0, y el color 15 si el bit 2 vale 1, 
+pero si hemos cambiado a otro banco de 16 colores, en lugar del 7 o el 15 un BORDER 7 usará el color 7 del bloque actual, 
+o el color 15 del bloque actual. Por ejemplo, si los tres bits valen 1 (111) un BORDER 7 usará la entrada 63 de la paleta.
+
+Notese que utilizando la interrupción raster y este registro al tiempo, es posible conseguir 
+hasta 64 colores en pantalla (cambiando de bloque de paleta cada vez que llega la interrupción)
+*/
+	return (zxuno_ports[0x43]&3)*16;
 
 }
