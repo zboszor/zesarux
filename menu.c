@@ -7413,10 +7413,12 @@ void menu_debug_draw_sprites(void)
 
         //int ancho=(SPRITES_ANCHO-2)*8;
         //int alto=(SPRITES_ALTO-4)*8;
-				int sx=SPRITES_X+1;
-				if (view_sprites_ancho_sprite/8>=SPRITES_ANCHO-2) sx--;
+	int sx=SPRITES_X+1;
+	
+	//Si es mas ancho, que ventana visible, mover coordenada x 1 posicion atrás
+	if (view_sprites_ancho_sprite/menu_char_width>=SPRITES_ANCHO-2) sx--;
 
-        int xorigen=sx*8;
+        int xorigen=sx*menu_char_width;
         int yorigen=(SPRITES_Y+3)*8;
 
 
@@ -7430,6 +7432,8 @@ void menu_debug_draw_sprites(void)
 
 	menu_z80_moto_int puntero_inicio_linea;
 
+	int maximo_visible_x=32*menu_char_width;
+
 	if (view_sprites_tbblue==0) {
 
 		int tamanyo_linea=view_sprites_ancho_sprite/view_sprites_ppb;
@@ -7437,7 +7441,7 @@ void menu_debug_draw_sprites(void)
 		for (y=0;y<view_sprites_alto_sprite;y++) {
 			puntero_inicio_linea=puntero;
 			finalx=xorigen;
-			for (x=0;x<view_sprites_ancho_sprite && x<256;) {
+			for (x=0;x<view_sprites_ancho_sprite && x<maximo_visible_x;) {
 				//byte_leido=peek_byte_z80_moto(puntero);
 				puntero=adjust_address_memory_size(puntero);
 				byte_leido=menu_debug_get_mapped_byte(puntero);
@@ -9191,7 +9195,7 @@ void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int 
 {
 	#define PIANO_ZOOM 3
 
-	int offsetx=PIANO_GRAPHIC_BASE_X*8+12;
+	int offsetx=PIANO_GRAPHIC_BASE_X*menu_char_width+12;
 	int offsety=piano_graphic_base_y*scale_y_chip(8)+18;
 
 	x=offsetx+x*PIANO_ZOOM;
@@ -9642,7 +9646,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 				if (!si_mostrar_ay_piano_grafico()) {
 
 					if (total_chips==1) menu_dibuja_ventana(9,7,14,11,"AY Piano");
-          else if (total_chips==2) menu_dibuja_ventana(9,2,14,20,"AY Piano");
+          				else if (total_chips==2) menu_dibuja_ventana(9,2,14,20,"AY Piano");
 					else if (total_chips==3) menu_dibuja_ventana(9,1,14,22,"AY Piano");
 
 				}
@@ -20061,9 +20065,9 @@ void menu_debug_draw_visualmem(void)
         int yorigen=(VISUALMEM_Y+5);
 
         if (si_complete_video_driver() ) {
-                ancho *=8;
+                ancho *=menu_char_width;
                 alto *=8;
-                xorigen *=8;
+                xorigen *=menu_char_width;
                 yorigen *=8;
         }
 
