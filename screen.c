@@ -3128,7 +3128,12 @@ int scr_ver_si_refrescar_por_menu_activo(int x,int fila)
 	x /=menu_gui_zoom;
 	fila /=menu_gui_zoom;
 
+	//menu_char_width
+	x=(x*menu_char_width)/8;
+
 	if (x>31 || fila>23) return 1;
+
+
 
                         //Ver en casos en que puede que haya menu activo y hay que hacer overlay
                         if (screen_refresh_menu==1) {
