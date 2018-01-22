@@ -2887,6 +2887,11 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 			if (bit!=0 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
 		}
 
+		//Si 5, saltar tres pixeles: primero izquierda y centro y primero derecha
+		else if (menu_char_width==5) {
+			if (bit!=0 && bit!=6 && bit!=7) scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+		}
+
 		/*int incx,incy;
 		for (incy=0;incy<zoom_level;incy++) {
 			for (incx=0;incx<zoom_level;incx++) {

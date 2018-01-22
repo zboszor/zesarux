@@ -1782,6 +1782,9 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 
 
 	//Compabilidad con char size 7, 6. Ver si caracter finaliza en siguiente columna
+	//temp
+	if (xusado<31) overlay_usado_screen_array[y*32+xusado+1]=1;
+	/*
 	if (menu_char_width!=8) {
 		if (xfinal!=xusado) {
 			if (xfinal<32) {
@@ -1790,6 +1793,7 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 			}
 		}
 	}
+	*/
 }
 
 
@@ -22966,6 +22970,12 @@ void menu_colour_settings(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_interface_charwidth(MENU_ITEM_PARAMETERS)
+{
+	menu_char_width--;
+
+	if (menu_char_width==4) menu_char_width=8;
+}
 
 
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
@@ -22990,6 +23000,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_interface_settings,"Changes Window Size Zoom (width and height)");
                 }
 
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"Menu char width: %d",menu_char_width);
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"M~~ultitask menu: %s", (menu_multitarea==1 ? "On" : "Off"));
