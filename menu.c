@@ -1781,8 +1781,8 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 	overlay_usado_screen_array[y*32+xusado]=1;
 
 
-	//Compatibilidad con char size menor que 8. Reservar caracter a la derechoa
-	
+	//Compatibilidad con char size menor que 8. Reservar caracter a la derecha
+	/*	
 	if (menu_char_width!=8) {
 		if (x<31) {
 			int pos_siguiente=y*32+xusado+1;
@@ -1793,21 +1793,9 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 			}
 		}
 	}
+	*/
 
 	
-
-
-	/*
-	//Compabilidad con char size 7, 6. Ver si caracter finaliza en siguiente columna
-	if (menu_char_width!=8) {
-		if (xfinal!=xusado) {
-			if (xfinal<32) {
-				printf ("reservamos por la derecha %d %d,%d\n",xusado,xfinal,y);
-				overlay_usado_screen_array[y*32+xfinal]=1;
-			}
-		}
-	}
-	*/
 }
 
 
