@@ -1782,6 +1782,7 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 
 
 	//Compatibilidad con char size menor que 8. Reservar caracter a la derecha
+	//TODO Revisar esto, esto puede ser el culpable porque la ultima columna de la derecha no se ve bien en las ventanas
 	/*	
 	if (menu_char_width!=8) {
 		if (x<31) {
