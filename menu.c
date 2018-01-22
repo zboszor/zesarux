@@ -1774,25 +1774,6 @@ void putchar_menu_overlay(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte 
 }
 
 
-//funcion para escribir un caracter en el buffer de segundo overlay, tambien copiarlo en el primer buffer
-/*
-void putchar_menu_second_overlay(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel)
-{
-
-        int pos_array=y*32+x;
-       	second_overlay_screen_array[pos_array].tinta=tinta;
-        second_overlay_screen_array[pos_array].papel=papel;
-       	second_overlay_screen_array[pos_array].caracter=caracter;
-
-	if (menu_second_layer) {
-
-		putchar_menu_overlay(x,y,caracter,tinta,papel);
-
-	}
-
-
-}
-*/
 
 //con zoom de menu gui
 void menu_scr_putpixel(int x,int y,int color)
@@ -2015,39 +1996,6 @@ void menu_init_footer(void)
 }
 
 
-//funcion para limpiar el buffer de segunda capa de overlay
-/*
-void cls_menu_second_overlay(void)
-{
-        clear_putpixel_cache();
-
-        int i;
-        for (i=0;i<32*24;i++) second_overlay_screen_array[i].caracter=0;
-
-}
-*/
-
-//escribir la segunda capa en la primera. llamado en la funcion de cls de la primera capa
-/*
-void copy_second_first_overlay(void)
-{
-
-	if (menu_second_layer) {
-                int i;
-                z80_byte caracter;
-                for (i=0;i<32*24;i++) {
-			caracter=second_overlay_screen_array[i].caracter;
-			if (caracter) {
-	                        overlay_screen_array[i].caracter=caracter;
-        	                overlay_screen_array[i].tinta=second_overlay_screen_array[i].tinta;
-                	        overlay_screen_array[i].papel=second_overlay_screen_array[i].papel;
-			}
-                }
-	}
-
-
-}
-*/
 
 //funcion para limpiar el buffer de overlay y si hay cuadrado activo
 void cls_menu_overlay(void)
@@ -28853,10 +28801,6 @@ void menu_inicio(void)
 
 }
 
-/*void set_splash_zesarux_logo_reserve_text(int x,int y)
-{
-	overlay_screen_array[y*32+x].caracter=255;
-}*/
 
 void set_splash_zesarux_logo_put_space(int x,int y)
 {
