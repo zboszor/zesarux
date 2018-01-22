@@ -1781,16 +1781,22 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 	overlay_usado_screen_array[y*32+xusado]=1;
 
 
-	//Compabilidad con char size menor que 8. Reservar caracter a la derechoa
+	//Compatibilidad con char size menor que 8. Reservar caracter a la derechoa
+	
 	if (menu_char_width!=8) {
-		if (xusado<31) {
+		if (x<31) {
 			int pos_siguiente=y*32+xusado+1;
 			if (!overlay_usado_screen_array[pos_siguiente]) {
 				overlay_usado_screen_array[pos_siguiente]=1;
-				overlay_screen_array[pos_siguiente].caracter=255; //255 no muestra nada, aunque ya lo hemos dejado reservado
+
+				//overlay_screen_array[pos_array+1].caracter=255; //255 no muestra nada, aunque ya lo hemos dejado reservado
 			}
 		}
 	}
+
+	
+
+
 	/*
 	//Compabilidad con char size 7, 6. Ver si caracter finaliza en siguiente columna
 	if (menu_char_width!=8) {
@@ -2678,8 +2684,8 @@ void normal_overlay_texto_menu(void)
 			caracter=overlay_screen_array[pos_array].caracter;
 			//si caracter es 0, no mostrar
 
-			if (overlay_usado_screen_array[pos_array]) {
-			//if (caracter) {
+			//if (overlay_usado_screen_array[pos_array]) {
+			if (caracter) {
 				//128 y 129 corresponden a franja de menu y a letra enye minuscula
 				if (si_valid_char(caracter) ) {
 					tinta=overlay_screen_array[pos_array].tinta;
