@@ -1362,7 +1362,7 @@ mmc.o: mmc.c mmc.h cpu.h debug.h utils.h menu.h screen.h divmmc.h
 ide.o: ide.c ide.h cpu.h debug.h utils.h menu.h screen.h divide.h
 	\$(CC) \$(CFLAGS) -c ide.c
 
-pd765.o: pd765.c pd765.h cpu.h debug.h utils.h menu.h screen.h
+pd765.o: pd765.c pd765.h cpu.h debug.h utils.h menu.h screen.h mem128.h
 	\$(CC) \$(CFLAGS) -c pd765.c
 
 zxpand.o: zxpand.c zxpand.h mmc.h cpu.h debug.h utils.h menu.h screen.h zx8081.h joystick.h

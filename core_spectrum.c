@@ -215,6 +215,16 @@ void cpu_core_loop_spectrum(void)
 
 		timer_check_interrupt();
 
+//
+//	Pruebas pd765
+//
+	//traps_plus3dos();
+
+
+//
+//	Fin pruebas pd765
+//		
+
 
 //#ifdef COMPILE_STDOUT
 //		if (screen_stdout_driver) scr_stdout_printchar();

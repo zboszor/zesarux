@@ -31,6 +31,7 @@
 #include "utils.h"
 #include "menu.h"
 #include "screen.h"
+#include "mem128.h"
 
 
 z80_bit pd765_enabled={0};
@@ -735,3 +736,141 @@ Para poder llegar aqui
 Que sentido tiene que ST0 valga BF???
 O es por culpa del PCN que vale 0???
 */
+
+void traps_plus3dos_return(void)
+{
+	reg_pc=pop_valor();
+}
+
+void traps_plus3dos_return_ok(void)
+{
+
+	Z80_FLAGS |=FLAG_C;
+	traps_plus3dos_return();
+}
+
+void traps_plus3dos_return_error(void)
+{
+
+	Z80_FLAGS=(Z80_FLAGS & (255-FLAG_C));
+	traps_plus3dos_return();
+}
+
+void traps_plus3dos(void)
+{
+	if (MACHINE_IS_SPECTRUM_P2A) {
+		z80_byte rom_entra=((puerto_32765>>4)&1) + ((puerto_8189>>1)&2);
+
+		if (rom_entra==2 && reg_pc>=256 && reg_pc<=412) {
+			//Mostrar llamadas a PLUS3DOS
+
+
+			switch (reg_pc) {
+
+				case 256:
+					printf ("\n-----DOS INITIALISE\n");
+					traps_plus3dos_return_ok();
+				break;
+
+				case 262:
+					printf ("\n-----DOS OPEN\n");
+					/*
+						If file newly created:
+		Carry true
+		Zero true
+		A corrupt
+	If existing file opened:
+		Carry true
+		Zero false
+		A corrupt
+					*/
+
+					Z80_FLAGS=(Z80_FLAGS & (255-FLAG_Z));
+					traps_plus3dos_return_ok();
+
+				break;
+
+				case 265:
+					printf ("\n-----DOS CLOSE\n");
+					traps_plus3dos_return_ok();
+				break;
+
+				case 268:
+					printf ("\n-----DOS ABANDON\n");
+					traps_plus3dos_return_ok();
+				break;
+
+				case 271:
+					printf ("\n-----DOS REF HEAD\n");
+/*
+EXIT CONDITIONS
+	If OK, but file doesn't have a header:
+		Carry true
+		Zero true
+		A corrupt
+		IX = Address of header data in page 7
+	If OK, file has a header:
+		Carry true
+		Zero false
+		A corrupt
+		IX = Address of header data in page 7
+		*/
+
+					Z80_FLAGS=(Z80_FLAGS & (255-FLAG_Z));
+					traps_plus3dos_return_ok();
+					
+				break;
+
+				case 274:
+					printf ("\n-----DOS READ\n");
+
+					traps_plus3dos_return_ok();
+				break;
+
+				case 286:
+					printf ("\n-----DOS CATALOG\n");
+				break;
+
+				case 334:
+					printf ("\n-----DOS SET MESSAGE\n");
+				break;
+
+				case 340:
+					printf ("\n-----DOS MAP B\n");
+				break;
+
+				case 355:
+					printf ("\n-----DD READ SECTOR\n");	
+				break;
+			
+
+				case 349:
+					printf ("\n-----DD SETUP\n");
+				break;
+
+				case 346:
+					printf ("\n-----DD INIT\n");
+					traps_plus3dos_return_ok();
+				break;
+			
+
+				case 343:
+					printf ("\n-----DD INTERFACE\n");
+					traps_plus3dos_return_ok();
+				break;
+			
+				case 367:
+					printf ("\n-----DD READ ID\n");
+				break;
+
+				case 379:
+					printf ("\n-----DD ASK 1\n");
+					traps_plus3dos_return_error();
+				break;
+			}
+
+			printf ("PLUS3DOS routine reg_pc=%d\n",reg_pc);
+			sleep(2);
+		}
+	}
+}
