@@ -17840,6 +17840,11 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 
 		puntero=0x110200;
 /*
+
+
+https://www.win.tue.nl/~aeb/linux/fs/fat/fat-1.html
+
+
 Bytes   Content
 0-10    File name (8 bytes) with extension (3 bytes)
 11      Attribute - a bitvector. Bit 0: read only. Bit 1: hidden.
