@@ -278,12 +278,14 @@ void ulaplus_set_extended_mode(z80_byte value)
 
                                 ulaplus_extended_mode=(value&255);
 
+				//printf ("ulaplus extended mode: %d\n",ulaplus_extended_mode);
+
                                 switch (ulaplus_extended_mode) {
                                         case 0:
-                                                debug_printf (VERBOSE_DEBUG,"Disabling ULAplus (mode 0)");
+                                                debug_printf (VERBOSE_DEBUG,"Disabling ULAplus (extended mode 0)");
                                                 ulaplus_enabled.v=0;
                                                 if (ulaplus_extended_mode!=ulaplus_mode_anterior) {
-                                                        screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling ULAplus (mode 0)");
+                                                        screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling ULAplus (extended mode 0)");
                                                 }
 
                                         break;
