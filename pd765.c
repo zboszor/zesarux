@@ -756,6 +756,96 @@ void traps_plus3dos_return_error(void)
 	traps_plus3dos_return();
 }
 
+/*
+archivo de pruebas en cinta 
+pruebaplustres.tap
+
+0   (de program)
+ 1d 00 00 80 1d 00  (longitud, par1, par2)
+
+
+
+datos:
+00 01 0e 00 ea 68 6f 6c 
+61 20 71 75 65 20 74 61  6c 0d 00 02 07 00 ea 61  
+ 64 69 6f 73 0d
+
+*/
+
+z80_byte p3dos_prueba_header[]={0,0x1d, 0x00, 00, 0x80, 0x1d ,00,0};
+z80_byte p3dos_prueba_datos[]={00 ,0x01 ,0x0e ,0x00 ,0xea ,0x68 ,0x6f ,0x6c 
+,0x61 ,0x20 ,0x71 ,0x75 ,0x65 ,0x20 ,0x74 ,0x61  ,0x6c ,0x0d ,0x00 ,0x02 ,0x07 ,0x00 ,0xea ,0x61  
+ ,0x64 ,0x69 ,0x6f ,0x73 ,0x0d};
+
+
+void traps_plus3dos_handle_ref_head(void)
+{
+	reg_ix=49152;
+	int i;
+
+			z80_byte *p;
+		p=ram_mem_table[7];
+
+	for (i=0;i<8;i++) {
+
+		p[i]=p3dos_prueba_header[i];
+	}
+}
+
+void traps_plus3dos_handle_dos_read(void)
+{
+
+	/*
+Read bytes from a file into memory.
+
+Advance the file pointer.
+
+The destination buffer is in the following memory configuration:
+
+	C000h...FFFFh (49152...65535)	- Page specified in C
+	8000h...BFFFh (32768...49151)	- Page 2
+	4000h...7FFFh (16384...32767)	- Page 5
+	0000h...3FFFh (0...16383)	- DOS ROM
+
+The routine does not consider soft-EOF.
+
+Reading EOF will produce an error.
+
+ENTRY CONDITIONS
+	B = File number
+	C = Page for C000h (49152)...FFFFh (65535)
+	DE = Number of bytes to read (0 means 64K)
+	HL = Address for bytes to be read
+
+EXIT CONDITIONS
+	If OK:
+		Carry true
+		A DE corrupt
+	Otherwise:
+		Carry false
+		A = Error code
+		DE = Number of bytes remaining unread
+	Always:
+		BC HL IX corrupt
+		All other registers preserved
+	*/
+
+
+	reg_ix=49152;
+	int i;
+
+			z80_byte *p;
+		p=ram_mem_table[reg_c];
+
+		//temp
+		p=ram_mem_table[5];
+
+	for (i=0;i<reg_de;i++) {
+		//poke_byte_no_time(reg_hl+i,p3dos_prueba_datos[i]);
+		p[(reg_hl&16383)+i]=p3dos_prueba_datos[i];
+	}
+}
+
 void traps_plus3dos(void)
 {
 	if (MACHINE_IS_SPECTRUM_P2A) {
@@ -816,14 +906,20 @@ EXIT CONDITIONS
 		IX = Address of header data in page 7
 		*/
 
+					//Problema: Como asigno IX dentro de pagina 7? A saber
+					traps_plus3dos_handle_ref_head();
+					
+
+
 					Z80_FLAGS=(Z80_FLAGS & (255-FLAG_Z));
 					traps_plus3dos_return_ok();
 					
 				break;
 
 				case 274:
-					printf ("\n-----DOS READ\n");
-
+					printf ("\n-----DOS READ. Address: %d Lenght: %d\n",reg_hl,reg_de);
+					
+					traps_plus3dos_handle_dos_read();
 					traps_plus3dos_return_ok();
 				break;
 
@@ -870,7 +966,7 @@ EXIT CONDITIONS
 			}
 
 			printf ("PLUS3DOS routine reg_pc=%d\n",reg_pc);
-			sleep(2);
+			sleep(1);
 		}
 	}
 }
