@@ -610,6 +610,7 @@ int machine_selection_por_fabricante_opcion_seleccionada=0;
 int display_settings_opcion_seleccionada=0;
 int audio_settings_opcion_seleccionada=0;
 int hardware_settings_opcion_seleccionada=0;
+int keyboard_settings_opcion_seleccionada=0;
 int hardware_memory_settings_opcion_seleccionada=0;
 int tape_settings_opcion_seleccionada=0;
 int snapshot_opcion_seleccionada=0;
@@ -16250,6 +16251,120 @@ void menu_hardware_recreated_keyboard(MENU_ITEM_PARAMETERS)
 }
 
 
+//menu keyboard settings
+void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_keyboard_settings;
+	menu_item item_seleccionado;
+	int retorno_menu;
+        do {
+
+        	//Redefine keys
+		menu_add_item_menu_inicial_format(&array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_redefine_keys,NULL,"~~Redefine keys");
+		menu_add_item_menu_shortcut(array_menu_keyboard_settings,'r');
+		menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Redefine one key to another");
+		menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Redefine one key to another");
+
+
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keyboard_issue,menu_hardware_keyboard_issue_cond,"Keyboard ~~Issue %s", (keyboard_issue2.v==1 ? "2" : "3"));
+			menu_add_item_menu_shortcut(array_menu_keyboard_settings,'i');
+			menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Type of Spectrum keyboard emulated");
+			menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Changes the way the Spectrum keyboard port returns its value: Issue 3 returns bit 6 off, and Issue 2 has bit 6 on");
+		}
+
+
+		//Soporte para Azerty keyboard
+
+		if (!strcmp(scr_driver_name,"xwindows")) {
+			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_azerty,NULL,"~~Azerty keyboard: %s",(azerty_keyboard.v ? "Yes" : "No") );
+			menu_add_item_menu_shortcut(array_menu_keyboard_settings,'a');
+			menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Enables azerty keyboard");
+			menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Only used on xwindows driver by now. Enables to use numeric keys on Azerty keyboard, without having "
+						"to press Shift. Note we are referring to the numeric keys (up to letter A, Z, etc) and not to the numeric keypad.");
+		}
+
+
+		menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_recreated_keyboard,NULL,"ZX Recreated support: %s",
+			(recreated_zx_keyboard_support.v ? "Yes" : "No") );
+
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_chloe_keyboard,NULL,"Chloe Keyboard: %s",(chloe_keyboard.v ? "Yes" : "No") );
+		}
+
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_spectrum_keyboard_matrix_error,NULL,"Speccy keyb. ~~ghosting: %s",
+					(keyboard_matrix_error.v ? "Yes" : "No") );
+			menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Enables real keyboard emulation, even with the keyboard matrix error");
+			menu_add_item_menu_shortcut(array_menu_keyboard_settings,'g');
+			menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Enables real keyboard emulation, even with the keyboard matrix error.\n"
+						"This is the error/feature that returns more key pressed than the real situation, for example, "
+						"pressing keys ASQ, will return ASQW. Using a pc keyboard is difficult to test that effect, because "
+						"that most of them can return more than two or three keys pressed at a time. But using the on-screen keyboard "
+						"and also the Recreated Keyboard, you can test it");
+
+		}
+
+		if (MACHINE_IS_Z88 || MACHINE_IS_CPC || chloe_keyboard.v || MACHINE_IS_SAM || MACHINE_IS_QL)  {
+			//keymap solo hace falta con xwindows y sdl. fbdev y cocoa siempre leen en raw como teclado english
+			if (!strcmp(scr_driver_name,"xwindows")  || !strcmp(scr_driver_name,"sdl") ) {
+				if (MACHINE_IS_Z88) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Z88 K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
+				else if (MACHINE_IS_CPC) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"CPC K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
+				else if (MACHINE_IS_SAM) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"SAM K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
+				else if (MACHINE_IS_QL) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"QL K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
+
+				else menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Chloe K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
+				menu_add_item_menu_shortcut(array_menu_keyboard_settings,'e');
+				menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Keyboard Layout");
+				menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Used on Z88, CPC, Sam and Chloe machines, needed to map symbol keys. "
+						"You must indicate here which kind of physical keyboard you have. The keyboard will "
+						"be mapped always to a Z88/CPC/Sam/Chloe English keyboard, to the absolute positions of the keys. "
+						"You have two physical keyboard choices: Default (English) and Spanish");
+
+			}
+		}
+
+
+
+
+
+
+		//Set F keys functions
+		menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_set_f_functions,NULL,"Set ~~F keys functions");
+		menu_add_item_menu_shortcut(array_menu_keyboard_settings,'f');
+		menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Assign actions to F keys");
+		menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Assign actions to F keys");
+
+
+
+
+
+
+
+                menu_add_item_menu(array_menu_keyboard_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+		menu_add_ESC_item(array_menu_keyboard_settings);
+
+                retorno_menu=menu_dibuja_menu(&keyboard_settings_opcion_seleccionada,&item_seleccionado,array_menu_keyboard_settings,"Keyboard Settings" );
+
+                cls_menu_overlay();
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+			//llamamos por valor de funcion
+	                if (item_seleccionado.menu_funcion!=NULL) {
+        	                //printf ("actuamos por funcion\n");
+                	        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+				cls_menu_overlay();
+	                }
+		}
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+}
+
+
+
 
 //menu hardware settings
 void menu_hardware_settings(MENU_ITEM_PARAMETERS)
@@ -16258,6 +16373,15 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 	menu_item item_seleccionado;
 	int retorno_menu;
         do {
+
+		//Keyboard settings
+		menu_add_item_menu_inicial_format(&array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_keyboard_settings,NULL,"~~Keyboard settings");
+		menu_add_item_menu_shortcut(array_menu_hardware_settings,'k');
+		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Hardware settings");
+		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Hardware settings");
+
+
+		/*
 
         	//Redefine keys
 		menu_add_item_menu_inicial_format(&array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_redefine_keys,NULL,"Rede~~fine keys");
@@ -16332,6 +16456,9 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_hardware_settings,'n');
 		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Assign actions to F keys");
 		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Assign actions to F keys");
+
+
+		*/
 
 
 		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081 || MACHINE_IS_SAM) {
