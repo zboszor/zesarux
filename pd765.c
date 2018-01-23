@@ -851,7 +851,13 @@ void traps_plus3dos(void)
 	if (MACHINE_IS_SPECTRUM_P2A) {
 		z80_byte rom_entra=((puerto_32765>>4)&1) + ((puerto_8189>>1)&2);
 
-		if (rom_entra==2 && reg_pc>=256 && reg_pc<=412) {
+		if (rom_entra==2 && reg_pc==0x1bff) {
+			printf ("READ SECTOR\n");
+			sleep(2);
+		}
+
+		if (rom_entra==2 && (reg_pc==0x1bff || (reg_pc>=256 && reg_pc<=412))
+			) {
 			//Mostrar llamadas a PLUS3DOS
 
 
@@ -859,7 +865,7 @@ void traps_plus3dos(void)
 
 				case 256:
 					printf ("\n-----DOS INITIALISE\n");
-					traps_plus3dos_return_ok();
+					//traps_plus3dos_return_ok();
 				break;
 
 				case 262:
@@ -875,19 +881,19 @@ void traps_plus3dos(void)
 		A corrupt
 					*/
 
-					Z80_FLAGS=(Z80_FLAGS & (255-FLAG_Z));
-					traps_plus3dos_return_ok();
+					//Z80_FLAGS=(Z80_FLAGS & (255-FLAG_Z));
+					//traps_plus3dos_return_ok();
 
 				break;
 
 				case 265:
 					printf ("\n-----DOS CLOSE\n");
-					traps_plus3dos_return_ok();
+					//traps_plus3dos_return_ok();
 				break;
 
 				case 268:
 					printf ("\n-----DOS ABANDON\n");
-					traps_plus3dos_return_ok();
+					//traps_plus3dos_return_ok();
 				break;
 
 				case 271:
@@ -907,20 +913,20 @@ EXIT CONDITIONS
 		*/
 
 					//Problema: Como asigno IX dentro de pagina 7? A saber
-					traps_plus3dos_handle_ref_head();
+					//traps_plus3dos_handle_ref_head();
 					
 
 
-					Z80_FLAGS=(Z80_FLAGS & (255-FLAG_Z));
-					traps_plus3dos_return_ok();
+					//Z80_FLAGS=(Z80_FLAGS & (255-FLAG_Z));
+					//traps_plus3dos_return_ok();
 					
 				break;
 
 				case 274:
 					printf ("\n-----DOS READ. Address: %d Lenght: %d\n",reg_hl,reg_de);
 					
-					traps_plus3dos_handle_dos_read();
-					traps_plus3dos_return_ok();
+					//traps_plus3dos_handle_dos_read();
+					//traps_plus3dos_return_ok();
 				break;
 
 				case 286:
@@ -936,7 +942,20 @@ EXIT CONDITIONS
 				break;
 
 				case 355:
-					printf ("\n-----DD READ SECTOR\n");	
+				case 0x1bff:
+					printf ("\n-----DD READ SECTOR track %d sector %d buffer %d xdpb: %d\n",
+					reg_d,reg_e,reg_hl,reg_ix);	
+/*
+ENTRY CONDITIONS
+	B = Page for C000h (49152)...FFFFh (65535)
+	C = Unit (0/1)
+	D = Logical track, 0 base
+	E = Logical sector, 0 base
+	HL = Address of buffer
+	IX = Address of XDPB
+	*/		
+					printf ("PLUS3DOS routine reg_pc=%d\n",reg_pc);
+					sleep(1);			
 				break;
 			
 
@@ -946,13 +965,13 @@ EXIT CONDITIONS
 
 				case 346:
 					printf ("\n-----DD INIT\n");
-					traps_plus3dos_return_ok();
+					//traps_plus3dos_return_ok();
 				break;
 			
 
 				case 343:
 					printf ("\n-----DD INTERFACE\n");
-					traps_plus3dos_return_ok();
+					//traps_plus3dos_return_ok();
 				break;
 			
 				case 367:
@@ -961,7 +980,7 @@ EXIT CONDITIONS
 
 				case 379:
 					printf ("\n-----DD ASK 1\n");
-					traps_plus3dos_return_error();
+					//traps_plus3dos_return_error();
 				break;
 			}
 
