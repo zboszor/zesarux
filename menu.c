@@ -9082,7 +9082,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 				if (total_chips>3) total_chips=3;
 
         if (total_chips==1) menu_dibuja_ventana(1,5,30,14,"AY Registers");
-				else menu_dibuja_ventana(1,0,30,24,"AY Registers");
+	else menu_dibuja_ventana(1,0,30,24,"AY Registers");
 
         z80_byte acumulado;
 
@@ -9176,6 +9176,8 @@ int piano_graphic_base_y=0;
 
 #define PIANO_ZOOM_X ( menu_char_width>=7 ? 3 : 2 )
 #define PIANO_ZOOM_Y 3
+
+#define AY_PIANO_ANCHO_VENTANA ( menu_char_width==8 || menu_char_width==6 ? 14 : 15 )
 
 
 //Escala alto en vertical teclado piano segun si ay chip>2, para que el teclado sea mas pequeñito
@@ -9648,7 +9650,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 				if (!si_mostrar_ay_piano_grafico()) {
 
-					if (total_chips==1) menu_dibuja_ventana(9,7,14,11,"AY Piano");
+					if (total_chips==1)      menu_dibuja_ventana(9,7,14,11,"AY Piano");
           				else if (total_chips==2) menu_dibuja_ventana(9,2,14,20,"AY Piano");
 					else if (total_chips==3) menu_dibuja_ventana(9,1,14,22,"AY Piano");
 
@@ -9656,19 +9658,19 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 				//#define PIANO_GRAPHIC_BASE_X 7
 				//#define PIANO_GRAPHIC_BASE_Y 7
 				else {
-					//Dibujar ay piano con grafico
+					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
 					if (total_chips==1) {
 						piano_graphic_base_y=5;
-						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,14,13,"AY Piano");
+						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,13,"AY Piano");
 					}
 					else if (total_chips==2) {
 						piano_graphic_base_y=1;
-						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,14,22,"AY Piano");
+						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,22,"AY Piano");
 					}
 
 					else if (total_chips==3) {
 						piano_graphic_base_y=0;
-						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,14,24,"AY Piano");
+						menu_dibuja_ventana(PIANO_GRAPHIC_BASE_X,piano_graphic_base_y,AY_PIANO_ANCHO_VENTANA,24,"AY Piano");
 					}
 				}
 
@@ -23048,6 +23050,8 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
                 }
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"Menu char width: %d",menu_char_width);
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"M~~ultitask menu: %s", (menu_multitarea==1 ? "On" : "Off"));
