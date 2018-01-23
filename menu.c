@@ -17839,10 +17839,30 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 		int puntero,i;
 
 		puntero=0x110200;
+/*
+Bytes   Content
+0-10    File name (8 bytes) with extension (3 bytes)
+11      Attribute - a bitvector. Bit 0: read only. Bit 1: hidden.
+        Bit 2: system file. Bit 3: volume label. Bit 4: subdirectory.
+        Bit 5: archive. Bits 6-7: unused.
+12-21   Reserved (see below)
+22-23   Time (5/6/5 bits, for hour/minutes/doubleseconds)
+24-25   Date (7/4/5 bits, for year-since-1980/month/day)
+26-27   Starting cluster (0 for an empty file)
+28-31   Filesize in bytes
+*/
 
 		for (i=0;i<max_entradas_vfat;i++) {
+			z80_byte file_attribute=mmc_file_memory[puntero+11];
 			menu_file_mmc_browser_show_file(&mmc_file_memory[puntero],buffer_texto,1,11);
 			if (buffer_texto[0]!='?') {
+				//Es directorio?
+				if (file_attribute&16) {
+					//Agregamos texto <DIR>
+					int l=strlen(buffer_texto);
+					strcpy(&buffer_texto[l]," <DIR>");
+				}
+
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 			}
 
