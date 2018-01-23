@@ -1,17 +1,15 @@
 Version 6.1. 12 January 2018 - Xeno edition
 
-Added setting to exit emulator after a number of seconds (--exit-after)
-Added setting to show changelog when updating emulator version
+Added BetaDisk and TR-DOS emulation
 Added Spectrum keyboard ghosting error feature
 Added ZX Spectrum Recreated keyboard support
+Added setting to exit emulator after a number of seconds (--exit-after)
+Added setting to show changelog when updating emulator version
 Added actions to file utilities: Copy, Move, Rename
-Added second Easter Egg ;)
-Added BetaDisk and TR-DOS emulation
 Added setting to write protect IDE, MMC, ZX-Uno Flash
 Added setting to disable persistent writes IDE, MMC
 Added two more GUI styles: Clean and CleanInverse
-Improved sound: Silence detector does not activate on pthreads versions
-Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
+Added second Easter Egg ;)
 Improved joystick support: 
 * added joystick test menu
 * buttons to events and buttons to joystick configuration are saved on configuration file
@@ -27,6 +25,8 @@ Improved file viewer from file utilities:
 Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
 Improved menus, a new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
 Improved menu: now character width can be reduced to 7,6 or 5 pixels width
+Improved sound: Silence detector does not activate on pthreads versions
+Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
 Fixed TBBlue MMU when using segment 0000-3FFFH
 Fixed ZX-Uno emulation: 128kb timings are the same as a Spectrum 128k. When port 1ffd enabled, port FF return FF
 Fixed window footer when running Pentagon
