@@ -1160,6 +1160,41 @@ int traps_plus3dos_directentry(void)
 			//.l019c  jp      l2164           ; DD_L_OFF_MOTOR
 		 break;
 
+
+
+	/*
+; Subroutine to wait for FD ready & ouput A to data register if
+; controller wants input
+
+.l2114  push    de
+	*/
+		case 0x2114:
+			printf ("Undocumented Wait FD & Output\n");
+		break;
+
+/*
+; Subroutine to wait until FDC ready for new command
+
+.l206f  push    hl
+*/
+
+		case 0x206f:
+			printf ("Undocumented Wait FDC ready for new command\n");
+		break;
+
+
+/*
+; Subroutine to read A bytes from a sector
+
+.l1be9  push    af
+        call    l1b5b           ; setup parameter block for sector read
+        pop     af
+*/
+
+		case 0x1be9:
+			printf ("Undocumented Subroutine to read A bytes from a sector\n");
+		break;
+
 		default:
 			return 0;
 		break;
@@ -1288,7 +1323,7 @@ ENTRY CONDITIONS
 	IX = Address of XDPB
 	*/		
 					printf ("PLUS3DOS routine reg_pc=%d\n",reg_pc);
-					sleep(1);			
+					sleep(5);			
 				break;
 			
 
@@ -1302,6 +1337,7 @@ ENTRY CONDITIONS
 				break;
 			
 
+				case 0x1f27:
 				case 343:
 					printf ("-----DD INTERFACE\n");
 					//traps_plus3dos_return_ok();
@@ -1337,10 +1373,26 @@ ENTRY CONDITIONS
 					printf ("-----DD_READ_ID\n");
 					traps_plus3dos_read_id();
 				break;
+
+
+		                case 0x2114:
+                		        printf ("-----Undocumented Wait FD & Output\n");
+					traps_plus3dos_return();
+		                break;
+
+		                case 0x206f:
+		                        printf ("-----Undocumented Wait FDC ready for new command\n");
+					traps_plus3dos_return();
+				break;
+
+
+		                case 0x1be9:
+                		        printf ("-----Undocumented Subroutine to read A bytes from a sector\n");
+		                break;
 			}
 
 			printf ("\n\n");
-			sleep(1);
+			//sleep(1);
 		}
 
 		if (direct_entry) printf ("\n");
