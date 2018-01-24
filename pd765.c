@@ -918,6 +918,41 @@ EXIT CONDITIONS
 	traps_plus3dos_return_ok();
 }
 
+
+void traps_plus3dos_read_id(void)
+{
+
+/*
+DD READ ID
+016Fh (367)
+
+Read a sector identifier.
+
+ENTRY CONDITIONS
+        C = Unit (0/1)
+        D = Logical track, 0 base
+        IX = Address of XDPB
+
+EXIT CONDITIONS
+        If OK:
+                Carry true
+                A = Sector number from identifier
+        Otherwise:
+                Carry false
+                A = Error code
+        Always:
+                HL = Address of result buffer in page 7
+                BC DE IX corrupt
+                All other registers preserved
+
+*/
+
+	//???? Que retornar en A?
+	reg_a=0;
+
+	traps_plus3dos_return_ok();
+}
+
 //ROM 2 4.0 direct entry points
 int traps_plus3dos_directentry(void)
 {
@@ -927,54 +962,156 @@ int traps_plus3dos_directentry(void)
 		break;
 	
                  case 0x01cd:
+		break;
+
                  case 0x062d:
+			printf ("DOS_OPEN\n");
+		break;
+
                  case 0x0740:
+			printf ("DOS_CLOSE\n");
+		break;
+
                  case 0x0761:
+			printf ("DOS_ABANDON\n");
+		break;
+
                  case 0x08b1:
+		break;
+
                  case 0x10ea:
+		break;
+
                  case 0x11fe:
+		break;
+
                  case 0x11a8:
+		break;
+
                  case 0x1298:
+		break;
+
                  case 0x0a19:
+		break;
+
                  case 0x08f2:
+		break;
+
                  case 0x0924:
+		break;
+
                  case 0x096f:
+		break;
+
                  case 0x1ace:
+		break;
+
                  case 0x090f:
+		break;
+
                  case 0x08fc:
+		break;
+
                  case 0x1070:
+		break;
+
                  case 0x108c:
+		break;
+
                  case 0x1079:
+		break;
+
                  case 0x01d8:
+		break;
+
                  case 0x01de:
+		break;
+
                  case 0x05c2:
+		break;
+
                  case 0x08c3:
+		break;
+
                  case 0x0959:
+		break;
+
                  case 0x0706:
+		break;
+
                  case 0x02e8:
 			printf ("DOS_SET_MESSAGE\n");
 		break;
                  case 0x1847:
+		break;
+
                  case 0x1943:
+		break;
+
                  case 0x1f27:
 			printf ("DD_INTERFACE\n");
 		break;
+
                  case 0x1f32:
+			printf ("DD_INIT\n");
+			//.l015a  jp      l1f32           ; DD_INIT
+		break;
+
                  case 0x1f47:
+			printf ("DD_SETUP\n");
+			//.l015d  jp      l1f47           ; DD_SETUP
+		break;
+
                  case 0x1e7c:
+		break;
+
                  case 0x1bff:
+		break;
+
                  case 0x1c0d:
+		break;
+
                  case 0x1c16:
+		break;
+
                  case 0x1c24:
+		break;
+
                  case 0x1c36:
+			printf ("DD_READ_ID\n");
+			//.l016f  jp      l1c36           ; DD_READ_ID
+		break;
+
                  case 0x1e65:
+		break;
+
                  case 0x1c80:
+			printf ("DD_LOGIN\n");
+			//.l0175  jp      l1c80           ; DD_LOGIN
+		break;
+
                  case 0x1cdb:
+			printf ("DD_SEL_FORMAT\n");
+			//.l0178  jp      l1cdb           ; DD_SEL_FORMAT
+		break;
+
                  case 0x1edd:
+		break;
+
                  case 0x1ee9:
+		break;
+
                  case 0x1e75:
+		break;
+
                  case 0x1bda:
+		break;
+
                  case 0x1cee:
+			printf ("DD_L_XDPB\n");
+			//.l0187  jp      l1cee           ; DD_L_XDPB
+		break;
+
                  case 0x1d30:
 			printf ("DD_L_DPB\n");
 		break;
@@ -984,13 +1121,21 @@ int traps_plus3dos_directentry(void)
 		break;
 
                  case 0x20c3:
+		break;
+
                  case 0x20cc:
+		break;
+
                  case 0x212b:
 			printf ("DD_L_ON_MOTOR\n");
 		break;
 
                  case 0x2150:
+		break;
+
                  case 0x2164:
+			printf ("DD_L_OFF_MOTOR\n");
+			//.l019c  jp      l2164           ; DD_L_OFF_MOTOR
 		 break;
 
 		default:
@@ -1009,7 +1154,7 @@ void traps_plus3dos(void)
 		int direct_entry=0;
 
 		if (rom_entra==2 && traps_plus3dos_directentry() ) {
-			printf ("Direct entry point. reg_pc=%d %04xH\n\n",reg_pc,reg_pc);	
+			printf ("Direct entry point. reg_pc=%d %04xH\n",reg_pc,reg_pc);	
 			direct_entry=1;
 			sleep(1);
 		}
@@ -1020,17 +1165,19 @@ void traps_plus3dos(void)
 
 			) {
 			//Mostrar llamadas a PLUS3DOS
+			printf ("PLUS3DOS routine reg_pc=%d %04xH\n",reg_pc,reg_pc);
 
 
 			switch (reg_pc) {
 
 				case 256:
-					printf ("-----DOS INITIALISE\n\n");
+					printf ("-----DOS INITIALISE\n");
 					//traps_plus3dos_return_ok();
 				break;
 
+				case 0x062d:
 				case 262:
-					printf ("-----DOS OPEN\n\n");
+					printf ("-----DOS OPEN\n");
 					/*
 						If file newly created:
 		Carry true
@@ -1047,18 +1194,20 @@ void traps_plus3dos(void)
 
 				break;
 
+				case 0x0740:
 				case 265:
-					printf ("-----DOS CLOSE\n\n");
+					printf ("-----DOS CLOSE\n");
 					//traps_plus3dos_return_ok();
 				break;
 
+				case 0x0761:
 				case 268:
-					printf ("-----DOS ABANDON\n\n");
+					printf ("-----DOS ABANDON\n");
 					//traps_plus3dos_return_ok();
 				break;
 
 				case 271:
-					printf ("-----DOS REF HEAD\n\n");
+					printf ("-----DOS REF HEAD\n");
 /*
 EXIT CONDITIONS
 	If OK, but file doesn't have a header:
@@ -1084,27 +1233,27 @@ EXIT CONDITIONS
 				break;
 
 				case 274:
-					printf ("-----DOS READ. Address: %d Lenght: %d\n\n",reg_hl,reg_de);
+					printf ("-----DOS READ. Address: %d Lenght: %d\n",reg_hl,reg_de);
 					
 					//traps_plus3dos_handle_dos_read();
 					//traps_plus3dos_return_ok();
 				break;
 
 				case 286:
-					printf ("-----DOS CATALOG\n\n");
+					printf ("-----DOS CATALOG\n");
 				break;
 
 				case 334:
-					printf ("-----DOS SET MESSAGE\n\n");
+					printf ("-----DOS SET MESSAGE\n");
 				break;
 
 				case 340:
-					printf ("-----DOS MAP B\n\n");
+					printf ("-----DOS MAP B\n");
 				break;
 
 				case 355:
 				case 0x1bff:
-					printf ("-----DD READ SECTOR track %d sector %d buffer %d xdpb: %d\n\n",
+					printf ("-----DD READ SECTOR track %d sector %d buffer %d xdpb: %d\n",
 					reg_d,reg_e,reg_hl,reg_ix);	
 /*
 ENTRY CONDITIONS
@@ -1121,45 +1270,56 @@ ENTRY CONDITIONS
 			
 
 				case 349:
-					printf ("-----DD SETUP\n\n");
+					printf ("-----DD SETUP\n");
 				break;
 
 				case 346:
-					printf ("-----DD INIT\n\n");
+					printf ("-----DD INIT\n");
 					//traps_plus3dos_return_ok();
 				break;
 			
 
 				case 343:
-					printf ("-----DD INTERFACE\n\n");
+					printf ("-----DD INTERFACE\n");
 					//traps_plus3dos_return_ok();
 				break;
 			
-				case 367:
-					printf ("-----DD READ ID\n\n");
-				break;
-
 				case 379:
-					printf ("-----DD ASK 1\n\n");
+					printf ("-----DD ASK 1\n");
 					//traps_plus3dos_return_error();
 				break;
 
 				case 394:
 				case 0x1d30:
-					printf ("-----DD_L_DPB\n\n");
+					printf ("-----DD_L_DPB\n");
 					traps_plus3dos_dd_l_dpb();
 				break;
 
 
 				case 397:
 				case 0x1f76:
-					printf ("-----DD_L_SEEK\n\n");
+					printf ("-----DD_L_SEEK\n");
 					traps_plus3dos_dd_l_seek();
+				break;
+
+
+				case 406:
+		                 case 0x212b:
+                		        printf ("-----DD_L_ON_MOTOR\n");
+					traps_plus3dos_return_ok();
+				break;
+                 		
+				case 367:
+				case 0x1c36:
+					printf ("-----DD_READ_ID\n");
+					traps_plus3dos_read_id();
 				break;
 			}
 
-			printf ("PLUS3DOS routine reg_pc=%d\n\n",reg_pc);
+			printf ("\n\n");
 			sleep(1);
 		}
+
+		if (direct_entry) printf ("\n");
 	}
 }
