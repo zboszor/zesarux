@@ -117,7 +117,7 @@ Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where 
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
 1,2: Block start address
-3,4: Block lenght
+3,4: Block lenght (if 0, means 65536. Currently onlu used on Inves)
 5 and next bytes: data bytes
 
 
@@ -338,8 +338,10 @@ void load_zsf_snapshot_block_data(z80_byte *block_data,int longitud_original)
   i++;
   z80_int block_start=value_8_to_16(block_data[i+1],block_data[i]);
   i +=2;
-  z80_int block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
+  int block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
   i+=2;
+
+  if (block_lenght==0) block_lenght=65536;
 
   debug_printf (VERBOSE_DEBUG,"Block start: %d Lenght: %d Compressed: %s Length_source: %d",block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
   //printf ("Block start: %d Lenght: %d Compressed: %d Length_source: %d\n",block_start,block_lenght,block_flags&1,longitud_original);
@@ -689,8 +691,15 @@ void save_zsf_snapshot(char *filename)
   //Maquinas Spectrum de 48kb
   if (MACHINE_IS_SPECTRUM_16_48) {
 
+	int inicio_ram=16384;
 	int longitud_ram=49152;
 	if (MACHINE_IS_SPECTRUM_16) longitud_ram=16384;
+
+	if (MACHINE_IS_INVES) {
+		//Grabar tambien la ram oculta de inves (0-16383). Por tanto, grabar todos los 64kb de ram
+		longitud_ram=65536; //65536
+		inicio_ram=0;
+	}
 
   //Test. Save 48kb block
   //Allocate 5+48kb bytes
@@ -716,17 +725,17 @@ void save_zsf_snapshot(char *filename)
   */
 
   compressed_ramblock[0]=0;
-  compressed_ramblock[1]=value_16_to_8l(16384);
-  compressed_ramblock[2]=value_16_to_8h(16384);
+  compressed_ramblock[1]=value_16_to_8l(inicio_ram);
+  compressed_ramblock[2]=value_16_to_8h(inicio_ram);
   compressed_ramblock[3]=value_16_to_8l(longitud_ram);
   compressed_ramblock[4]=value_16_to_8h(longitud_ram);
 
   //Copy spectrum memory to ramblock
   //int i;
-  //for (i=0;i<longitud_ram;i++) ramblock[5+i]=peek_byte_no_time(16384+i);
+  //for (i=0;i<longitud_ram;i++) ramblock[5+i]=peek_byte_no_time(inicio_ram+i);
 
   int si_comprimido;
-  int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[16384],&compressed_ramblock[5],longitud_ram,&si_comprimido);
+  int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[inicio_ram],&compressed_ramblock[5],longitud_ram,&si_comprimido);
   if (si_comprimido) compressed_ramblock[0]|=1;
 
   //Store block to file

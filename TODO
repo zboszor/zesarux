@@ -837,6 +837,8 @@ Ver si la simulación de pulsado de escape desde smartload de remote protocol no
 
 -Mejorar load source code. Poder saber líneas siguientes a un label empezando en siguientes líneas a label. Cache? Indices?
 
+-comando send-keys-string  y send-keys-ascii no van si driver stdout. con otro (incluso con null) va. Quiza tampoco va spool file con stdout?
+
 
 -------------
 
