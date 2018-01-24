@@ -986,6 +986,10 @@ char *string_machines_list_description=
 							" P2A41    Spectrum +2A (ROM v4.1)\n"
 							" P2AS     Spectrum +2A (Spanish)\n"
 
+							" P340     Spectrum +3 (ROM v4.0)\n"
+							" P341     Spectrum +3 (ROM v4.1)\n"
+							" P3S      Spectrum +3 (Spanish)\n"							
+
 							" TS2068   Timex TS 2068\n"
 
 							" Inves    Inves Spectrum+\n"
@@ -1988,6 +1992,13 @@ struct s_machine_names machine_names[]={
 					    {"Pentagon",		21},
 							{"Chrome", MACHINE_ID_CHROME},
 							{"TSConf", MACHINE_ID_TSCONF},
+
+
+                                            {"Spectrum +3 (ROM v4.0)",		MACHINE_ID_SPECTRUM_P3_40},
+                                            {"Spectrum +3 (ROM v4.1)",		MACHINE_ID_SPECTRUM_P3_41},
+                                            {"Spectrum +3 (Spanish)",		MACHINE_ID_SPECTRUM_P3_SPA},
+
+
                                             {"ZX-80",  				120},
                                             {"ZX-81",  				121},
 					    {"Jupiter Ace",  			122},
@@ -2388,7 +2399,12 @@ void set_machine_params(void)
 22=Chrome
 23=ZX-Evolution TS-Conf
 24=ZX-Evolution BaseConf (no implementado aun)
-25-29 Reservado (Spectrum)
+
+25=Amstrad +3 (ROM v4.0)
+26=Amstrad +3 (ROM v4.1)
+27=Amstrad +3 - Espa�ol
+
+28-29 Reservado (Spectrum)
 120=zx80 (old 20)
 121=zx81 (old 21)
 122=jupiter ace (old 22)
@@ -2597,6 +2613,10 @@ void set_machine_params(void)
 				ula_enable_pentagon_timing_no_common();
 			}
 
+			if (MACHINE_IS_SPECTRUM_P3) {
+				pd765_enable();
+				plus3dos_traps.v=1;
+			}
 
 		}
 
@@ -2890,16 +2910,14 @@ void set_machine_params(void)
                 ay_chip_present.v=1;
                 break;
 
+
+                //11=Amstrad +2A (ROM v4.0
                 case 11:
-                poke_byte=poke_byte_spectrum_128kp2a;
-                peek_byte=peek_byte_spectrum_128kp2a;
-		peek_byte_no_time=peek_byte_no_time_spectrum_128kp2a;
-		poke_byte_no_time=poke_byte_no_time_spectrum_128kp2a;
-                lee_puerto=lee_puerto_spectrum;
-                ay_chip_present.v=1;
-                break;
-
                 case 12:
+                case 13:
+                case MACHINE_ID_SPECTRUM_P3_40:
+                case MACHINE_ID_SPECTRUM_P3_41:
+                case MACHINE_ID_SPECTRUM_P3_SPA:
                 poke_byte=poke_byte_spectrum_128kp2a;
                 peek_byte=peek_byte_spectrum_128kp2a;
 		peek_byte_no_time=peek_byte_no_time_spectrum_128kp2a;
@@ -2908,6 +2926,17 @@ void set_machine_params(void)
                 ay_chip_present.v=1;
                 break;
 
+                //12=Amstrad +2A (ROM v4.1)
+                /*case 12:
+                poke_byte=poke_byte_spectrum_128kp2a;
+                peek_byte=peek_byte_spectrum_128kp2a;
+		peek_byte_no_time=peek_byte_no_time_spectrum_128kp2a;
+		poke_byte_no_time=poke_byte_no_time_spectrum_128kp2a;
+                lee_puerto=lee_puerto_spectrum;
+                ay_chip_present.v=1;
+                break;
+
+                //13=Amstrad +2A - Espa�ol
                 case 13:
                 poke_byte=poke_byte_spectrum_128kp2a;
                 peek_byte=peek_byte_spectrum_128kp2a;
@@ -2915,7 +2944,8 @@ void set_machine_params(void)
 		poke_byte_no_time=poke_byte_no_time_spectrum_128kp2a;
                 lee_puerto=lee_puerto_spectrum;
                 ay_chip_present.v=1;
-                break;
+                break;*/
+
 
                 case 14:
                 poke_byte=poke_byte_zxuno;
@@ -3490,14 +3520,19 @@ void rom_load(char *romfilename)
                 romfilename="p2s.rom";
                 break;
 
+
+
                 case 11:
+                case MACHINE_ID_SPECTRUM_P3_40:
                 romfilename="p2a40.rom";
                 break;
 
+                case MACHINE_ID_SPECTRUM_P3_41:
                 case 12:
                 romfilename="p2a41.rom";
                 break;
 
+                case MACHINE_ID_SPECTRUM_P3_SPA:
                 case 13:
                 romfilename="p2as.rom";
                 break;

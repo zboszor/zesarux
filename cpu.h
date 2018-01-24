@@ -331,6 +331,12 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 #define MACHINE_ID_TSCONF			23
 #define MACHINE_ID_BASECONF			24
 
+
+#define MACHINE_ID_SPECTRUM_P3_40		25
+#define MACHINE_ID_SPECTRUM_P3_41		26
+#define MACHINE_ID_SPECTRUM_P3_SPA		27
+
+
 #define MACHINE_ID_ZX80				120
 #define MACHINE_ID_ZX81				121
 #define MACHINE_ID_ACE				122
@@ -352,7 +358,11 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 #define MACHINE_IS_SPECTRUM_16_48 ( (current_machine_type<=MACHINE_ID_MICRODIGITAL_TK95) || MACHINE_IS_SPECTRUM_48_SPA )
 
 #define MACHINE_IS_SPECTRUM_128_P2 ( (current_machine_type>=MACHINE_ID_SPECTRUM_128 && current_machine_type<=MACHINE_ID_SPECTRUM_P2_SPA) || MACHINE_IS_PENTAGON)
-#define MACHINE_IS_SPECTRUM_P2A (current_machine_type>=MACHINE_ID_SPECTRUM_P2A_40 && current_machine_type<=MACHINE_ID_SPECTRUM_P2A_SPA)
+
+#define MACHINE_IS_SPECTRUM_P3 (current_machine_type==MACHINE_ID_SPECTRUM_P3_40 || current_machine_type==MACHINE_ID_SPECTRUM_P3_41 || current_machine_type==MACHINE_ID_SPECTRUM_P3_SPA)
+
+//Incluir en MACHINE_IS_SPECTRUM_P2A los P3, pues son lo mismo pero con disquetera
+#define MACHINE_IS_SPECTRUM_P2A ( (current_machine_type>=MACHINE_ID_SPECTRUM_P2A_40 && current_machine_type<=MACHINE_ID_SPECTRUM_P2A_SPA) || MACHINE_IS_SPECTRUM_P3)
 #define MACHINE_IS_SPECTRUM_128_P2_P2A ( MACHINE_IS_SPECTRUM_128_P2 || MACHINE_IS_SPECTRUM_P2A)
 
 #define MACHINE_IS_ZXUNO (current_machine_type==MACHINE_ID_ZXUNO)

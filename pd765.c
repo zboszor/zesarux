@@ -1285,6 +1285,8 @@ int traps_plus3dos_directentry(void)
 		break;
 
                  case 0x08f2:
+                 	//.l0121  jp      l08f2           ; DOS_FREE_SPACE
+                 	printf ("DOS_FREE_SPACE\n");
 		break;
 
                  case 0x0924:
@@ -1582,6 +1584,12 @@ EXIT CONDITIONS
 					printf ("-----DOS CATALOG\n");
 				break;
 
+				case 0x08f2:
+				case 289:
+				//.l0121  jp      l08f2           ; DOS_FREE_SPACE
+					printf ("-----DOS FREE SPACE\n");
+				break;
+
 				case 334:
 					printf ("-----DOS SET MESSAGE\n");
 				break;
@@ -1647,6 +1655,7 @@ ENTRY CONDITIONS
 				case 406:
 		                 case 0x212b:
                 		        printf ("-----DD_L_ON_MOTOR\n");
+                		        generic_footertext_print_operating("DISK");
 					traps_plus3dos_return_ok();
 				break;
                  		

@@ -1,6 +1,7 @@
 Version 6.1. 12 January 2018 - Xeno edition
 
 Added BetaDisk and TR-DOS emulation
+Added +3 Disk emulation
 Added Spectrum keyboard ghosting error feature
 Added ZX Spectrum Recreated keyboard support
 Added setting to exit emulator after a number of seconds (--exit-after)

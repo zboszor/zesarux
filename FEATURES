@@ -75,6 +75,8 @@
 
 -Handles DCK Timex dock cartridges
 
+-Emulates +3 Disk
+
 -Emulates Betadisk/TR-DOS
 
 -Emulates ZX Spectrum MMC Interfaces: ZXMMC, DivMMC

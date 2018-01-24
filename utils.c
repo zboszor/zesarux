@@ -446,7 +446,7 @@ int array_maquinas_microdigital_electronica[]={
 };
 
 int array_maquinas_amstrad[]={
-	8,9,10,11,12,13,140,255
+	8,9,10,11,12,13,MACHINE_ID_SPECTRUM_P3_40,MACHINE_ID_SPECTRUM_P3_41,MACHINE_ID_SPECTRUM_P3_SPA,140,255
 };
 
 int array_maquinas_jupiter_cantab[]={
@@ -606,6 +606,9 @@ int return_fabricante_maquina(int maquina)
 		case 11:
 		case 12:
 		case 13:
+		case MACHINE_ID_SPECTRUM_P3_40:
+		case MACHINE_ID_SPECTRUM_P3_41:
+		case MACHINE_ID_SPECTRUM_P3_SPA:
 		case 140:
 			return FABRICANTE_AMSTRAD;
 		break;
