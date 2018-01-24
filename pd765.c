@@ -947,7 +947,46 @@ int traps_plus3dos_getoff_start_track(int pista)
 int traps_plus3dos_getoff_track_sector(int pista,int sector)
 {
 	int iniciopista=traps_plus3dos_getoff_start_track(pista);
-	int sectorpista=iniciopista+512*sector;
+
+/*
+sectores van alternados:
+00000100  54 72 61 63 6b 2d 49 6e  66 6f 0d 0a 00 00 00 00  |Track-Info......|
+00000110  00 00 00 00 02 09 4e e5  00 00 c1 02 00 00 00 02  |......N.........|
+00000120  00 00 c6 02 00 00 00 02  00 00 c2 02 00 00 00 02  |................|
+00000130  00 00 c7 02 00 00 00 02  00 00 c3 02 00 00 00 02  |................|
+00000140  00 00 c8 02 00 00 00 02  00 00 c4 02 00 00 00 02  |................|
+00000150  00 00 c9 02 00 00 00 02  00 00 c5 02 00 00 00 02  |................|
+00000160  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+
+1,6,2,7,3,8
+
+
+0 1 2 3 4 5 6 7 8  
+0,5,1,6,2,7,3,8,4
+
+*/
+
+	//Sector 0 esta en posicion 0
+	//Sector 5 esta en posicion 1
+
+	//Sector 1 esta en posicion 2
+	//Sector 6 esta en posicion 3
+
+	//Sector 2 esta en posicion 4
+	//Sector 7 esta en posicion 5
+
+	//Sector 3 esta en posicion 6
+	//Sector 8 esta en posicion 7
+
+	//Sector 4 esta en posicion 8
+
+			    //0 1 2 3 4 5 6 7 8
+	int saltossectores[]={0,2,4,6,8,1,3,5,7};
+
+
+	int sectorfinal=saltossectores[sector];
+
+	int sectorpista=iniciopista+512*sectorfinal;
 
 	return sectorpista;
 }
@@ -1516,7 +1555,7 @@ ENTRY CONDITIONS
 	IX = Address of XDPB
 	*/		
 					traps_plus3dos_read_sector();
-					sleep(5);			
+					//sleep(5);			
 				break;
 			
 
