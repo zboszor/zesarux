@@ -925,6 +925,7 @@ EXIT CONDITIONS
                 All other registers preserved
 */
 
+	printf ("Seek to unit %d track %d\n",reg_c,reg_d);
 
 	traps_plus3dos_return_ok();
 }
@@ -956,11 +957,59 @@ EXIT CONDITIONS
                 BC DE IX corrupt
                 All other registers preserved
 
+Parece que es el sector info de los dsk:
+
+Track0
+00 00 c1 02 00 00 00 02  sector 0
+00 00 c2 02 00 00 00 02  sector 1
+...
+
+Track1
+01 00 c1 02 00 00 00 02  sector 0
+01 00 c2 02 00 00 00 02  sector 1
+...
+
 */
-
 	//???? Que retornar en A?
-	reg_a=0;
+	int sector=0;
+	printf ("READ ID: Unit: %d Track: %d\n",reg_c,reg_d);
 
+	z80_byte sector_id=0xc0 | (sector+1);
+
+	reg_a=sector_id;
+	reg_hl=49152; //??
+
+
+        int i=0;
+                        z80_byte *p;
+                p=ram_mem_table[7];
+
+
+                p[(reg_hl&16383)+i]=reg_d;
+		i++;
+
+                p[(reg_hl&16383)+i]=0;
+		i++;
+
+                p[(reg_hl&16383)+i]=sector_id;
+		i++;
+
+                p[(reg_hl&16383)+i]=2;
+		i++;
+
+                p[(reg_hl&16383)+i]=0;
+		i++;
+
+                p[(reg_hl&16383)+i]=0;
+		i++;
+
+                p[(reg_hl&16383)+i]=0;
+		i++;
+
+                p[(reg_hl&16383)+i]=2;
+		i++;
+
+	//Incrementar sector??? ni idea
 	traps_plus3dos_return_ok();
 }
 
@@ -1213,7 +1262,7 @@ void traps_plus3dos(void)
 		if (rom_entra==2 && traps_plus3dos_directentry() ) {
 			printf ("Direct entry point. reg_pc=%d %04xH\n",reg_pc,reg_pc);	
 			direct_entry=1;
-			sleep(1);
+			//sleep(1);
 		}
 
 		if (rom_entra==2 && 
