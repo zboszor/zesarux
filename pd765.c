@@ -118,6 +118,14 @@ int pdc_buffer_retorno_index=0;
 int dwstate=0,drstate=0;
 
 
+void pd765_debug_getstacktrace(int items)
+{
+	int i;
+                        for (i=0;i<items;i++) {
+                                z80_int valor=peek_byte_z80_moto(reg_sp+i*2)+256*peek_byte_z80_moto(reg_sp+1+i*2);
+                                printf ("%04XH ",valor);
+                        }
+}
 
 int pd765_get_index_memory(int indice)
 {
@@ -692,6 +700,9 @@ z80_byte pd765_read_status_register(void)
 
 
 	printf ("\nReading PD765 status register: return value 0x%02X PC=0x%04X\n",value,reg_pc);
+	printf ("Stack trace: ");
+	pd765_debug_getstacktrace(20);
+	printf ("\n");
 	//sleep(1);
 
 
@@ -1046,6 +1057,8 @@ int traps_plus3dos_directentry(void)
 		break;
 
                  case 0x1943:
+			printf ("DOS_MAP_B\n");
+			//.l0154  jp      l1943           ; DOS_MAP_B
 		break;
 
                  case 0x1f27:
@@ -1065,7 +1078,10 @@ int traps_plus3dos_directentry(void)
                  case 0x1e7c:
 		break;
 
+		case 0x197c:
                  case 0x1bff:
+			printf ("DD_READ_SECTOR\n");
+			//.l0163  jp      l1bff           ; DD_READ_SECTOR
 		break;
 
                  case 0x1c0d:
@@ -1096,9 +1112,13 @@ int traps_plus3dos_directentry(void)
 		break;
 
                  case 0x1edd:
+			printf ("DD_ASK_1\n");
+			//.l017b  jp      l1edd           ; DD_ASK_1
 		break;
 
                  case 0x1ee9:
+			printf ("DD_DRIVE_STATUS\n");
+			//.l017e  jp      l1ee9           ; DD_DRIVE_STATUS
 		break;
 
                  case 0x1e75:
@@ -1131,6 +1151,8 @@ int traps_plus3dos_directentry(void)
 		break;
 
                  case 0x2150:
+			printf ("DD_L_T_OFF_MOTOR\n");
+			//.l0199  jp      l2150           ; DD_L_T_OFF_MOTOR
 		break;
 
                  case 0x2164:
@@ -1252,6 +1274,7 @@ EXIT CONDITIONS
 				break;
 
 				case 355:
+				case 0x197c:
 				case 0x1bff:
 					printf ("-----DD READ SECTOR track %d sector %d buffer %d xdpb: %d\n",
 					reg_d,reg_e,reg_hl,reg_ix);	

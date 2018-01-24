@@ -218,7 +218,7 @@ void cpu_core_loop_spectrum(void)
 //
 //	Pruebas pd765
 //
-	traps_plus3dos();
+	//traps_plus3dos();
 
 
 //
