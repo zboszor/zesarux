@@ -8,6 +8,9 @@ Next: implementar features que faltan: video offset
 ZX-Uno: implementar features que faltan: radaspaloffset
 Mas utilidades de visor archivos: convertir?
 Formato zsf: completar para mas maquinas
+
+Estado emulacion pd765 (+3): puedo capturar las llamadas de apertura de archivos (DOS OPEN, etc) pero no llego a capturar
+las de lectura de sectores de disco. Por lo que puedo hacer una emulacion como el esxdos handler, pero no puedo emular mediante archivos .dsk
  
 
 --- Cosas para la version 6.1
