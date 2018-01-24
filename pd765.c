@@ -846,18 +846,95 @@ EXIT CONDITIONS
 	}
 }
 
+
+//ROM 2 4.0 direct entry points
+int traps_plus3dos_directentry(void)
+{
+	switch(reg_pc) {
+                 case 0x019f:
+			printf ("DOS_INITIALISE\n");
+		break;
+	
+                 case 0x01cd:
+                 case 0x062d:
+                 case 0x0740:
+                 case 0x0761:
+                 case 0x08b1:
+                 case 0x10ea:
+                 case 0x11fe:
+                 case 0x11a8:
+                 case 0x1298:
+                 case 0x0a19:
+                 case 0x08f2:
+                 case 0x0924:
+                 case 0x096f:
+                 case 0x1ace:
+                 case 0x090f:
+                 case 0x08fc:
+                 case 0x1070:
+                 case 0x108c:
+                 case 0x1079:
+                 case 0x01d8:
+                 case 0x01de:
+                 case 0x05c2:
+                 case 0x08c3:
+                 case 0x0959:
+                 case 0x0706:
+                 case 0x02e8:
+			printf ("DOS_SET_MESSAGE\n");
+		break;
+                 case 0x1847:
+                 case 0x1943:
+                 case 0x1f27:
+			printf ("DD_INTERFACE\n");
+		break;
+                 case 0x1f32:
+                 case 0x1f47:
+                 case 0x1e7c:
+                 case 0x1bff:
+                 case 0x1c0d:
+                 case 0x1c16:
+                 case 0x1c24:
+                 case 0x1c36:
+                 case 0x1e65:
+                 case 0x1c80:
+                 case 0x1cdb:
+                 case 0x1edd:
+                 case 0x1ee9:
+                 case 0x1e75:
+                 case 0x1bda:
+                 case 0x1cee:
+                 case 0x1d30:
+			printf ("DD_L_DPB\n");
+		break;
+
+                 case 0x1f76:
+                 case 0x20c3:
+                 case 0x20cc:
+                 case 0x212b:
+                 case 0x2150:
+                 case 0x2164:
+		 break;
+
+		default:
+			return 0;
+		break;
+	}
+
+	return 1;
+}
+
 void traps_plus3dos(void)
 {
 	if (MACHINE_IS_SPECTRUM_P2A) {
 		z80_byte rom_entra=((puerto_32765>>4)&1) + ((puerto_8189>>1)&2);
 
-		if (rom_entra==2 && reg_pc==0x1bff) {
-			printf ("READ SECTOR\n");
+		if (rom_entra==2 && traps_plus3dos_directentry() ) {
+			printf ("Direct entry point. reg_pc=%d %04xH\n",reg_pc,reg_pc);
 			sleep(2);
 		}
 
-		if (rom_entra==2 && (reg_pc==0x1bff || (reg_pc>=256 && reg_pc<=412))
-			) {
+		if (rom_entra==2 && reg_pc>=256 && reg_pc<=412) {
 			//Mostrar llamadas a PLUS3DOS
 
 
