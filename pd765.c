@@ -32,6 +32,7 @@
 #include "menu.h"
 #include "screen.h"
 #include "mem128.h"
+#include "operaciones.h"
 
 
 z80_bit pd765_enabled={0};
@@ -202,11 +203,20 @@ z80_bit dskplusthree_emulation={0};
 
 void dskplusthree_disable(void)
 {
+
+	if (dskplusthree_emulation.v==0) return;
+
+	debug_printf (VERBOSE_INFO,"Disabling DSK emulation");
+
 	dskplusthree_emulation.v=0;
 }
 
 void dskplusthree_enable(void)
 {
+
+	if (dskplusthree_emulation.v) return;
+
+	debug_printf (VERBOSE_INFO,"Enabling DSK emulation");
 
         FILE *ptr_dskfile;
         ptr_dskfile=fopen(dskplusthree_file_name,"rb");
@@ -228,6 +238,9 @@ void dskplusthree_enable(void)
 
 void pd765_enable(void)
 {
+
+	if (pd765_enabled.v) return;
+
 	debug_printf (VERBOSE_INFO,"Enabling PD765");
 	pd765_enabled.v=1;
 
@@ -238,6 +251,9 @@ void pd765_enable(void)
 
 void pd765_disable(void)
 {
+
+	if (pd765_enabled.v==0) return;
+
         debug_printf (VERBOSE_INFO,"Disabling PD765");
         pd765_enabled.v=0;
 }
@@ -372,7 +388,7 @@ void pd765_write_command(z80_byte value)
 		else {
 			printf ("\n\nUnknown command\n");
 			pd765_index_write_command=0; //Reseteamos a comando inicial
-			sleep(5);
+			//sleep(5);
 		}
 	}
 

@@ -34,10 +34,15 @@ extern void pd765_write_command(z80_byte value);
 extern z80_byte pd765_read_command(void);
 extern z80_byte pd765_read_status_register(void);
 
+extern void traps_plus3dos(void);
+
 extern z80_bit plus3dos_traps;
 
 extern char dskplusthree_file_name[];
 
 extern z80_bit dskplusthree_emulation;
+
+extern void dskplusthree_disable(void);
+extern void dskplusthree_enable(void);
 
 #endif

@@ -102,6 +102,7 @@
 #include "kartusho.h"
 #include "betadisk.h"
 #include "codetests.h"
+#include "pd765.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -2420,6 +2421,11 @@ void set_machine_params(void)
 		superupgrade_enabled.v=0;
 		kartusho_enabled.v=0;
 		betadisk_enabled.v=0;
+
+		plus3dos_traps.v=0;
+		pd765_enabled.v=0;
+		dskplusthree_emulation.v=0;
+
 		//nota: combiene que allow_write_rom.v sea 0 al desactivar superupgrade
 		//porque si estaba activo allow_write_rom.v antes, y desactivamos superupgrade,
 		//al intentar desactivar allow_write, se produce segmentation fault
