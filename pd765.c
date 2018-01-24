@@ -977,7 +977,7 @@ Track1
 	z80_byte sector_id=0xc0 | (sector+1);
 
 	reg_a=sector_id;
-	reg_hl=49152; //??
+	reg_hl=49152; 
 
 
         int i=0;
@@ -985,28 +985,28 @@ Track1
                 p=ram_mem_table[7];
 
 
-                p[(reg_hl&16383)+i]=reg_d;
+                p[i]=reg_d;
 		i++;
 
-                p[(reg_hl&16383)+i]=0;
+                p[i]=0;
 		i++;
 
-                p[(reg_hl&16383)+i]=sector_id;
+                p[i]=sector_id;
 		i++;
 
-                p[(reg_hl&16383)+i]=2;
+                p[i]=2;
 		i++;
 
-                p[(reg_hl&16383)+i]=0;
+                p[i]=0;
 		i++;
 
-                p[(reg_hl&16383)+i]=0;
+                p[i]=0;
 		i++;
 
-                p[(reg_hl&16383)+i]=0;
+                p[i]=0;
 		i++;
 
-                p[(reg_hl&16383)+i]=2;
+                p[i]=2;
 		i++;
 
 	//Incrementar sector??? ni idea
