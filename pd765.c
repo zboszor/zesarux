@@ -931,6 +931,150 @@ EXIT CONDITIONS
 }
 
 
+//9 sectores por pista, 512 bytes por sector
+
+int traps_plus3dos_getoff_start_trackinfo(int pista)
+{
+	return 0x100+pista*4864;
+}
+
+int traps_plus3dos_getoff_start_track(int pista)
+{
+	return traps_plus3dos_getoff_start_trackinfo(pista)+0x100;
+}
+
+
+int traps_plus3dos_getoff_track_sector(int pista,int sector)
+{
+	int iniciopista=traps_plus3dos_getoff_start_track(pista);
+	int sectorpista=iniciopista+512*sector;
+
+	return sectorpista;
+}
+
+void traps_poke_addr_page(z80_byte page,z80_int dir,z80_byte value)
+{
+
+        z80_byte *p;
+	int segmento=dir/16384;
+	if (dir<16384) return;
+
+	if (dir>49151) {
+		p=ram_mem_table[page];
+	}
+
+	else {
+		p=memory_paged[segmento];
+	}
+	
+
+        p[dir&16383]=value;
+
+}
+
+                                       
+void traps_plus3dos_read_sector(void)
+{
+
+/*
+
+
+DD READ SECTOR
+0163h (355)
+
+Read a sector.
+
+ENTRY CONDITIONS
+        B = Page for C000h (49152)...FFFFh (65535)
+        C = Unit (0/1)
+        D = Logical track, 0 base
+        E = Logical sector, 0 base
+        HL = Address of buffer
+        IX = Address of XDPB
+
+EXIT CONDITIONS
+        If OK:
+                Carry true
+                A corrupt
+        Otherwise:
+                Carry false
+                A = Error code
+        Always:
+                BC DE HL IX corrupt
+                All other registers preserved
+
+
+        */
+
+/*
+Formato DSK
+Primera pista:
+00000100  54 72 61 63 6b 2d 49 6e  66 6f 0d 0a 00 00 00 00  |Track-Info......|
+00000110  00 00 00 00 02 09 4e e5  00 00 c1 02 00 00 00 02  |......N.........|
+00000120  00 00 c6 02 00 00 00 02  00 00 c2 02 00 00 00 02  |................|
+00000130  00 00 c7 02 00 00 00 02  00 00 c3 02 00 00 00 02  |................|
+00000140  00 00 c8 02 00 00 00 02  00 00 c4 02 00 00 00 02  |................|
+00000150  00 00 c9 02 00 00 00 02  00 00 c5 02 00 00 00 02  |................|
+00000160  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000200  00 43 4f 4d 50 49 4c 45  52 c2 49 4e 00 00 00 80  |.COMPILER.IN....|
+
+
+Segunda pista:
+00001400  54 72 61 63 6b 2d 49 6e  66 6f 0d 0a 00 00 00 00  |Track-Info......|
+00001410  01 00 00 00 02 09 4e e5  01 00 c1 02 00 00 00 02  |......N.........|
+00001420  01 00 c6 02 00 00 00 02  01 00 c2 02 00 00 00 02  |................|
+00001430  01 00 c7 02 00 00 00 02  01 00 c3 02 00 00 00 02  |................|
+00001440  01 00 c8 02 00 00 00 02  01 00 c4 02 00 00 00 02  |................|
+00001450  01 00 c9 02 00 00 00 02  01 00 c5 02 00 00 00 02  |................|
+00001460  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00001700  60 ed 5b f7 a5 b7 ed 52  22 0a 60 2a 06 60 11 00  |`.[....R".`*.`..|
+00001710  60 19 ed 5b f5 a5 b7 ed  52 28 0f 38 0d 2a 06 60  |`..[....R(.8.*.`|
+
+
+Diferencia de bytes entre pistas: 1400h-100h=1300=4864
+
+
+Principio de pista, offset 0x18:
+
+offset 	description 	bytes
+00 	track (equivalent to C parameter in NEC765 commands) 	1
+01 	side (equivalent to H parameter in NEC765 commands) 	1
+02 	sector ID (equivalent to R parameter in NEC765 commands) 	1
+03 	sector size (equivalent to N parameter in NEC765 commands) 	1
+04 	FDC status register 1 (equivalent to NEC765 ST1 status register) 	1
+05 	FDC status register 2 (equivalent to NEC765 ST2 status register) 	1
+06 - 07 	notused (0) 	2
+
+Estos 8 bytes son los de read id
+
+
+ENTRY CONDITIONS
+        B = Page for C000h (49152)...FFFFh (65535)
+        C = Unit (0/1)
+        D = Logical track, 0 base
+        E = Logical sector, 0 base
+        HL = Address of buffer
+        IX = Address of XDPB
+
+*/
+
+
+	int iniciosector=traps_plus3dos_getoff_track_sector(reg_d,reg_e);
+
+
+        int i;
+	for (i=0;i<512;i++) {
+		z80_byte byte_leido=buffer_disco[iniciosector+i];
+		traps_poke_addr_page(reg_b,reg_hl+i,byte_leido);
+	}
+
+	traps_plus3dos_return_ok();
+
+}
+
+
 void traps_plus3dos_read_id(void)
 {
 
@@ -1371,7 +1515,7 @@ ENTRY CONDITIONS
 	HL = Address of buffer
 	IX = Address of XDPB
 	*/		
-					printf ("PLUS3DOS routine reg_pc=%d\n",reg_pc);
+					traps_plus3dos_read_sector();
 					sleep(5);			
 				break;
 			
@@ -1400,7 +1544,7 @@ ENTRY CONDITIONS
 				case 394:
 				case 0x1d30:
 					printf ("-----DD_L_DPB\n");
-					traps_plus3dos_dd_l_dpb();
+					//traps_plus3dos_dd_l_dpb();
 				break;
 
 
