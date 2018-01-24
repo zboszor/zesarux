@@ -81,6 +81,12 @@ z80_byte pdc_buffer_retorno[20000];
 int pdc_buffer_retorno_len=0;
 int pdc_buffer_retorno_index=0;
 
+z80_bit plus3dos_traps={0};
+
+
+char dskplusthree_file_name[PATH_MAX]="";
+
+
 #define kBusy 0x10
 #define kExec 0x20
 #define kIO 0x40
@@ -190,6 +196,36 @@ int contador_recallibrate_temp=0;
 //Se deberia inicializar a 128 al hacer reset
 z80_byte pd765_status_register=128;
 
+
+z80_bit dskplusthree_emulation={0};
+
+
+void dskplusthree_disable(void)
+{
+	dskplusthree_emulation.v=0;
+}
+
+void dskplusthree_enable(void)
+{
+
+        FILE *ptr_dskfile;
+        ptr_dskfile=fopen(dskplusthree_file_name,"rb");
+
+        if (!ptr_dskfile) {
+                debug_printf(VERBOSE_ERR,"Unable to open disk %s",dskplusthree_file_name);
+                return;
+        }
+
+        //int leidos=fread(buffer_disco,1,200000,ptr_configfile);
+        fread(buffer_disco,1,200000,ptr_dskfile);
+
+
+        fclose(ptr_dskfile);
+
+        dskplusthree_emulation.v=1;
+
+}
+
 void pd765_enable(void)
 {
 	debug_printf (VERBOSE_INFO,"Enabling PD765");
@@ -198,19 +234,6 @@ void pd765_enable(void)
 	//Leer disco de prueba
 
 
-        FILE *ptr_configfile;
-        ptr_configfile=fopen("disco.dsk","rb");
-
-        if (!ptr_configfile) {
-                debug_printf(VERBOSE_ERR,"Unable to open disco de prueba");
-                return;
-        }
-
-        //int leidos=fread(buffer_disco,1,200000,ptr_configfile);
-        fread(buffer_disco,1,200000,ptr_configfile);
-
-
-        fclose(ptr_configfile);
 }
 
 void pd765_disable(void)
@@ -1011,6 +1034,14 @@ void traps_poke_addr_page(z80_byte page,z80_int dir,z80_byte value)
 
 }
 
+
+z80_byte plus3dsk_get_byte_disk(int offset)
+{
+
+	if (dskplusthree_emulation.v==0) return 0;
+
+	else return buffer_disco[offset];
+}
                                        
 void traps_plus3dos_read_sector(void)
 {
@@ -1105,7 +1136,7 @@ ENTRY CONDITIONS
 
         int i;
 	for (i=0;i<512;i++) {
-		z80_byte byte_leido=buffer_disco[iniciosector+i];
+		z80_byte byte_leido=plus3dsk_get_byte_disk(iniciosector+i);
 		traps_poke_addr_page(reg_b,reg_hl+i,byte_leido);
 	}
 
@@ -1437,7 +1468,10 @@ int traps_plus3dos_directentry(void)
 
 void traps_plus3dos(void)
 {
-	if (MACHINE_IS_SPECTRUM_P2A) {
+
+	if (!MACHINE_IS_SPECTRUM_P2A) return;
+
+	
 		z80_byte rom_entra=((puerto_32765>>4)&1) + ((puerto_8189>>1)&2);
 
 		int direct_entry=0;
@@ -1628,5 +1662,5 @@ ENTRY CONDITIONS
 		}
 
 		if (direct_entry) printf ("\n");
-	}
+	
 }

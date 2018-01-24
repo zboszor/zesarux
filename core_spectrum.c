@@ -49,6 +49,7 @@
 #include "prism.h"
 #include "snap_rzx.h"
 #include "superupgrade.h"
+#include "pd765.h"
 
 #include "scrstdout.h"
 
@@ -215,15 +216,6 @@ void cpu_core_loop_spectrum(void)
 
 		timer_check_interrupt();
 
-//
-//	Pruebas pd765
-//
-	traps_plus3dos();
-
-
-//
-//	Fin pruebas pd765
-//		
 
 
 //#ifdef COMPILE_STDOUT
@@ -235,6 +227,8 @@ void cpu_core_loop_spectrum(void)
 //#endif
 		if (chardetect_detect_char_enabled.v) chardetect_detect_char();
 		if (chardetect_printchar_enabled.v) chardetect_printchar();
+
+		if (plus3dos_traps.v) traps_plus3dos();
 
 
 		//Gestionar autoload

@@ -676,6 +676,7 @@ int debug_new_visualmem_opcion_seleccionada=0;
 int audio_new_waveform_opcion_seleccionada=0;
 int audio_new_ayplayer_opcion_seleccionada=0;
 
+int plusthreedisk_opcion_seleccionada=0;
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
 z80_bit menu_splash_text_active;
@@ -15018,6 +15019,198 @@ void menu_esxdos_traps(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_storage_dskplusthree_file(MENU_ITEM_PARAMETERS)
+{
+
+	dskplusthree_disable();
+
+        char *filtros[2];
+
+        filtros[0]="dsk";
+        filtros[1]=0;
+
+        //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
+
+              //Obtenemos directorio de dskplusthree
+        //si no hay directorio, vamos a rutas predefinidas
+        if (dskplusthree_file_name[0]==0) menu_chdir_sharedfiles();
+
+        else {
+                char directorio[PATH_MAX];
+                util_get_dir(dskplusthree_file_name,directorio);
+                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+                //cambiamos a ese directorio, siempre que no sea nulo
+                if (directorio[0]!=0) {
+                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+                        menu_filesel_chdir(directorio);
+                }
+        }
+
+
+        int ret=menu_filesel("Select DSK File",filtros,dskplusthree_file_name);
+        //volvemos a directorio inicial
+        menu_filesel_chdir(directorio_actual);
+
+        if (ret==1) {
+
+		if (!si_existe_archivo(dskplusthree_file_name)) {
+
+			menu_warn_message("File does not exist");
+			return;
+
+			/*if (menu_confirm_yesno_texto("File does not exist","Create?")==0) {
+                                dskplusthree_file_name[0]=0;
+                                return;
+                        }*/
+
+
+			//Crear archivo vacio
+		        FILE *ptr_dskplusthreefile;
+			ptr_dskplusthreefile=fopen(dskplusthree_file_name,"wb");
+
+		        long int totalsize=640*1024;
+			
+			z80_byte valor_grabar=0;
+
+		        if (ptr_dskplusthreefile!=NULL) {
+				while (totalsize) {
+					fwrite(&valor_grabar,1,1,ptr_dskplusthreefile);
+					totalsize--;
+				}
+		                fclose(ptr_dskplusthreefile);
+		        }
+
+		}
+
+		dskplusthree_enable();
+		
+
+
+        }
+        //Sale con ESC
+        else {
+                //Quitar nombre
+                dskplusthree_file_name[0]=0;
+
+
+        }
+}
+
+void menu_storage_plusthreedisk_traps(MENU_ITEM_PARAMETERS)
+{
+	plus3dos_traps.v ^=1;
+}
+
+
+void menu_plusthreedisk_pd765(MENU_ITEM_PARAMETERS)
+{
+        if (pd765_enabled.v) pd765_disable();
+	else pd765_enable();
+}
+
+int menu_storage_dskplusthree_emulation_cond(void)
+{
+        if (dskplusthree_file_name[0]==0) return 0;
+        else return 1;
+}
+
+
+void menu_storage_dskplusthree_emulation(MENU_ITEM_PARAMETERS)
+{
+	if (dskplusthree_emulation.v==0) dskplusthree_enable();
+	else dskplusthree_disable();
+}
+
+void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_plusthreedisk;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+
+
+        	char string_dskplusthree_file_shown[17];
+						
+
+			menu_tape_settings_trunc_name(dskplusthree_file_name,string_dskplusthree_file_shown,17);
+                        menu_add_item_menu_inicial_format(&array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_file,NULL,"~~DSK File: %s",string_dskplusthree_file_shown);
+                        menu_add_item_menu_shortcut(array_menu_plusthreedisk,'d');
+                        menu_add_item_menu_tooltip(array_menu_plusthreedisk,"DSK Emulation file");
+                        menu_add_item_menu_ayuda(array_menu_plusthreedisk,"DSK Emulation file");
+
+
+                        menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_emulation,
+                        	menu_storage_dskplusthree_emulation_cond,"DSK ~~Emulation: %s", (dskplusthree_emulation.v ? "Yes" : "No"));
+                        menu_add_item_menu_shortcut(array_menu_plusthreedisk,'e');
+                        menu_add_item_menu_tooltip(array_menu_plusthreedisk,"DSK Emulation");
+                        menu_add_item_menu_ayuda(array_menu_plusthreedisk,"DSK Emulation");
+
+/*
+			menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_write_protect,NULL,"~~Write protect: %s", (dskplusthree_write_protection.v ? "Yes" : "No"));
+			menu_add_item_menu_shortcut(array_menu_plusthreedisk,'w');
+                        menu_add_item_menu_tooltip(array_menu_plusthreedisk,"If DSK disk is write protected");
+                        menu_add_item_menu_ayuda(array_menu_plusthreedisk,"If DSK disk is write protected");
+
+
+                        menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_persistent_writes,NULL,"Persistent Writes: %s",(dskplusthree_persistent_writes.v ? "Yes" : "No") );
+			menu_add_item_menu_tooltip(array_menu_plusthreedisk,"Tells if DSK writes are saved to disk");
+			menu_add_item_menu_ayuda(array_menu_plusthreedisk,"Tells if DSK writes are saved to disk. "
+			"Note: all writing operations to DSK are always saved to internal memory (unless you disable write permission), but this setting "
+			"tells if these changes are written to disk or not."
+			);
+
+
+
+                        menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_browser,menu_storage_dskplusthree_emulation_cond,"DSK B~~rowser");
+                        menu_add_item_menu_shortcut(array_menu_plusthreedisk,'b');
+                        menu_add_item_menu_tooltip(array_menu_plusthreedisk,"DSK Browser");
+                        menu_add_item_menu_ayuda(array_menu_plusthreedisk,"DSK Browser");
+
+*/
+
+                       
+
+
+                        menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_plusthreedisk_traps,NULL,"~~PLUS3DOS Traps: %s", (plus3dos_traps.v ? "Yes" : "No"));
+                        menu_add_item_menu_shortcut(array_menu_plusthreedisk,'k');
+                        menu_add_item_menu_tooltip(array_menu_plusthreedisk,"Enable plusthreedisk");
+                        menu_add_item_menu_ayuda(array_menu_plusthreedisk,"Enable plusthreedisk");
+
+
+                        menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_plusthreedisk_pd765,NULL,"PD765 enabled: %s",(pd765_enabled.v ? "Yes" : "No") );
+
+
+                        
+                                menu_add_item_menu(array_menu_plusthreedisk,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+                menu_add_ESC_item(array_menu_plusthreedisk);
+
+                retorno_menu=menu_dibuja_menu(&plusthreedisk_opcion_seleccionada,&item_seleccionado,array_menu_plusthreedisk,"+3 Disk" );
+
+                cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+}
+
+
+
 //menu storage settings
 void menu_storage_settings(MENU_ITEM_PARAMETERS)
 {
@@ -15122,13 +15315,18 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
+		if (MACHINE_IS_SPECTRUM_P2A) {
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_plusthreedisk,NULL,"+3 Disk");
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"+3 Disk emulation");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"+3 Disk emulation");
+		}
+
 		if (MACHINE_IS_SPECTRUM) {
                         menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_betadisk,NULL,"~~Betadisk");
                         menu_add_item_menu_shortcut(array_menu_storage_settings,'b');
                         menu_add_item_menu_tooltip(array_menu_storage_settings,"Betadisk settings");
                         menu_add_item_menu_ayuda(array_menu_storage_settings,"Betadisk settings");
 		}
-
 
 
 		if (MACHINE_IS_SPECTRUM) {
@@ -15968,11 +16166,7 @@ void menu_hardware_sam_ram(MENU_ITEM_PARAMETERS)
 	else sam_memoria_total_mascara=15;
 }
 
-void menu_pd765(MENU_ITEM_PARAMETERS)
-{
-        if (pd765_enabled.v) pd765_disable();
-	else pd765_enable();
-}
+
 
 void menu_turbo_mode(MENU_ITEM_PARAMETERS)
 {
@@ -16554,11 +16748,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		//De momento no activo
-		if (MACHINE_IS_SPECTRUM_P2A) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_pd765,NULL,"PD765 enabled: %s",(pd765_enabled.v ? "Yes" : "No") );
-		}
-		
+			
 
 
 		if (!MACHINE_IS_Z88) {
