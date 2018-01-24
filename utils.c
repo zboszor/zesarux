@@ -7647,6 +7647,9 @@ int get_machine_id_by_name(char *machine_name)
                                 else if (!strcasecmp(machine_name,"Pentagon")) return_machine=21;
                                 else if (!strcasecmp(machine_name,"Chrome")) return_machine=MACHINE_ID_CHROME;
                                 else if (!strcasecmp(machine_name,"TSConf")) return_machine=MACHINE_ID_TSCONF;
+                                else if (!strcasecmp(machine_name,"P340")) return_machine=MACHINE_ID_SPECTRUM_P3_40;
+                                else if (!strcasecmp(machine_name,"P341")) return_machine=MACHINE_ID_SPECTRUM_P3_41;
+                                else if (!strcasecmp(machine_name,"P3S")) return_machine=MACHINE_ID_SPECTRUM_P3_SPA;
                                 else if (!strcasecmp(machine_name,"ZX80")) return_machine=120;
                                 else if (!strcasecmp(machine_name,"ZX81")) return_machine=121;
                                 else if (!strcasecmp(machine_name,"ACE")) return_machine=122;
@@ -7778,6 +7781,19 @@ break;
 
 case MACHINE_ID_TSCONF:
 strcpy(machine_name,"TSConf");
+break;
+
+
+case MACHINE_ID_SPECTRUM_P3_40:
+strcpy(machine_name,"P340");
+break;
+
+case MACHINE_ID_SPECTRUM_P3_41:
+strcpy(machine_name,"P341");
+break;
+
+case MACHINE_ID_SPECTRUM_P3_SPA:
+strcpy(machine_name,"P3S");
 break;
 
 case 120:
