@@ -310,6 +310,7 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen);
 void menu_file_mmc_browser_show(char *filename,char *tipo_imagen);
 void menu_file_viewer_read_file(char *title,char *file_name);
 void menu_file_viewer_read_text_file(char *title,char *file_name);
+void menu_file_dsk_browser_show(char *filename);
 
 
 //si hay recuadro activo, y cuales son sus coordenadas y color
@@ -15130,6 +15131,12 @@ void menu_storage_dskplusthree_emulation(MENU_ITEM_PARAMETERS)
 	else dskplusthree_disable();
 }
 
+
+void menu_storage_dskplusthree_browser(MENU_ITEM_PARAMETERS)
+{
+	menu_file_dsk_browser_show(dskplusthree_file_name);
+}
+
 void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_plusthreedisk;
@@ -15155,6 +15162,12 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_shortcut(array_menu_plusthreedisk,'e');
                         menu_add_item_menu_tooltip(array_menu_plusthreedisk,"DSK Emulation");
                         menu_add_item_menu_ayuda(array_menu_plusthreedisk,"DSK Emulation");
+
+
+                        menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_browser,menu_storage_dskplusthree_emulation_cond,"DSK B~~rowser");
+                        menu_add_item_menu_shortcut(array_menu_plusthreedisk,'b');
+                        menu_add_item_menu_tooltip(array_menu_plusthreedisk,"DSK Browser");
+                        menu_add_item_menu_ayuda(array_menu_plusthreedisk,"DSK Browser");
 
 /*
 			menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_write_protect,NULL,"~~Write protect: %s", (dskplusthree_write_protection.v ? "Yes" : "No"));
@@ -18271,6 +18284,158 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 	free(trd_file_memory);
 
 }
+
+
+
+void menu_file_dsk_browser_show(char *filename)
+{
+
+
+	int tamanyo_dsk_entry=32;
+
+	int max_entradas_dsk=16;
+
+	//Asignamos para 16 entradas
+	//int bytes_to_load=tamanyo_dsk_entry*max_entradas_dsk;
+
+	//Leemos 4kb. esto permite leer el directorio 
+	int bytes_to_load=4096;
+
+	z80_byte *dsk_file_memory;
+	dsk_file_memory=malloc(bytes_to_load);
+	if (dsk_file_memory==NULL) {
+		debug_printf(VERBOSE_ERR,"Unable to assign memory");
+		return;
+	}
+	
+	//Leemos archivo dsk
+        FILE *ptr_file_dsk_browser;
+        ptr_file_dsk_browser=fopen(filename,"rb");
+
+        if (!ptr_file_dsk_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		free(dsk_file_memory);
+		return;
+	}
+
+
+        int leidos=fread(dsk_file_memory,1,bytes_to_load,ptr_file_dsk_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+        fclose(ptr_file_dsk_browser);
+
+
+        
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+#define MAX_TEXTO_BROWSER 8192
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	
+
+
+ 	sprintf(buffer_texto,"DSK disk image");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+/*
+00000000  45 58 54 45 4e 44 45 44  20 43 50 43 20 44 53 4b  |EXTENDED CPC DSK|
+00000010  20 46 69 6c 65 0d 0a 44  69 73 6b 2d 49 6e 66 6f  | File..Disk-Info|
+00000020  0d 0a 43 50 44 52 65 61  64 20 76 33 2e 32 34 00  |..CPDRead v3.24.|
+00000030  2d 01 00 00 13 13 13 13  13 13 13 13 13 13 13 13  |-...............|
+00000040  13 13 13 13 13 13 13 13  13 13 13 13 13 13 13 13  |................|
+00000050  13 13 13 13 13 13 13 13  13 13 13 13 00 00 00 00  |................|
+00000060  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000100  54 72 61 63 6b 2d 49 6e  66 6f 0d 0a 00 00 00 00  |Track-Info......|
+00000110  00 00 00 00 02 09 4e e5  00 00 c1 02 00 00 00 02  |......N.........|
+00000120  00 00 c6 02 00 00 00 02  00 00 c2 02 00 00 00 02  |................|
+00000130  00 00 c7 02 00 00 00 02  00 00 c3 02 00 00 00 02  |................|
+00000140  00 00 c8 02 00 00 00 02  00 00 c4 02 00 00 00 02  |................|
+00000150  00 00 c9 02 00 00 00 02  00 00 c5 02 00 00 00 02  |................|
+00000160  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+00000200  00 43 4f 4d 50 49 4c 45  52 c2 49 4e 00 00 00 80  |.COMPILER.IN....|
+00000210  02 03 04 05 06 07 08 09  0a 0b 0c 0d 0e 0f 10 11  |................|
+00000220  00 43 4f 4d 50 49 4c 45  52 c2 49 4e 01 00 00 59  |.COMPILER.IN...Y|
+00000230  12 13 14 15 16 17 18 19  1a 1b 1c 1d 00 00 00 00  |................|
+00000240  00 4b 49 54 31 32 38 4c  44 c2 49 4e 00 00 00 03  |.KIT128LD.IN....|
+00000250  1e 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+00000260  00 4b 49 54 31 32 38 20  20 c2 49 4e 00 00 00 80  |.KIT128  .IN....|
+00000270  1f 20 21 22 23 24 25 26  27 28 29 2a 2b 2c 2d 2e  |. !"#$%&'()*+,-.|
+00000280  00 4b 49 54 31 32 38 20  20 c2 49 4e 01 00 00 59  |.KIT128  .IN...Y|
+*/
+
+	//La extension es de 1 byte
+
+
+	/*
+        sprintf(buffer_texto,"DSK Label: %s",dsk_label);
+        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+	sprintf(buffer_texto,"Free sectors on disk: %d",dsk_file_memory[start_track_8+229]+256*dsk_file_memory[start_track_8+230]);
+        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);*/
+
+ 	sprintf(buffer_texto,"Disk information:");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	util_binary_to_ascii(&dsk_file_memory[0], buffer_texto, 34, 34);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+ 	sprintf(buffer_texto,"\nCreator:");
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	util_binary_to_ascii(&dsk_file_memory[0x22], buffer_texto, 14, 14);
+
+	sprintf(buffer_texto,"\nTracks: %d",dsk_file_memory[0x30]);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+	sprintf(buffer_texto,"Sides: %d",dsk_file_memory[0x31]);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);	
+
+
+        sprintf(buffer_texto,"\nFirst PLUS3 entries:");
+        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+
+	int puntero,i;
+	puntero=0x201;
+
+	for (i=0;i<max_entradas_dsk;i++) {
+
+		menu_file_mmc_browser_show_file(&dsk_file_memory[puntero],buffer_texto,1,11);
+		if (buffer_texto[0]!='?') {
+			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+		}
+
+		puntero +=tamanyo_dsk_entry;	
+	}
+	
+
+
+	texto_browser[indice_buffer]=0;
+
+
+	menu_generic_message_tooltip("DSK file browser", 0, 0, 1, NULL, "%s", texto_browser);
+
+
+	free(dsk_file_memory);
+
+}
+
 
 
 void menu_file_zsf_browser_show(char *filename)
@@ -21946,6 +22111,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"ide")) menu_file_mmc_browser_show(file_name,"IDE");
 
 	else if (!util_compare_file_extension(file_name,"trd")) menu_file_trd_browser_show(file_name,"TRD");
+
+	else if (!util_compare_file_extension(file_name,"dsk")) menu_file_dsk_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"tzx")) menu_file_tzx_browser_show(file_name);
 
