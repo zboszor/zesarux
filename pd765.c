@@ -1049,7 +1049,7 @@ sectores van alternados:
 	for (pista=0;pista<traps_plus3dos_pistas;pista++) {
 		int iniciopista=traps_plus3dos_getoff_start_trackinfo(pista);
 		//saltar 0x18
-		iniciopista +=8;
+		iniciopista +=0x18;
 
 		for (sector=0;sector<traps_plus3dos_sect_pista;sector++) {
 			int offset_tabla_sector=sector*8; 
