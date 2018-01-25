@@ -986,29 +986,43 @@ EXIT CONDITIONS
 }
 
 
+int traps_plus3dos_pistas=40;
 int traps_plus3dos_sect_pista=9;
 int traps_plus3dos_bytes_sector=512;
 
 //9 sectores por pista, 512 bytes por sector
 
-int traps_plus3dos_getoff_start_trackinfo(int pista)
+int traps_plus3dos_getoff_start_trackinfo(int pista_lineal)
 {
 	int traps_plus3dos_dsk_trackstep=(traps_plus3dos_bytes_sector*traps_plus3dos_sect_pista)+256;
 
-	return 0x100+pista*traps_plus3dos_dsk_trackstep;
+	return 0x100+pista_lineal*traps_plus3dos_dsk_trackstep;
 }
 
-int traps_plus3dos_getoff_start_track(int pista)
+int traps_plus3dos_getoff_start_track(int pista_lineal)
 {
-	return traps_plus3dos_getoff_start_trackinfo(pista)+0x100;
+	return traps_plus3dos_getoff_start_trackinfo(pista_lineal)+0x100;
 }
 
 
-
-//Retorna el offset al dsk segun la pista y sector dados
-int traps_plus3dos_getoff_track_sector(int pista,int sector)
+z80_byte plus3dsk_get_byte_disk(int offset)
 {
-	int iniciopista=traps_plus3dos_getoff_start_track(pista);
+
+        if (dskplusthree_emulation.v==0) return 0;
+
+        if (offset>=p3dsk_buffer_disco_size) {
+                debug_printf (VERBOSE_ERR,"Error. Trying to read beyond dsk. Size: %d Asked: %d. Disabling MMC",p3dsk_buffer_disco_size,offset);
+                dskplusthree_disable();
+                return 0;
+        }
+
+
+        return p3dsk_buffer_disco[offset];
+}
+
+//Retorna el offset al dsk segun la pista y sector dados (ambos desde 0...)
+int traps_plus3dos_getoff_track_sector(int pista_buscar,int sector_buscar)
+{
 
 /*
 sectores van alternados:
@@ -1028,6 +1042,42 @@ sectores van alternados:
 
 */
 
+	int pista;
+	int sector;
+
+	//Buscamos en todo el archivo dsk
+	for (pista=0;pista<traps_plus3dos_pistas;pista++) {
+		int iniciopista=traps_plus3dos_getoff_start_trackinfo(pista);
+		//saltar 0x18
+		iniciopista +=8;
+
+		for (sector=0;sector<traps_plus3dos_sect_pista;sector++) {
+			int offset_tabla_sector=sector*8; 
+			z80_byte pista_id=plus3dsk_get_byte_disk(iniciopista+offset_tabla_sector); //Leemos pista id
+			z80_byte sector_id=plus3dsk_get_byte_disk(iniciopista+offset_tabla_sector+2); //Leemos c1, c2, etc
+			sector_id &=0xF;
+
+			sector_id--;  //empiezan en 1...
+
+			if (pista_id==pista_buscar && sector_id==sector_buscar) {
+				printf ("Found sector %d/%d at %d/%d\n",pista_buscar,sector_buscar,pista,sector);
+		                int offset=traps_plus3dos_getoff_start_track(pista);
+
+                		//int iniciopista=traps_plus3dos_getoff_start_track(pista);
+		                return offset+traps_plus3dos_bytes_sector*sector;
+			}
+
+		}
+	}
+
+	printf ("Not found sector %d/%d",pista_buscar,sector_buscar);	
+	//TODO
+	//de momento retornamos offset fuera de rango
+	return MAX_BUFFER_DISCO;
+
+
+	//Old
+
 	//Sector 0 esta en posicion 0
 	//Sector 5 esta en posicion 1
 
@@ -1041,6 +1091,7 @@ sectores van alternados:
 	//Sector 8 esta en posicion 7
 
 	//Sector 4 esta en posicion 8
+/*
 
 			    //0 1 2 3 4 5 6 7 8
 	int saltossectores[]={0,2,4,6,8,1,3,5,7};
@@ -1051,6 +1102,7 @@ sectores van alternados:
 	int sectorpista=iniciopista+512*sectorfinal;
 
 	return sectorpista;
+*/
 }
 
 void traps_poke_addr_page(z80_byte page,z80_int dir,z80_byte value)
@@ -1074,20 +1126,6 @@ void traps_poke_addr_page(z80_byte page,z80_int dir,z80_byte value)
 }
 
 
-z80_byte plus3dsk_get_byte_disk(int offset)
-{
-
-	if (dskplusthree_emulation.v==0) return 0;
-
-	if (offset>=p3dsk_buffer_disco_size) {
-		debug_printf (VERBOSE_ERR,"Error. Trying to read beyond dsk. Size: %d Asked: %d. Disabling MMC",p3dsk_buffer_disco_size,offset);
-		dskplusthree_disable();
-                return 0;
-	}
-
-
-	return p3dsk_buffer_disco[offset];
-}
                                        
 void traps_plus3dos_read_sector(void)
 {
