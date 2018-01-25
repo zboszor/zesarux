@@ -76,7 +76,9 @@ z80_byte pd765_gpl=0;
 z80_byte pd765_dtl=0;
 
 
-z80_byte buffer_disco[200000];
+#define MAX_BUFFER_DISCO 200000
+z80_byte p3dsk_buffer_disco[200000];
+int p3dsk_buffer_disco_size=MAX_BUFFER_DISCO; //Tamanyo del dsk leido. De momento establecemos en maximo
 
 z80_byte pdc_buffer_retorno[20000];
 int pdc_buffer_retorno_len=0;
@@ -176,14 +178,14 @@ void pd765_read_sector(int indice_destino)
 
 	//copiamos 512 bytes
 
-//z80_byte buffer_disco[200000];
+//z80_byte p3dsk_buffer_disco[200000];
 
 //z80_byte pdc_buffer_retorno[20000];
 
 	int i;
 	z80_byte byte_leido;
 	for (i=0;i<512;i++) {
-		byte_leido=buffer_disco[offset++];
+		byte_leido=p3dsk_buffer_disco[offset++];
 		pdc_buffer_retorno[indice_destino++]=byte_leido;
 	}
 
@@ -226,8 +228,8 @@ void dskplusthree_enable(void)
                 return;
         }
 
-        //int leidos=fread(buffer_disco,1,200000,ptr_configfile);
-        fread(buffer_disco,1,200000,ptr_dskfile);
+        //int leidos=fread(p3dsk_buffer_disco,1,200000,ptr_configfile);
+        fread(p3dsk_buffer_disco,1,MAX_BUFFER_DISCO,ptr_dskfile);
 
 
         fclose(ptr_dskfile);
@@ -675,7 +677,7 @@ z80_byte pd765_read_command(void)
 						//Devolver datos de disco
 						//value=temp_leer_dato++;
 						value=pd765_get_disk_value(pd765_read_byte_index);
-						//return pd765_buffer_disco[pd765_read_byte_index];
+						//return pd765_p3dsk_buffer_disco[pd765_read_byte_index];
 						pd765_read_byte_index++;
 						
 					}
@@ -786,6 +788,20 @@ Para poder llegar aqui
 Que sentido tiene que ST0 valga BF???
 O es por culpa del PCN que vale 0???
 */
+
+
+
+
+
+//
+//
+// A partir de aqui nuevo codigo para hacer traps en plus3dos
+// El codigo anterior del pd765 no funciona del todo bien, pese a que las funciones principales de retornar disco ok, seek y demas paracen funcionar
+//
+//
+
+
+
 
 void traps_plus3dos_return(void)
 {
@@ -970,11 +986,16 @@ EXIT CONDITIONS
 }
 
 
+int traps_plus3dos_sect_pista=9;
+int traps_plus3dos_bytes_sector=512;
+
 //9 sectores por pista, 512 bytes por sector
 
 int traps_plus3dos_getoff_start_trackinfo(int pista)
 {
-	return 0x100+pista*4864;
+	int traps_plus3dos_dsk_trackstep=(traps_plus3dos_bytes_sector*traps_plus3dos_sect_pista)+256;
+
+	return 0x100+pista*traps_plus3dos_dsk_trackstep;
 }
 
 int traps_plus3dos_getoff_start_track(int pista)
@@ -983,6 +1004,8 @@ int traps_plus3dos_getoff_start_track(int pista)
 }
 
 
+
+//Retorna el offset al dsk segun la pista y sector dados
 int traps_plus3dos_getoff_track_sector(int pista,int sector)
 {
 	int iniciopista=traps_plus3dos_getoff_start_track(pista);
@@ -1056,7 +1079,14 @@ z80_byte plus3dsk_get_byte_disk(int offset)
 
 	if (dskplusthree_emulation.v==0) return 0;
 
-	else return buffer_disco[offset];
+	if (offset>=p3dsk_buffer_disco_size) {
+		debug_printf (VERBOSE_ERR,"Error. Trying to read beyond dsk. Size: %d Asked: %d. Disabling MMC",p3dsk_buffer_disco_size,offset);
+		dskplusthree_disable();
+                return 0;
+	}
+
+
+	return p3dsk_buffer_disco[offset];
 }
                                        
 void traps_plus3dos_read_sector(void)
