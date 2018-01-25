@@ -1045,13 +1045,20 @@ sectores van alternados:
 	int pista;
 	int sector;
 
+	int iniciopista_orig=256;
+
 	//Buscamos en todo el archivo dsk
 	for (pista=0;pista<traps_plus3dos_pistas;pista++) {
-		int iniciopista=traps_plus3dos_getoff_start_trackinfo(pista);
+
+		int sectores_en_pista=plus3dsk_get_byte_disk(iniciopista_orig+0x15);
+		printf ("Iniciopista: %XH (%d). Sectores en pista %d: %d\n",iniciopista_orig,iniciopista_orig,pista,sectores_en_pista);
+
+		//int iniciopista_orig=traps_plus3dos_getoff_start_trackinfo(pista);
+		int iniciopista=iniciopista_orig;
 		//saltar 0x18
 		iniciopista +=0x18;
 
-		for (sector=0;sector<traps_plus3dos_sect_pista;sector++) {
+		for (sector=0;sector<sectores_en_pista;sector++) {
 			int offset_tabla_sector=sector*8; 
 			z80_byte pista_id=plus3dsk_get_byte_disk(iniciopista+offset_tabla_sector); //Leemos pista id
 			z80_byte sector_id=plus3dsk_get_byte_disk(iniciopista+offset_tabla_sector+2); //Leemos c1, c2, etc
@@ -1061,13 +1068,17 @@ sectores van alternados:
 
 			if (pista_id==pista_buscar && sector_id==sector_buscar) {
 				printf ("Found sector %d/%d at %d/%d\n",pista_buscar,sector_buscar,pista,sector);
-		                int offset=traps_plus3dos_getoff_start_track(pista);
+		                //int offset=traps_plus3dos_getoff_start_track(pista);
+		                int offset=iniciopista_orig+256;
 
                 		//int iniciopista=traps_plus3dos_getoff_start_track(pista);
 		                return offset+traps_plus3dos_bytes_sector*sector;
 			}
 
 		}
+
+		iniciopista_orig +=256;
+		iniciopista_orig +=traps_plus3dos_bytes_sector*sectores_en_pista;
 	}
 
 	printf ("Not found sector %d/%d",pista_buscar,sector_buscar);	
