@@ -1051,7 +1051,7 @@ sectores van alternados:
 	for (pista=0;pista<traps_plus3dos_pistas;pista++) {
 
 		int sectores_en_pista=plus3dsk_get_byte_disk(iniciopista_orig+0x15);
-		printf ("Iniciopista: %XH (%d). Sectores en pista %d: %d\n",iniciopista_orig,iniciopista_orig,pista,sectores_en_pista);
+		printf ("Iniciopista: %XH (%d). Sectores en pista %d: %d. IDS pista:  ",iniciopista_orig,iniciopista_orig,pista,sectores_en_pista);
 
 		//int iniciopista_orig=traps_plus3dos_getoff_start_trackinfo(pista);
 		int iniciopista=iniciopista_orig;
@@ -1062,6 +1062,9 @@ sectores van alternados:
 			int offset_tabla_sector=sector*8; 
 			z80_byte pista_id=plus3dsk_get_byte_disk(iniciopista+offset_tabla_sector); //Leemos pista id
 			z80_byte sector_id=plus3dsk_get_byte_disk(iniciopista+offset_tabla_sector+2); //Leemos c1, c2, etc
+
+			printf ("%02X ",sector_id);
+
 			sector_id &=0xF;
 
 			sector_id--;  //empiezan en 1...
@@ -1076,6 +1079,8 @@ sectores van alternados:
 			}
 
 		}
+
+		printf ("\n");
 
 		iniciopista_orig +=256;
 		iniciopista_orig +=traps_plus3dos_bytes_sector*sectores_en_pista;
