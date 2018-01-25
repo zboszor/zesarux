@@ -7701,6 +7701,7 @@ G  G   R   R   B   B
 			//spectrum_colortable_normal=(int *)spectrum_colortable_original;
 			int i;
 			for (i=0;i<16;i++) {
+				debug_printf(VERBOSE_DEBUG,"Initializing Standard Spectrum Color. Index: %i  Value: %06XH",i,spectrum_colortable_original[i]);
 				screen_set_colour_normal(i,spectrum_colortable_original[i]);
 			}
 
@@ -7718,17 +7719,20 @@ G  G   R   R   B   B
 			int color32;
 			for (i=0;i<256;i++) {
 				color32=ulaplus_rgb_table[i];
+				debug_printf(VERBOSE_DEBUG,"Initializing ULAPlus Color. Index: %i  Value: %06XH",i,color32);
 				screen_set_colour_normal(ULAPLUS_INDEX_FIRST_COLOR+i, color32);
 			}
 
 			//Colores spectra
                         for (i=0;i<64;i++) {
+                        	debug_printf(VERBOSE_DEBUG,"Initializing Spectra Color. Index: %i  Value: %06XH",i,spectra_colortable_original[i]);
                                 screen_set_colour_normal(SPECTRA_INDEX_FIRST_COLOR+i,spectra_colortable_original[i]);
                         }
 
 			//Colores CPC
 			for (i=0;i<32;i++) {
                                 color32=cpc_rgb_table[i];
+                                debug_printf(VERBOSE_DEBUG,"Initializing CPC Color. Index: %i  Value: %06XH",i,color32);
                                 screen_set_colour_normal(CPC_INDEX_FIRST_COLOR+i, color32);
                         }
 

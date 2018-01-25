@@ -14077,7 +14077,7 @@ menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
 
 
 
-                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_browser,menu_storage_trd_emulation_cond,"TRD B~~rowser");
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_browser,menu_storage_trd_emulation_cond,"TRD ~~Browser");
                         menu_add_item_menu_shortcut(array_menu_betadisk,'b');
                         menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Browser");
                         menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Browser");
@@ -14402,7 +14402,7 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 			"tells if these changes are written to disk or not."
 			);
 
-  			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_browser,menu_storage_mmc_emulation_cond,"MMC B~~rowser");
+  			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_browser,menu_storage_mmc_emulation_cond,"MMC ~~Browser");
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'b');
                         menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"MMC Browser");
                         menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"MMC Browser");
@@ -14743,7 +14743,7 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 			);
 
 
-			menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_browser,menu_storage_ide_emulation_cond,"IDE B~~rowser");
+			menu_add_item_menu_format(array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_browser,menu_storage_ide_emulation_cond,"IDE ~~Browser");
                         menu_add_item_menu_shortcut(array_menu_ide_divide,'b');
                         menu_add_item_menu_tooltip(array_menu_ide_divide,"IDE Browser");
                         menu_add_item_menu_ayuda(array_menu_ide_divide,"IDE Browser");
@@ -15164,7 +15164,7 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_plusthreedisk,"DSK Emulation");
 
 
-                        menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_browser,menu_storage_dskplusthree_emulation_cond,"DSK B~~rowser");
+                        menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_browser,menu_storage_dskplusthree_emulation_cond,"DSK ~~Browser");
                         menu_add_item_menu_shortcut(array_menu_plusthreedisk,'b');
                         menu_add_item_menu_tooltip(array_menu_plusthreedisk,"DSK Browser");
                         menu_add_item_menu_ayuda(array_menu_plusthreedisk,"DSK Browser");
