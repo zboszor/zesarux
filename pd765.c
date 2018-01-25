@@ -264,7 +264,8 @@ void pd765_disable(void)
 void pd765_motor_on(void)
 {
 	if (pd765_motor.v==0) {
-		menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_DISK,1,"DISK",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+		//menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_DISK,1,"DISK",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+		generic_footertext_print_operating("DISK");
 		pd765_motor.v=1;
 	}
 }
@@ -272,7 +273,7 @@ void pd765_motor_on(void)
 void pd765_motor_off(void)
 {
 	if (pd765_motor.v) {
-		menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_DISK,1,"    ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+		//menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_DISK,1,"    ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 		pd765_motor.v=0;
 	}
 }
