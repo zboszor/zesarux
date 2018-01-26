@@ -355,7 +355,13 @@ void trd_insert(void)
 
 	trd_memory_pointer=malloc(TRD_FILE_SIZE);
 
+
+        if (trd_memory_pointer==NULL) {
+                cpu_panic ("No enough memory for TRD emulation");
+        }
+
         FILE *ptr_trdfile;
+	debug_printf (VERBOSE_INFO,"Opening TRD File %s",trd_file_name);
 	ptr_trdfile=fopen(trd_file_name,"rb");
 
         if (!ptr_trdfile) {
@@ -586,6 +592,9 @@ void betadisk_disable(void)
 
 void trd_enable(void)
 {
+
+	if (trd_enabled.v) return;
+
         debug_printf (VERBOSE_INFO,"Enabling trd");
         trd_enabled.v=1;
 
@@ -596,9 +605,12 @@ void trd_enable(void)
 
 void trd_disable(void)
 {
+	if (trd_enabled.v==0) return;
 
 
+        debug_printf (VERBOSE_INFO,"Disabling trd");
         trd_enabled.v=0;
+	free(trd_memory_pointer);
 
 
 }

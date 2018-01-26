@@ -219,6 +219,7 @@ void dskplusthree_enable(void)
 	if (dskplusthree_emulation.v) return;
 
 	debug_printf (VERBOSE_INFO,"Enabling DSK emulation");
+	debug_printf (VERBOSE_INFO,"Opening DSK File %s",dskplusthree_file_name);
 
 	long int tamanyo=get_file_size(dskplusthree_file_name);
 
