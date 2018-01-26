@@ -1451,6 +1451,8 @@ int traps_plus3dos_directentry(void)
 		break;
 
                  case 0x1c0d:
+			//.l0166  jp      l1c0d           ; DD_WRITE_SECTOR
+			printf ("DD_WRITE_SECTOR\n");
 		break;
 
                  case 0x1c16:
@@ -1765,6 +1767,14 @@ ENTRY CONDITIONS
 		                case 0x1be9:
                 		        printf ("-----Undocumented Subroutine to read A bytes from a sector\n");
 		                break;
+
+
+//.l0166  jp      l1c0d           ; DD_WRITE_SECTOR
+				case 358:
+				case 0x1c0d:
+					printf ("-----DD_WRITE_SECTOR\n");
+				break;
+
 			}
 
 			printf ("\n\n");
