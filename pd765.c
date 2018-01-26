@@ -75,8 +75,8 @@ z80_byte pd765_eot=0;
 z80_byte pd765_gpl=0;
 z80_byte pd765_dtl=0;
 
-
-#define MAX_BUFFER_DISCO 200000
+//Ejemplo metal action:  214784 14 sep  2000 Metal Action 1 - Side A.dsk
+#define MAX_BUFFER_DISCO 214784
 z80_byte p3dsk_buffer_disco[MAX_BUFFER_DISCO];
 int p3dsk_buffer_disco_size=MAX_BUFFER_DISCO; //Tamanyo del dsk leido. De momento establecemos en maximo
 

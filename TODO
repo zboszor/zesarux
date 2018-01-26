@@ -9,22 +9,7 @@ ZX-Uno: implementar features que faltan: radaspaloffset
 Mas utilidades de visor archivos: convertir?
 Formato zsf: completar para mas maquinas
 
--+3: funcionan :
 
-3d kit disco 1
-
-zigurat software:
-autocrash
-carlos sainz
-gp f1
-jungle warrior
-senda salvaje
-sito pons
-
-
-al cambiar funcion de busqueda sectores: ahora busca sector id de cada sector:
-emilio sanchez vicario: usa sectores consecutivos
-paris dakar: NO va, pero veo que usa sectores consecutivos tambien (a partir de pista 1)
  
 
 --- Cosas para la version 6.1
@@ -78,6 +63,8 @@ overlay y todo queda por encima del texto del osd
 
 -quiza compilar sin soporte libsssl en linux
 
+-menu char size afecta a dibujado de pantalla en zx8081 sin realvideo
+
 -probar speech, stdout driver con menu tabulado
 
 -Alternativa en los menús tabulares tipo como el de sprites o colores, que usan cursores y pgup y down
@@ -85,14 +72,11 @@ overlay y todo queda por encima del texto del osd
 -agregar un handler especial para esas teclas. Pero entonces como se mueve uno por los ítems? Con tecla tab?
 Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En menú tabular, el tab sale?
 
--Offset Paleta modo radastan
 
 -Funcion genérico leer archivo y asignar memoria para browsers
 
 -spectrum .basic browser ? pero la mayoría están dentro de taps
 
--demo tslabs
-http://forum.tslabs.info/viewtopic.php?f=24&t=785
 
 -Recreated Keyboard en Linux con fbdev
 
@@ -106,6 +90,24 @@ http://forum.tslabs.info/viewtopic.php?f=24&t=785
 
 -Config sinclair1/2 interface 2 joystick está bien? Ver página wos joystick
 
+
+-+3: funcionan :
+
+3d kit disco 1
+
+zigurat software:
+autocrash
+carlos sainz
+gp f1
+jungle warrior
+senda salvaje
+sito pons
+
+
+al cambiar funcion de busqueda sectores: ahora busca sector id de cada sector:
+emilio sanchez vicario: usa sectores consecutivos
+paris dakar: NO va, pero veo que usa sectores consecutivos tambien (a partir de pista 1)
+drazen petrovic basket
 
 
 -Quizá resetear puntero escritura latencia siempre que carga, graba, etc
