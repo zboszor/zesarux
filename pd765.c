@@ -1351,12 +1351,14 @@ void traps_plus3dos(void)
 
 				case 256:
 					printf ("-----DOS INITIALISE\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					//traps_plus3dos_return_ok();
 				break;
 
 				case 0x062d:
 				case 262:
 					printf ("-----DOS OPEN\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					/*
 						If file newly created:
 		Carry true
@@ -1376,17 +1378,20 @@ void traps_plus3dos(void)
 				case 0x0740:
 				case 265:
 					printf ("-----DOS CLOSE\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					//traps_plus3dos_return_ok();
 				break;
 
 				case 0x0761:
 				case 268:
 					printf ("-----DOS ABANDON\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					//traps_plus3dos_return_ok();
 				break;
 
 				case 271:
 					printf ("-----DOS REF HEAD\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 /*
 EXIT CONDITIONS
 	If OK, but file doesn't have a header:
@@ -1413,6 +1418,7 @@ EXIT CONDITIONS
 
 				case 274:
 					printf ("-----DOS READ. Address: %d Lenght: %d\n",reg_hl,reg_de);
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					
 					//traps_plus3dos_handle_dos_read();
 					//traps_plus3dos_return_ok();
@@ -1420,20 +1426,24 @@ EXIT CONDITIONS
 
 				case 286:
 					printf ("-----DOS CATALOG\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 				break;
 
 				case 0x08f2:
 				case 289:
 				//.l0121  jp      l08f2           ; DOS_FREE_SPACE
 					printf ("-----DOS FREE SPACE\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 				break;
 
 				case 334:
 					printf ("-----DOS SET MESSAGE\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 				break;
 
 				case 340:
 					printf ("-----DOS MAP B\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 				break;
 
 				case 355:
@@ -1441,6 +1451,7 @@ EXIT CONDITIONS
 				case 0x1bff:
 					printf ("-----DD READ SECTOR track %d sector %d buffer %d xdpb: %d\n",
 					reg_d,reg_e,reg_hl,reg_ix);	
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 /*
 ENTRY CONDITIONS
 	B = Page for C000h (49152)...FFFFh (65535)
@@ -1457,10 +1468,12 @@ ENTRY CONDITIONS
 
 				case 349:
 					printf ("-----DD SETUP\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 				break;
 
 				case 346:
 					printf ("-----DD INIT\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					//traps_plus3dos_return_ok();
 				break;
 			
@@ -1468,17 +1481,20 @@ ENTRY CONDITIONS
 				case 0x1f27:
 				case 343:
 					printf ("-----DD INTERFACE\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					//traps_plus3dos_return_ok();
 				break;
 			
 				case 379:
 					printf ("-----DD ASK 1\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					//traps_plus3dos_return_error();
 				break;
 
 				case 394:
 				case 0x1d30:
 					printf ("-----DD_L_DPB\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					//traps_plus3dos_dd_l_dpb();
 				break;
 
@@ -1486,6 +1502,7 @@ ENTRY CONDITIONS
 				case 397:
 				case 0x1f76:
 					printf ("-----DD_L_SEEK\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					traps_plus3dos_dd_l_seek();
 				break;
 
@@ -1493,6 +1510,7 @@ ENTRY CONDITIONS
 				case 406:
 		                 case 0x212b:
                 		        printf ("-----DD_L_ON_MOTOR\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
                 		        generic_footertext_print_operating("DISK");
 					traps_plus3dos_return_ok();
 				break;
@@ -1500,23 +1518,27 @@ ENTRY CONDITIONS
 				case 367:
 				case 0x1c36:
 					printf ("-----DD_READ_ID\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					traps_plus3dos_read_id();
 				break;
 
 
 		                case 0x2114:
                 		        printf ("-----Undocumented Wait FD & Output\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					traps_plus3dos_return();
 		                break;
 
 		                case 0x206f:
 		                        printf ("-----Undocumented Wait FDC ready for new command\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					traps_plus3dos_return();
 				break;
 
 
 		                case 0x1be9:
                 		        printf ("-----Undocumented Subroutine to read A bytes from a sector\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 		                break;
 
 
@@ -1525,6 +1547,7 @@ ENTRY CONDITIONS
 				case 0x1982:
 				case 0x1c0d:
 					printf ("-----DD_WRITE_SECTOR\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 				break;
 
 
@@ -1532,6 +1555,7 @@ ENTRY CONDITIONS
 				case 370:
 				case 0x1e65:
 					printf ("-----DD_TEST_UNSUITABLE\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					traps_plus3dos_return_ok();
 				break;
 
@@ -1540,13 +1564,15 @@ ENTRY CONDITIONS
 				case 364:
 				case 0x1c24:
 					printf ("-----DD_FORMAT\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 					traps_plus3dos_return_ok();
 				break;
 
 
 
                  case 0x019f:
-			printf ("DOS_INITIALISE\n");
+			printf ("-----DOS_INITIALISE\n");
+					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 		break;
 
                  case 0x01cd:
@@ -1616,24 +1642,28 @@ ENTRY CONDITIONS
 		break;
 
                  case 0x02e8:
-			printf ("DOS_SET_MESSAGE\n");
+			printf ("-----DOS_SET_MESSAGE\n");
+			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 		break;
                  case 0x1847:
 		break;
 
                  case 0x1943:
-			printf ("DOS_MAP_B\n");
+			printf ("-----DOS_MAP_B\n");
+			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 			//.l0154  jp      l1943           ; DOS_MAP_B
 		break;
 
 
                  case 0x1f32:
-			printf ("DD_INIT\n");
+			printf ("-----DD_INIT\n");
+			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 			//.l015a  jp      l1f32           ; DD_INIT
 		break;
 
                  case 0x1f47:
-			printf ("DD_SETUP\n");
+			printf ("-----DD_SETUP\n");
+			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 			//.l015d  jp      l1f47           ; DD_SETUP
 		break;
 
@@ -1646,22 +1676,26 @@ ENTRY CONDITIONS
 
 
                  case 0x1c80:
-			printf ("DD_LOGIN\n");
+			printf ("-----DD_LOGIN\n");
+			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 			//.l0175  jp      l1c80           ; DD_LOGIN
 		break;
 
                  case 0x1cdb:
-			printf ("DD_SEL_FORMAT\n");
+			printf ("-----DD_SEL_FORMAT\n");
+			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 			//.l0178  jp      l1cdb           ; DD_SEL_FORMAT
 		break;
 
                  case 0x1edd:
-			printf ("DD_ASK_1\n");
+			printf ("-----DD_ASK_1\n");
+			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 			//.l017b  jp      l1edd           ; DD_ASK_1
 		break;
 
                  case 0x1ee9:
-			printf ("DD_DRIVE_STATUS\n");
+			printf ("-----DD_DRIVE_STATUS\n");
+			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 			//.l017e  jp      l1ee9           ; DD_DRIVE_STATUS
 		break;
 
@@ -1672,7 +1706,8 @@ ENTRY CONDITIONS
 		break;
 
                  case 0x1cee:
-			printf ("DD_L_XDPB\n");
+			printf ("-----DD_L_XDPB\n");
+			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 			//.l0187  jp      l1cee           ; DD_L_XDPB
 		break;
 
@@ -1684,12 +1719,14 @@ ENTRY CONDITIONS
 		break;
 
                  case 0x2150:
-			printf ("DD_L_T_OFF_MOTOR\n");
+			printf ("-----DD_L_T_OFF_MOTOR\n");
+			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 			//.l0199  jp      l2150           ; DD_L_T_OFF_MOTOR
 		break;
 
                  case 0x2164:
-			printf ("DD_L_OFF_MOTOR\n");
+			printf ("-----DD_L_OFF_MOTOR\n");
+			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
 			//.l019c  jp      l2164           ; DD_L_OFF_MOTOR
 		 break;
 
@@ -1705,7 +1742,7 @@ ENTRY CONDITIONS
 
 		}
 
-			if (estrap) printf ("\n\n");
+			if (estrap) printf ("PLUS3DOS call. After trap table: reg_pc=%d %04xH\n\n",reg_pc,reg_pc);
 			//sleep(1);
 		}
 
