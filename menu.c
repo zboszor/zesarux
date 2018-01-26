@@ -15137,6 +15137,11 @@ void menu_storage_dskplusthree_browser(MENU_ITEM_PARAMETERS)
 	menu_file_dsk_browser_show(dskplusthree_file_name);
 }
 
+void menu_storage_dsk_write_protect(MENU_ITEM_PARAMETERS)
+{	
+	dskplusthree_write_protection.v ^=1;
+}	
+
 void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_plusthreedisk;
@@ -15162,6 +15167,12 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_shortcut(array_menu_plusthreedisk,'e');
                         menu_add_item_menu_tooltip(array_menu_plusthreedisk,"DSK Emulation");
                         menu_add_item_menu_ayuda(array_menu_plusthreedisk,"DSK Emulation");
+
+
+			menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dsk_write_protect,NULL,"~~Write protect: %s", (dskplusthree_write_protection.v ? "Yes" : "No"));
+                        menu_add_item_menu_shortcut(array_menu_plusthreedisk,'w');
+                        menu_add_item_menu_tooltip(array_menu_plusthreedisk,"If DSK disk is write protected");
+                        menu_add_item_menu_ayuda(array_menu_plusthreedisk,"If DSK disk is write protected");
 
 
                         menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_browser,menu_storage_dskplusthree_emulation_cond,"DSK ~~Browser");

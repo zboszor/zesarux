@@ -1604,12 +1604,16 @@ ENTRY CONDITIONS
 		                case 0x2114:
                 		        printf ("-----Undocumented Wait FD & Output\n");
 					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+
+					//realizando traps_plus3dos_return las lecturas funcionan pero write_sector no se llama nunca
 					//traps_plus3dos_return();
 		                break;
 
 		                case 0x206f:
 		                        printf ("-----Undocumented Wait FDC ready for new command\n");
 					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+
+					//realizando traps_plus3dos_return las lecturas funcionan pero write_sector no se llama nunca
 					//traps_plus3dos_return();
 				break;
 
@@ -1626,7 +1630,7 @@ ENTRY CONDITIONS
 				case 0x1c0d:
 					printf ("-----DD_WRITE_SECTOR\n");
 					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
-					sleep(2);
+					//sleep(2);
 					traps_plus3dos_write_sector();
 				break;
 

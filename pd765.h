@@ -45,4 +45,6 @@ extern z80_bit dskplusthree_emulation;
 extern void dskplusthree_disable(void);
 extern void dskplusthree_enable(void);
 
+extern z80_bit dskplusthree_write_protection;
+
 #endif
