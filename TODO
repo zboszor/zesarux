@@ -108,6 +108,7 @@ al cambiar funcion de busqueda sectores: ahora busca sector id de cada sector:
 emilio sanchez vicario: usa sectores consecutivos
 paris dakar: NO va, pero veo que usa sectores consecutivos tambien (a partir de pista 1)
 drazen petrovic basket
+night hunter. aunque luego no carga la cara b
 
 
 -Quizá resetear puntero escritura latencia siempre que carga, graba, etc
@@ -117,6 +118,7 @@ deberia verse bien, pues se usan funciones de putchar igual que en menu. si real
 
 -Intentar reproducir click inicial metiendo pausa expresamente. E intentar que solo haga ajuste de buffer cuando haya algo en dicho buffer 
 
+-autoload en +3 de cinta no va, seguramente porque al tener un dsk insertado, la rutina salta diferente (o le envia el enter antes)
 
 -Menú utilidades archivos
 Convertir archivo
