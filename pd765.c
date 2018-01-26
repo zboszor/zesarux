@@ -1459,6 +1459,8 @@ int traps_plus3dos_directentry(void)
 		break;
 
                  case 0x1c24:
+//l016c  jp      l1c24           ; DD_FORMAT
+			printf ("DD_FORMAT\n");
 		break;
 
                  case 0x1c36:
@@ -1467,6 +1469,8 @@ int traps_plus3dos_directentry(void)
 		break;
 
                  case 0x1e65:
+			//.l0172  jp      l1e65           ; DD_TEST_UNSUITABLE
+			printf ("DD_TEST_UNSUITABLE\n");
 		break;
 
                  case 0x1c80:
@@ -1581,7 +1585,9 @@ void traps_plus3dos(void)
 
 		int direct_entry=0;
 
-		if (rom_entra==2 && traps_plus3dos_directentry() ) {
+		if (rom_entra!=2) return;
+
+		if (traps_plus3dos_directentry() ) {
 			printf ("Direct entry point. reg_pc=%d %04xH\n",reg_pc,reg_pc);	
 			direct_entry=1;
 			//sleep(1);
@@ -1593,7 +1599,7 @@ void traps_plus3dos(void)
 
 			) {
 			//Mostrar llamadas a PLUS3DOS
-			printf ("PLUS3DOS routine reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			if (reg_pc>=256 && reg_pc<=412) printf ("PLUS3DOS routine jump table entry start. reg_pc=%d %04xH\n",reg_pc,reg_pc);
 
 
 			switch (reg_pc) {
@@ -1773,6 +1779,22 @@ ENTRY CONDITIONS
 				case 358:
 				case 0x1c0d:
 					printf ("-----DD_WRITE_SECTOR\n");
+				break;
+
+
+//.l0172  jp      l1e65           ; DD_TEST_UNSUITABLE
+				case 370:
+				case 0x1e65:
+					printf ("-----DD_TEST_UNSUITABLE\n");
+					traps_plus3dos_return_ok();
+				break;
+
+
+//l016c  jp      l1c24           ; DD_FORMAT
+				case 364:
+				case 0x1c24:
+					printf ("-----DD_FORMAT\n");
+					traps_plus3dos_return_ok();
 				break;
 
 			}
