@@ -1328,252 +1328,6 @@ Track1
 	traps_plus3dos_return_ok();
 }
 
-//ROM 2 4.0 direct entry points
-int traps_plus3dos_directentry(void)
-{
-	switch(reg_pc) {
-                 case 0x019f:
-			printf ("DOS_INITIALISE\n");
-		break;
-	
-                 case 0x01cd:
-		break;
-
-                 case 0x062d:
-			printf ("DOS_OPEN\n");
-		break;
-
-                 case 0x0740:
-			printf ("DOS_CLOSE\n");
-		break;
-
-                 case 0x0761:
-			printf ("DOS_ABANDON\n");
-		break;
-
-                 case 0x08b1:
-		break;
-
-                 case 0x10ea:
-		break;
-
-                 case 0x11fe:
-		break;
-
-                 case 0x11a8:
-		break;
-
-                 case 0x1298:
-		break;
-
-                 case 0x0a19:
-		break;
-
-                 case 0x08f2:
-                 	//.l0121  jp      l08f2           ; DOS_FREE_SPACE
-                 	printf ("DOS_FREE_SPACE\n");
-		break;
-
-                 case 0x0924:
-		break;
-
-                 case 0x096f:
-		break;
-
-                 case 0x1ace:
-		break;
-
-                 case 0x090f:
-		break;
-
-                 case 0x08fc:
-		break;
-
-                 case 0x1070:
-		break;
-
-                 case 0x108c:
-		break;
-
-                 case 0x1079:
-		break;
-
-                 case 0x01d8:
-		break;
-
-                 case 0x01de:
-		break;
-
-                 case 0x05c2:
-		break;
-
-                 case 0x08c3:
-		break;
-
-                 case 0x0959:
-		break;
-
-                 case 0x0706:
-		break;
-
-                 case 0x02e8:
-			printf ("DOS_SET_MESSAGE\n");
-		break;
-                 case 0x1847:
-		break;
-
-                 case 0x1943:
-			printf ("DOS_MAP_B\n");
-			//.l0154  jp      l1943           ; DOS_MAP_B
-		break;
-
-                 case 0x1f27:
-			printf ("DD_INTERFACE\n");
-		break;
-
-                 case 0x1f32:
-			printf ("DD_INIT\n");
-			//.l015a  jp      l1f32           ; DD_INIT
-		break;
-
-                 case 0x1f47:
-			printf ("DD_SETUP\n");
-			//.l015d  jp      l1f47           ; DD_SETUP
-		break;
-
-                 case 0x1e7c:
-		break;
-
-		case 0x197c:
-                 case 0x1bff:
-			printf ("DD_READ_SECTOR\n");
-			//.l0163  jp      l1bff           ; DD_READ_SECTOR
-		break;
-
-                 case 0x1c0d:
-			//.l0166  jp      l1c0d           ; DD_WRITE_SECTOR
-			printf ("DD_WRITE_SECTOR\n");
-		break;
-
-                 case 0x1c16:
-		break;
-
-                 case 0x1c24:
-//l016c  jp      l1c24           ; DD_FORMAT
-			printf ("DD_FORMAT\n");
-		break;
-
-                 case 0x1c36:
-			printf ("DD_READ_ID\n");
-			//.l016f  jp      l1c36           ; DD_READ_ID
-		break;
-
-                 case 0x1e65:
-			//.l0172  jp      l1e65           ; DD_TEST_UNSUITABLE
-			printf ("DD_TEST_UNSUITABLE\n");
-		break;
-
-                 case 0x1c80:
-			printf ("DD_LOGIN\n");
-			//.l0175  jp      l1c80           ; DD_LOGIN
-		break;
-
-                 case 0x1cdb:
-			printf ("DD_SEL_FORMAT\n");
-			//.l0178  jp      l1cdb           ; DD_SEL_FORMAT
-		break;
-
-                 case 0x1edd:
-			printf ("DD_ASK_1\n");
-			//.l017b  jp      l1edd           ; DD_ASK_1
-		break;
-
-                 case 0x1ee9:
-			printf ("DD_DRIVE_STATUS\n");
-			//.l017e  jp      l1ee9           ; DD_DRIVE_STATUS
-		break;
-
-                 case 0x1e75:
-		break;
-
-                 case 0x1bda:
-		break;
-
-                 case 0x1cee:
-			printf ("DD_L_XDPB\n");
-			//.l0187  jp      l1cee           ; DD_L_XDPB
-		break;
-
-                 case 0x1d30:
-			printf ("DD_L_DPB\n");
-		break;
-
-                 case 0x1f76:
-			printf ("DD_L_SEEK\n");
-		break;
-
-                 case 0x20c3:
-		break;
-
-                 case 0x20cc:
-		break;
-
-                 case 0x212b:
-			printf ("DD_L_ON_MOTOR\n");
-		break;
-
-                 case 0x2150:
-			printf ("DD_L_T_OFF_MOTOR\n");
-			//.l0199  jp      l2150           ; DD_L_T_OFF_MOTOR
-		break;
-
-                 case 0x2164:
-			printf ("DD_L_OFF_MOTOR\n");
-			//.l019c  jp      l2164           ; DD_L_OFF_MOTOR
-		 break;
-
-
-
-	/*
-; Subroutine to wait for FD ready & ouput A to data register if
-; controller wants input
-
-.l2114  push    de
-	*/
-		case 0x2114:
-			printf ("Undocumented Wait FD & Output\n");
-		break;
-
-/*
-; Subroutine to wait until FDC ready for new command
-
-.l206f  push    hl
-*/
-
-		case 0x206f:
-			printf ("Undocumented Wait FDC ready for new command\n");
-		break;
-
-
-/*
-; Subroutine to read A bytes from a sector
-
-.l1be9  push    af
-        call    l1b5b           ; setup parameter block for sector read
-        pop     af
-*/
-
-		case 0x1be9:
-			printf ("Undocumented Subroutine to read A bytes from a sector\n");
-		break;
-
-		default:
-			return 0;
-		break;
-	}
-
-	return 1;
-}
 
 void traps_plus3dos(void)
 {
@@ -1583,23 +1337,14 @@ void traps_plus3dos(void)
 	
 		z80_byte rom_entra=((puerto_32765>>4)&1) + ((puerto_8189>>1)&2);
 
-		int direct_entry=0;
-
 		if (rom_entra!=2) return;
 
-		if (traps_plus3dos_directentry() ) {
-			printf ("Direct entry point. reg_pc=%d %04xH\n",reg_pc,reg_pc);	
-			direct_entry=1;
-			//sleep(1);
-		}
+		if (1) {
 
-		if (rom_entra==2 && 
-			( (reg_pc>=256 && reg_pc<=412) || direct_entry) 
-
-
-			) {
 			//Mostrar llamadas a PLUS3DOS
 			if (reg_pc>=256 && reg_pc<=412) printf ("PLUS3DOS routine jump table entry start. reg_pc=%d %04xH\n",reg_pc,reg_pc);
+
+			int estrap=1;
 
 
 			switch (reg_pc) {
@@ -1797,12 +1542,171 @@ ENTRY CONDITIONS
 					traps_plus3dos_return_ok();
 				break;
 
-			}
 
-			printf ("\n\n");
+
+                 case 0x019f:
+			printf ("DOS_INITIALISE\n");
+		break;
+
+                 case 0x01cd:
+		break;
+
+
+
+
+                 case 0x08b1:
+		break;
+
+                 case 0x10ea:
+		break;
+
+                 case 0x11fe:
+		break;
+
+                 case 0x11a8:
+		break;
+
+                 case 0x1298:
+		break;
+
+                 case 0x0a19:
+		break;
+
+                 case 0x0924:
+		break;
+
+                 case 0x096f:
+		break;
+
+                 case 0x1ace:
+		break;
+
+                 case 0x090f:
+		break;
+
+                 case 0x08fc:
+		break;
+
+                 case 0x1070:
+		break;
+
+                 case 0x108c:
+		break;
+
+                 case 0x1079:
+		break;
+
+                 case 0x01d8:
+		break;
+
+                 case 0x01de:
+		break;
+
+                 case 0x05c2:
+		break;
+
+                 case 0x08c3:
+		break;
+
+                 case 0x0959:
+		break;
+
+                 case 0x0706:
+		break;
+
+                 case 0x02e8:
+			printf ("DOS_SET_MESSAGE\n");
+		break;
+                 case 0x1847:
+		break;
+
+                 case 0x1943:
+			printf ("DOS_MAP_B\n");
+			//.l0154  jp      l1943           ; DOS_MAP_B
+		break;
+
+
+                 case 0x1f32:
+			printf ("DD_INIT\n");
+			//.l015a  jp      l1f32           ; DD_INIT
+		break;
+
+                 case 0x1f47:
+			printf ("DD_SETUP\n");
+			//.l015d  jp      l1f47           ; DD_SETUP
+		break;
+
+                 case 0x1e7c:
+		break;
+
+
+                 case 0x1c16:
+		break;
+
+
+                 case 0x1c80:
+			printf ("DD_LOGIN\n");
+			//.l0175  jp      l1c80           ; DD_LOGIN
+		break;
+
+                 case 0x1cdb:
+			printf ("DD_SEL_FORMAT\n");
+			//.l0178  jp      l1cdb           ; DD_SEL_FORMAT
+		break;
+
+                 case 0x1edd:
+			printf ("DD_ASK_1\n");
+			//.l017b  jp      l1edd           ; DD_ASK_1
+		break;
+
+                 case 0x1ee9:
+			printf ("DD_DRIVE_STATUS\n");
+			//.l017e  jp      l1ee9           ; DD_DRIVE_STATUS
+		break;
+
+                 case 0x1e75:
+		break;
+
+                 case 0x1bda:
+		break;
+
+                 case 0x1cee:
+			printf ("DD_L_XDPB\n");
+			//.l0187  jp      l1cee           ; DD_L_XDPB
+		break;
+
+
+                 case 0x20c3:
+		break;
+
+                 case 0x20cc:
+		break;
+
+                 case 0x2150:
+			printf ("DD_L_T_OFF_MOTOR\n");
+			//.l0199  jp      l2150           ; DD_L_T_OFF_MOTOR
+		break;
+
+                 case 0x2164:
+			printf ("DD_L_OFF_MOTOR\n");
+			//.l019c  jp      l2164           ; DD_L_OFF_MOTOR
+		 break;
+
+
+		default:
+			estrap=0;
+		break;
+
+
+
+
+
+
+		}
+
+			if (estrap) printf ("\n\n");
 			//sleep(1);
 		}
 
-		if (direct_entry) printf ("\n");
 	
 }
