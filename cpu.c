@@ -1537,6 +1537,14 @@ printf (
 		"--enable-superupgrade      Enable Superupgrade emulation. Requires --superupgrade-flash\n"
                 "--kartusho-rom f           Set Kartusho rom file\n"
                 "--enable-kartusho          Enable Kartusho emulation. Requires --kartusho-rom\n"
+
+                
+
+                "--dsk-file f               Set +3 DSK image file\n"
+                "--enable-dsk               Enable +3 DSK emulation. Usually requires --dsk-file\n"
+                "--dsk-write-protection     Enable +3 DSK write protection\n"
+		"--dsk-no-persistent-writes Disable +3 DSK persistent writes\n"
+
                 "--enable-betadisk          Enable Betadisk emulation\n"
                 "--trd-file f               Set trd image file\n"
                 "--enable-trd               Enable TRD emulation. Usually requires --trd-file\n"
@@ -4198,6 +4206,7 @@ z80_bit command_line_superupgrade={0};
 z80_bit command_line_kartusho={0};
 z80_bit command_line_betadisk={0};
 z80_bit command_line_trd={0};
+z80_bit command_line_dsk={0};
 
 z80_bit command_line_set_breakpoints={0};
 
@@ -4982,6 +4991,46 @@ void parse_cmdline_options(void) {
                                 siguiente_parametro_argumento();
                                 sprintf (external_tool_unrar,"%s",argv[puntero_parametro]);
 			}
+
+
+
+			else if (!strcmp(argv[puntero_parametro],"--dsk-file")) {
+				siguiente_parametro_argumento();
+
+                                //Si es ruta relativa, poner ruta absoluta
+                                if (!si_ruta_absoluta(argv[puntero_parametro])) {
+                                        //printf ("es ruta relativa\n");
+
+                                        //TODO: quiza hacer esto con convert_relative_to_absolute pero esa funcion es para directorios,
+                                        //no para directorios con archivo, por tanto quiza habria que hacer un paso intermedio separando
+                                        //directorio de archivo
+                                        char directorio_actual[PATH_MAX];
+                                        getcwd(directorio_actual,PATH_MAX);
+
+                                        sprintf (dskplusthree_file_name,"%s/%s",directorio_actual,argv[puntero_parametro]);
+
+                                }
+
+				else {
+					sprintf (dskplusthree_file_name,"%s",argv[puntero_parametro]);
+				}
+
+			}
+
+
+                        else if (!strcmp(argv[puntero_parametro],"--enable-dsk")) {
+                                command_line_dsk.v=1;
+                        }
+
+
+                        else if (!strcmp(argv[puntero_parametro],"--dsk-write-protection")) {
+				dskplusthree_write_protection.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--dsk-no-persistent-writes")) {
+				dskplusthree_persistent_writes.v=0;
+			}
+
 
 			else if (!strcmp(argv[puntero_parametro],"--trd-file")) {
 				siguiente_parametro_argumento();
@@ -6507,6 +6556,8 @@ struct sched_param sparam;
 	}
 
 	if (command_line_trd.v) trd_enable();
+
+	if (command_line_dsk.v) dskplusthree_enable();
 
 	if (command_line_set_breakpoints.v) {
 		if (debug_breakpoints_enabled.v==0) {

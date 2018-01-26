@@ -91,6 +91,7 @@
 #include "mdvtool.h"
 #include "betadisk.h"
 #include "multiface.h"
+#include "pd765.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -3151,11 +3152,18 @@ int util_write_configfile(void)
   if (kartusho_enabled.v)                   ADD_STRING_CONFIG,"--enable-kartusho");
 
   if (betadisk_enabled.v)                   ADD_STRING_CONFIG,"--enable-betadisk");
+
   if (trd_file_name[0]!=0)                    ADD_STRING_CONFIG,"--trd-file \"%s\"",trd_file_name);
   if (trd_enabled.v)                          ADD_STRING_CONFIG,"--enable-trd");
   if (trd_write_protection.v)		      ADD_STRING_CONFIG,"--trd-write-protection");
   if (trd_persistent_writes.v==0)	      ADD_STRING_CONFIG,"--trd-no-persistent-writes");
 
+
+ 
+  if (dskplusthree_file_name[0]!=0)           ADD_STRING_CONFIG,"--dsk-file \"%s\"",dskplusthree_file_name);		
+  if (dskplusthree_emulation.v)               ADD_STRING_CONFIG,"--enable-dsk");
+  if (dskplusthree_write_protection.v)	      ADD_STRING_CONFIG,"--dsk-write-protection");
+  if (dskplusthree_persistent_writes.v==0)    ADD_STRING_CONFIG,"--dsk-no-persistent-writes");
 
   if (superupgrade_rom_file_name[0]!=0)       ADD_STRING_CONFIG,"--superupgrade-flash \"%s\"",superupgrade_rom_file_name);
   if (superupgrade_enabled.v)                 ADD_STRING_CONFIG,"--enable-superupgrade");
