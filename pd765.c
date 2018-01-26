@@ -1522,6 +1522,7 @@ ENTRY CONDITIONS
 
 //.l0166  jp      l1c0d           ; DD_WRITE_SECTOR
 				case 358:
+				case 0x1982:
 				case 0x1c0d:
 					printf ("-----DD_WRITE_SECTOR\n");
 				break;
