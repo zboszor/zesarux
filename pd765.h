@@ -47,4 +47,8 @@ extern void dskplusthree_enable(void);
 
 extern z80_bit dskplusthree_write_protection;
 
+extern z80_bit dskplusthree_persistent_writes;
+
+extern void dskplusthree_flush_contents_to_disk(void);
+
 #endif

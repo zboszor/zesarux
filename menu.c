@@ -15142,6 +15142,12 @@ void menu_storage_dsk_write_protect(MENU_ITEM_PARAMETERS)
 	dskplusthree_write_protection.v ^=1;
 }	
 
+
+void menu_storage_dskplusthree_persistent_writes(MENU_ITEM_PARAMETERS)
+{
+	dskplusthree_persistent_writes.v ^=1;
+}
+
 void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_plusthreedisk;
@@ -15175,35 +15181,21 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_plusthreedisk,"If DSK disk is write protected");
 
 
+			menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_persistent_writes,NULL,"Persistent Writes: %s",(dskplusthree_persistent_writes.v ? "Yes" : "No") );
+                        menu_add_item_menu_tooltip(array_menu_plusthreedisk,"Tells if DSK writes are saved to disk");
+                        menu_add_item_menu_ayuda(array_menu_plusthreedisk,"Tells if DSK writes are saved to disk. "
+                        "Note: all writing operations to TRD are always saved to internal memory (unless you disable write permission), but this setting "
+                        "tells if these changes are written to disk or not."
+                        );
+
+
                         menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_browser,menu_storage_dskplusthree_emulation_cond,"DSK ~~Browser");
                         menu_add_item_menu_shortcut(array_menu_plusthreedisk,'b');
                         menu_add_item_menu_tooltip(array_menu_plusthreedisk,"DSK Browser");
                         menu_add_item_menu_ayuda(array_menu_plusthreedisk,"DSK Browser");
 
-/*
-			menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_write_protect,NULL,"~~Write protect: %s", (dskplusthree_write_protection.v ? "Yes" : "No"));
-			menu_add_item_menu_shortcut(array_menu_plusthreedisk,'w');
-                        menu_add_item_menu_tooltip(array_menu_plusthreedisk,"If DSK disk is write protected");
-                        menu_add_item_menu_ayuda(array_menu_plusthreedisk,"If DSK disk is write protected");
-
-
-                        menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_persistent_writes,NULL,"Persistent Writes: %s",(dskplusthree_persistent_writes.v ? "Yes" : "No") );
-			menu_add_item_menu_tooltip(array_menu_plusthreedisk,"Tells if DSK writes are saved to disk");
-			menu_add_item_menu_ayuda(array_menu_plusthreedisk,"Tells if DSK writes are saved to disk. "
-			"Note: all writing operations to DSK are always saved to internal memory (unless you disable write permission), but this setting "
-			"tells if these changes are written to disk or not."
-			);
-
-
-
-                        menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_dskplusthree_browser,menu_storage_dskplusthree_emulation_cond,"DSK B~~rowser");
-                        menu_add_item_menu_shortcut(array_menu_plusthreedisk,'b');
-                        menu_add_item_menu_tooltip(array_menu_plusthreedisk,"DSK Browser");
-                        menu_add_item_menu_ayuda(array_menu_plusthreedisk,"DSK Browser");
-
-*/
-
-                       
+                               
+			menu_add_item_menu(array_menu_plusthreedisk,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
                         menu_add_item_menu_format(array_menu_plusthreedisk,MENU_OPCION_NORMAL,menu_storage_plusthreedisk_traps,NULL,"~~PLUS3DOS Traps: %s", (plus3dos_traps.v ? "Yes" : "No"));
