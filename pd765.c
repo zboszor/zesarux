@@ -801,7 +801,7 @@ O es por culpa del PCN que vale 0???
 //
 //
 
-
+z80_bit dskplusthree_write_protection={0};
 
 
 void traps_plus3dos_return(void)
@@ -1021,6 +1021,22 @@ z80_byte plus3dsk_get_byte_disk(int offset)
         return p3dsk_buffer_disco[offset];
 }
 
+void plus3dsk_put_byte_disk(int offset,z80_byte value)
+{
+        if (dskplusthree_emulation.v==0) return;
+
+        if (offset>=p3dsk_buffer_disco_size) {
+                debug_printf (VERBOSE_ERR,"Error. Trying to read beyond dsk. Size: %d Asked: %d. Disabling MMC",p3dsk_buffer_disco_size,offset);
+                dskplusthree_disable();
+                return;
+        }
+
+
+	if (dskplusthree_write_protection.v) return;
+
+        p3dsk_buffer_disco[offset]=value;
+}
+
 //Retorna el offset al dsk segun la pista y sector dados (ambos desde 0...)
 int traps_plus3dos_getoff_track_sector(int pista_buscar,int sector_buscar)
 {
@@ -1142,6 +1158,68 @@ void traps_poke_addr_page(z80_byte page,z80_int dir,z80_byte value)
 
 }
 
+
+z80_byte traps_peek_addr_page(z80_byte page,z80_int dir)
+{
+
+        z80_byte *p;
+        int segmento=dir/16384;
+
+        if (dir>49151) {
+                p=ram_mem_table[page];
+        }
+
+        else {
+                p=memory_paged[segmento];
+        }
+
+
+        return p[dir&16383];
+
+}
+
+
+void traps_plus3dos_write_sector(void)
+{
+/*
+DD WRITE SECTOR
+0166h (358)
+
+Write a sector.
+
+ENTRY CONDITIONS
+        B = Page for C000h (49152)...FFFFh (65535)
+        C = Unit (0/1)
+        D = Logical track, 0 base
+        E = Logical sector, 0 base
+        HL = Address of buffer
+        IX = Address of XDPB
+
+EXIT CONDITIONS
+        If OK:
+                Carry true
+                A corrupt
+        Otherwise:
+                Carry false
+                A = Error code
+        Always:
+                BC DE HL IX corrupt
+                All other registers preserved
+*/
+
+        int iniciosector=traps_plus3dos_getoff_track_sector(reg_d,reg_e);
+
+
+        int i;
+        for (i=0;i<512;i++) {
+		z80_byte byte_a_grabar=traps_peek_addr_page(reg_b,reg_hl+i);
+                plus3dsk_put_byte_disk(iniciosector+i,byte_a_grabar);
+        }
+
+
+	traps_plus3dos_return_ok();
+
+}
 
                                        
 void traps_plus3dos_read_sector(void)
@@ -1526,13 +1604,13 @@ ENTRY CONDITIONS
 		                case 0x2114:
                 		        printf ("-----Undocumented Wait FD & Output\n");
 					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
-					traps_plus3dos_return();
+					//traps_plus3dos_return();
 		                break;
 
 		                case 0x206f:
 		                        printf ("-----Undocumented Wait FDC ready for new command\n");
 					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
-					traps_plus3dos_return();
+					//traps_plus3dos_return();
 				break;
 
 
@@ -1548,6 +1626,8 @@ ENTRY CONDITIONS
 				case 0x1c0d:
 					printf ("-----DD_WRITE_SECTOR\n");
 					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					sleep(2);
+					traps_plus3dos_write_sector();
 				break;
 
 
