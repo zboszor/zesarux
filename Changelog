@@ -1,4 +1,4 @@
-Version 6.1. 12 January 2018 - Xeno edition
+Version 6.1. 26 January 2018 - Xeno edition
 
 Added BetaDisk and TR-DOS emulation
 Added Spectrum +3 emulation
@@ -8,7 +8,7 @@ Added setting to exit emulator after a number of seconds (--exit-after)
 Added setting to show changelog when updating emulator version
 Added actions to file utilities: Copy, Move, Rename
 Added setting to write protect IDE, MMC, ZX-Uno Flash
-Added setting to disable persistent writes IDE, MMC
+Added setting to disable persistent writes on IDE and MMC
 Added two more GUI styles: Clean and CleanInverse
 Added second Easter Egg ;)
 Improved joystick support: 

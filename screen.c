@@ -4174,12 +4174,22 @@ void screen_store_scanline_char_zx8081_border_scanline(int x,int y,z80_byte byte
 
 z80_int screen_return_border_ulaplus_color(void)
 {
-	//En modos lineal (radastan, 5, 7, 9) color del border es primeros 8 (0-7) de paleta ulaplus
+	//En modos lineal (radastan, 5, 7, 9) color del border depende de radaspalbank y sale de ulaplus
 	//En resto ulaplus, sale de colores (8-15) de ulaplus
 	int offset=8;
 
 	if (ulaplus_extended_mode>=1) {
-		offset=0;
+
+		z80_byte radaspalbank_offset=zxuno_get_radaspalbank_offset();
+
+		offset=radaspalbank_offset;
+
+
+/* bit 2:
+BOR3: dentro de la paleta actual seleccionada, indica si el color del borde se tomará de las 
+entradas 0 a 7 (0) o de las entradas 8 a 15 (1). Puede considerarse como el bit 3 del color del borde en modo radastaniano.
+*/
+		if (zxuno_ports[0x43]&4) offset+=8;
 	}
 
 	/*
