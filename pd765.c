@@ -132,7 +132,7 @@ void pd765_debug_getstacktrace(int items)
 	int i;
                         for (i=0;i<items;i++) {
                                 z80_int valor=peek_byte_z80_moto(reg_sp+i*2)+256*peek_byte_z80_moto(reg_sp+1+i*2);
-                                printf ("%04XH ",valor);
+                                debug_printf(VERBOSE_DEBUG,"%04XH ",valor);
                         }
 }
 
@@ -171,7 +171,7 @@ void pd765_read_sector(int indice_destino)
         //ncn pista
         //sector
 
-	printf ("Reading full sector at track %d sector %d\n",pd765_ncn,pd765_sector);
+	debug_printf(VERBOSE_DEBUG,"Reading full sector at track %d sector %d",pd765_ncn,pd765_sector);
 
 	int offset=pd765_get_index_memory(0);
 	pd765_next_sector();
@@ -292,29 +292,29 @@ int temp_operacion_pendiente=0;
 
 void pd765_write_command(z80_byte value)
 {
-	if (pd765_index_write_command==0) printf ("------------------------\nSending PD765 command: 0x%02X PC=0x%04X\n------------------------\n",value,reg_pc);
-	else printf ("Sending PD765 command data 0x%02X index write: %d for previous command (0x%02X) PC=0x%04X\n",value,pd765_index_write_command-1,pd765_last_command_write,reg_pc);
+	if (pd765_index_write_command==0) debug_printf(VERBOSE_DEBUG,"------------------------Sending PD765 command: 0x%02X PC=0x%04X------------------------",value,reg_pc);
+	else debug_printf(VERBOSE_DEBUG,"Sending PD765 command data 0x%02X index write: %d for previous command (0x%02X) PC=0x%04X",value,pd765_index_write_command-1,pd765_last_command_write,reg_pc);
 
 
 	//Envio comando inicial
 	if (pd765_index_write_command==0) {
 		if (value==0x03) {
-			printf ("PD765 command: specify\n");
+			debug_printf(VERBOSE_DEBUG,"PD765 command: specify");
 			pd765_last_command_write=3;
 			pd765_index_write_command=1;
 			pd765_status_register= (pd765_status_register & 0xF) | kRM ; 
 		}
 
 		else if (value==0x04) {
-                        printf ("PD765 command: sense drive status\n");
+                        debug_printf(VERBOSE_DEBUG,"PD765 command: sense drive status");
 			pd765_last_command_write=4;
                         pd765_index_write_command=1;
 			pd765_status_register= (pd765_status_register & 0xF) | kRM ; 
-			//sleep(1);
+			
                 }
 
 		else if (value==7) {
-			printf ("PD765 command: recalibrate\n");
+			debug_printf(VERBOSE_DEBUG,"PD765 command: recalibrate");
 			pd765_last_command_write=7;
                         pd765_index_write_command=1;
 			pd765_status_register= (pd765_status_register & 0xF) | kRM ; 
@@ -322,22 +322,22 @@ void pd765_write_command(z80_byte value)
                 }
 
 		else if (value==8) {
-                        printf ("PD765 command: sense interrupt status\n");
+                        debug_printf(VERBOSE_DEBUG,"PD765 command: sense interrupt status");
                         pd765_last_command_write=8;
                         pd765_index_write_command=0; //no necesita parametros
 			pd765_index_read_command=1;
 
 			pd765_st0=(pd765_hd&1)<<2 | (pd765_us1&1) << 1 | (pd765_us0&1) | 32;
-			printf ("us0: %d us1: %d\n",pd765_us0,pd765_us1);
-			//sleep(3);
+			debug_printf(VERBOSE_DEBUG,"us0: %d us1: %d",pd765_us0,pd765_us1);
+			
 
 			pd765_status_register= (pd765_status_register & 0xF) | kRM | kIO; 
 
 			if (temp_operacion_pendiente==0) {
 				//Decir comando incorrecto, ya que no habia ninguna operacion pendiente
 				pd765_st0 |=128;
-				printf ("No habia operacion pendiente. Indicar comando incorrecto en st0\n");
-				//sleep(3);
+				debug_printf(VERBOSE_DEBUG,"No habia operacion pendiente. Indicar comando incorrecto en st0");
+				
 			}
 
 			if (temp_operacion_pendiente==1) {
@@ -358,9 +358,9 @@ void pd765_write_command(z80_byte value)
                 }
 
 		else if ((value&15)==10) {
-			printf ("PD765 command: read id\n");
-			//sleep(1);
-			if (value&64) printf ("TODO multitrack\n");
+			debug_printf(VERBOSE_DEBUG,"PD765 command: read id");
+			
+			if (value&64) debug_printf(VERBOSE_DEBUG,"TODO multitrack");
 
 			pd765_st0=(pd765_hd&1)<<2 | (pd765_us1&1) << 1 | (pd765_us0&1) | 32    ; //Indicar 32 de seek end
 			//Cuando finaliza read id, bits de st0: 7 a 0, 6 a 1
@@ -377,11 +377,11 @@ void pd765_write_command(z80_byte value)
                 }
 
 		else if ((value&15)==6) {
-			printf ("PD765 command: read data\n");
-			//sleep(1);
-			if (value&128) printf ("TODO MT\n");
-			if (value&64) printf ("TODO MF\n");
-			if (value&32) printf ("TODO SK\n");
+			debug_printf(VERBOSE_DEBUG,"PD765 command: read data");
+			
+			if (value&128) debug_printf(VERBOSE_DEBUG,"TODO MT");
+			if (value&64) debug_printf(VERBOSE_DEBUG,"TODO MF");
+			if (value&32) debug_printf(VERBOSE_DEBUG,"TODO SK");
 
 			pd765_last_command_write=6;
 			pd765_index_write_command=1;
@@ -390,7 +390,7 @@ void pd765_write_command(z80_byte value)
 		}
 
 		else if (value==15) {
-			printf ("PD765 command: seek\n");
+			debug_printf(VERBOSE_DEBUG,"PD765 command: seek");
                         pd765_last_command_write=15;
 			pd765_index_write_command=1;
 			temp_operacion_pendiente=1;
@@ -399,9 +399,9 @@ void pd765_write_command(z80_byte value)
 
 
 		else {
-			printf ("\n\nUnknown command\n");
+			debug_printf(VERBOSE_DEBUG,"Unknown command");
 			pd765_index_write_command=0; //Reseteamos a comando inicial
-			//sleep(5);
+			
 		}
 	}
 
@@ -414,14 +414,14 @@ void pd765_write_command(z80_byte value)
 					//SRT/HUD
 					pd765_srt=(value>>4)&15;
 					pd765_hut=value&15;
-					printf ("Setting SRT: %d HUT: %d\n",pd765_srt,pd765_hut);
+					debug_printf(VERBOSE_DEBUG,"Setting SRT: %d HUT: %d",pd765_srt,pd765_hut);
 				}
 
 				if (pd765_index_write_command==2) {
 					//HLT/ND
 					pd765_hlt=(value>>4)&15;
                                         pd765_nd=value&15;
-					printf ("Setting HLT: %d ND: %d\n",pd765_hlt,pd765_nd);
+					debug_printf(VERBOSE_DEBUG,"Setting HLT: %d ND: %d",pd765_hlt,pd765_nd);
 				}
 				
 				pd765_index_write_command++;
@@ -440,7 +440,7 @@ void pd765_write_command(z80_byte value)
 					pd765_hd=(value>>2)&1;
 					pd765_us1=(value>>1)&1;
 					pd765_us0=value&1;
-					printf ("Setting HD: %d US1: %d US0: %d\n",pd765_hd,pd765_us1,pd765_us0);
+					debug_printf(VERBOSE_DEBUG,"Setting HD: %d US1: %d US0: %d",pd765_hd,pd765_us1,pd765_us0);
 				}
 
 				pd765_index_write_command++;
@@ -470,7 +470,7 @@ void pd765_write_command(z80_byte value)
                                         pd765_hd=(value>>2)&1;
                                         pd765_us1=(value>>1)&1;
                                         pd765_us0=value&1;
-                                        printf ("Setting HD: %d US1: %d US0: %d\n",pd765_hd,pd765_us1,pd765_us0);
+                                        debug_printf(VERBOSE_DEBUG,"Setting HD: %d US1: %d US0: %d",pd765_hd,pd765_us1,pd765_us0);
                                 }
 
 				if (pd765_index_write_command==2) {
@@ -548,13 +548,13 @@ void pd765_write_command(z80_byte value)
 				//Recalibrate
 				if (pd765_index_write_command==1) {
 					//US1 US0
-					//printf ("Temporal no cambiamos us0 o us1\n");
+					//debug_printf(VERBOSE_DEBUG,"Temporal no cambiamos us0 o us1");
 					pd765_us1=(value>>1)&1;
                                         pd765_us0=value&1;
-                                        printf ("Setting US1: %d US0: %d\n",pd765_us1,pd765_us0);
+                                        debug_printf(VERBOSE_DEBUG,"Setting US1: %d US0: %d",pd765_us1,pd765_us0);
 					pd765_ncn=0;
 					pd765_sector=0;
-					//sleep(2);
+					
                                 }
 
 				pd765_index_write_command++;
@@ -591,7 +591,7 @@ void pd765_write_command(z80_byte value)
                                         pd765_hd=(value>>2)&1;
                                         pd765_us1=(value>>1)&1;
                                         pd765_us0=value&1;
-                                        printf ("Setting HD: %d US1: %d US0: %d\n",pd765_hd,pd765_us1,pd765_us0);
+                                        debug_printf(VERBOSE_DEBUG,"Setting HD: %d US1: %d US0: %d",pd765_hd,pd765_us1,pd765_us0);
                                 }
 
                                 pd765_index_write_command++;
@@ -625,14 +625,14 @@ void pd765_write_command(z80_byte value)
                                         pd765_hd=(value>>2)&1;
                                         pd765_us1=(value>>1)&1;
                                         pd765_us0=value&1;
-                                        printf ("Setting HD: %d US1: %d US0: %d\n",pd765_hd,pd765_us1,pd765_us0);
+                                        debug_printf(VERBOSE_DEBUG,"Setting HD: %d US1: %d US0: %d",pd765_hd,pd765_us1,pd765_us0);
                                 }
 
                                 if (pd765_index_write_command==2) {
                                         //NCN
                                         pd765_ncn=value;
 					pd765_sector=0;
-                                        printf ("Setting NCN: %d\n",pd765_ncn);
+                                        debug_printf(VERBOSE_DEBUG,"Setting NCN: %d",pd765_ncn);
 
 					//Indicar que el disco esta en seek mode
 					//temp pd765_status_register=1;
@@ -656,8 +656,8 @@ void pd765_write_command(z80_byte value)
 
 
 			default:
-				printf ("\n\nSending data from unknown command: 0x%02X\n",pd765_last_command_write);
-				sleep(5);
+				debug_printf(VERBOSE_DEBUG,"Sending data from unknown command: 0x%02X",pd765_last_command_write);
+				
 			break;
 		}
 	}
@@ -670,7 +670,7 @@ z80_byte temp_leer_dato;
 
 z80_byte pd765_read_command(void)
 {
-	printf ("\nRead data after command index:  %d PC=0x%04X\n",pdc_buffer_retorno_index,reg_pc);
+	debug_printf(VERBOSE_DEBUG,"Read data after command index:  %d PC=0x%04X",pdc_buffer_retorno_index,reg_pc);
         z80_byte value;
 
 			/*
@@ -679,12 +679,12 @@ z80_byte pd765_read_command(void)
 					int final_datos=512;
 					if (pd765_read_byte_index>=final_datos) {
 						pd765_status_register &=(255-64); //Final
-						printf ("Fin leer datos\n");
+						debug_printf(VERBOSE_DEBUG,"Fin leer datos");
 						//Avanzamos numero de sector + cilindro
 						pd765_next_sector();
 					}
 					else {
-						printf ("Devolviendo dato indice: %d\n",pd765_read_byte_index);
+						debug_printf(VERBOSE_DEBUG,"Devolviendo dato indice: %d",pd765_read_byte_index);
 						//Devolver datos de disco
 						//value=temp_leer_dato++;
 						value=pd765_get_disk_value(pd765_read_byte_index);
@@ -712,7 +712,7 @@ z80_byte pd765_read_command(void)
 	if (!pdc_buffer_retorno_len) {
           pd765_status_register=(pd765_status_register & 0xf) | kRM;
           drstate=kRvmUPD765StateIdle;
-	  printf ("fin datos retorno\n");
+	  debug_printf(VERBOSE_DEBUG,"fin datos retorno");
         }
         value=pdc_buffer_retorno[pdc_buffer_retorno_index++];
 	break;
@@ -730,7 +730,7 @@ z80_byte pd765_read_command(void)
       break;
     }
 
-        printf ("Reading PD765 command result: return value: 0x%02X char: %c\n",value,
+        debug_printf(VERBOSE_DEBUG,"Reading PD765 command result: return value: 0x%02X char: %c",value,
 		(value>=32 && value<=127 ? value : '.') );
 
 	return value;
@@ -747,15 +747,15 @@ z80_byte pd765_read_status_register(void)
 	//if (pd765_disk_busy) {	
 	//	value=31;
 	//	pd765_disk_busy--;
-	//	printf ("\nReading PD765 status register disk busy\n");
+	//	debug_printf(VERBOSE_DEBUG,"Reading PD765 status register disk busy");
 	//}
 
 
-	printf ("\nReading PD765 status register: return value 0x%02X PC=0x%04X\n",value,reg_pc);
-	printf ("Stack trace: ");
+	debug_printf(VERBOSE_DEBUG,"Reading PD765 status register: return value 0x%02X PC=0x%04X",value,reg_pc);
+	debug_printf(VERBOSE_DEBUG,"Stack trace: ");
 	pd765_debug_getstacktrace(20);
-	printf ("\n");
-	//sleep(1);
+	debug_printf(VERBOSE_DEBUG,"");
+	
 
 
 	return value;
@@ -997,7 +997,7 @@ EXIT CONDITIONS
                 All other registers preserved
 */
 
-	printf ("Seek to unit %d track %d\n",reg_c,reg_d);
+	debug_printf(VERBOSE_DEBUG,"Seek to unit %d track %d",reg_c,reg_d);
 
 	traps_plus3dos_return_ok();
 }
@@ -1086,7 +1086,7 @@ sectores van alternados:
 	for (pista=0;pista<traps_plus3dos_pistas;pista++) {
 
 		int sectores_en_pista=plus3dsk_get_byte_disk(iniciopista_orig+0x15);
-		printf ("Iniciopista: %XH (%d). Sectores en pista %d: %d. IDS pista:  ",iniciopista_orig,iniciopista_orig,pista,sectores_en_pista);
+		debug_printf(VERBOSE_DEBUG,"Iniciopista: %XH (%d). Sectores en pista %d: %d. IDS pista:  ",iniciopista_orig,iniciopista_orig,pista,sectores_en_pista);
 
 		//int iniciopista_orig=traps_plus3dos_getoff_start_trackinfo(pista);
 		int iniciopista=iniciopista_orig;
@@ -1098,14 +1098,14 @@ sectores van alternados:
 			z80_byte pista_id=plus3dsk_get_byte_disk(iniciopista+offset_tabla_sector); //Leemos pista id
 			z80_byte sector_id=plus3dsk_get_byte_disk(iniciopista+offset_tabla_sector+2); //Leemos c1, c2, etc
 
-			printf ("%02X ",sector_id);
+			debug_printf(VERBOSE_DEBUG,"%02X ",sector_id);
 
 			sector_id &=0xF;
 
 			sector_id--;  //empiezan en 1...
 
 			if (pista_id==pista_buscar && sector_id==sector_buscar) {
-				printf ("Found sector %d/%d at %d/%d\n",pista_buscar,sector_buscar,pista,sector);
+				debug_printf(VERBOSE_DEBUG,"Found sector %d/%d at %d/%d",pista_buscar,sector_buscar,pista,sector);
 		                //int offset=traps_plus3dos_getoff_start_track(pista);
 		                int offset=iniciopista_orig+256;
 
@@ -1115,13 +1115,13 @@ sectores van alternados:
 
 		}
 
-		printf ("\n");
+		debug_printf(VERBOSE_DEBUG,"");
 
 		iniciopista_orig +=256;
 		iniciopista_orig +=traps_plus3dos_bytes_sector*sectores_en_pista;
 	}
 
-	printf ("Not found sector %d/%d",pista_buscar,sector_buscar);	
+	debug_printf(VERBOSE_DEBUG,"Not found sector %d/%d",pista_buscar,sector_buscar);	
 	//TODO
 	//de momento retornamos offset fuera de rango
 	return MAX_BUFFER_DISCO;
@@ -1383,7 +1383,7 @@ Track1
 */
 	//???? Que retornar en A?
 	int sector=0;
-	printf ("READ ID: Unit: %d Track: %d\n",reg_c,reg_d);
+	debug_printf(VERBOSE_DEBUG,"READ ID: Unit: %d Track: %d",reg_c,reg_d);
 
 	z80_byte sector_id=0xc0 | (sector+1);
 
@@ -1438,7 +1438,7 @@ void traps_plus3dos(void)
 		if (1) {
 
 			//Mostrar llamadas a PLUS3DOS
-			if (reg_pc>=256 && reg_pc<=412) printf ("PLUS3DOS routine jump table entry start. reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			if (reg_pc>=256 && reg_pc<=412) debug_printf(VERBOSE_DEBUG,"PLUS3DOS routine jump table entry start. reg_pc=%d %04xH",reg_pc,reg_pc);
 
 			int estrap=1;
 
@@ -1446,15 +1446,15 @@ void traps_plus3dos(void)
 			switch (reg_pc) {
 
 				case 256:
-					printf ("-----DOS INITIALISE\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DOS INITIALISE");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					//traps_plus3dos_return_ok();
 				break;
 
 				case 0x062d:
 				case 262:
-					printf ("-----DOS OPEN\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DOS OPEN");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					/*
 						If file newly created:
 		Carry true
@@ -1473,21 +1473,21 @@ void traps_plus3dos(void)
 
 				case 0x0740:
 				case 265:
-					printf ("-----DOS CLOSE\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DOS CLOSE");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					//traps_plus3dos_return_ok();
 				break;
 
 				case 0x0761:
 				case 268:
-					printf ("-----DOS ABANDON\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DOS ABANDON");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					//traps_plus3dos_return_ok();
 				break;
 
 				case 271:
-					printf ("-----DOS REF HEAD\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DOS REF HEAD");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 /*
 EXIT CONDITIONS
 	If OK, but file doesn't have a header:
@@ -1513,41 +1513,41 @@ EXIT CONDITIONS
 				break;
 
 				case 274:
-					printf ("-----DOS READ. Address: %d Lenght: %d\n",reg_hl,reg_de);
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DOS READ. Address: %d Lenght: %d",reg_hl,reg_de);
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					
 					//traps_plus3dos_handle_dos_read();
 					//traps_plus3dos_return_ok();
 				break;
 
 				case 286:
-					printf ("-----DOS CATALOG\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DOS CATALOG");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 				break;
 
 				case 0x08f2:
 				case 289:
 				//.l0121  jp      l08f2           ; DOS_FREE_SPACE
-					printf ("-----DOS FREE SPACE\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DOS FREE SPACE");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 				break;
 
 				case 334:
-					printf ("-----DOS SET MESSAGE\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DOS SET MESSAGE");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 				break;
 
 				case 340:
-					printf ("-----DOS MAP B\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DOS MAP B");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 				break;
 
 				case 355:
 				case 0x197c:
 				case 0x1bff:
-					printf ("-----DD READ SECTOR track %d sector %d buffer %d xdpb: %d\n",
+					debug_printf(VERBOSE_DEBUG,"-----DD READ SECTOR track %d sector %d buffer %d xdpb: %d",
 					reg_d,reg_e,reg_hl,reg_ix);	
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 /*
 ENTRY CONDITIONS
 	B = Page for C000h (49152)...FFFFh (65535)
@@ -1557,79 +1557,80 @@ ENTRY CONDITIONS
 	HL = Address of buffer
 	IX = Address of XDPB
 	*/		
+					generic_footertext_print_operating("DISK"); //Aunque ya lo hace al encender motor, pero por si acaso
 					traps_plus3dos_read_sector();
-					//sleep(5);			
+								
 				break;
 			
 
 				case 349:
-					printf ("-----DD SETUP\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DD SETUP");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 				break;
 
 				case 346:
-					printf ("-----DD INIT\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DD INIT");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					//traps_plus3dos_return_ok();
 				break;
 			
 
 				case 0x1f27:
 				case 343:
-					printf ("-----DD INTERFACE\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DD INTERFACE");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					//traps_plus3dos_return_ok();
 				break;
 			
 				case 379:
-					printf ("-----DD ASK 1\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DD ASK 1");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					//traps_plus3dos_return_error();
 				break;
 
 				case 394:
 				case 0x1d30:
-					printf ("-----DD_L_DPB\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DD_L_DPB");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					//traps_plus3dos_dd_l_dpb();
 				break;
 
 
 				case 397:
 				case 0x1f76:
-					printf ("-----DD_L_SEEK\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DD_L_SEEK");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					traps_plus3dos_dd_l_seek();
 				break;
 
 
 				case 406:
 		                 case 0x212b:
-                		        printf ("-----DD_L_ON_MOTOR\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+                		        debug_printf(VERBOSE_DEBUG,"-----DD_L_ON_MOTOR");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
                 		        generic_footertext_print_operating("DISK");
 					traps_plus3dos_return_ok();
 				break;
                  		
 				case 367:
 				case 0x1c36:
-					printf ("-----DD_READ_ID\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DD_READ_ID");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					traps_plus3dos_read_id();
 				break;
 
 
 		                case 0x2114:
-                		        printf ("-----Undocumented Wait FD & Output\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+                		        debug_printf(VERBOSE_DEBUG,"-----Undocumented Wait FD & Output");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 
 					//realizando traps_plus3dos_return las lecturas funcionan pero write_sector no se llama nunca
 					//traps_plus3dos_return();
 		                break;
 
 		                case 0x206f:
-		                        printf ("-----Undocumented Wait FDC ready for new command\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+		                        debug_printf(VERBOSE_DEBUG,"-----Undocumented Wait FDC ready for new command");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 
 					//realizando traps_plus3dos_return las lecturas funcionan pero write_sector no se llama nunca
 					//traps_plus3dos_return();
@@ -1637,8 +1638,8 @@ ENTRY CONDITIONS
 
 
 		                case 0x1be9:
-                		        printf ("-----Undocumented Subroutine to read A bytes from a sector\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+                		        debug_printf(VERBOSE_DEBUG,"-----Undocumented Subroutine to read A bytes from a sector");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 		                break;
 
 
@@ -1646,9 +1647,10 @@ ENTRY CONDITIONS
 				case 358:
 				case 0x1982:
 				case 0x1c0d:
-					printf ("-----DD_WRITE_SECTOR\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
-					//sleep(2);
+					debug_printf(VERBOSE_DEBUG,"-----DD_WRITE_SECTOR");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
+					
+					generic_footertext_print_operating("DISK"); //Aunque ya lo hace al encender motor, pero por si acaso
 					traps_plus3dos_write_sector();
 				break;
 
@@ -1656,8 +1658,8 @@ ENTRY CONDITIONS
 //.l0172  jp      l1e65           ; DD_TEST_UNSUITABLE
 				case 370:
 				case 0x1e65:
-					printf ("-----DD_TEST_UNSUITABLE\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+					debug_printf(VERBOSE_DEBUG,"-----DD_TEST_UNSUITABLE");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 					traps_plus3dos_return_ok();
 				break;
 
@@ -1665,16 +1667,17 @@ ENTRY CONDITIONS
 //l016c  jp      l1c24           ; DD_FORMAT
 				case 364:
 				case 0x1c24:
-					printf ("-----DD_FORMAT\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
-					traps_plus3dos_return_ok();
+					debug_printf(VERBOSE_DEBUG,"-----DD_FORMAT");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
+					generic_footertext_print_operating("DISK"); //Aunque ya lo hace al encender motor, pero por si acaso
+					traps_plus3dos_return_ok(); 
 				break;
 
 
 
                  case 0x019f:
-			printf ("-----DOS_INITIALISE\n");
-					printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DOS_INITIALISE");
+					debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 		break;
 
                  case 0x01cd:
@@ -1744,28 +1747,28 @@ ENTRY CONDITIONS
 		break;
 
                  case 0x02e8:
-			printf ("-----DOS_SET_MESSAGE\n");
-			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DOS_SET_MESSAGE");
+			debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 		break;
                  case 0x1847:
 		break;
 
                  case 0x1943:
-			printf ("-----DOS_MAP_B\n");
-			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DOS_MAP_B");
+			debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 			//.l0154  jp      l1943           ; DOS_MAP_B
 		break;
 
 
                  case 0x1f32:
-			printf ("-----DD_INIT\n");
-			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DD_INIT");
+			debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 			//.l015a  jp      l1f32           ; DD_INIT
 		break;
 
                  case 0x1f47:
-			printf ("-----DD_SETUP\n");
-			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DD_SETUP");
+			debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 			//.l015d  jp      l1f47           ; DD_SETUP
 		break;
 
@@ -1778,26 +1781,26 @@ ENTRY CONDITIONS
 
 
                  case 0x1c80:
-			printf ("-----DD_LOGIN\n");
-			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DD_LOGIN");
+			debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 			//.l0175  jp      l1c80           ; DD_LOGIN
 		break;
 
                  case 0x1cdb:
-			printf ("-----DD_SEL_FORMAT\n");
-			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DD_SEL_FORMAT");
+			debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 			//.l0178  jp      l1cdb           ; DD_SEL_FORMAT
 		break;
 
                  case 0x1edd:
-			printf ("-----DD_ASK_1\n");
-			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DD_ASK_1");
+			debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 			//.l017b  jp      l1edd           ; DD_ASK_1
 		break;
 
                  case 0x1ee9:
-			printf ("-----DD_DRIVE_STATUS\n");
-			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DD_DRIVE_STATUS");
+			debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 			//.l017e  jp      l1ee9           ; DD_DRIVE_STATUS
 		break;
 
@@ -1808,8 +1811,8 @@ ENTRY CONDITIONS
 		break;
 
                  case 0x1cee:
-			printf ("-----DD_L_XDPB\n");
-			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DD_L_XDPB");
+			debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 			//.l0187  jp      l1cee           ; DD_L_XDPB
 		break;
 
@@ -1821,14 +1824,14 @@ ENTRY CONDITIONS
 		break;
 
                  case 0x2150:
-			printf ("-----DD_L_T_OFF_MOTOR\n");
-			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DD_L_T_OFF_MOTOR");
+			debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 			//.l0199  jp      l2150           ; DD_L_T_OFF_MOTOR
 		break;
 
                  case 0x2164:
-			printf ("-----DD_L_OFF_MOTOR\n");
-			printf ("reg_pc=%d %04xH\n",reg_pc,reg_pc);
+			debug_printf(VERBOSE_DEBUG,"-----DD_L_OFF_MOTOR");
+			debug_printf(VERBOSE_DEBUG,"reg_pc=%d %04xH",reg_pc,reg_pc);
 			//.l019c  jp      l2164           ; DD_L_OFF_MOTOR
 		 break;
 
@@ -1844,8 +1847,8 @@ ENTRY CONDITIONS
 
 		}
 
-			if (estrap) printf ("PLUS3DOS call. After trap table: reg_pc=%d %04xH\n\n",reg_pc,reg_pc);
-			//sleep(1);
+			if (estrap) debug_printf(VERBOSE_DEBUG,"PLUS3DOS call. After trap table: reg_pc=%d %04xH",reg_pc,reg_pc);
+			
 		}
 
 	
@@ -1901,8 +1904,8 @@ void dskplusthree_flush_contents_to_disk(void)
 
         }
 
-        //printf ("ptr_dskplusthreefile: %d\n",ptr_dskplusthreefile);
-        //printf ("escritos: %d\n",escritos);
+        //debug_printf(VERBOSE_DEBUG,"ptr_dskplusthreefile: %d",ptr_dskplusthreefile);
+        //debug_printf(VERBOSE_DEBUG,"escritos: %d",escritos);
 
         if (escritos!=size || ptr_dskplusthreefile==NULL) {
                 debug_printf (VERBOSE_ERR,"Error writing to DSK file");

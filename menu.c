@@ -15285,6 +15285,14 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
+		if (MACHINE_IS_SPECTRUM_P2A) {
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_plusthreedisk,NULL,"+3 ~~Disk");
+			menu_add_item_menu_shortcut(array_menu_storage_settings,'d');
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"+3 Disk emulation");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"+3 Disk emulation");
+		}
+
+
 		if (MACHINE_IS_TIMEX_TS2068) {
 			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_timexcart,NULL,"Timex ~~Cartridge");
 			menu_add_item_menu_shortcut(array_menu_storage_settings,'c');
@@ -15337,11 +15345,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		if (MACHINE_IS_SPECTRUM_P2A) {
-			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_plusthreedisk,NULL,"+3 Disk");
-			menu_add_item_menu_tooltip(array_menu_storage_settings,"+3 Disk emulation");
-			menu_add_item_menu_ayuda(array_menu_storage_settings,"+3 Disk emulation");
-		}
+
 
 		if (MACHINE_IS_SPECTRUM) {
                         menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_betadisk,NULL,"~~Betadisk");
@@ -15378,8 +15382,8 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 
      		if (MACHINE_IS_SPECTRUM && !MACHINE_IS_ZXUNO) {
 
-                        menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_dandanator,NULL,"ZX ~~Dandanator");
-                        menu_add_item_menu_shortcut(array_menu_storage_settings,'d');
+                        menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_dandanator,NULL,"ZX D~~andanator");
+                        menu_add_item_menu_shortcut(array_menu_storage_settings,'a');
                         menu_add_item_menu_tooltip(array_menu_storage_settings,"ZX Dandanator settings");
                         menu_add_item_menu_ayuda(array_menu_storage_settings,"ZX Dandanator settings");
 
@@ -15403,24 +15407,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 
 
 
-                /*menu_add_item_menu(array_menu_storage_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-								menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_tape_autoloadtape,NULL,"~~Autoload medium: %s", (noautoload.v==0 ? "On" : "Off"));
-                menu_add_item_menu_shortcut(array_menu_storage_settings,'a');
-
-                menu_add_item_menu_tooltip(array_menu_storage_settings,"Autoload medium and set machine");
-                menu_add_item_menu_ayuda(array_menu_storage_settings,"This option first change to the machine that handles the medium file type selected (tape, cartridge, etc), resets it, set some default machine values, and then, it sends "
-                                                "a LOAD sentence to load the medium\n"
-                                                "Note: The machine is changed only using smartload. Inserting a medium only resets the machine but does not change it");
-
-
-                menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_tape_autoselectfileopt,NULL,"A~~utoselect medium opts: %s", (autoselect_snaptape_options.v==1 ? "On" : "Off"));
-                menu_add_item_menu_shortcut(array_menu_storage_settings,'u');
-                menu_add_item_menu_tooltip(array_menu_storage_settings,"Detect options for the selected medium file and the needed machine");
-                menu_add_item_menu_ayuda(array_menu_storage_settings,"The emulator uses a database for different included programs "
-                                "(and some other not included) and reads .config files to select emulator settings and the needed machine "
-                                "to run them. If you disable this, the database nor the .config files are read");
-																*/
+              
 
 
 
