@@ -433,7 +433,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         {"Clean",7,0,
                 0,0,0,0,          //Mostrar cursor >, no mostrar recuadro, no mostrar rainbow
                 0,7,          //Colores para opcion seleccionada
-                7,0,0,7,      //Colores para opcion no disponible
+		7,2,0,2, 	//Colores para opcion no disponible
                 0,7,          //Colores para el titulo y linea recuadro ventana
                 0,              //Color waveform
                 7,               //Color para zona no usada en visualmem
@@ -443,7 +443,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         {"CleanInverse",0,7,
                 0,0,0,0,          //Mostrar cursor >, no mostrar recuadro, no mostrar rainbow
                 7,0,          //Colores para opcion seleccionada
-                0,7,7,0,      //Colores para opcion no disponible
+		0,2,7,2, 	//Colores para opcion no disponible
                 7,0,          //Colores para el titulo y linea recuadro ventana
                 7,              //Color waveform
                 0,               //Color para zona no usada en visualmem
