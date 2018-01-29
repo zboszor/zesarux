@@ -27850,6 +27850,23 @@ void menu_settings_storage(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_display_timex_force_line_512192(MENU_ITEM_PARAMETERS)
+{
+	if (timex_ugly_hack_last_hires==0) timex_ugly_hack_last_hires=198;
+
+	        char string_num[4];
+
+        sprintf (string_num,"%d",timex_ugly_hack_last_hires);
+
+        menu_ventana_scanf("Address",string_num,4);
+
+        timex_ugly_hack_last_hires=parse_string_to_number(string_num);
+}
+
+void menu_display_timex_ugly_hack(MENU_ITEM_PARAMETERS)
+{
+	timex_ugly_hack_enabled ^=1;
+}
 
 
 //menu display settings
@@ -28111,7 +28128,24 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_tooltip(array_menu_settings_display,"Selects between real 512x192 or scaled 256x192");
 				menu_add_item_menu_ayuda(array_menu_settings_display,"Real 512x192 does not support scanline effects (it draws the display at once). "
 							"If not enabled real, it draws scaled 256x192 but does support scanline effects");
+
+
+
+				if (timex_mode_512192_real.v==0) {
+
+					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_ugly_hack,NULL,"Ugly hack: %s",(timex_ugly_hack_enabled ? "Yes" : "No") );
+					menu_add_item_menu_tooltip(array_menu_settings_display,"EXPERIMENTAL feature");
+					menu_add_item_menu_ayuda(array_menu_settings_display,"EXPERIMENTAL feature");
+
+					if (timex_ugly_hack_enabled) {
+					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_force_line_512192,NULL,"Force 512x192 at %d",timex_ugly_hack_last_hires);
+					menu_add_item_menu_tooltip(array_menu_settings_display,"EXPERIMENTAL feature");
+					menu_add_item_menu_ayuda(array_menu_settings_display,"EXPERIMENTAL feature");
+					}
+				}
+
 			}
+
 
 
 

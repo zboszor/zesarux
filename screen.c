@@ -3501,6 +3501,118 @@ void scr_refresca_pantalla_rainbow_comun_gigascreen(void)
 	screen_switch_rainbow_buffer();
 }
 
+
+void scr_refresca_pantalla_rainbow_unalinea_timex(int y)
+{
+
+	//printf ("timex modo 512x192 linea y: %d\n",y);
+	//return;
+
+	        int x,bit;
+        z80_int direccion;
+        z80_byte byte_leido;
+        int fila;
+        //int zx,zy;
+
+        int col6;
+        int tin6, pap6;
+
+
+       z80_byte *screen=get_base_mem_pantalla();
+
+        //printf ("dpy=%x ventana=%x gc=%x image=%x\n",dpy,ventana,gc,image);
+        int x_hi;
+
+
+                                tin6=get_timex_ink_mode6_color();
+
+
+                                //Obtenemos color
+                                pap6=get_timex_paper_mode6_color();
+
+
+                                //Poner brillo1
+                                tin6 +=8;
+                                pap6 +=8;
+
+                                if (ulaplus_presente.v && ulaplus_enabled.v) {
+                                        //Colores en ulaplus en este modo son:
+                                        /*
+BITS INK PAPER BORDER
+000 24 31 31
+001 25 30 30
+010 26 29 29
+011 27 28 28
+100 28 27 27
+101 29 26 26
+110 30 25 25
+111 31 24 24
+                                        */
+
+                                        tin6 +=16;
+                                        pap6 +=16;
+
+
+					tin6=ulaplus_palette_table[tin6]+ULAPLUS_INDEX_FIRST_COLOR;
+                                        pap6=ulaplus_palette_table[pap6]+ULAPLUS_INDEX_FIRST_COLOR;
+                                }
+
+                z80_int incremento_offset=0;
+
+
+        
+                direccion=screen_addr_table[(y<<5)];
+
+
+                fila=y/8;
+                for (x=0,x_hi=0;x<64;x++,x_hi +=8) {
+
+
+                        //Ver en casos en que puede que haya menu activo y hay que hacer overlay
+                        //if (1==1) {
+                        if (scr_ver_si_refrescar_por_menu_activo(x/2,fila)) {
+
+                                byte_leido=screen[direccion+incremento_offset];
+
+
+                                for (bit=0;bit<8;bit++) {
+                                        if (byte_leido&128) col6=tin6;
+                                        else col6=pap6;
+
+
+                                        //printf ("color: %d\n",col6);
+
+                                        //scr_putpixel(offsetx+x_hi+bit,offsety+y,col6);
+                                        //printf ("x: %d y: %d\n",x_hi+bit,y*2);
+
+
+                                        if (video_interlaced_mode.v==0) {
+                                                scr_putpixel_zoom_timex_mode6(x_hi+bit,y,col6);
+                                        }
+
+                                        else {
+
+
+scr_putpixel_zoom_timex_mode6_interlaced(x_hi+bit,y,col6);
+                                        }
+
+                                        byte_leido=byte_leido<<1;
+                                }
+                        }
+
+                        incremento_offset ^=8192;
+
+
+                        if (incremento_offset==0) direccion++;
+                        //printf ("direccion:%d\n",direccion);
+                }
+
+       
+
+}
+
+
+
 //Refresco pantalla con rainbow
 
 
@@ -3554,39 +3666,43 @@ void scr_refresca_pantalla_rainbow_comun(void)
 	int dibujar;
 
 	for (y=0;y<alto;y++) {
+		//Truco para tener a partir de una posicion y modo timex 512x192
+
+		int altoborder=screen_borde_superior;
+		int linea_cambio_timex=timex_ugly_hack_last_hires-screen_invisible_borde_superior;
+		
+
+		if (timex_mode_512192_real.v==0 && timex_video_emulation.v && timex_ugly_hack_enabled && timex_ugly_hack_last_hires>0 && 
+			y>=linea_cambio_timex && y<192+altoborder && ((zoom_x&1)==0) ) {
+			
+			scr_refresca_pantalla_rainbow_unalinea_timex(y-altoborder);
+			puntero +=ancho;
+		}
+		else {
 		for (x=0;x<ancho;x+=8) {
 			dibujar=1;
 
 			//Ver si esa zona esta ocupada por texto de menu u overlay
 
 			if (y>=margeny_arr && y<margeny_aba && x>=margenx_izq && x<margenx_der) {
-
-
-				//normalmente a 48
-				//int screen_total_borde_izquierdo;
-
 				if (!scr_ver_si_refrescar_por_menu_activo( (x-margenx_izq)/8, (y-margeny_arr)/8) )
 					dibujar=0;
-
 			}
 
 
 			if (dibujar==1) {
-
 					for (bit=0;bit<8;bit++) {
-
-
-						//printf ("x: %d y: %d\n",x,y);
-
 						color_pixel=*puntero++;
-
 						scr_putpixel_zoom_rainbow(x+bit,y,color_pixel);
 					}
 			}
 			else puntero+=8;
 
 		}
+		}
 	}
+
+	//timex_ugly_hack_last_hires=0;
 
 
 }

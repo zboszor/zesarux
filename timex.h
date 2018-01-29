@@ -76,5 +76,8 @@ extern int timex_si_modo_8x1(void);
 
 extern int get_timex_paper_mode6_color(void);
 
+extern int timex_ugly_hack_enabled;
+extern int timex_ugly_hack_last_hires;
+
 
 #endif

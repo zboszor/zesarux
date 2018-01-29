@@ -7189,6 +7189,12 @@ acts as expected unless this registe is explicitly changed by the user/software.
                 	screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,mensaje);
 		}
 
+        if ((value&7)==6) {
+                        //Indicar que se ha puesto modo timex en alguna parte del frame
+                //timex_ugly_hack_last_hires=t_estados/screen_testados_linea;
+                //printf ("estableciendo modo timex en y: %d\n",timex_ugly_hack_last_hires);
+        }
+
 
 		timex_port_ff=value;
 		//Color del border en modo timex hi-res sale de aqui

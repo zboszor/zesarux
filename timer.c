@@ -88,6 +88,7 @@ int contador_20ms=0;
 
 
 
+
 int conta_envio_audio=0;
 
 

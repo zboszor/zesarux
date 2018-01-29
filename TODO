@@ -5,7 +5,6 @@ Recreated: que funcione en windows y linux
 QL: lectura de bloques basic no siempre funciona
 TsConf: dibujado sprites, tiles a cada scanline. dibujado border
 Next: implementar features que faltan: video offset
-ZX-Uno: implementar features que faltan: radaspaloffset
 Mas utilidades de visor archivos: convertir?
 Formato zsf: completar para mas maquinas
 

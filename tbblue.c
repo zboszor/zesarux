@@ -31,7 +31,6 @@
 #include "menu.h"
 #include "divmmc.h"
 #include "diviface.h"
-#include "ulaplus.h"
 #include "screen.h"
 
 #include "timex.h"
@@ -1094,71 +1093,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 			//Inicializar linea a transparente
 
-/*
-Port 0x243B is write-only and is used to set the registry number.
 
-Port 0x253B is used to access the registry value.
-
-Register:
-(R/W) 21 => Sprite system
- bits 7-2 = Reserved, must be 0
- bit 1 = Over border (1 = yes)
- bit 0 = Sprites visible (1 = visible)
- */
-
-
-
-			//Si no se permite en el border, rango entre 0..31 y 288..319 no permitido
-			/*
-			#define MAX_X_SPRITE_LINE 320
-			z80_byte sprite_line[MAX_X_SPRITE_LINE];
-
-			#define MAX_SPRITES_PER_LINE 12
-
-			#define TBBLUE_SPRITE_BORDER 32
-			*/
-
-
-
-			//Dibujar en buffer rainbow
-			/*
-			for (i=0;i<MAX_X_SPRITE_LINE;i++) {
-				z80_byte color=sprite_line[i];
-
-				if (i>=rangoxmin && i<=rangoxmax) {
-
-					//color transparente hace referencia al valor indice que hay en pattern. y NO al color final
-					//if (color!=TBBLUE_TRANSPARENT_COLOR) {
-
-						//Pasamos de RGB a GRB
-						//z80_byte r,g,b;
-						//r=(color>>5)&7;
-						//g=(color>>2)&7;
-						//b=(color&3);
-
-						z80_byte colorulaplus=(g<<5)|(r<<2)|b;
-
-
-						//TODO conversion rgb. esto no es ulaplus. usamos tabla ulaplus solo para probar
-
-
-						//color_final=colorulaplus+ULAPLUS_INDEX_FIRST_COLOR;
-						z80_int color_final;
-						//color_final=RGB8_INDEX_FIRST_COLOR+color;
-						color_final=tbsprite_return_color_index(color);
-						//color_final=ulaplus_rgb_table[color_final];
-
-						// *puntero_buf_rainbow=color_final;
-						tbblue_layer_sprites[puntero_array_layer]=color_fnal;
-
-					//}
-				}
-
-				//puntero_buf_rainbow++;
-				puntero_array_layer++;
-
-			}
-			*/
 
 }
 
@@ -1214,16 +1149,7 @@ z80_bit tbblue_bootrom={1};
 /*
 Para habilitar las interfaces y las opciones que utilizo el puerto 0x24DD (config2). Para iniciar la ejecución de la máquina elegida escribo la máquina de la puerta 0x24DB y luego escribir 0x01 en puerta 0x24D9 (hardsoftreset), que activa el "SoftReset" y hace PC = 0.
 
-config2:
 
-Si el bit 7 es '1', los demás bits se refiere a:
-
-6 => Frecuencia vertical (50 o 60 Hz);
-5-4 => PSG modo;
-3 => "ULAplus" habilitado o no;
-2 => "DivMMC" habilitado o no;
-1 => "Scanlines" habilitadas o no;
-0 => "Scandoubler" habilitado o no;
 
 Si el bit 7 es "0":
 
@@ -1844,25 +1770,7 @@ void tbblue_set_emulator_setting_divmmc(void)
 
 }
 
-void tbblue_set_emulator_setting_ulaplus(void)
-{
 
-/*
-(R/W)	05 => Peripheral 1 setting, only in bootrom or config mode:
-			bits 7-6 = (W) joystick 1 mode (00 = Sinclair, 01 = Kempston, 10 = Cursor)
-			bits 5-4 = (W) joystick 2 mode (same as joy1)
-			bit 3 = (W) Enable ULAplus (1 = enabled)
-			bit 2 = (R/W) 50/60 Hz mode (0 = 50Hz, 1 = 60Hz)
-			bit 1 = (R/W) Enable Scanlines (1 = enabled)
-			bit 0 = (R/W) Enable Scandoubler (1 = enabled)
-			*/
-        //z80_byte ulaplusen=tbblue_config2&8;
-				z80_byte ulaplusen=tbblue_registers[5]&8;
-        debug_printf (VERBOSE_INFO,"Apply config.ulaplus change: %s",(ulaplusen ? "enabled" : "disabled") );
-        //printf ("Apply config2.ulaplus change: %s\n",(ulaplusen ? "enabled" : "disabled") );
-        if (ulaplusen) enable_ulaplus();
-        else disable_ulaplus();
-}
 
 
 void tbblue_set_emulator_setting_turbo(void)
@@ -1973,7 +1881,6 @@ void tbblue_hard_reset(void)
 	tbblue_set_memory_pages();
 
 	tbblue_set_emulator_setting_divmmc();
-	tbblue_set_emulator_setting_ulaplus();
 
 	tbblue_reset_sprites();
 	tbblue_reset_palettes();
@@ -2287,17 +2194,7 @@ void tbblue_set_value_port(z80_byte value)
 
 		break;
 
-		case 5:
-			//Si hay cambio en ulaplus
-					/*
-			(R/W)	05 => Peripheral 1 setting, only in bootrom or config mode:
-
-						bit 3 = (W) Enable ULAplus (1 = enabled)
-
-						*/
-
-			if ( (last_register_5&8) != (value&8)) tbblue_set_emulator_setting_ulaplus();
-		break;
+		
 
 		case 6:
 			//Si hay cambio en DivMMC

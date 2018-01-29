@@ -40,6 +40,11 @@ z80_byte timex_port_ff=0;
 
 
 
+//Para poder hacer 512x192 en una parte de la pantalla solamente
+int timex_ugly_hack_enabled=0;
+int timex_ugly_hack_last_hires=0; //a partir de que coordenada se hace cambio
+
+
 
 //Direcciones donde estan cada pagina de rom. 1 pagina de 16 kb
 z80_byte *timex_rom_mem_table[1];
