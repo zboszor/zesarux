@@ -273,27 +273,27 @@ z80_byte tbblue_port_303b;
 
 Registros internos implicados:
 
-
-(R/W) 18 => Layer 2 RAM page
+(R/W) 0x12 (18) => Layer 2 RAM page
  bits 7-6 = Reserved, must be 0
- bits 5-0 = SRAM page
+ bits 5-0 = SRAM page (point to page 8 after a Reset)
 
-(R/W) 19 => Layer 2 RAM shadow page
+(R/W) 0x13 (19) => Layer 2 RAM shadow page
  bits 7-6 = Reserved, must be 0
- bits 5-0 = SRAM page
+ bits 5-0 = SRAM page (point to page 11 after a Reset)
+
+(R/W) 0x14 (20) => Global transparency color
+  bits 7-0 = Transparency color value (Reset to 0xE3, after a reset)
+  (Note this value is 8-bit only, so the transparency is compared only by the MSB bits of the final colour)
 
 
-(R/W) 20 => Layer 2 transparency color
-  bits 7-4 = Reserved, must be 0
-  bits 3-0 = ULA transparency color (IGRB)(Reset to "1000" black with bright, after a reset)
 
-
-
-(R/W) 22 => Layer2 Offset X
+(R/W) 0x16 (22) => Layer2 Offset X
   bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
 
-(R/W) 23 => Layer2 Offset Y
-  bist 7-0 = Y Offset (0-255)(Reset to 0 after a reset)
+(R/W) 0x17 (23) => Layer2 Offset Y
+  bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
+
+
 
 
 Posiblemente registro 20 aplica a cuando el layer2 esta por detras de pantalla de spectrum, y dice el color de pantalla de spectrum
@@ -1953,8 +1953,8 @@ void tbblue_hard_reset(void)
 	tbblue_registers[8]=0;
 
 
-	tbblue_registers[18]=0;
-	tbblue_registers[19]=0;
+	tbblue_registers[18]=8;
+	tbblue_registers[19]=11;
 
 
 	tbblue_reset_common();
