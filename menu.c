@@ -18742,39 +18742,42 @@ void menu_file_superupgrade_flash_browser_show(char *filename)
 
 
 /*
-00000010  2d 53 50 45 43 54 52 55  4d 20 20 20 20 20 0f 31  |-SPECTRUM     .1|
-00000020  2d 49 4e 56 45 53 20 20  20 20 20 20 20 20 0f 32  |-INVES        .2|
-00000030  2d 54 4b 39 30 2d 58 20  20 20 20 20 20 20 0f 33  |-TK90-X       .3|
-00000040  2d 50 4c 55 53 33 45 20  4d 4d 43 20 20 20 0f 2d  |-PLUS3E MMC   .-|
-00000050  2d 2d 2d 2d 2d 2d 2d 2d  2d 2d 30 31 20 20 0f 2d  |----------01  .-|
-00000060  2d 2d 2d 2d 2d 2d 2d 2d  2d 2d 30 32 20 20 0f 2d  |----------02  .-|
-00000070  2d 2d 2d 2d 2d 2d 2d 2d  2d 2d 30 33 20 20 0f 37  |----------03  .7|
-00000080  2d 53 50 45 43 54 52 55  4d 20 2b 32 20 20 0f 38  |-SPECTRUM +2  .8|
-00000090  2d 2d 2d 2d 2d 2d 2d 2d  2d 2d 30 31 20 20 0f 39  |----------01  .9|
-000000a0  2d 53 50 45 43 54 20 31  32 38 20 20 20 20 0f 41  |-SPECT 128    .A|
-000000b0  2d 2d 2d 2d 2d 2d 2d 2d  2d 2d 30 31 20 20 0f 42  |----------01  .B|
-000000c0  2d 53 50 45 43 54 52 55  4d 20 2b 33 20 20 0f 2d  |-SPECTRUM +3  .-|
-000000d0  2d 2d 2d 2d 2d 2d 2d 2d  2d 2d 30 31 20 20 0f 2d  |----------01  .-|
-000000e0  2d 2d 2d 2d 2d 2d 2d 2d  2d 2d 30 32 20 20 0f 2d  |----------02  .-|
-000000f0  2d 2d 2d 2d 2d 2d 2d 2d  2d 2d 30 33 20 20 0f 46  |----------03  .F|
-00000100  2d 4a 55 50 49 54 45 52  20 41 43 45 20 20 0f 47  |-JUPITER ACE  .G|
-00000110  2d 54 4b 2d 39 35 20 20  20 20 20 20 20 20 0f 48  |-TK-95        .H|
-00000120  2d 54 45 53 54 20 4d 43  4c 45 4f 44 20 20 0f 49  |-TEST MCLEOD  .I|
-00000130  2d 2d 2d 2d 2d 2d 2d 2d  2d 2d 30 31 20 20 0f 4a  |----------01  .J|
-00000140  2d 5a 58 20 54 45 53 54  20 52 4f 4d 20 20 0f 4b  |-ZX TEST ROM  .K|
-00000150  2d 53 45 20 42 41 53 49  43 20 20 20 20 20 0f 4c  |-SE BASIC     .L|
-00000160  2d 4d 41 4e 49 43 20 4d  49 4e 45 52 20 20 0f 4d  |-MANIC MINER  .M|
-00000170  2d 4a 45 54 20 53 45 54  20 57 49 4c 4c 59 0f 4e  |-JET SET WILLY.N|
-00000180  2d 53 54 41 52 20 57 41  52 53 20 20 20 20 0f 4f  |-STAR WARS    .O|
-00000190  2d 44 45 41 54 48 20 43  48 41 53 45 20 20 0f 50  |-DEATH CHASE  .P|
-000001a0  2d 4d 49 53 43 4f 20 4a  4f 4e 45 53 20 20 0f 51  |-MISCO JONES  .Q|
-000001b0  2d 4c 41 4c 41 20 50 52  4f 4c 4f 47 55 45 0f 52  |-LALA PROLOGUE.R|
-000001c0  2d 53 50 41 43 45 20 52  41 49 44 45 52 53 0f 53  |-SPACE RAIDERS.S|
-000001d0  2d 43 48 45 53 53 20 20  20 20 20 20 20 20 0f 54  |-CHESS        .T|
-000001e0  2d 51 42 45 52 54 20 20  20 20 20 20 20 20 0f 55  |-QBERT        .U|
-000001f0  2d 50 4f 50 45 59 45 20  20 20 20 20 20 20 0f 56  |-POPEYE       .V|
-00000200  2d 48 45 52 52 41 4d 49  45 4e 54 41 53 20 e0 61  |-HERRAMIENTAS .a|
-00000210  62 63 04 05 06 07 48 09  4a 0b 0c 0d 0e 0f f0 71  |bc....H.J......q|
+
+00000300  0f 30 2d 53 50 45 43 54  52 55 4d 20 20 20 20 20  |.0-SPECTRUM     |
+00000310  0f 31 2d 49 4e 56 45 53  20 20 20 20 20 20 20 20  |.1-INVES        |
+00000320  0f 32 2d 54 4b 2d 39 30  58 20 20 20 20 20 20 20  |.2-TK-90X       |
+00000330  0f 33 2d 53 50 45 43 2b  33 45 20 4d 4d 43 20 20  |.3-SPEC+3E MMC  |
+00000340  0f 34 2d 2d 2d 2d 2d 2d  2d 2d 2d 2d 30 31 20 20  |.4----------01  |
+00000350  0f 35 2d 2d 2d 2d 2d 2d  2d 2d 2d 2d 30 32 20 20  |.5----------02  |
+00000360  0f 36 2d 2d 2d 2d 2d 2d  2d 2d 2d 2d 30 33 20 20  |.6----------03  |
+00000370  0f 37 2d 53 50 45 43 54  52 55 4d 2b 32 20 20 20  |.7-SPECTRUM+2   |
+00000380  0f 38 2d 2d 2d 2d 2d 2d  2d 2d 2d 2d 30 31 20 20  |.8----------01  |
+00000390  0f 39 2d 53 50 45 43 54  2e 20 20 31 32 38 20 20  |.9-SPECT.  128  |
+000003a0  0f 41 2d 2d 2d 2d 2d 2d  2d 2d 2d 2d 30 31 20 20  |.A----------01  |
+000003b0  0f 42 2d 53 50 45 43 54  52 55 4d 2b 33 45 20 20  |.B-SPECTRUM+3E  |
+000003c0  0f 43 2d 2d 2d 2d 2d 2d  2d 2d 2d 2d 30 31 20 20  |.C----------01  |
+000003d0  0f 44 2d 2d 2d 2d 2d 2d  2d 2d 2d 2d 30 32 20 20  |.D----------02  |
+000003e0  0f 45 2d 2d 2d 2d 2d 2d  2d 2d 2d 2d 30 33 20 20  |.E----------03  |
+000003f0  0f 46 2d 4a 55 50 49 54  45 52 20 41 43 45 20 20  |.F-JUPITER ACE  |
+00000400  0f 47 2d 54 4b 2d 39 35  20 20 20 20 20 20 20 20  |.G-TK-95        |
+00000410  0f 48 2d 54 45 53 54 20  4d 43 4c 45 4f 44 20 20  |.H-TEST MCLEOD  |
+00000420  0f 49 2d 2d 2d 2d 2d 2d  2d 2d 2d 2d 30 31 20 20  |.I----------01  |
+00000430  0f 4a 2d 5a 58 20 54 45  53 54 20 52 4f 4d 20 20  |.J-ZX TEST ROM  |
+00000440  0f 4b 2d 53 45 20 42 41  53 49 43 20 20 20 20 20  |.K-SE BASIC     |
+00000450  0f 4c 2d 4d 41 4e 49 43  20 4d 49 4e 45 52 20 20  |.L-MANIC MINER  |
+00000460  0f 4d 2d 4a 45 54 20 53  45 54 20 57 49 4c 4c 59  |.M-JET SET WILLY|
+00000470  0f 4e 2d 53 54 41 52 20  57 41 52 53 20 20 20 20  |.N-STAR WARS    |
+00000480  0f 4f 2d 44 45 41 54 48  20 43 48 41 53 45 20 20  |.O-DEATH CHASE  |
+00000490  0f 50 2d 4d 49 53 43 4f  20 4a 4f 4e 45 53 20 20  |.P-MISCO JONES  |
+000004a0  0f 51 2d 4c 41 4c 41 20  50 52 4f 4c 4f 47 55 45  |.Q-LALA PROLOGUE|
+000004b0  0f 52 2d 53 50 41 43 45  20 52 41 49 44 45 52 53  |.R-SPACE RAIDERS|
+000004c0  0f 53 2d 43 48 45 53 53  20 20 20 20 20 20 20 20  |.S-CHESS        |
+000004d0  0f 54 2d 51 42 45 52 54  20 20 20 20 20 20 20 20  |.T-QBERT        |
+000004e0  0f 55 2d 50 4f 50 45 59  45 20 20 20 20 20 20 20  |.U-POPEYE       |
+000004f0  0f 56 2d 48 45 52 52 41  4d 49 45 4e 54 41 53 20  |.V-HERRAMIENTAS |
+00000500  e0 61 62 63 04 05 06 07  48 49 4a 4b 0c 0d 0e 0f  |.abc....HIJK....|
+
+
 
 */
 
@@ -18785,7 +18788,7 @@ void menu_file_superupgrade_flash_browser_show(char *filename)
 	int total_roms_show=32;
 	int i;
 	for (i=0;i<total_roms_show;i++) {
-		util_binary_to_ascii(&superupgrade_flash_file_memory[0x0f+i*16],buffer_texto,15,15);
+		util_binary_to_ascii(&superupgrade_flash_file_memory[0x301+i*16],buffer_texto,15,15);
 		indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 	}
 
@@ -18855,11 +18858,11 @@ void menu_file_flash_browser_show(char *filename)
 
        	else if (
        		   flash_cabecera[0]==0x01
-        	&& flash_cabecera[1]==0x96
-        	&& flash_cabecera[2]==0x23
+        	&& flash_cabecera[1]==0xfd
+        	&& flash_cabecera[2]==0x7f
 		) {
        		//adivinar superupgrade
-       		//00000000  01 96 23 21 00 00 11 00  80 ed b0 c3 7b 83 0f 30  |..#!........{..0|
+       		//00000000  01 fd 7f 3e c5 ed 79 01
        		menu_file_superupgrade_flash_browser_show(filename);
        	}
 
