@@ -3285,7 +3285,6 @@ void menu_dibuja_ventana_franja_arcoiris_trozo(int x, int y, int ancho,int franj
         	        }
 
         	     	if (franjas==3) {
-	                	//putchar_menu_overlay(x+ancho-6,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
         	        	putchar_menu_overlay(x+ancho-5,y,128,cr[1],ESTILO_GUI_PAPEL_TITULO);
                 		putchar_menu_overlay(x+ancho-4,y,128,cr[2],cr[1]);
 	                	putchar_menu_overlay(x+ancho-3,y,128,cr[3],cr[2]);
@@ -3294,36 +3293,52 @@ void menu_dibuja_ventana_franja_arcoiris_trozo(int x, int y, int ancho,int franj
 
 
         	        if (franjas==2) {
-	                	//putchar_menu_overlay(x+ancho-6,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
-        	        	//putchar_menu_overlay(x+ancho-5,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
                 		putchar_menu_overlay(x+ancho-4,y,128,cr[2],ESTILO_GUI_PAPEL_TITULO);
 	                	putchar_menu_overlay(x+ancho-3,y,128,cr[3],cr[2]);
         	        	putchar_menu_overlay(x+ancho-2,y,128,ESTILO_GUI_PAPEL_TITULO,cr[3]);
         	        }
 
         	        if (franjas==1) {
-	                	//putchar_menu_overlay(x+ancho-6,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
-        	        	//putchar_menu_overlay(x+ancho-5,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
-                		//putchar_menu_overlay(x+ancho-4,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
 	                	putchar_menu_overlay(x+ancho-3,y,128,cr[3],ESTILO_GUI_PAPEL_TITULO);
         	        	putchar_menu_overlay(x+ancho-2,y,128,ESTILO_GUI_PAPEL_TITULO,cr[3]);
         	        }
 
-        	        if (franjas==0) {
-	                	//putchar_menu_overlay(x+ancho-6,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
-        	        	//putchar_menu_overlay(x+ancho-5,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
-                		//putchar_menu_overlay(x+ancho-4,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
-	                	//putchar_menu_overlay(x+ancho-3,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
-        	        	//putchar_menu_overlay(x+ancho-2,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
-        	        }
+        	      
 	        }
 
 		//en caso de curses o caca, hacerlo con lineas de colores
 	        if (!strcmp(scr_driver_name,"curses") || !strcmp(scr_driver_name,"caca") ) {
-        	        putchar_menu_overlay(x+ancho-6,y,'/',cr[0],ESTILO_GUI_PAPEL_TITULO);
-                	putchar_menu_overlay(x+ancho-5,y,'/',cr[1],ESTILO_GUI_PAPEL_TITULO);
-	                putchar_menu_overlay(x+ancho-4,y,'/',cr[2],ESTILO_GUI_PAPEL_TITULO);
-        	        putchar_menu_overlay(x+ancho-3,y,'/',cr[3],ESTILO_GUI_PAPEL_TITULO);
+        	        //putchar_menu_overlay(x+ancho-6,y,'/',cr[0],ESTILO_GUI_PAPEL_TITULO);
+                	//putchar_menu_overlay(x+ancho-5,y,'/',cr[1],ESTILO_GUI_PAPEL_TITULO);
+	                //putchar_menu_overlay(x+ancho-4,y,'/',cr[2],ESTILO_GUI_PAPEL_TITULO);
+        	        //putchar_menu_overlay(x+ancho-3,y,'/',cr[3],ESTILO_GUI_PAPEL_TITULO);
+
+
+        	        //5 espacios negro primero
+			int i;
+			for (i=6;i>=2;i--) putchar_menu_overlay(x+ancho-i,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+	                if (franjas==4) {
+	                	putchar_menu_overlay(x+ancho-5,y,'/',cr[0],ESTILO_GUI_PAPEL_TITULO);
+        	        	putchar_menu_overlay(x+ancho-4,y,'/',cr[1],ESTILO_GUI_PAPEL_TITULO);
+                		putchar_menu_overlay(x+ancho-3,y,'/',cr[2],ESTILO_GUI_PAPEL_TITULO);
+	                	putchar_menu_overlay(x+ancho-2,y,'/',cr[3],ESTILO_GUI_PAPEL_TITULO);
+        	        }
+
+        	     	if (franjas==3) {
+        	        	putchar_menu_overlay(x+ancho-4,y,'/',cr[1],ESTILO_GUI_PAPEL_TITULO);
+                		putchar_menu_overlay(x+ancho-3,y,'/',cr[2],ESTILO_GUI_PAPEL_TITULO);
+	                	putchar_menu_overlay(x+ancho-2,y,'/',cr[3],ESTILO_GUI_PAPEL_TITULO);
+        	        }
+
+
+        	        if (franjas==2) {
+                		putchar_menu_overlay(x+ancho-3,y,'/',cr[2],ESTILO_GUI_PAPEL_TITULO);
+	                	putchar_menu_overlay(x+ancho-2,y,'/',cr[3],ESTILO_GUI_PAPEL_TITULO);
+        	        }
+
+        	        if (franjas==1) {
+	                	putchar_menu_overlay(x+ancho-2,y,'/',cr[3],ESTILO_GUI_PAPEL_TITULO);
+        	        }
 	        }
 	}
 }
@@ -3829,6 +3844,14 @@ void menu_espera_tecla_timeout_window_splash(void)
         int contador_antes=menu_window_splash_counter_ms;
         int trozos=4;
         //WINDOW_SPLASH_SECONDS. 
+        //5 pasos. total de WINDOW_SPLASH_SECONDS
+        int tiempototal=1000*WINDOW_SPLASH_SECONDS;
+        //Quitamos 1 segundo
+        tiempototal-=1000;
+
+        //Intervalo de cambio
+        int intervalo=tiempototal/5; //5 pasos
+        //printf ("intervalo: %d\n",intervalo);
 
 
 
@@ -3839,10 +3862,10 @@ void menu_espera_tecla_timeout_window_splash(void)
                 acumulado=menu_da_todas_teclas();
 
                 //Cada 400 ms
-                if (menu_window_splash_counter_ms-contador_antes>300) {
+                if (menu_window_splash_counter_ms-contador_antes>intervalo) {
                 	trozos--;
                 	contador_antes=menu_window_splash_counter_ms;
-                	printf ("dibujar franjas trozos: %d\n",trozos);
+                	//printf ("dibujar franjas trozos: %d\n",trozos);
                 	if (trozos>=0) {		
                 		menu_dibuja_ventana_franja_arcoiris_trozo_current(trozos);
                 	}
