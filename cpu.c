@@ -6263,6 +6263,7 @@ tooltip_enabled.v=1;
   puntero_parametro=0;
 
   if (parse_cmdline_options()) {
+				printf ("\n\n");
                                 cpu_help();
                                 exit(1);
 	}
