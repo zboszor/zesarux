@@ -5916,7 +5916,7 @@ int parse_cmdline_options(void) {
 			else {
 
 				//parametro desconocido
-				debug_printf (VERBOSE_ERR,"Unknown parameter : %s",argv[puntero_parametro]);
+				debug_printf (VERBOSE_ERR,"Unknown parameter : %s . Stopping parsing the rest of parameters",argv[puntero_parametro]);
 				return 1;
 				//cpu_help();
 				//exit(1);
@@ -6252,20 +6252,21 @@ tooltip_enabled.v=1;
 
         	        if (parse_cmdline_options()) {
 				//debug_printf(VERBOSE_ERR,"Error parsing configuration file. Disabling autosave feature");
+				//Desactivamos autoguardado para evitar que se genere una configuración incompleta
 				save_configuration_file_on_exit.v=0;
 			}
 	}
 
 
-  //Luego parseamos parametros por linea de comandos
-  argc=main_argc;
-  argv=main_argv;
-  puntero_parametro=0;
+  	//Luego parseamos parametros por linea de comandos
+  	argc=main_argc;
+  	argv=main_argv;
+  	puntero_parametro=0;
 
-  if (parse_cmdline_options()) {
-				printf ("\n\n");
-                                cpu_help();
-                                exit(1);
+  	if (parse_cmdline_options()) {
+		printf ("\n\n");
+        	cpu_help();
+        	exit(1);
 	}
 
 	if (test_config_and_exit.v) exit(0);

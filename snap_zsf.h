@@ -29,4 +29,6 @@ extern char *zsf_get_block_id_name(int block_id);
 
 extern char zsf_magic_header[];
 
+extern int zsf_force_uncompressed;
+
 #endif

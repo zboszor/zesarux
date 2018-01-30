@@ -28259,6 +28259,12 @@ void menu_snapshot_sna_set_machine(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_snapshot_settings_compressed_zsf(MENU_ITEM_PARAMETERS)
+{
+	zsf_force_uncompressed ^=1;
+}
+
+
 void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 {
 
@@ -28283,6 +28289,10 @@ void menu_settings_snapshot(MENU_ITEM_PARAMETERS)
 					"Version 4 works on ZEsarUX V1.3 and higher\n"
 					"Version 5 works on ZEsarUX V2 and higher\n"
 				);
+
+                menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_settings_compressed_zsf,NULL,"Compressed ZSF: %s",(zsf_force_uncompressed ? "No" : "Yes") );
+                menu_add_item_menu_tooltip(array_menu_settings_snapshot,"Setting to save compressed ZSF files or not"); 
+                menu_add_item_menu_ayuda(array_menu_settings_snapshot,"Setting to save compressed ZSF files or not"); 
 
                 menu_add_item_menu_format(array_menu_settings_snapshot,MENU_OPCION_NORMAL,menu_snapshot_sna_set_machine,NULL,"Set machine sna load: %s",(sna_setting_no_change_machine.v ? "No" : "Yes"));
                 menu_add_item_menu_tooltip(array_menu_settings_snapshot,"If machine is reset to 48k/128k when loading a .sna snapshot file");
