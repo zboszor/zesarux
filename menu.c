@@ -576,6 +576,7 @@ int menu_tooltip_counter;
 #define TOOLTIP_SECONDS 4
 
 int menu_window_splash_counter;
+int menu_window_splash_counter_ms;
 #define WINDOW_SPLASH_SECONDS 3
 
 z80_bit tooltip_enabled;
@@ -3262,6 +3263,83 @@ debug_printf (VERBOSE_INFO,"Showing pending error message on menu");
 }
 }
 
+
+//x,y origen ventana, ancho ventana
+void menu_dibuja_ventana_franja_arcoiris_trozo(int x, int y, int ancho,int franjas)
+{
+
+	int cr[]={2+8,6+8,4+8,5+8};
+
+	if (ESTILO_GUI_MUESTRA_RAINBOW) {
+		//en el caso de drivers completos, hacerlo real
+		if (si_complete_video_driver() ) {
+			//5 espacios negro primero
+			int i;
+			for (i=6;i>=2;i--) putchar_menu_overlay(x+ancho-i,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+	                if (franjas==4) {
+	                	putchar_menu_overlay(x+ancho-6,y,128,cr[0],ESTILO_GUI_PAPEL_TITULO);
+        	        	putchar_menu_overlay(x+ancho-5,y,128,cr[1],cr[0]);
+                		putchar_menu_overlay(x+ancho-4,y,128,cr[2],cr[1]);
+	                	putchar_menu_overlay(x+ancho-3,y,128,cr[3],cr[2]);
+        	        	putchar_menu_overlay(x+ancho-2,y,128,ESTILO_GUI_PAPEL_TITULO,cr[3]);
+        	        }
+
+        	     	if (franjas==3) {
+	                	//putchar_menu_overlay(x+ancho-6,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+        	        	putchar_menu_overlay(x+ancho-5,y,128,cr[1],ESTILO_GUI_PAPEL_TITULO);
+                		putchar_menu_overlay(x+ancho-4,y,128,cr[2],cr[1]);
+	                	putchar_menu_overlay(x+ancho-3,y,128,cr[3],cr[2]);
+        	        	putchar_menu_overlay(x+ancho-2,y,128,ESTILO_GUI_PAPEL_TITULO,cr[3]);
+        	        }
+
+
+        	        if (franjas==2) {
+	                	//putchar_menu_overlay(x+ancho-6,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+        	        	//putchar_menu_overlay(x+ancho-5,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+                		putchar_menu_overlay(x+ancho-4,y,128,cr[2],ESTILO_GUI_PAPEL_TITULO);
+	                	putchar_menu_overlay(x+ancho-3,y,128,cr[3],cr[2]);
+        	        	putchar_menu_overlay(x+ancho-2,y,128,ESTILO_GUI_PAPEL_TITULO,cr[3]);
+        	        }
+
+        	        if (franjas==1) {
+	                	//putchar_menu_overlay(x+ancho-6,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+        	        	//putchar_menu_overlay(x+ancho-5,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+                		//putchar_menu_overlay(x+ancho-4,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+	                	putchar_menu_overlay(x+ancho-3,y,128,cr[3],ESTILO_GUI_PAPEL_TITULO);
+        	        	putchar_menu_overlay(x+ancho-2,y,128,ESTILO_GUI_PAPEL_TITULO,cr[3]);
+        	        }
+
+        	        if (franjas==0) {
+	                	//putchar_menu_overlay(x+ancho-6,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+        	        	//putchar_menu_overlay(x+ancho-5,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+                		//putchar_menu_overlay(x+ancho-4,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+	                	//putchar_menu_overlay(x+ancho-3,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+        	        	//putchar_menu_overlay(x+ancho-2,y,' ',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_PAPEL_TITULO);
+        	        }
+	        }
+
+		//en caso de curses o caca, hacerlo con lineas de colores
+	        if (!strcmp(scr_driver_name,"curses") || !strcmp(scr_driver_name,"caca") ) {
+        	        putchar_menu_overlay(x+ancho-6,y,'/',cr[0],ESTILO_GUI_PAPEL_TITULO);
+                	putchar_menu_overlay(x+ancho-5,y,'/',cr[1],ESTILO_GUI_PAPEL_TITULO);
+	                putchar_menu_overlay(x+ancho-4,y,'/',cr[2],ESTILO_GUI_PAPEL_TITULO);
+        	        putchar_menu_overlay(x+ancho-3,y,'/',cr[3],ESTILO_GUI_PAPEL_TITULO);
+	        }
+	}
+}
+
+
+void menu_dibuja_ventana_franja_arcoiris(int x, int y, int ancho)
+{
+	menu_dibuja_ventana_franja_arcoiris_trozo(x,y,ancho,4);
+}
+
+void menu_dibuja_ventana_franja_arcoiris_trozo_current(int trozos)
+{
+
+	menu_dibuja_ventana_franja_arcoiris_trozo(ventana_x,ventana_y,ventana_ancho,trozos);
+}
+
 //dibuja ventana de menu, con:
 //titulo
 //contenido blanco
@@ -3324,6 +3402,8 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
         //y las franjas de color
 	if (ESTILO_GUI_MUESTRA_RAINBOW) {
 		//en el caso de drivers completos, hacerlo real
+		menu_dibuja_ventana_franja_arcoiris(x,y,ancho);
+		/*
 		if (si_complete_video_driver() ) {
 	                putchar_menu_overlay(x+ancho-6,y,128,2+8,ESTILO_GUI_PAPEL_TITULO);
         	        putchar_menu_overlay(x+ancho-5,y,128,6+8,2+8);
@@ -3338,7 +3418,7 @@ void menu_dibuja_ventana(z80_byte x,z80_byte y,z80_byte ancho,z80_byte alto,char
                 	putchar_menu_overlay(x+ancho-5,y,'/',6+8,ESTILO_GUI_PAPEL_TITULO);
 	                putchar_menu_overlay(x+ancho-4,y,'/',4+8,ESTILO_GUI_PAPEL_TITULO);
         	        putchar_menu_overlay(x+ancho-3,y,'/',5+8,ESTILO_GUI_PAPEL_TITULO);
-	        }
+	        }*/
 	}
 
 
@@ -3746,14 +3826,32 @@ void menu_espera_tecla_timeout_window_splash(void)
         //Esperar a pulsar una tecla o timeout de window splash
         z80_byte acumulado;
 
+        int contador_antes=menu_window_splash_counter_ms;
+        int trozos=4;
+        //WINDOW_SPLASH_SECONDS. 
+
+
+
         do {
                 menu_cpu_core_loop();
 
 
                 acumulado=menu_da_todas_teclas();
 
+                //Cada 400 ms
+                if (menu_window_splash_counter_ms-contador_antes>300) {
+                	trozos--;
+                	contador_antes=menu_window_splash_counter_ms;
+                	printf ("dibujar franjas trozos: %d\n",trozos);
+                	if (trozos>=0) {		
+                		menu_dibuja_ventana_franja_arcoiris_trozo_current(trozos);
+                	}
+                }
+
+
 		//printf ("menu_espera_tecla_timeout_tooltip acumulado: %d\n",acumulado);
 		//printf ("contador splash: %d\n",menu_window_splash_counter);
+		
 
 	} while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && menu_window_splash_counter<WINDOW_SPLASH_SECONDS);
 
@@ -26206,7 +26304,10 @@ void menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_
 
 	//printf ("input text: %s\n",texto);
 
-	if (volver_timeout) menu_window_splash_counter=0;
+	if (volver_timeout) {
+		menu_window_splash_counter=0;
+		menu_window_splash_counter_ms=0;
+	}
 	//linea cursor en el caso que se muestre cursor
 	int linea_cursor=0;
 

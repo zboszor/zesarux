@@ -473,6 +473,8 @@ void timer_check_interrupt(void)
 			//Temporizador de cancion ay playing
 			ay_player_playing_timer();
 
+			menu_window_splash_counter_ms +=20;
+
 			//decrementar contador pausa cinta
 			if (tape_pause!=0) tape_pause--;
 

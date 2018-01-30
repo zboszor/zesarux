@@ -198,6 +198,7 @@ extern void menu_get_dir(char *ruta,char *directorio);
 extern int menu_tooltip_counter;
 
 extern int menu_window_splash_counter;
+extern int menu_window_splash_counter_ms;
 
 extern z80_bit tooltip_enabled;
 
