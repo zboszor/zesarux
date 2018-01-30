@@ -5916,7 +5916,7 @@ int parse_cmdline_options(void) {
 			else {
 
 				//parametro desconocido
-				debug_printf (VERBOSE_ERR,"Unknown parameter : %s\n\n",argv[puntero_parametro]);
+				debug_printf (VERBOSE_ERR,"Unknown parameter : %s",argv[puntero_parametro]);
 				return 1;
 				//cpu_help();
 				//exit(1);

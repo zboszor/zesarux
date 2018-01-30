@@ -527,14 +527,14 @@ void debug_printf (int debuglevel, const char * format , ...)
     if (scr_messages_debug!=NULL) scr_messages_debug (buffer_final);
     else printf ("%s\n",buffer_final);
 
-    //Hacer aparecer menu, siempre que el driver no sea null ni no inicializado
+    //Hacer aparecer menu, siempre que el driver no sea null ni.. porque no inicializado tambien? no inicializado
     if (debuglevel==VERBOSE_ERR) {
 
 	//en el caso de stdout, no aparecera ventana igualmente, pero el error ya se vera por consola
         if (!strcmp(scr_driver_name,"stdout")) return;
         if (!strcmp(scr_driver_name,"simpletext")) return;
         if (!strcmp(scr_driver_name,"null")) return;
-        if (!strcmp(scr_driver_name,"")) return;
+        //if (!strcmp(scr_driver_name,"")) return;
         sprintf (pending_error_message,"%s",buffer_inicial);
         if_pending_error_message=1;
         menu_abierto=1;
