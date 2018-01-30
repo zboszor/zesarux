@@ -4227,7 +4227,7 @@ int joystickkey_definidas=0;
 
 
 //void parse_cmdline_options(int argc,char *argv[]) {
-void parse_cmdline_options(void) {
+int parse_cmdline_options(void) {
 
 		while (!siguiente_parametro()) {
 			if (!strcmp(argv[puntero_parametro],"--help")) {
@@ -5916,15 +5916,17 @@ void parse_cmdline_options(void) {
 			else {
 
 				//parametro desconocido
-				printf ("Unknown parameter : %s\n\n",argv[puntero_parametro]);
-				cpu_help();
-				exit(1);
+				debug_printf (VERBOSE_ERR,"Unknown parameter : %s\n\n",argv[puntero_parametro]);
+				return 1;
+				//cpu_help();
+				//exit(1);
 			}
 
 
 		}
 
 		//Fin de interpretacion de parametros
+		return 0;
 
 }
 
@@ -6241,13 +6243,17 @@ tooltip_enabled.v=1;
 
 
 	if (noconfigfile==0) {
+			//parametros del archivo de configuracion
 			configfile_parse();
 
         	        argc=configfile_argc;
                 	argv=configfile_argv;
 			puntero_parametro=0;
 
-        	        parse_cmdline_options();
+        	        if (parse_cmdline_options()) {
+				//debug_printf(VERBOSE_ERR,"Error parsing configuration file. Disabling autosave feature");
+				save_configuration_file_on_exit.v=0;
+			}
 	}
 
 
@@ -6256,7 +6262,10 @@ tooltip_enabled.v=1;
   argv=main_argv;
   puntero_parametro=0;
 
-  parse_cmdline_options();
+  if (parse_cmdline_options()) {
+                                cpu_help();
+                                exit(1);
+	}
 
 	if (test_config_and_exit.v) exit(0);
 
