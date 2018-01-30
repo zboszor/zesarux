@@ -3194,6 +3194,9 @@ int util_write_configfile(void)
   if (ulaplus_presente.v)                     ADD_STRING_CONFIG,"--enableulaplus");
   if (spectra_enabled.v)                      ADD_STRING_CONFIG,"--enablespectra");
   if (timex_video_emulation.v)                ADD_STRING_CONFIG,"--enabletimexvideo");
+  if (timex_mode_512192_real.v==0)	      ADD_STRING_CONFIG,"--disablerealtimex512");
+
+
   if (spritechip_enabled.v)                   ADD_STRING_CONFIG,"--enablezgx");
   if (beeper_enabled.v==0)                    ADD_STRING_CONFIG,"--disablebeeper");
   if (beeper_real_enabled==0)                 ADD_STRING_CONFIG,"--disablerealbeeper");

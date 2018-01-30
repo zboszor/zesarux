@@ -1315,6 +1315,7 @@ printf (
 		"--enableulaplus            Enable ULAplus video modes\n"
 		"--enablespectra            Enable Spectra video modes\n"
 		"--enabletimexvideo         Enable Timex video modes\n"
+		"--disablerealtimex512      Disable real Timex mode 512x192. In this case, it's scalled to 256x192 but allows scanline effects\n"
 		"--enablezgx                Enable ZGX Sprite chip\n"
 		"--autodetectwrx            Enable WRX autodetect setting on ZX80/ZX81\n"
 		"--wrx                      Enable WRX mode on ZX80/ZX81\n"
@@ -5448,6 +5449,10 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--enabletimexvideo")) {
                                 command_line_timex_video.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--disablerealtimex512")) {
+				timex_mode_512192_real.v=0;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--enablezgx")) {

@@ -27858,7 +27858,7 @@ void menu_display_timex_force_line_512192(MENU_ITEM_PARAMETERS)
 
         sprintf (string_num,"%d",timex_ugly_hack_last_hires);
 
-        menu_ventana_scanf("Address",string_num,4);
+        menu_ventana_scanf("Scanline",string_num,4);
 
         timex_ugly_hack_last_hires=parse_string_to_number(string_num);
 }
