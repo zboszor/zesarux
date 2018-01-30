@@ -7,6 +7,7 @@ TsConf: dibujado sprites, tiles a cada scanline. dibujado border
 Next: implementar features que faltan: video offset
 Mas utilidades de visor archivos: convertir?
 Formato zsf: completar para mas maquinas
+Mirar porque fallan muchos dsk
 
 
  
@@ -55,8 +56,6 @@ probado lo siguiente:
 * poner a 0 tambien fifo_read_position al hacer empty buffer: ningun cambio
 ->Quiza solucion es que haga reseteo solo cuando se haya llenado 1 vez el buffer al menos
 
--osd cuando aparece desde visual mem por ejemplo no se ve, dado que visual mem sobreescribe la funcion de escriura de texto
-overlay y todo queda por encima del texto del osd
 
 -eventos joystick para simular pgup, pgdn
 
@@ -79,7 +78,6 @@ Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En men�
 
 -Recreated Keyboard en Linux con fbdev
 
--acciones de file utils, como se pueden cancelar si se lanzan por error? Esc funciona como selector de directorio
 
 -quizá ventanas splash se deberían ver diferentes. quizá sin franja de color? Pero en otros skins (que ya no tienen franja de color) no se diferenciarían
 
