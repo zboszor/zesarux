@@ -8919,7 +8919,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       size=49152;
 
       if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
-        size=131072;
+        size=131072*mem128_multiplicador;
       }
 
       //Vigilar condiciones que pueden cumplir mas de una maquina a la vez

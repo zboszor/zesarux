@@ -7164,6 +7164,10 @@ int view_sprites_bpp=1;
 int view_sprites_palette=0;
 
 
+//Sprite esta organizado como memoria de pantalla spectrum
+int view_sprites_scr_sprite=0;
+
+
 //Retorna total de colores de una paleta mapeada
 int menu_debug_sprites_total_colors_mapped_palette(int paleta)
 {
@@ -7563,6 +7567,10 @@ void menu_debug_draw_sprites(void)
 		int tamanyo_linea=view_sprites_ancho_sprite/view_sprites_ppb;
 
 		for (y=0;y<view_sprites_alto_sprite;y++) {
+			if (view_sprites_scr_sprite && y<192) {
+				 puntero=view_sprites_direccion+screen_addr_table[(y<<5)];
+			}
+
 			puntero_inicio_linea=puntero;
 			finalx=xorigen;
 			for (x=0;x<view_sprites_ancho_sprite && x<maximo_visible_x;) {
@@ -7862,13 +7870,13 @@ menu_writing_inverse_color.v=1;
 				sprintf(buffer_tercera_linea,"                              ");
 			}
 			else {
-				sprintf(buffer_primera_linea,"~~Memptr In~~c+%d ~~O~~P~~Q~~A:Size ~~BPP",view_sprite_incremento);
-				sprintf(buffer_segunda_linea, "~~Inverse %s ~~Hardware",(view_sprites_bpp==1 ? "~~Save" : "") );
+				sprintf(buffer_primera_linea,"~~Memptr In~~c+%d %s ~~O~~P~~Q~~A:Size ~~BPP",view_sprite_incremento,(view_sprites_scr_sprite ? "SC~~R" : "sc~~r") );
+				sprintf(buffer_segunda_linea, "~~Inverse %s ~~Hardware",(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~Save" : "") );
 			}
 		}
 		else {
-			  sprintf(buffer_primera_linea,"~~Memptr In~~c+%d ~~O~~P~~Q~~A:Size ~~BPP",view_sprite_incremento);
-			  sprintf(buffer_segunda_linea, "~~Inverse %s",(view_sprites_bpp==1 ? "~~Save" : ""));
+			  sprintf(buffer_primera_linea,"~~Memptr In~~c+%d %s ~~O~~P~~Q~~A:Size ~~BPP",view_sprite_incremento,(view_sprites_scr_sprite ? "SC~~R" : "sc~~r") );
+			  sprintf(buffer_segunda_linea, "~~Inverse %s",(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~Save" : ""));
 		}
 
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_primera_linea);
@@ -7971,45 +7979,45 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 						menu_debug_sprites_change_palette();
 					break;
 
-																				case 'h':
-																								if (MACHINE_IS_TBBLUE) view_sprites_tbblue ^=1;
-																				break;
+					case 'h':
+									if (MACHINE_IS_TBBLUE) view_sprites_tbblue ^=1;
+					break;
 
-																				case 'i':
-																							view_sprites_inverse.v ^=1;
-																				break;
+					case 'i':
+								view_sprites_inverse.v ^=1;
+					break;
 
-																				case 'z':
-																					menu_debug_change_memory_zone();
+					case 'z':
+						menu_debug_change_memory_zone();
 
-																					break;
+						break;
 
-																				case 's':
-
-
-																							if (MACHINE_IS_TBBLUE && view_sprites_tbblue) {
-
-																							}
-
-																							else {
-
-																									//Solo graba sprites de 1bpp (monocromos)
-																								if (view_sprites_bpp==1) {
-																									//restauramos modo normal de texto de menu, sino, el selector de archivos se vera
-																									//con el sprite encima
-																									set_menu_overlay_function(normal_overlay_texto_menu);
+					case 's':
 
 
-																									menu_debug_view_sprites_save(view_sprites_direccion,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_ppb,view_sprite_incremento);
+						if (MACHINE_IS_TBBLUE && view_sprites_tbblue) {
 
-																									cls_menu_overlay();
+						}
 
-																									menu_debug_view_sprites_ventana();
-																									set_menu_overlay_function(menu_debug_draw_sprites);
-																								}
+						else {
 
-																							}
-																				break;
+								//Solo graba sprites de 1bpp (monocromos)
+							if (view_sprites_bpp==1 && !view_sprites_scr_sprite) {
+								//restauramos modo normal de texto de menu, sino, el selector de archivos se vera
+								//con el sprite encima
+								set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+								menu_debug_view_sprites_save(view_sprites_direccion,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_ppb,view_sprite_incremento);
+
+								cls_menu_overlay();
+
+								menu_debug_view_sprites_ventana();
+								set_menu_overlay_function(menu_debug_draw_sprites);
+							}
+
+						}
+					break;
 
 					case 'o':
 						if (view_sprites_ancho_sprite>view_sprites_ppb) view_sprites_ancho_sprite -=view_sprites_ppb;
@@ -8028,21 +8036,26 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                                 if (view_sprites_alto_sprite<(SPRITES_ALTO)*8)  view_sprites_alto_sprite++;
                                         break;
 
-																				case 'c':
-																						if (view_sprite_incremento==1) view_sprite_incremento=2;
-																						else view_sprite_incremento=1;
-																				break;
+					case 'c':
+							if (view_sprite_incremento==1) view_sprite_incremento=2;
+							else view_sprite_incremento=1;
+					break;
 
 
-                                        /*default:
-                                                salir=1;
-                                        break;*/
+					case 'r':
+							view_sprites_scr_sprite ^=1;
+					break;
 
-																				//Salir con ESC
 
-																				case 2:
-																						salir=1;
-																				break;
+                /*default:
+                        salir=1;
+                break;*/
+
+					//Salir con ESC
+
+					case 2:
+							salir=1;
+					break;
                                 }
 
 

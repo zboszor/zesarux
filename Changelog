@@ -26,6 +26,7 @@ Improved file viewer from file utilities:
 Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
 Improved menus, a new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
 Improved menu: now character width can be reduced to 7,6 or 5 pixels width
+Improved sprite viewer: now can see sprites with speccy screen format
 Improved sound: Silence detector does not activate on pthreads versions
 Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
 Fixed TBBlue MMU when using segment 0000-3FFFH
