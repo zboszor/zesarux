@@ -2073,7 +2073,6 @@ void tbblue_splash_palette_format(void)
 void tbblue_set_value_port(z80_byte value)
 {
 
-	z80_byte last_register_5=tbblue_registers[5];
 	z80_byte last_register_6=tbblue_registers[6];
 	z80_byte last_register_7=tbblue_registers[7];
 	z80_byte last_register_21=tbblue_registers[21];
