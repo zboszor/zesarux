@@ -117,16 +117,15 @@ deberia verse bien, pues se usan funciones de putchar igual que en menu. si real
 
 -Menú utilidades archivos
 Convertir archivo
+
+
+-menus tabulados:
 TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, que permita:
-*diferentes textos de acciones en ventana activa: posicion x,y,texto,accion a ejecutar, condicion para activo
-*quiza demasiado lio? se va a usar para algo mas? quiza se puede reusar para el AY Player
 *quiza se pueda usar misma estructura de acciones de menu, pero simplemente mostrarlo diferente:
 **sin tooltip (o si?)
 **sin ayuda (o si?)
 **mover con cursor abajo/arriba e izquierda/derecha. TAB o ESC permite salir
-**no mostrar en linea, sino en coordenadas x,y
 **hotkeys son importantes
-**en AY player quiza seria un problema, pues necesito mostrar en pantalla texto continuamente. Quiza se puede agregar un handler al que se llame a cada X frames
 **en file utils, por su parte, tambien permito acciones directas como ahora con shift+tecla. o no?
 
 -betadisk: nmi no parece guardar el snapshot, aunque lo intenta
@@ -169,12 +168,6 @@ Y lo haga la gente manualmente y/ o se detecte si es rpi1
 O quizá setting configurable 
 
 
-*tsconf: 
--limite sprites en scanline
--revisar mapeo rom mediante 32765 porque parece que no hay manera de iniciar la rom del 128kb. creo que ahora mismo el puerto 32765 esta totalmente desactivado
--para probar sprites/tiles:
-render de sprites / tiles se hace de momento al final de cada frame de pantalla y de manera muy chapucera
--tsconf border en modos rainbow
 
 
 -tbblue:
@@ -201,7 +194,8 @@ Luego se podrá usar en el futuro para nuevos settings de menú y command line, 
 Mark Hutchings  
 
 
--por que se entrecorta sonido al mover ratón con menu abierto? quizá por culpa de mensajes verbose?
+-por que se entrecorta sonido al mover ratón con menu abierto?
+->porque hay mucho uso de cpu para cada evento de raton que mueve menu
 
 -Puertos debug zx81. Ver hilo sinclairzxworld
 
@@ -226,7 +220,12 @@ https://github.com/charlierobson/ZXpand-Vitamins/wiki/ZXpand---Online-Manual
 
 
 -tsconf:
-
+*tsconf: 
+-limite sprites en scanline
+-revisar mapeo rom mediante 32765 porque parece que no hay manera de iniciar la rom del 128kb. creo que ahora mismo el puerto 32765 esta totalmente desactivado
+-para probar sprites/tiles:
+render de sprites / tiles se hace de momento al final de cada frame de pantalla y de manera muy chapucera
+-tsconf border en modos rainbow
 *parece que cuando se ha entrado una vez en la bios ya no se puede volver a entrar mas (usando el hard reset temporal) -> si deniego la escritura en nvram luego si que vuelve a entrar
 ->Parece que es porque intenta boot de SD (lee puerto xx57) y tiene que hacer timeout
 *quiza tsbios no va en modo p2a porque necesita bus idle -> efectivamente
@@ -260,10 +259,8 @@ teclas F en general en fbdev driver no raw
 
 
 -seguir formato zsf:
-*comprimir datos mediante DD DD. se permiten bloques sin comprimir o con comprimir. que permita comprimir bloque de X de longitud
-
--Opción para poder cargar snapshot pero sin cambiar la rom actual... útil por si grabamos un snapshot por ejemplo en máquina 128kb pero la rom era la del opense: quiza esto quedara para formato zsf?
-->esto ya esta para .sna
+-Opción para poder cargar snapshot pero sin cambiar la rom actual... útil por si grabamos un snapshot por ejemplo en máquina 128kb pero la rom era la del opense
+->esto ya esta para .sna, hacer para zsf
 
 
 
