@@ -2901,6 +2901,8 @@ void menu_textspeech_send_text(char *texto)
 	buf_speech[dest]=0;
 
 
+	//printf ("directorio antes: [%s]\n",buf_speech);
+
 	//Si hay texto <dir> cambiar por directory
 	char *p;
 	p=strstr(buf_speech,"<dir>");
@@ -2909,6 +2911,15 @@ void menu_textspeech_send_text(char *texto)
 		sprintf (p,"%s","directory");
 	}
 
+	//Si directorio es ".."
+	if (!strcmp(buf_speech,".. directory") || !strcmp(buf_speech,"..                     directory") ) {
+		strcpy(buf_speech,"dot dot directory");
+	}
+
+	//Si directorio es ".."
+	if (!strcmp(buf_speech,"Active item: .. directory")) {
+		strcpy(buf_speech,"Active item: dot dot directory");
+	}
 
 
 	//Si es todo espacios sin ningun caracter, no enviar
@@ -8727,11 +8738,15 @@ void menu_audio_draw_sound_wave(void)
 	normal_overlay_texto_menu();
 
 
+
+
 	//esto hara ejecutar esto 2 veces por segundo
 	if ( ((contador_segundo%500) == 0 && menu_waveform_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 
 		menu_waveform_valor_contador_segundo_anterior=contador_segundo;
 		//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+		menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
                      
 			char buffer_texto_medio[40];
 			sprintf (buffer_texto_medio,"Av.: %d Min: %d Max: %d",
@@ -9116,8 +9131,9 @@ void menu_ay_registers_overlay(void)
 
 	int linea=0;
 
-	for (chip=0;chip<total_chips;chip++) {
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
+	for (chip=0;chip<total_chips;chip++) {
 
 			menu_string_volumen(volumen,ay_3_8912_registros[chip][8]);
 			sprintf (textovolumen,"Volume A: %s",volumen);
@@ -10467,7 +10483,7 @@ void menu_audio_new_ayplayer_overlay(void)
     	//Los volumenes mostrarlos siempre a cada refresco
 	char volumen[16],textovolumen[32];
 
-	
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 	menu_string_volumen(volumen,ay_3_8912_registros[0][8]);
 			sprintf (textovolumen,"Volume A: %s",volumen);
@@ -24460,6 +24476,8 @@ int menu_display_total_palette_lista_colores(int linea,int si_barras)
 void menu_display_total_palette_draw_barras(void)
 {
 
+				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
 
 				//Mostrar lista colores
 				menu_display_total_palette_lista_colores(TOTAL_PALETTE_WINDOW_Y+3,0);
@@ -24508,6 +24526,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 			set_menu_overlay_function(menu_display_total_palette_draw_barras);
 
         do {
+        	menu_speech_tecla_pulsada=0; //Que envie a speech
 
 							int linea=0;
 							//int linea_color;

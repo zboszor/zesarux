@@ -81,7 +81,7 @@ Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En men�
 
 -Posible ocr con traducción de cirílico?
 
--En tsconf que cargue la rom de trdos incluida en el tsconf
+
 
 -Config sinclair1/2 interface 2 joystick está bien? Ver página wos joystick
 
@@ -229,6 +229,7 @@ render de sprites / tiles se hace de momento al final de cada frame de pantalla 
 *parece que cuando se ha entrado una vez en la bios ya no se puede volver a entrar mas (usando el hard reset temporal) -> si deniego la escritura en nvram luego si que vuelve a entrar
 ->Parece que es porque intenta boot de SD (lee puerto xx57) y tiene que hacer timeout
 *quiza tsbios no va en modo p2a porque necesita bus idle -> efectivamente
+-En tsconf que cargue la rom de trdos incluida en el tsconf
 
 -320 lineas tsconf. ajustar t-estados por linea para que llegue a ser correcto. ajustar timings en cpu.c screen_total_borde_izquierdo, screen_invisible_borde_superior, etc
 
@@ -251,6 +252,11 @@ render de sprites / tiles se hace de momento al final de cada frame de pantalla 
 -capas de tiles/sprites/pixeles
 -Más info tsconf
 http://forum.tslabs.info/viewtopic.php?f=12&t=157 
+
+
+
+
+
 -Comandos ZRCP obtener datos sprites tsconf
 -synchronization demo .trd es para tsconfig
 
