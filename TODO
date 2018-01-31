@@ -274,8 +274,6 @@ o bien el mezclado de chip ay
 
 -probar a reducir buffer sonido en otros drivers: dsp, alsa, pulse
 
--drivers video texto mouse estará dividido entre 8??
-
 
 -Full screen cocoa gl
 -Grabar en archivo configuracion joystick: eventos, teclas, etc
