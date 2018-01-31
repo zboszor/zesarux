@@ -7542,12 +7542,19 @@ void menu_debug_draw_sprites(void)
         //int ancho=(SPRITES_ANCHO-2)*8;
         //int alto=(SPRITES_ALTO-4)*8;
 	int sx=SPRITES_X+1;
+	int sy=SPRITES_Y+3;
 	
 	//Si es mas ancho, que ventana visible, mover coordenada x 1 posicion atrás
 	if (view_sprites_ancho_sprite/menu_char_width>=SPRITES_ANCHO-2) sx--;
 
+	//Si es mas alto, mover coordenada sprite a 1, asi podemos mostrar sprites de hasta 192 de alto
+	if (view_sprites_alto_sprite>168) sy=1;
+
+	//Si se pasa aun mas
+	if (view_sprites_alto_sprite>184) sy=0;
+
         int xorigen=sx*menu_char_width;
-        int yorigen=(SPRITES_Y+3)*8;
+        int yorigen=sy*8;
 
 
         int x,y,bit;
@@ -8033,7 +8040,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         break;
 
                                         case 'a':
-                                                if (view_sprites_alto_sprite<(SPRITES_ALTO)*8)  view_sprites_alto_sprite++;
+                                                //if (view_sprites_alto_sprite<(SPRITES_ALTO)*8)  view_sprites_alto_sprite++;
+                                        	if (view_sprites_alto_sprite<192)  view_sprites_alto_sprite++;
                                         break;
 
 					case 'c':
