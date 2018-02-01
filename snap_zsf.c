@@ -577,6 +577,8 @@ Byte fields:
   zxuno_set_emulador_settings();
 
 
+
+  ulaplus_set_extended_mode(zxuno_ports[0x40]);
 }
 
 void load_zsf_snapshot(char *filename)
@@ -832,6 +834,38 @@ void save_zsf_snapshot(char *filename)
   else {
     save_zsf_snapshot_cpuregs(ptr_zsf_file);
   }
+
+
+
+ //Ula block
+  z80_byte ulablock[1];
+
+  ulablock[0]=out_254 & 7;
+
+  zsf_write_block(ptr_zsf_file, ulablock,ZSF_ULA, 1);
+
+  //ULAPlus block. Mejor que este esto hacia el principio, asi si por ejemplo se carga zxuno y esta un modo ulaplus extendido,
+  //como radastan, no hay problema en que el modo ulaplus estandard esté desactivado
+  if (ulaplus_presente.v) {
+   z80_byte ulaplusblock[67];
+/*
+-Block ID 9: ZSF_ULAPLUS
+Byte fields:
+0: ULAplus mode
+1: ULAplus last out to port BF3B
+2: ULAplus last out to port FF3B
+3-66: ULAplus palette
+*/
+  ulaplusblock[0]=ulaplus_mode;
+  ulaplusblock[1]=ulaplus_last_send_BF3B;
+  ulaplusblock[2]=ulaplus_last_send_FF3B;
+
+        int i;
+        for (i=0;i<64;i++) ulaplusblock[3+i]=ulaplus_palette_table[i];
+
+     zsf_write_block(ptr_zsf_file, ulaplusblock,ZSF_ULAPLUS, 67);
+  }
+
 
     //TODO: estado ula: puerto 254, etc
 
@@ -1108,33 +1142,7 @@ Byte fields:
     }
   }
 
-  //Ula block
-  z80_byte ulablock[1];
-
-  ulablock[0]=out_254 & 7;
-
-  zsf_write_block(ptr_zsf_file, ulablock,ZSF_ULA, 1);
-
-  //ULAPlus block
-  if (ulaplus_presente.v) {
-	 z80_byte ulaplusblock[67];
-/*
--Block ID 9: ZSF_ULAPLUS
-Byte fields:
-0: ULAplus mode
-1: ULAplus last out to port BF3B
-2: ULAplus last out to port FF3B
-3-66: ULAplus palette
-*/
-	ulaplusblock[0]=ulaplus_mode;
-	ulaplusblock[1]=ulaplus_last_send_BF3B;
-	ulaplusblock[2]=ulaplus_last_send_FF3B;
-
-        int i;
-        for (i=0;i<64;i++) ulaplusblock[3+i]=ulaplus_palette_table[i];
-
-	   zsf_write_block(ptr_zsf_file, ulaplusblock,ZSF_ULAPLUS, 67);
-  }
+ 
 
 
   //test meter un NOOP

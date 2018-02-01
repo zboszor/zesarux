@@ -18472,9 +18472,9 @@ After these 6 bytes, the data for the block comes.
     			block_id=value_8_to_16(zsf_file_memory[indice_zsf+1],zsf_file_memory[indice_zsf+0]);
     			unsigned int block_lenght=zsf_file_memory[indice_zsf+2]+(zsf_file_memory[indice_zsf+3]*256)+(zsf_file_memory[indice_zsf+4]*65536)+(zsf_file_memory[indice_zsf+5]*16777216);
 
-    			debug_printf (VERBOSE_INFO,"Block id: %u Lenght: %u",block_id,block_lenght);
+    			debug_printf (VERBOSE_INFO,"Block id: %u Size: %u",block_id,block_lenght);
 
-    			sprintf(buffer_texto,"Block id: %u (%s) Lenght: %u",block_id,zsf_get_block_id_name(block_id),block_lenght);
+    			sprintf(buffer_texto,"Id: %u (%s) Size: %u",block_id,zsf_get_block_id_name(block_id),block_lenght);
     			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
     			bytes_to_load -=6;
