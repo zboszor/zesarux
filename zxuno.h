@@ -125,4 +125,6 @@ extern z80_bit zxuno_flash_write_protection;
 
 extern z80_byte zxuno_get_radaspalbank_offset(void);
 
+extern void zxuno_set_emulador_settings(void);
+
 #endif

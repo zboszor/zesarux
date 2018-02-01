@@ -81,6 +81,7 @@
 #define ZSF_ULA 8
 #define ZSF_ULAPLUS 9
 #define ZSF_ZXUNO_RAMBLOCK 10
+#define ZSF_ZXUNO_CONF 11
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -171,6 +172,22 @@ Byte Fields:
 5: ram block id 
 6 and next bytes: data bytes
 
+
+
+-Block ID 11: ZSF_ZXUNO_CONF
+Ports and internal registers of ZXUNO machine
+Byte fields:
+0: Last out to port FC3B
+1-256: 256 internal ZXUNO registers
+257: Flash SPI bus index
+258: Flash SPI next read byte   
+259: Flash SPI status register
+260-262: 24 bit value with last spi write address
+263-265: 24 bit value with last spi read address
+266-273: 8 byte with spi bus contents
+
+
+
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
 Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
@@ -181,7 +198,7 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 10
+#define MAX_ZSF_BLOCK_ID_NAMES 11
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -195,6 +212,7 @@ char *zsf_block_id_names[]={
   "ZSF_ULA",
   "ZSF_ULAPLUS",
   "ZSF_ZXUNO_RAMBLOCK",
+  "ZSF_ZXUNO_CONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -522,6 +540,45 @@ Byte fields:
 }
 
 
+void load_zsf_zxuno_conf(z80_byte *header)
+{
+/*
+-Block ID 11: ZSF_ZXUNO_CONF
+Ports and internal registers of ZXUNO machine
+Byte fields:
+0: Last out to port FC3B
+1-256: 256 internal ZXUNO registers
+257: Flash SPI bus index
+258: Flash SPI next read byte   
+259: Flash SPI status register
+260-262: 24 bit value with last spi write address
+263-265: 24 bit value with last spi read address
+266-273: 8 byte with spi bus contents
+*/
+
+  last_port_FC3B=header[0];
+  int i;
+  for (i=0;i<256;i++) zxuno_ports[i]=header[1+i];
+
+  zxuno_spi_bus_index=header[257];
+  next_spi_read_byte=header[258];
+  zxuno_spi_status_register=header[259];
+
+
+  last_spi_write_address=(header[260]) + (256 * header[261]) + (65536 * header[262]);
+  last_spi_read_address=(header[263]) + (256 * header[264]) + (65536 * header[265]);
+
+  for (i=0;i<8;i++) zxuno_spi_bus[i]=header[266+i];
+
+  zxuno_set_memory_pages();    
+
+
+  //Sincronizar settings de emulador con los valores de puertos de zxuno
+  zxuno_set_emulador_settings();
+
+
+}
+
 void load_zsf_snapshot(char *filename)
 {
 
@@ -647,6 +704,10 @@ void load_zsf_snapshot(char *filename)
 
       case ZSF_ZXUNO_RAMBLOCK:
         load_zsf_zxuno_snapshot_block_data(block_data,block_lenght);
+      break;
+
+      case ZSF_ZXUNO_CONF:
+        load_zsf_zxuno_conf(block_data);
       break;
 
       default:
@@ -930,6 +991,45 @@ Byte Fields:
 
 if (MACHINE_IS_ZXUNO) {
 
+    z80_byte zxunoconfblock[274];
+
+/*
+-Block ID 11: ZSF_ZXUNO_CONF
+Ports and internal registers of ZXUNO machine
+Byte fields:
+0: Last out to port FC3B
+1-256: 256 internal ZXUNO registers
+257: Flash SPI bus index
+258: Flash SPI next read byte   
+259: Flash SPI status register
+260-262: 24 bit value with last spi write address
+263-265: 24 bit value with last spi read address
+266-273: 8 byte with spi bus contents
+*/    
+
+    zxunoconfblock[0]=last_port_FC3B;
+    int i;
+    for (i=0;i<256;i++) zxunoconfblock[1+i]=zxuno_ports[i];
+
+    zxunoconfblock[257]=zxuno_spi_bus_index;
+    zxunoconfblock[258]=next_spi_read_byte;  
+    zxunoconfblock[259]=zxuno_spi_status_register;  
+
+
+    zxunoconfblock[260]=last_spi_write_address & 0xFF;
+    zxunoconfblock[261]=(last_spi_write_address>>8) & 0xFF;
+    zxunoconfblock[262]=(last_spi_write_address>>16) & 0xFF;
+
+    zxunoconfblock[263]=last_spi_read_address & 0xFF;
+    zxunoconfblock[264]=(last_spi_read_address>>8) & 0xFF;
+    zxunoconfblock[265]=(last_spi_read_address>>16) & 0xFF;
+
+    for (i=0;i<8;i++) zxunoconfblock[266+i]=zxuno_spi_bus[i];
+
+    zsf_write_block(ptr_zsf_file, zxunoconfblock,ZSF_ZXUNO_CONF, 274);
+
+
+
    int longitud_ram=16384;
 
   
@@ -1017,7 +1117,7 @@ Byte fields:
 
   //ULAPlus block
   if (ulaplus_presente.v) {
-	z80_byte ulaplusblock[67];
+	 z80_byte ulaplusblock[67];
 /*
 -Block ID 9: ZSF_ULAPLUS
 Byte fields:
@@ -1033,7 +1133,7 @@ Byte fields:
         int i;
         for (i=0;i<64;i++) ulaplusblock[3+i]=ulaplus_palette_table[i];
 
-	zsf_write_block(ptr_zsf_file, ulaplusblock,ZSF_ULAPLUS, 67);
+	   zsf_write_block(ptr_zsf_file, ulaplusblock,ZSF_ULAPLUS, 67);
   }
 
 

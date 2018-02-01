@@ -224,6 +224,22 @@ void delete_zxuno_flash_text(void)
 }
 */
 
+void zxuno_set_emulador_settings(void)
+{
+	//Sincronizar settings de emulador con los valores de puertos de zxuno
+  zxuno_set_emulator_setting_contend();
+  zxuno_set_emulator_setting_devcontrol_diay();
+  zxuno_set_emulator_setting_devcontrol_ditay();
+  zxuno_set_emulator_setting_disd();
+  zxuno_set_emulator_setting_ditimex();
+  zxuno_set_emulator_setting_diulaplus(); 
+  zxuno_set_emulator_setting_diven(); 
+  zxuno_set_emulator_setting_i2kb();
+  zxuno_set_emulator_setting_scandblctrl();
+  zxuno_set_emulator_setting_timing();
+  
+  
+}
 
 void hard_reset_cpu_zxuno(void)
 {
@@ -250,16 +266,8 @@ void hard_reset_cpu_zxuno(void)
 	//registro RADASPALBANK, el numero 0x43 (67)
 	zxuno_ports[0x43]=0;
 
-	//Y sincronizar parametros
-        zxuno_set_emulator_setting_diven();
-	zxuno_set_emulator_setting_disd();
-        zxuno_set_emulator_setting_i2kb();
-        zxuno_set_emulator_setting_timing();
-        zxuno_set_emulator_setting_contend();
-	zxuno_set_emulator_setting_devcontrol_diay();
-	zxuno_set_emulator_setting_scandblctrl();
-	zxuno_set_emulator_setting_ditimex();
-	zxuno_set_emulator_setting_diulaplus();
+	//Sincronizar settings de emulador con los valores de puertos de zxuno
+	zxuno_set_emulador_settings();
 
 	reset_cpu();
 
