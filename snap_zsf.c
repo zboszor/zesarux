@@ -62,6 +62,7 @@
 #include "prism.h"
 #include "diviface.h"
 #include "snap_rzx.h"
+#include "divmmc.h"
 
 
 #include "autoselectoptions.h"
@@ -571,6 +572,10 @@ Byte fields:
   for (i=0;i<8;i++) zxuno_spi_bus[i]=header[266+i];
 
   zxuno_set_memory_pages();    
+
+  //Resetear settings mmc. Ya los habilitara luego si conviene
+  divmmc_diviface_enabled.v=0;
+  diviface_enabled.v=0;
 
 
   //Sincronizar settings de emulador con los valores de puertos de zxuno

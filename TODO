@@ -9,7 +9,10 @@ Mas utilidades de visor archivos: convertir?
 Formato zsf: completar para mas maquinas
 Mirar porque fallan muchos dsk
 
- 
+ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo y desactivo setting de divmmc paging, ya aparece:
+porque no habilita el nested_function de divmmc. Sera tan facil como guardar el setting de diviface-paged-enabled y si es asi, 
+activar ese nested (por defecto tenerlo desactivado). En caso de zxuno, divmmc en zsf no debe guardar/grabar su memoria ram ya que es 
+la propia memoria de zxuno quien lo tiene, lo mismo para tbblue, y prism
 
 --- Cosas para la version 6.1
 
@@ -44,6 +47,13 @@ archivo se llama spacepods.bas y hace lbytes mdv1_spacepods_bas -> lo normal
 
 -implementar exec_mdv1_... mismo ejemplo con cueshell, va a   Returning header for file on address 00100H y ahi peta
 
+-quiza en set_machine, cuando hace:
+  //Si estaba divmmc o divide activo, desactivarlos
+  //if (divmmc_enabled.v) divmmc_disable();
+  //if (divide_enabled.v) divide_disable();
+  if (diviface_enabled.v) diviface_disable();
+Igual deberia desactivar tambien setting divmmc_enabled y divide_enabled.v, porque sino, desactiva el setting diviface pero los otros 
+pueden quedarse activos. Esto en load snapshot zsf de zxuno lo hace aparte
 
 
 IMPORTANTE: ruido al iniciar emulador, no siempre, debido al agregar rutina de autoresize audio puntero

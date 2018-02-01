@@ -1314,7 +1314,7 @@ m68kopnz.o: m68kopnz.c
 snap.o: snap.c snap.h cpu.h debug.h operaciones.h zx8081.h mem128.h ay38912.h compileoptions.h autoselectoptions.h ay38912.h tape_smp.h audio.h screen.h menu.h tape.h snap_z81.h snap_zx8081.h snap_rzx.h utils.h ula.h joystick.h realjoystick.h z88.h chardetect.h jupiterace.h cpc.h timex.h zxuno.h ulaplus.h chloe.h prism.h diviface.h snap_rzx.h chrome.h tsconf.h snap_spg.h
 	\$(CC) \$(CFLAGS) -c snap.c
 
-snap_zsf.o: snap_zsf.c snap_zsf.h cpu.h debug.h operaciones.h zx8081.h mem128.h ay38912.h compileoptions.h autoselectoptions.h ay38912.h tape_smp.h audio.h screen.h menu.h tape.h snap_z81.h snap_zx8081.h snap_rzx.h utils.h ula.h joystick.h realjoystick.h z88.h chardetect.h jupiterace.h cpc.h timex.h zxuno.h ulaplus.h chloe.h prism.h diviface.h snap_rzx.h chrome.h tsconf.h
+snap_zsf.o: snap_zsf.c snap_zsf.h cpu.h debug.h operaciones.h zx8081.h mem128.h ay38912.h compileoptions.h autoselectoptions.h ay38912.h tape_smp.h audio.h screen.h menu.h tape.h snap_z81.h snap_zx8081.h snap_rzx.h utils.h ula.h joystick.h realjoystick.h z88.h chardetect.h jupiterace.h cpc.h timex.h zxuno.h ulaplus.h chloe.h prism.h diviface.h snap_rzx.h chrome.h tsconf.h divmmc.h
 	\$(CC) \$(CFLAGS) -c snap_zsf.c
 
 snap_z81.o: snap_z81.c snap_z81.h cpu.h debug.h operaciones.h snap.h
