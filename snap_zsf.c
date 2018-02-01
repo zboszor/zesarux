@@ -468,6 +468,8 @@ Byte fields:
                         
 	ulaplus_mode=header[0];
 	if (ulaplus_mode) ulaplus_enabled.v=1;
+	else ulaplus_enabled.v=0;
+
 	debug_printf (VERBOSE_DEBUG,"Setting ULAplus mode %d",ulaplus_mode);
 
 
