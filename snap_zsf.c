@@ -463,12 +463,17 @@ Byte fields:
 2: ULAplus last out to port FF3B
 3-66: ULAplus palette
 */
+
+	ulaplus_presente.v=1;
                         
 	ulaplus_mode=header[0];
+	if (ulaplus_mode) ulaplus_enabled.v=1;
+	debug_printf (VERBOSE_DEBUG,"Setting ULAplus mode %d",ulaplus_mode);
+
+
         ulaplus_last_send_BF3B=header[1];
         ulaplus_last_send_FF3B=header[2];
 
-	debug_printf (VERBOSE_DEBUG,"Setting ULAplus mode %d",ulaplus_mode);
 
         //Leer 64 bytes de paleta ulaplus
         int i;
