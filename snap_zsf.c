@@ -79,6 +79,7 @@
 #define ZSF_SPEC128_RAMBLOCK 6
 #define ZSF_AYCHIP 7
 #define ZSF_ULA 8
+#define ZSF_ULAPLUS 9
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -151,6 +152,14 @@ Byte fields:
 0: Border color (Last out to port 254 AND 7)
 
 
+-Block ID 9: ZSF_ULAPLUS
+Byte fields:
+0: ULAplus mode
+1: ULAplus last out to port BF3B
+2: ULAplus last out to port FF3B
+3-66: ULAplus palette
+
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -162,7 +171,7 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 8
+#define MAX_ZSF_BLOCK_ID_NAMES 9
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -174,6 +183,7 @@ char *zsf_block_id_names[]={
   "ZSF_SPEC128_RAMBLOCK",
   "ZSF_AYCHIP",
   "ZSF_ULA",
+  "ZSF_ULAPLUS",
 
   "Unknown"  //Este siempre al final
 };
@@ -443,6 +453,29 @@ void load_zsf_ula(z80_byte *header)
 }
 
 
+void load_zsf_ulaplus(z80_byte *header)
+{
+/*
+-Block ID 9: ZSF_ULAPLUS
+Byte fields:
+0: ULAplus mode
+1: ULAplus last out to port BF3B
+2: ULAplus last out to port FF3B
+3-66: ULAplus palette
+*/
+                        
+	ulaplus_mode=header[0];
+        ulaplus_last_send_BF3B=header[1];
+        ulaplus_last_send_FF3B=header[2];
+
+	debug_printf (VERBOSE_DEBUG,"Setting ULAplus mode %d",ulaplus_mode);
+
+        //Leer 64 bytes de paleta ulaplus
+        int i;
+        for (i=0;i<64;i++) ulaplus_palette_table[i]=header[3+i];
+}
+
+
 void load_zsf_snapshot(char *filename)
 {
 
@@ -560,6 +593,10 @@ void load_zsf_snapshot(char *filename)
 
       case ZSF_ULA:
         load_zsf_ula(block_data);
+      break;
+
+      case ZSF_ULAPLUS:
+        load_zsf_ulaplus(block_data);
       break;
 
       default:
@@ -875,6 +912,27 @@ Byte fields:
   ulablock[0]=out_254 & 7;
 
   zsf_write_block(ptr_zsf_file, ulablock,ZSF_ULA, 1);
+
+  //ULAPlus block
+  if (ulaplus_presente.v) {
+	z80_byte ulaplusblock[67];
+/*
+-Block ID 9: ZSF_ULAPLUS
+Byte fields:
+0: ULAplus mode
+1: ULAplus last out to port BF3B
+2: ULAplus last out to port FF3B
+3-66: ULAplus palette
+*/
+	ulaplusblock[0]=ulaplus_mode;
+	ulaplusblock[1]=ulaplus_last_send_BF3B;
+	ulaplusblock[2]=ulaplus_last_send_FF3B;
+
+        int i;
+        for (i=0;i<64;i++) ulaplusblock[3+i]=ulaplus_palette_table[i];
+
+	zsf_write_block(ptr_zsf_file, ulaplusblock,ZSF_ULAPLUS, 67);
+  }
 
 
   //test meter un NOOP
