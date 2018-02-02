@@ -114,6 +114,50 @@ z80_int tbblue_layer_ula[512];
 z80_int tbblue_layer_layer2[512];
 z80_int tbblue_layer_sprites[512];
 
+/* 
+Clip window registers
+
+(W) 0x18 (24) => Clip Window Layer 2
+  bits 7-0 = Cood. of the clip window
+  1st write - X1 position
+  2nd write - X2 position
+  3rd write - Y1 position
+  4rd write - Y2 position
+  The values are 0,255,0,191 after a Reset
+
+(W) 0x19 (25) => Clip Window Sprites
+  bits 7-0 = Cood. of the clip window
+  1st write - X1 position
+  2nd write - X2 position
+  3rd write - Y1 position
+  4rd write - Y2 position
+  The values are 0,255,0,191 after a Reset
+  Clip window on Sprites only work when the "over border bit" is disabled
+
+(W) 0x1A (26) => Clip Window ULA/LoRes
+  bits 7-0 = Coord. of the clip window
+  1st write = X1 position
+  2nd write = X2 position
+  3rd write = Y1 position
+  4rd write = Y2 position
+
+(W) 0x1C (28) => Clip Window control
+  bits 7-3 = Reserved, must be 0
+  bit 2 - reset the ULA/LoRes clip index.
+  bit 1 - reset the sprite clip index.
+  bit 0 - reset the Layer 2 clip index.
+
+*/
+
+z80_byte clip_window_layer2[4];
+z80_byte clip_window_layer2_index;
+
+z80_byte clip_window_sprites[4];
+z80_byte clip_window_sprites_index;
+
+z80_byte clip_window_ula[4];
+z80_byte clip_window_ula_index;
+
 
 //Damos la paleta que se esta leyendo o escribiendo en una operacion de I/O
 //Para ello mirar bits 6-4  de reg 0x43
@@ -1801,6 +1845,31 @@ void tbblue_reset_common(void)
 	tbblue_registers[22]=0;
 	tbblue_registers[23]=0;
 
+	tbblue_registers[24]=191;
+	tbblue_registers[25]=191;
+	tbblue_registers[26]=191;
+	tbblue_registers[28]=0;
+
+
+	clip_window_layer2[0]=0;
+	clip_window_layer2[1]=255;
+	clip_window_layer2[2]=0;
+	clip_window_layer2[3]=191;
+
+	clip_window_sprites[0]=0;
+	clip_window_sprites[1]=255;
+	clip_window_sprites[2]=0;
+	clip_window_sprites[3]=191;
+
+	clip_window_ula[0]=0;
+	clip_window_ula[1]=255;
+	clip_window_ula[2]=0;
+	clip_window_ula[3]=191;	
+
+
+	clip_window_layer2_index=clip_window_sprites_index=clip_window_ula_index=0;
+
+
 	tbblue_registers[30]=0;
 	tbblue_registers[31]=0;
 	tbblue_registers[34]=0;
@@ -2220,6 +2289,49 @@ void tbblue_set_value_port(z80_byte value)
 				if (value&128) screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling lores video mode. 128x96 256 colours");
 				else screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling lores video mode");
 			}
+		break;
+
+
+		case 24:
+			//(W) 0x18 (24) => Clip Window Layer 2
+			clip_window_layer2[clip_window_layer2_index&3]=value;
+			clip_window_layer2_index++;
+
+			//debug
+			printf ("layer2 %d %d %d %d\n",clip_window_layer2[0],clip_window_layer2[1],clip_window_layer2[2],clip_window_layer2[3]);
+		break;
+
+		case 25:
+			//((W) 0x19 (25) => Clip Window Sprites
+			clip_window_sprites[clip_window_sprites_index&3]=value;
+			clip_window_sprites_index++;
+
+			//debug
+			printf ("sprites %d %d %d %d\n",clip_window_sprites[0],clip_window_sprites[1],clip_window_sprites[2],clip_window_sprites[3]);
+		break;	
+
+		case 26:
+			//(W) 0x1A (26) => Clip Window ULA/LoRes
+			clip_window_ula[clip_window_ula_index&3]=value;
+			clip_window_ula_index++;
+
+			//debug
+			printf ("ula %d %d %d %d\n",clip_window_ula[0],clip_window_ula[1],clip_window_ula[2],clip_window_ula[3]);
+		break;				
+
+		case 28:
+		/*
+		(W) 0x1C (28) => Clip Window control
+  bits 7-3 = Reserved, must be 0
+  bit 2 - reset the ULA/LoRes clip index.
+  bit 1 - reset the sprite clip index.
+  bit 0 - reset the Layer 2 clip index.
+  	*/
+
+			if (value&1) clip_window_layer2_index=0;
+			if (value&2) clip_window_sprites_index=0;
+			if (value&4) clip_window_ula_index=0;
+
 		break;
 
 		case 64:

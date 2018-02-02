@@ -65,6 +65,7 @@ probado lo siguiente:
 * poner a 0 tambien fifo_read_position al hacer empty buffer: ningun cambio
 ->Quiza solucion es que haga reseteo solo cuando se haya llenado 1 vez el buffer al menos
 
+-enter le envia siempre speech pending. normal?
 
 -eventos joystick para simular pgup, pgdn
 
