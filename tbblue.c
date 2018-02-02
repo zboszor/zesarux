@@ -2965,7 +2965,12 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 							
 
 				//Capa ula
+				//Tener en cuenta valor clip window
+				int posx=x*8+bit;
+				//(W) 0x1A (26) => Clip Window ULA/LoRes
+				if (posx>=clip_window_ula[0] && posx<=clip_window_ula[1] && scanline_copia>=clip_window_ula[2] && scanline_copia<=clip_window_ula[3]) {
 				tbblue_layer_ula[posicion_array_layer]=tbblue_get_palette_active_ula(color);
+				}
 
 				//Capa layer2
 				if (tbblue_is_active_layer2()) {
@@ -2997,6 +3002,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 	}
 
 	//Aqui puede ser borde superior o inferior
+
 	//capa sprites
 	tbsprite_do_overlay();
 
