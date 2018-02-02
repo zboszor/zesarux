@@ -3013,8 +3013,16 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 	//Aqui puede ser borde superior o inferior
 
 	//capa sprites. Si clip window y corresponde:
-	int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
-	if (scanline_copia>=clip_window_sprites[2] && scanline_copia<=clip_window_sprites[3]) {
+	z80_byte sprites_over_border=tbblue_registers[21]&2;
+	//Clip window on Sprites only work when the "over border bit" is disabled
+	int mostrar_sprites=1;
+	if (sprites_over_border==0) {
+		int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+		if (scanline_copia<clip_window_sprites[2] || scanline_copia>clip_window_sprites[3]) mostrar_sprites=0;
+	}
+
+	
+	if (mostrar_sprites) {
 	tbsprite_do_overlay();
 	}
 
