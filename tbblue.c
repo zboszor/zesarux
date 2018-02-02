@@ -795,6 +795,13 @@ void tbsprite_put_color_line(int x,z80_byte color,int rangoxmin,int rangoxmax)
 	//Si coordenadas fuera de la parte visible (border si o no), volver
 	if (x<rangoxmin || x>rangoxmax) return;
 
+
+	//Si fuera del viewport. Clip window on Sprites only work when the "over border bit" is disabled
+	int clipxmin=clip_window_sprites[0]+TBBLUE_SPRITE_BORDER;
+	int clipxmax=clip_window_sprites[1]+TBBLUE_SPRITE_BORDER;
+	z80_byte sprites_over_border=tbblue_registers[21]&2;
+	if (sprites_over_border==0 && (x<clipxmin || x>=clipxmax)) return;
+
 	z80_int color_final=tbblue_get_palette_active_sprite(color);
 
 	//Si color transparente, no hacer nada
@@ -2962,11 +2969,11 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 					posicion_x_lores_pointer++; 
 				}
 
-							
+				int posx=x*8+bit; //Posicion pixel. Para clip window registers							
 
 				//Capa ula
 				//Tener en cuenta valor clip window
-				int posx=x*8+bit;
+				
 				//(W) 0x1A (26) => Clip Window ULA/LoRes
 				if (posx>=clip_window_ula[0] && posx<=clip_window_ula[1] && scanline_copia>=clip_window_ula[2] && scanline_copia<=clip_window_ula[3]) {
 				tbblue_layer_ula[posicion_array_layer]=tbblue_get_palette_active_ula(color);
@@ -2974,9 +2981,11 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 				//Capa layer2
 				if (tbblue_is_active_layer2()) {
+					if (posx>=clip_window_layer2[0] && posx<=clip_window_layer2[1] && scanline_copia>=clip_window_layer2[2] && scanline_copia<=clip_window_layer2[3]) {
 					z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+tbblue_reg_22];
 					z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2);
 					tbblue_layer_layer2[posicion_array_layer]=final_color_layer2;
+					}
 				}
 
 				posicion_array_layer++;
@@ -3003,8 +3012,11 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 	//Aqui puede ser borde superior o inferior
 
-	//capa sprites
+	//capa sprites. Si clip window y corresponde:
+	int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+	if (scanline_copia>=clip_window_sprites[2] && scanline_copia<=clip_window_sprites[3]) {
 	tbsprite_do_overlay();
+	}
 
 
 	//int i;
