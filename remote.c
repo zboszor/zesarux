@@ -793,7 +793,9 @@ struct s_items_ayuda items_ayuda[]={
   {"speech-empty-fifo",NULL,NULL,"Empty speech fifo"},
   {"speech-send",NULL,"message","Sends message to speech"},
 
-  
+  {"tbblue-get-clipwindow",NULL,"ula|layer2|sprite","Get clip window parameters. You need to tell which clip window. Only allowed on machine TBBlue"},
+  {"tbblue-set-clipwindow",NULL,"ula|layer2|sprite x1 x2 y1 y2","Set clip window parameters. You need to tell which clip window. Only allowed on machine TBBlue"},
+
 
  {"tbblue-get-palette",NULL,"ula|layer2|sprite first|second index [items]","Get palette colours at index, if not specified items parameters, returns only one. You need to tell which palette. Returned values are in hexadecimal format. Only allowed on machine TBBlue"},
  {"tbblue-get-pattern",NULL,"index [items]","Get patterns at index, if not specified items parameters, returns only one. Returned values are in hexadecimal format. Only allowed on machine TBBlue"},
@@ -2910,6 +2912,36 @@ int return_internal_pointer(char *s,z80_byte **puntero)
 }
 
 
+//Retorna puntero a array de clip window, segun 
+//tipo : ula|layer2|sprite
+//Retorna NULL si hay algun error
+z80_byte *remote_return_clipwindow(char *tipo)
+{
+
+  /*
+
+z80_byte clip_window_layer2[4];
+
+z80_byte clip_window_sprites[4];
+
+z80_byte clip_window_ula[4];
+
+*/
+
+  if (!strcmp(tipo,"ula")) {
+    return clip_window_ula;
+  }
+  else   if (!strcmp(tipo,"layer2")) {
+    return clip_window_layer2;
+  }
+  else   if (!strcmp(tipo,"sprite")) {
+    return clip_window_sprites;
+  }
+
+  return NULL;
+
+}
+
 //Retorna puntero a array de paleta, segun 
 //tipo : ula|layer2|sprite
 //firstsecond: first|second
@@ -3941,7 +3973,64 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
   	textspeech_print_speech(parametros);
   }
 
+  else if (!strcmp(comando_sin_parametros,"tbblue-get-clipwindow") ) {
 
+    if (!MACHINE_IS_TBBLUE) escribir_socket(misocket,"ERROR. Machine is not TBBlue");
+    else {
+      remote_parse_commands_argvc(parametros);
+      if (remote_command_argc<1) {
+        escribir_socket(misocket,"ERROR. Needs one parameter");
+        return;
+      }
+
+
+      z80_byte *clipwindow;
+      clipwindow=remote_return_clipwindow(remote_command_argv[0]);
+      if (clipwindow==NULL) {
+        escribir_socket(misocket,"ERROR. Unknown clip window");
+        return;
+      }
+
+      int i;
+      for (i=0;i<4;i++) {
+        escribir_socket_format(misocket,"%d ",clipwindow[i]);
+      }
+
+      
+
+
+    }
+  }
+
+
+  else if (!strcmp(comando_sin_parametros,"tbblue-set-clipwindow") ) {
+
+    if (!MACHINE_IS_TBBLUE) escribir_socket(misocket,"ERROR. Machine is not TBBlue");
+    else {
+      remote_parse_commands_argvc(parametros);
+      if (remote_command_argc<5) {
+        escribir_socket(misocket,"ERROR. Needs five parameters");
+        return;
+      }
+
+
+      z80_byte *clipwindow;
+      clipwindow=remote_return_clipwindow(remote_command_argv[0]);
+      if (clipwindow==NULL) {
+        escribir_socket(misocket,"ERROR. Unknown clip window");
+        return;
+      }
+
+      int i;
+      for (i=0;i<4;i++) {
+        clipwindow[i]=parse_string_to_number(remote_command_argv[1+i]);
+      }
+
+      
+
+
+    }
+  }
 
     else if (!strcmp(comando_sin_parametros,"tbblue-get-palette") ) {
 
@@ -3975,7 +4064,7 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
 	        }
 
 
-        }
+    }
 
         else if (!strcmp(comando_sin_parametros,"tbblue-get-pattern") ) {
 

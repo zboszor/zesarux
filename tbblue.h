@@ -150,4 +150,9 @@ extern z80_byte return_tbblue_mmu_segment(z80_int dir);
 
 extern int tbblue_is_writable_segment_mmu_rom_space(z80_int dir);
 
+
+extern z80_byte clip_window_layer2[];
+extern z80_byte clip_window_sprites[];
+extern z80_byte clip_window_ula[];
+
 #endif

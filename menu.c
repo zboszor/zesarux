@@ -14528,11 +14528,11 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
 
-                char string_mmc_file_shown[13];
+                char string_mmc_file_shown[17];
 								char string_divmmc_rom_file_shown[10];
 
 
-                        menu_tape_settings_trunc_name(mmc_file_name,string_mmc_file_shown,13);
+                        menu_tape_settings_trunc_name(mmc_file_name,string_mmc_file_shown,17);
                         menu_add_item_menu_inicial_format(&array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_file,NULL,"~~MMC File: %s",string_mmc_file_shown);
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'m');
                         menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"MMC Emulation file");
@@ -14867,14 +14867,14 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
 
-                char string_ide_file_shown[13];
+                char string_ide_file_shown[17];
 								char string_divide_rom_file_shown[10];
 
 
 
 
 
-                        menu_tape_settings_trunc_name(ide_file_name,string_ide_file_shown,13);
+                        menu_tape_settings_trunc_name(ide_file_name,string_ide_file_shown,17);
                         menu_add_item_menu_inicial_format(&array_menu_ide_divide,MENU_OPCION_NORMAL,menu_storage_ide_file,NULL,"~~IDE File: %s",string_ide_file_shown);
                         menu_add_item_menu_shortcut(array_menu_ide_divide,'i');
                         menu_add_item_menu_tooltip(array_menu_ide_divide,"IDE Emulation file");

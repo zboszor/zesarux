@@ -2305,7 +2305,7 @@ void tbblue_set_value_port(z80_byte value)
 			clip_window_layer2_index++;
 
 			//debug
-			printf ("layer2 %d %d %d %d\n",clip_window_layer2[0],clip_window_layer2[1],clip_window_layer2[2],clip_window_layer2[3]);
+			//printf ("layer2 %d %d %d %d\n",clip_window_layer2[0],clip_window_layer2[1],clip_window_layer2[2],clip_window_layer2[3]);
 		break;
 
 		case 25:
@@ -2314,7 +2314,7 @@ void tbblue_set_value_port(z80_byte value)
 			clip_window_sprites_index++;
 
 			//debug
-			printf ("sprites %d %d %d %d\n",clip_window_sprites[0],clip_window_sprites[1],clip_window_sprites[2],clip_window_sprites[3]);
+			//printf ("sprites %d %d %d %d\n",clip_window_sprites[0],clip_window_sprites[1],clip_window_sprites[2],clip_window_sprites[3]);
 		break;	
 
 		case 26:
@@ -2323,7 +2323,7 @@ void tbblue_set_value_port(z80_byte value)
 			clip_window_ula_index++;
 
 			//debug
-			printf ("ula %d %d %d %d\n",clip_window_ula[0],clip_window_ula[1],clip_window_ula[2],clip_window_ula[3]);
+			//printf ("ula %d %d %d %d\n",clip_window_ula[0],clip_window_ula[1],clip_window_ula[2],clip_window_ula[3]);
 		break;				
 
 		case 28:
