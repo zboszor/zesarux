@@ -4,10 +4,11 @@
 Recreated: que funcione en windows y linux
 QL: lectura de bloques basic no siempre funciona
 TsConf: dibujado sprites, tiles a cada scanline. dibujado border
-Next: implementar features que faltan: video offset
 Mas utilidades de visor archivos: convertir?
 Formato zsf: completar para mas maquinas
 Mirar porque fallan muchos dsk
+TBBLue: al hacer hard reset, los colores del boot se cambian :S quiza algun bit de la paleta que no esta bien en reset?
+
 
 ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo y desactivo setting de divmmc paging, ya aparece:
 porque no habilita el nested_function de divmmc. Sera tan facil como guardar el setting de diviface-paged-enabled y si es asi, 
