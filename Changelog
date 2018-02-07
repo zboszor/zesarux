@@ -11,6 +11,7 @@ Added setting to write protect IDE, MMC, ZX-Uno Flash
 Added setting to disable persistent writes on IDE and MMC
 Added two more GUI styles: Clean and CleanInverse
 Added second Easter Egg ;)
+Added improved Spectrum 16/48/+ colour palette
 Improved joystick support: 
 * added joystick test menu
 * buttons to events and buttons to joystick configuration are saved on configuration file
