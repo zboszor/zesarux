@@ -689,5 +689,7 @@ agregando duplicidad de funciones sin verdadera necesidad...
 extern int spectrum_palette_offset;
 extern z80_bit spectrum_1648_use_real_palette;
 
+extern void screen_set_spectrum_palette_offset(void);
+
 
 #endif

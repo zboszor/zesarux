@@ -2556,6 +2556,7 @@ void set_machine_params(void)
 		fetch_opcode=fetch_opcode_spectrum;
 
 
+		screen_set_spectrum_palette_offset();
 
 
 		//2 para ZX81 mejor

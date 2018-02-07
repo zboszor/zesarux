@@ -255,6 +255,18 @@ int spectrum_palette_offset=0;
 
 z80_bit spectrum_1648_use_real_palette={1};
 
+void screen_set_spectrum_palette_offset(void)
+{
+	if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
+		if (spectrum_1648_use_real_palette.v) {
+			spectrum_palette_offset=SPECCY_1648_REAL_PALETTE_FIRST_COLOR;
+			return;
+		}
+	}
+
+	spectrum_palette_offset=0;
+}
+
 //Tabla con los colores reales del Z88. Formato RGB
 const int z88_colortable_original[4]={
 0x461B7D, //Enabled pixel
@@ -7868,6 +7880,13 @@ G  G   R   R   B   B
 			screen_set_colour_normal(Z88_PXCOLGREY,z88_colortable_original[1]);
 			screen_set_colour_normal(Z88_PXCOLOFF,z88_colortable_original[2]);
 			screen_set_colour_normal(Z88_PXCOLSCROFF,z88_colortable_original[3]);
+
+
+			//Colores reales de spectrum 16/48/+
+			for (i=0;i<16;i++) {
+                                debug_printf(VERBOSE_DEBUG,"Initializing Standard Spectrum 16/48/+ Real Color. Index: %i  Value: %06XH",i,spectrum_colortable_1648_real[i]);
+                                screen_set_colour_normal(SPECCY_1648_REAL_PALETTE_FIRST_COLOR+i,spectrum_colortable_1648_real[i]);
+                        }
 
 			//colores ulaplus
 			//ulaplus_rgb_table
