@@ -23429,7 +23429,11 @@ void menu_interface_show_cpu_usage(MENU_ITEM_PARAMETERS)
 	if (!screen_show_cpu_usage.v) menu_init_footer();
 }
 
-
+void menu_interface_real_1648_palette(MENU_ITEM_PARAMETERS)
+{
+	spectrum_1648_use_real_palette.v ^=1;
+	screen_set_spectrum_palette_offset();
+}
 
 void menu_colour_settings(MENU_ITEM_PARAMETERS)
 {
@@ -23449,6 +23453,11 @@ void menu_colour_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_colour_settings,"Inverses all the colours used on the emulator, including menu");
 
 
+		if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
+			menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_real_1648_palette,NULL,"Real palette: %s",(spectrum_1648_use_real_palette.v ? "Yes" : "No") );
+			menu_add_item_menu_tooltip(array_menu_colour_settings,"Use real Spectrum 16/48/+ colour palette");
+			menu_add_item_menu_ayuda(array_menu_colour_settings,"Use real Spectrum 16/48/+ colour palette");
+		}
 
                 menu_add_item_menu(array_menu_colour_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_colour_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
