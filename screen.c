@@ -3800,8 +3800,8 @@ void scr_refresca_pantalla_comun(void)
 				if (scr_refresca_sin_colores.v) attribute=56;
 
 
-        	                ink=spectrum_palette_offset+(attribute &7);
-                	        paper=spectrum_palette_offset+((attribute>>3) &7);
+        	                ink=attribute &7;
+                	        paper=(attribute>>3) &7;
 	                        bright=(attribute) &64;
         	                flash=(attribute)&128;
                 	        if (flash) {
@@ -3820,7 +3820,7 @@ void scr_refresca_pantalla_comun(void)
 
                         	for (bit=0;bit<8;bit++) {
 
-					color= ( byte_leido & 128 ? ink : paper );
+					color= spectrum_palette_offset + ( byte_leido & 128 ? ink : paper );
 					scr_putpixel_zoom(x_hi+bit,y,color);
 
 	                                byte_leido=byte_leido<<1;
@@ -6587,7 +6587,8 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
     z80_int offset_caracter;
 
-    z80_byte tinta,papel;
+    //z80_byte tinta,papel;
+    unsigned int tinta,papel;
 
     z80_byte atributo;
 
@@ -6820,7 +6821,8 @@ void screen_store_scanline_rainbow_solo_display(void)
         int fila;
 
         z80_byte attribute,bright,flash;
-	z80_int ink,paper,aux;
+	//z80_int ink,paper,aux;
+	unsigned int ink,paper,aux;
 
 
         z80_byte *screen=get_base_mem_pantalla();
