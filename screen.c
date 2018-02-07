@@ -254,7 +254,7 @@ const int spectrum_colortable_1648_real[16] =
 //Y setting de color real esta activo
 int spectrum_palette_offset=0;
 
-z80_bit spectrum_1648_use_real_palette={1};
+z80_bit spectrum_1648_use_real_palette={0};
 
 void screen_set_spectrum_palette_offset(void)
 {
@@ -4550,6 +4550,13 @@ void screen_store_scanline_rainbow_border_comun_prism(z80_int *puntero_buf_rainb
 
 }
 
+unsigned int screen_store_scanline_border_si_incremento_real(unsigned int color_border)
+{
+	if (ulaplus_presente.v==0 && spectra_enabled.v==0) color_border +=spectrum_palette_offset;
+
+	return color_border;
+}
+
 
 void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int xinicial)
 {
@@ -4587,6 +4594,8 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 
 	color_border=screen_border_last_color;
 
+	color_border=screen_store_scanline_border_si_incremento_real(color_border);
+
 	if (ulaplus_presente.v && ulaplus_enabled.v) {
 		//color_border=ulaplus_palette_table[screen_border_last_color+8]+ULAPLUS_INDEX_FIRST_COLOR;
 		color_border=screen_return_border_ulaplus_color();
@@ -4612,6 +4621,9 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
                 if (border_leido!=255) {
                         screen_border_last_color=border_leido;
 			color_border=screen_border_last_color;
+
+			color_border=screen_store_scanline_border_si_incremento_real(color_border);
+
                         //if (indice_border!=0) printf ("cambio color en indice_border=%d color=%d\n",indice_border,last_color);
 
 			//screen_incremento_border_si_ulaplus();
@@ -4635,7 +4647,11 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 		        }
 
 
+
+
                 }
+
+
 
 
 		//Si estamos en x a partir del parametro inicial y Si no estamos en zona de retrace horizontal, dibujar border e incrementar posicion
