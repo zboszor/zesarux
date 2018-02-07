@@ -1547,6 +1547,8 @@ Etc...
 
 *** Menu  ***
 
+-unificar funciones de debug y visores de archivo, etc. Para diferentes fuentes de datos (archivo, memoria emulada) que se pueda ver sprites, ver hexa, ver pantalla, etc....
+
 -pantalla de test teclado
 
 -AY piano pero que vaya mostrando las notas en scroll, y quiza guardando notas en archivo de texto?
