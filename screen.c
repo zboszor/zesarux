@@ -1127,6 +1127,8 @@ void scr_refresca_border_comun_spectrumzx8081(unsigned int color)
 	int topborder=TOP_BORDER;
 	if (MACHINE_IS_ZX8081ACE) topborder=ZX8081ACE_TOP_BORDER;
 
+	color +=spectrum_palette_offset;
+
 
         //parte superior
         for (y=0;y<topborder;y++) {
@@ -3798,8 +3800,8 @@ void scr_refresca_pantalla_comun(void)
 				if (scr_refresca_sin_colores.v) attribute=56;
 
 
-        	                ink=attribute &7;
-                	        paper=(attribute>>3) &7;
+        	                ink=spectrum_palette_offset+(attribute &7);
+                	        paper=spectrum_palette_offset+((attribute>>3) &7);
 	                        bright=(attribute) &64;
         	                flash=(attribute)&128;
                 	        if (flash) {

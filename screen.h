@@ -641,8 +641,8 @@ agregando duplicidad de funciones sin verdadera necesidad...
                 GET_PIXEL_ULAPLUS_COLOR \
             } \
             else { \
-                        ink=attribute &7; \
-                        paper=(attribute>>3) &7; \
+                        ink=spectrum_palette_offset+(attribute &7); \
+                        paper=spectrum_palette_offset+((attribute>>3) &7); \
                         bright=(attribute)&64; \
                         flash=(attribute)&128; \
                         if (flash) { \
