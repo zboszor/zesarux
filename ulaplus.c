@@ -187,6 +187,8 @@ void disable_ulaplus(void)
 {
 	debug_printf (VERBOSE_INFO,"Disabling ULAplus");
 	ulaplus_presente.v=0;
+
+    screen_set_spectrum_palette_offset();
 }
 
 void enable_ulaplus(void)
@@ -207,6 +209,8 @@ void enable_ulaplus(void)
 
         //necesita real video
         enable_rainbow();
+
+    screen_set_spectrum_palette_offset();
 }
 
 

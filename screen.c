@@ -259,7 +259,7 @@ z80_bit spectrum_1648_use_real_palette={0};
 void screen_set_spectrum_palette_offset(void)
 {
 	if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
-		if (spectrum_1648_use_real_palette.v) {
+		if (spectrum_1648_use_real_palette.v && ulaplus_presente.v==0 && spectra_enabled.v==0) {
 			spectrum_palette_offset=SPECCY_1648_REAL_PALETTE_FIRST_COLOR;
 			return;
 		}
@@ -4552,7 +4552,9 @@ void screen_store_scanline_rainbow_border_comun_prism(z80_int *puntero_buf_rainb
 
 unsigned int screen_store_scanline_border_si_incremento_real(unsigned int color_border)
 {
-	if (ulaplus_presente.v==0 && spectra_enabled.v==0) color_border +=spectrum_palette_offset;
+	//if (ulaplus_presente.v==0 && spectra_enabled.v==0) color_border +=spectrum_palette_offset;
+
+	color_border +=spectrum_palette_offset;
 
 	return color_border;
 }
