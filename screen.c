@@ -7786,6 +7786,22 @@ G  G   R   R   B   B
 			screen_set_colour_normal(Z88_PXCOLOFF,spectrum_colortable_normal[15]);
 			screen_set_colour_normal(Z88_PXCOLSCROFF,spectrum_colortable_normal[15]);
 
+
+			//trama de grises para spectrum 16/48/+ real
+			for (i=0;i<16;i++) {
+                                valorgris=(i&7)*GRAY_MODE_CONST;
+
+                                if (i>=8) valorgris +=GRAY_MODE_CONST_BRILLO;
+
+                                VALOR_GRIS_A_R_G_B
+
+                                screen_set_colour_normal(SPECCY_1648_REAL_PALETTE_FIRST_COLOR+i,(r<<16)|(g<<8)|b);
+
+                        }
+
+			//El color 8 es negro, con brillo 1. Pero negro igual
+                        screen_set_colour_normal(SPECCY_1648_REAL_PALETTE_FIRST_COLOR+8,0);
+
 			//trama de grises para ulaplus
 			//z80_byte color;
 			int color32;
