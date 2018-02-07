@@ -224,6 +224,27 @@ const int spectrum_colortable_original[16] =
 
 };
 
+//Tabla con los colores exactamente iguales para Spectrum 16/48/+, segun calculos de Richard Atkinson
+const int spectrum_colortable_1648_real[16] =
+{
+0x000002,
+0xA6070D,
+0x00BC00,
+0xAEC20B,
+0x0500BA,
+0xB306C5,
+0x0DBCB8,
+0xBBC2C4,
+0x000002,
+0xAF1016,
+0x11CE11,
+0xC8DD26,
+0x2822DC,
+0xDE31F1,
+0x41EFEC,
+0xF8FEFF
+};
+
 //Tabla con los colores reales del Z88. Formato RGB
 const int z88_colortable_original[4]={
 0x461B7D, //Enabled pixel
