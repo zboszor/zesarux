@@ -245,6 +245,16 @@ const int spectrum_colortable_1648_real[16] =
 0xFEFFF8
 };
 
+//Offset a paleta de colores spectrum. Se cambia en el caso de Spectrum 16/48/+, para usar nueva paleta real de Richard Atkinson
+//Se asigna al seleccionar maquina y tambien al cambiar setting desde menu
+//Si maquina es:
+//#define MACHINE_ID_SPECTRUM_16                  0
+//#define MACHINE_ID_SPECTRUM_48                  1
+//Y setting de color real esta activo
+int spectrum_palette_offset=0;
+
+z80_bit spectrum_1648_use_real_palette={1};
+
 //Tabla con los colores reales del Z88. Formato RGB
 const int z88_colortable_original[4]={
 0x461B7D, //Enabled pixel
