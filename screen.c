@@ -228,22 +228,22 @@ const int spectrum_colortable_original[16] =
 //Tabla con los colores exactamente iguales para Spectrum 16/48/+, segun calculos de Richard Atkinson
 const int spectrum_colortable_1648_real[16] =
 {
-0x000200,
-0x070DA6,
-0xBC0000,
-0xC20BAE,
-0x00BA05,
-0x06C5B3,
-0xBCB80D,
-0xC2C4BB,
-0x000200,
-0x1016AF,
-0xCE1111,
-0xDD26C8,
-0x22DC28,
-0x31F1DE,
-0xEFEC41,
-0xFEFFF8
+0x060800,
+0x0D13A7,
+0xBD0707,
+0xC312AF,
+0x07BA0C,
+0x0DC6B4,
+0xBCB914,
+0xC2C4BC,
+0x060800,
+0x161CB0,
+0xCE1818,
+0xDC2CC8,
+0x28DC2D,
+0x36EFDE,
+0xEEEB46,
+0xFDFFF7
 };
 
 //Offset a paleta de colores spectrum. Se cambia en el caso de Spectrum 16/48/+, para usar nueva paleta real de Richard Atkinson
