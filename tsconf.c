@@ -28,6 +28,8 @@
 #include "debug.h"
 #include "contend.h"
 #include "menu.h"
+#include "screen.h"
+#include "ula.h"
 
 
 z80_byte tsconf_last_port_eff7;
@@ -107,6 +109,18 @@ char *tsconf_video_sizes_array[]={
   "320x240",
   "360x288"
 };
+
+
+
+//360 pixeles de ancho maximo (720 en modo texto)
+//Le damos mas margen por si acaso
+//32768 colores maximo. Tenemos array de z80_int (16 bits). color 65535 es transparente
+
+#define TSCONF_MAX_WIDTH_LAYER 800
+
+z80_int tsconf_layer_ula[TSCONF_MAX_WIDTH_LAYER];
+z80_int tsconf_layer_tiles[TSCONF_MAX_WIDTH_LAYER];
+z80_int tsconf_layer_sprites[TSCONF_MAX_WIDTH_LAYER];
 
 z80_byte tsconf_get_video_mode_display(void)
 {
@@ -676,5 +690,946 @@ Y a partir de 24 todos son 255
 
 	return without_vdac[color];
 
+
+}
+
+
+//Hace putpixel tsconf pero teniendo en cuenta desplazamiento de border, que en el caso de tsconf es variable
+void scr_tsconf_putpixel_sum_border(int x,int y,unsigned color)
+{
+	//tsconf_current_border_width almacena el ancho de una franja, la izquierda por ejemplo
+	//Dado que el border (y la zona de pixeles) son pixeles de tamanyo 2x2, multiplicar en ancho y alto
+
+	scr_putpixel_zoom(x+tsconf_current_border_width*2,y+tsconf_current_border_height*2,color);
+}
+
+
+//Hace putpixel pero teniendo en cuenta tamanyo de 1x2
+void scr_tsconf_putpixel_text_mode(int x,int y,unsigned color)
+{
+	y*=2;
+
+	int border_x=tsconf_current_border_width*2;
+	int border_y=tsconf_current_border_height*2;
+
+	int menu_x=(x+border_x)/8;
+	int menu_y=(y+border_y)/8;
+
+	//Suponemos que y e y+1 van a estar dentro de una cuadricula igual los dos, por tanto la comprobacion siguiente solo la hacemos una vez
+	if (scr_ver_si_refrescar_por_menu_activo(menu_x,menu_y)) {
+		scr_tsconf_putpixel_sum_border(x,y,color);
+		scr_tsconf_putpixel_sum_border(x,y+1,color);
+	}
+}
+
+//Hace putpixel pero teniendo en cuenta tamanyo de 2x2
+void scr_tsconf_putpixel_zx_mode(int x,int y,unsigned color)
+{
+	y*=2;
+	x*=2;
+	scr_tsconf_putpixel_sum_border(x,y,color);
+	scr_tsconf_putpixel_sum_border(x,y+1,color);
+	scr_tsconf_putpixel_sum_border(x+1,y,color);
+	scr_tsconf_putpixel_sum_border(x+1,y+1,color);
+}
+
+void scr_tsconf_putpixel_zoom_rainbow_text_mode(unsigned color,z80_int *puntero_rainbow,int ancho_linea)
+{
+
+
+
+
+	//puntero_rainbow +=margeny_arr*ancho_linea;
+	//puntero_rainbow +=margenx_izq;
+
+	*puntero_rainbow=color;
+
+	puntero_rainbow +=ancho_linea;
+	*puntero_rainbow=color;
+
+}
+
+
+
+
+//Muestra un caracter en pantalla, al estilo del spectrum o zx80/81 o jupiter ace
+//entrada: puntero=direccion a tabla del caracter
+//x,y: coordenadas en x-0..31 e y 0..23 del zx81
+//inverse si o no
+//ink, paper
+//si emula fast mode o no
+void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_int *puntero_rainbow,int ancho_rainbow)
+{
+
+        z80_int color;
+        z80_byte bit;
+        z80_byte line;
+        z80_byte byte_leido;
+
+				z80_int *puntero_rainbow_orig;
+
+        for (line=0;line<alto;line++,y++) {
+					puntero_rainbow_orig=puntero_rainbow;
+          byte_leido=*puntero++;
+          if (inverse.v==1) byte_leido = byte_leido ^255;
+          for (bit=0;bit<8;bit++) {
+                if (byte_leido & 128 ) color=tinta;
+                else color=papel;
+
+                byte_leido=(byte_leido&127)<<1;
+
+								//Para modo texto se aplica paleta??
+								color=TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color);
+
+								if (puntero_rainbow!=NULL) {
+									//Lo mete en buffer rainbow
+
+											scr_tsconf_putpixel_zoom_rainbow_text_mode(color,puntero_rainbow,ancho_rainbow);
+											puntero_rainbow++;
+
+								}
+
+
+								else {
+									//if (scr_ver_si_refrescar_por_menu_activo((x+bit)/8,y/8)) {
+
+										scr_tsconf_putpixel_text_mode(x+bit,y,color);
+									//}
+								}
+
+           }
+
+					 puntero_rainbow=puntero_rainbow_orig;
+					 puntero_rainbow +=ancho_rainbow;
+        }
+}
+
+
+
+
+int temp_conta_nogfx;
+
+
+
+
+
+void tsconf_store_scanline_ula(void) 
+{
+	//Si desactivado plain graphics, no hacemos plain graphics. Pero habra que ver si estan los tiles/sprites (tsu)
+	if (tsconf_af_ports[0]&32) {
+		temp_conta_nogfx++;
+		//if (temp_conta_nogfx%3200==0) printf ("nogfx\n");
+		return;
+	}
+
+
+        //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
+
+        //linea que se debe leer
+        int scanline_copia=t_scanline_draw-tsconf_current_border_height;
+
+				//TODO: tener en cuenta zona invisible border
+				if (scanline_copia<0) return;
+
+				//Si zona border inferior
+				if (scanline_copia>tsconf_current_pixel_height) return;
+
+				int total_ancho_rainbow=get_total_ancho_rainbow();
+
+				//scanline_copia tiene coordenada scanline de dentro de zona pantalla
+				//doble de alto
+				//scanline_copia /=2;
+
+        //la copiamos a buffer rainbow
+        z80_int *puntero_buf_rainbow;
+        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
+        //int y;
+
+        int y_rainbow=scanline_copia*2;
+				//printf ("store y: %d\n",y_rainbow);
+
+				int y_origen_pixeles=scanline_copia; //para hacer doble de alto
+        //if (border_enabled.v==0) y=y-screen_borde_superior;
+
+        puntero_buf_rainbow=&rainbow_buffer[ y_rainbow*total_ancho_rainbow ];
+
+        //puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
+
+				//Margenes border
+				puntero_buf_rainbow +=tsconf_current_border_width*2;
+				puntero_buf_rainbow +=total_ancho_rainbow*tsconf_current_border_height*2;
+
+        int x,bit;
+        z80_int direccion;
+	      z80_int dir_atributo;
+        z80_byte byte_leido;
+
+
+        int color=0;
+        int fila;
+
+        z80_byte attribute,bright,flash;
+	      z80_int ink,paper,aux;
+
+				//scanline_copia tiene coordenada scanline de dentro de zona pantalla
+
+
+        z80_byte *screen=get_base_mem_pantalla();
+
+        direccion=screen_addr_table[(y_origen_pixeles<<5)];
+
+				
+
+
+
+        fila=y_origen_pixeles/8;
+        dir_atributo=6144+(fila*32);
+
+
+  int puntero_layer_ula=0;
+
+	z80_byte videomode=tsconf_get_video_mode_display();
+
+
+	//int posicion_array_pixeles_atributos=0;
+
+	if (videomode==3) {
+		//modo texto
+		int ancho_caracter=8;
+		int ancho_linea=tsconf_current_pixel_width*2;
+
+		z80_int puntero=0x0000;
+
+		z80_byte *screen;
+		screen=tsconf_ram_mem_table[tsconf_get_vram_page() ];
+
+		//int ancho_linea_caracteres=256;
+		int x=0;
+		int y=scanline_copia;
+		puntero=fila*256;
+
+		z80_byte font_page=tsconf_get_text_font_page();
+
+		z80_byte *puntero_fuente;
+		puntero_fuente=tsconf_ram_mem_table[font_page];
+
+		//z80_int puntero_orig=puntero;
+
+		z80_byte caracter;
+		//z80_byte caracter_text;
+
+		z80_bit inverse;
+
+    inverse.v=0;
+
+    z80_int offset_caracter;
+
+    //z80_byte tinta,papel;
+    unsigned int tinta,papel;
+
+    z80_byte atributo;
+
+    
+
+        for (x=0;x<ancho_linea;x+=ancho_caracter) {
+                //caracter=peek_byte_no_time(puntero);
+                //atributo=peek_byte_no_time(puntero+128);
+
+                caracter=screen[puntero];
+                atributo=screen[puntero+128];
+
+                puntero++;
+
+                //caracter_text=caracter;
+                //if (caracter<32 || caracter>127) caracter_text='.';
+                //printf ("%c",caracter_text);
+
+                offset_caracter=caracter*8;
+
+								//Sumarle scanline % 8
+								offset_caracter +=(y % 8);
+
+                //No tengo ni idea de si se leen los atributos asi, pero parece similar al real
+                tinta=atributo&15;
+                papel=(atributo>>4)&15;
+
+                scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],1,x,y,inverse,tinta,papel,puntero_buf_rainbow,total_ancho_rainbow);
+
+								puntero_buf_rainbow+=ancho_caracter;
+
+
+
+		}
+	}
+
+
+				if (videomode==1 || videomode==2) {
+					//puntero a vram
+					//Indice a linea
+					int offset;
+					if (videomode==1) offset=y_origen_pixeles*256;
+					else offset=y_origen_pixeles*512;
+
+					//Ver cuantas paginas salta esto
+					int pagina_offset=offset/16384;
+
+					//y offset final
+					z80_int offset_final=offset % 16384;
+
+					z80_byte vram_page=tsconf_get_vram_page()+pagina_offset;
+					z80_byte *screen;
+					screen=tsconf_ram_mem_table[vram_page]+offset_final;
+
+					z80_byte color;
+					for (x=0;x<tsconf_current_pixel_width;x++) {
+						if (videomode==2) {
+							color=*screen;
+							screen++;
+
+						}
+
+
+						if (videomode==1) {
+							color=*screen;
+
+							//Si pixel de la izquierda
+							if ((x%2)==0) {
+								color=(color>>4)&0xF;
+							}
+
+							else {
+								color=color&0xF;
+								screen++;
+							}
+
+							//Con paleta
+							color +=tsconf_return_cram_palette_offset();
+
+						}
+
+						z80_int color_final=tsconf_return_cram_color(color);
+
+            //doble ancho
+            tsconf_layer_ula[puntero_layer_ula++]=color_final;
+            tsconf_layer_ula[puntero_layer_ula++]=color_final;
+
+					}
+				}
+
+				if (videomode==0) {
+        	for (x=0;x<32;x++) {
+
+
+                        byte_leido=screen[direccion];
+
+                        attribute=screen[dir_atributo];
+
+                        ink=attribute &7; 
+                        paper=(attribute>>3) &7; 
+                        bright=(attribute)&64; 
+                        flash=(attribute)&128; 
+                        if (flash) { \
+                          if (estado_parpadeo.v) { 
+                                        aux=paper; 
+                                        paper=ink; 
+                                        ink=aux; 
+                                } 
+                        } 
+            
+                        if (bright) {   
+                          paper+=8; 
+                          ink+=8; 
+                        } 
+           
+
+
+                        for (bit=0;bit<8;bit++) {
+
+
+
+																color= ( byte_leido & 128 ? ink : paper ) ;
+
+																color=TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color);
+
+																//doble ancho
+																*puntero_buf_rainbow=color;
+																*(puntero_buf_rainbow+1)=color;
+
+																//doble alto
+
+																*(puntero_buf_rainbow+total_ancho_rainbow)=color;
+																*(puntero_buf_rainbow+total_ancho_rainbow+1)=color;
+
+																//Siguiente pixel
+																puntero_buf_rainbow++;
+																puntero_buf_rainbow++;
+
+
+
+                                byte_leido=byte_leido<<1;
+
+
+
+                        }
+												direccion++;
+												dir_atributo++;
+
+
+
+        			}
+					}
+
+
+
+
+}
+
+//Para zona no de border
+void screen_store_scanline_rainbow_solo_display_tsconf(void)
+{
+
+
+  //Inicializamos array de capas
+  int i;
+  for (i=0;i<TSCONF_MAX_WIDTH_LAYER;i++) {
+    tsconf_layer_ula[i]=tsconf_layer_tiles[i]=tsconf_layer_sprites[i]=65535;
+  }
+
+  //Dibujamos las capas
+  tsconf_store_scanline_ula();
+
+  //Y las pasamos a buffer rainbow
+        //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
+
+        //linea que se debe leer
+        int scanline_copia=t_scanline_draw-tsconf_current_border_height;
+
+				//TODO: tener en cuenta zona invisible border
+				if (scanline_copia<0) return;
+
+				//Si zona border inferior
+				if (scanline_copia>tsconf_current_pixel_height) return;
+
+				int total_ancho_rainbow=get_total_ancho_rainbow();
+
+				//scanline_copia tiene coordenada scanline de dentro de zona pantalla
+				//doble de alto
+				//scanline_copia /=2;
+
+        //la copiamos a buffer rainbow
+        z80_int *puntero_buf_rainbow;
+        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
+        //int y;
+
+        int y_rainbow=scanline_copia*2;
+				//printf ("store y: %d\n",y_rainbow);
+
+				int y_origen_pixeles=scanline_copia; //para hacer doble de alto
+        //if (border_enabled.v==0) y=y-screen_borde_superior;
+
+        puntero_buf_rainbow=&rainbow_buffer[ y_rainbow*total_ancho_rainbow ];
+
+        //puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
+
+				//Margenes border
+				puntero_buf_rainbow +=tsconf_current_border_width*2;
+				puntero_buf_rainbow +=total_ancho_rainbow*tsconf_current_border_height*2;
+
+        int x,bit;
+        z80_int direccion;
+	      z80_int dir_atributo;
+        z80_byte byte_leido;
+
+
+        int color=0;
+        int fila;
+
+        z80_byte attribute,bright,flash;
+	      z80_int ink,paper,aux;
+
+				//scanline_copia tiene coordenada scanline de dentro de zona pantalla
+
+
+
+
+
+	z80_byte videomode=tsconf_get_video_mode_display();
+
+
+	//int posicion_array_pixeles_atributos=0;
+
+
+
+					for (x=0;x<tsconf_current_pixel_width*2;x++) {
+						
+
+            //De momento solo capa ula
+						z80_int color_final=TSCONF_INDEX_FIRST_COLOR+tsconf_layer_ula[x];
+
+						*puntero_buf_rainbow=color_final;
+					
+						//doble alto
+						*(puntero_buf_rainbow+total_ancho_rainbow)=color_final;
+
+						//Siguiente pixel
+						puntero_buf_rainbow++;
+					}
+}
+
+			
+
+
+
+void screen_tsconf_refresca_text_mode(void)
+{
+
+	int ancho_caracter=8;
+	int ancho_linea=tsconf_current_pixel_width*2;
+	int alto_pantalla=tsconf_current_pixel_height;
+
+	//z80_int puntero=0xc000;
+
+	z80_int puntero=0x0000;
+
+	z80_byte *screen;
+	screen=tsconf_ram_mem_table[tsconf_get_vram_page() ];
+
+	int ancho_linea_caracteres=256;
+	int x=0;
+	int y=0;
+
+	z80_byte font_page=tsconf_get_text_font_page();
+
+	z80_byte *puntero_fuente;
+	puntero_fuente=tsconf_ram_mem_table[font_page];
+
+	z80_int puntero_orig=puntero;
+
+	z80_byte caracter;
+	//z80_byte caracter_text;
+
+
+
+
+	z80_bit inverse;
+
+	inverse.v=0;
+
+	z80_int offset_caracter;
+
+	z80_byte tinta,papel;
+
+	z80_byte atributo;
+
+	for (;puntero<7680;) {
+		//caracter=peek_byte_no_time(puntero);
+		//atributo=peek_byte_no_time(puntero+128);
+
+		caracter=screen[puntero];
+		atributo=screen[puntero+128];
+
+		puntero++;
+
+		//caracter_text=caracter;
+		//if (caracter<32 || caracter>127) caracter_text='.';
+		//printf ("%c",caracter_text);
+
+		offset_caracter=caracter*8;
+
+		//No tengo ni idea de si se leen los atributos asi, pero parece similar al real
+		tinta=atributo&15;
+		papel=(atributo>>4)&15;
+
+		scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],8,x,y,inverse,tinta,papel,NULL,0);
+
+
+		x+=ancho_caracter;
+		if (x+ancho_caracter>ancho_linea) {
+			//printf ("\n");
+			x=0;
+			y+=8;
+			if (y+8>alto_pantalla) {
+				//provocar fin
+				puntero=7680;
+			}
+			puntero=puntero_orig+ancho_linea_caracteres; //saltar atributos
+			puntero_orig=puntero;
+		}
+	}
+}
+
+
+//Putpixel de pixeles 2x2 de border de tsconf para modo no rainbow
+void scr_tsconf_putpixel_zoom_border(int x,int y, unsigned int color)
+{
+	x*=2;
+	y*=2;
+
+	scr_putpixel_zoom(x,y,color);
+	scr_putpixel_zoom(x+1,y,color);
+	scr_putpixel_zoom(x,y+1,color);
+	scr_putpixel_zoom(x+1,y+1,color);
+}
+
+void scr_refresca_border_tsconf_cont(void)
+{
+	int color;
+
+	color=out_254 & 7;
+
+
+	if (scr_refresca_sin_colores.v) color=7;
+
+//      printf ("Refresco border\n");
+
+        int x,y;
+
+	//Top border cambia en spectrum y zx8081 y ace
+	//int topborder=TOP_BORDER;
+
+        //parte superior e inferior
+        for (y=0;y<tsconf_current_border_height;y++) {
+                for (x=0;x<TSCONF_DISPLAY_WIDTH/2;x++) {
+                                scr_tsconf_putpixel_zoom_border(x,y,color);
+																scr_tsconf_putpixel_zoom_border(x,y+tsconf_current_pixel_height+tsconf_current_border_height,color);
+                }
+        }
+
+        //laterales
+        for (y=0;y<tsconf_current_pixel_height;y++) {
+                for (x=0;x<tsconf_current_border_width;x++) {
+                        scr_tsconf_putpixel_zoom_border(x,y+tsconf_current_border_height,color);
+                        scr_tsconf_putpixel_zoom_border(x+tsconf_current_border_width+tsconf_current_pixel_width,y+tsconf_current_border_height,color);
+                }
+
+        }
+
+}
+
+
+
+void screen_tsconf_refresca_border(void)
+{
+	if (rainbow_enabled.v==0) {
+					if (border_enabled.v) {
+									//ver si hay que refrescar border
+									if (modificado_border.v)
+									{
+													scr_refresca_border_tsconf_cont();
+													modificado_border.v=0;
+									}
+
+					}
+	}
+}
+
+//z80_int temp_cc=0;
+
+//Refresco pantalla sin rainbow en tsconf
+void scr_tsconf_refresca_pantalla_zxmode_no_rainbow_comun(void)
+{
+	//printf ("refresca\n");
+	int x,y,bit;
+        z80_int direccion,dir_atributo;
+        z80_byte byte_leido;
+        int color=0;
+        int fila;
+        //int zx,zy;
+
+        z80_byte attribute,ink,paper,bright,flash,aux;
+
+
+       z80_byte *screen;
+			 z80_byte vram_page=tsconf_get_vram_page();
+			 //vram_page=temp_cc/64;
+			 //temp_cc++;
+
+
+			 //printf ("refresca modo 0. vram: %d\n",vram_page);
+			 screen=tsconf_ram_mem_table[vram_page];
+			 //temp
+			 //screen=tsconf_ram_mem_table[tsconf_af_ports[1]];
+
+        //printf ("dpy=%x ventana=%x gc=%x image=%x\n",dpy,ventana,gc,image);
+	z80_byte x_hi;
+
+        for (y=0;y<192;y++) {
+
+                direccion=screen_addr_table[(y<<5)];
+
+
+                fila=y/8;
+                dir_atributo=6144+(fila*32);
+                for (x=0,x_hi=0;x<32;x++,x_hi +=8) {
+
+
+			//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+			if (1==1) {
+			//if (scr_ver_si_refrescar_por_menu_activo(x,fila)) {
+
+                	        byte_leido=screen[direccion];
+	                        attribute=screen[dir_atributo];
+
+				if (scr_refresca_sin_colores.v) attribute=56;
+
+
+        	                ink=attribute &7;
+                	        paper=(attribute>>3) &7;
+	                        bright=(attribute) &64;
+        	                flash=(attribute)&128;
+                	        if (flash) {
+                        	        //intercambiar si conviene
+	                                if (estado_parpadeo.v) {
+        	                                aux=paper;
+                	                        paper=ink;
+	                                        ink=aux;
+        	                        }
+                	        }
+
+				if (bright) {
+					ink +=8;
+					paper +=8;
+				}
+
+                        	for (bit=0;bit<8;bit++) {
+
+					color= ( byte_leido & 128 ? ink : paper );
+
+					color=TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color);
+
+
+					scr_tsconf_putpixel_zx_mode(x_hi+bit,y,color);
+
+	                                byte_leido=byte_leido<<1;
+        	                }
+			}
+
+			//temp
+			//else {
+			//	printf ("no refrescamos zona x %d fila %d\n",x,fila);
+			//}
+
+
+                        direccion++;
+			dir_atributo++;
+                }
+
+        }
+
+}
+
+z80_byte temp_conta_ts=0;
+z80_byte temp_conta_ts2=0;
+
+//Refresco pantalla sin rainbow en tsconf
+void scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(int modo)
+{
+
+	int x,y;
+
+
+        z80_byte color;
+
+
+
+
+
+       z80_int puntero=0;
+
+			 z80_byte vrampage;
+			 vrampage=tsconf_get_vram_page();
+
+
+			 //vrampage=temp_conta_ts;
+
+//printf ("refresca 16c/256c. vram page: %d modo: %d pagina forzada: %d\n",tsconf_af_ports[1],modo,vrampage);
+
+			 //temp_conta_ts2++;
+			 //if ((temp_conta_ts2 % 4)==0) temp_conta_ts++;
+
+
+
+
+
+			 z80_byte *screen=tsconf_ram_mem_table[vrampage];
+
+
+        for (y=0;y<tsconf_current_pixel_height;y++) {
+                //direccion=16384 | devuelve_direccion_pantalla(0,y);
+
+								z80_int puntero_orig=puntero;
+
+                for (x=0;x<tsconf_current_pixel_width;) {
+
+
+			//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+									if (1==1) {
+			//if (scr_ver_si_refrescar_por_menu_activo(x,fila)) {
+
+										if (modo==1) { //16c
+                	    color=screen[puntero++];
+											//printf ("color: %d\n",color);
+	        						scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color (tsconf_return_cram_palette_offset()+( (color>>4)&0xF) ) );
+											scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+ (color&0xF) ) );
+										}
+
+										if (modo==2) { //256c
+											color=screen[puntero++];
+											scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+tsconf_return_cram_color(color) );
+										}
+
+
+        	         }
+							}
+								//Siguiente linea
+								if (modo==1) puntero=puntero_orig+256;
+								else puntero=puntero_orig+512;
+
+								if (puntero>=16384) {
+									puntero=0;
+									vrampage++;
+									screen=tsconf_ram_mem_table[vrampage];
+
+								}
+
+
+
+
+        }
+
+}
+
+
+
+void scr_tsconf_refresca_pantalla_zxmode_no_rainbow(void)
+{
+
+	if (border_enabled.v) {
+		//ver si hay que refrescar border
+		if (modificado_border.v) {
+			//int color;
+			//color=out_254 & 7;
+
+			//screen_prism_refresca_no_rainbow_border(color);
+			scr_refresca_border_tsconf_cont();
+
+			modificado_border.v=0;
+		}
+
+	}
+
+	scr_tsconf_refresca_pantalla_zxmode_no_rainbow_comun();
+
+}
+
+
+void screen_tsconf_refresca_rainbow(void) {
+
+	int ancho,alto;
+
+        ancho=get_total_ancho_rainbow();
+        alto=get_total_alto_rainbow();
+
+				//printf ("ancho: %d alto: %d\n",ancho,alto);
+
+        int x,y,bit;
+
+        //margenes de zona interior de pantalla. Para overlay menu
+        /*int margenx_izq=screen_total_borde_izquierdo*border_enabled.v;
+        int margenx_der=screen_total_borde_izquierdo*border_enabled.v+512;
+        int margeny_arr=screen_borde_superior*border_enabled.v;
+        int margeny_aba=screen_borde_superior*border_enabled.v+384;*/
+
+				//en tsconf menu no aparece con margen de border. Sale tal cual desde 0,0
+
+        //para overlay menu tambien
+        //int fila;
+        //int columna;
+
+        z80_int color_pixel;
+        z80_int *puntero;
+
+        puntero=rainbow_buffer;
+        int dibujar;
+
+	int menu_x,menu_y;
+
+        for (y=0;y<alto;y++) {
+                for (x=0;x<ancho;x+=8) {
+                        dibujar=1;
+
+                        //Ver si esa zona esta ocupada por texto de menu u overlay
+
+                        //if (y>=margeny_arr && y<margeny_aba && x>=margenx_izq && x<margenx_der) {
+			if (y<192 && x<256) {
+
+
+                                //normalmente a 48
+                                //int screen_total_borde_izquierdo;
+
+				dibujar=0;
+				//menu_x=(x-margenx_izq)/8;
+				//menu_y=(y-margeny_arr)/8;
+				menu_x=x/8;
+				menu_y=y/8;
+
+				if (scr_ver_si_refrescar_por_menu_activo(menu_x,menu_y)) dibujar=1;
+
+                        }
+
+												//temp
+												//dibujar=1;
+
+                        if (dibujar==1) {
+
+                                        for (bit=0;bit<8;bit++) {
+
+
+                                                //printf ("prism refresca x: %d y: %d\n",x,y);
+
+                                                color_pixel=*puntero++;
+
+                                                scr_putpixel_zoom_rainbow(x+bit,y,color_pixel);
+                                        }
+                        }
+                        else puntero+=8;
+
+                }
+        }
+
+
+}
+
+
+void screen_tsconf_refresca_pantalla(void)
+{
+
+	//temp_dice_modos_sprites_etc();
+
+
+	//Como spectrum clasico
+
+	//modo clasico. sin rainbow
+	if (rainbow_enabled.v==0) {
+			z80_byte modo_video=tsconf_get_video_mode_display();
+
+
+			//printf ("modo video: %d\n",modo_video );
+					if (modo_video==0) scr_tsconf_refresca_pantalla_zxmode_no_rainbow();
+					if (modo_video==1)scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(1);
+					if (modo_video==2)scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(2);
+					if (modo_video==3) {
+						screen_tsconf_refresca_border();
+						screen_tsconf_refresca_text_mode();
+					}
+
+	}
+
+	else {
+	//modo rainbow - real video
+				temp_dice_modos_sprites_etc();
+				//temp_tsconf_render_graficos();
+				screen_tsconf_refresca_rainbow();
+	}
 
 }

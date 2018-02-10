@@ -110,6 +110,13 @@ z80_int tbblue_palette_sprite_second[256];
 
 //Si en zona pantalla y todo es transparente, se pone un 0
 //Layers con el indice al olor final en la paleta RGB9 (0..511)
+
+
+//Por que ancho 512? Es mas de lo necesario. 
+//256 pixeles de ancho + 48 sumando borde izquierdo y derecho dan 304
+//es mas, probando a donde llega el indice "posicion_array_layer" es efectivamente 304
+//Por lo que con 304 seria mas que suficiente
+//Seguramente este 512 ha sido una confusión debido a que en el comentario anterior se habla de colores RGB9 desde 0 hasta 511
 z80_int tbblue_layer_ula[512];
 z80_int tbblue_layer_layer2[512];
 z80_int tbblue_layer_sprites[512];
@@ -2938,7 +2945,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 
 
-                        attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
+            attribute=puntero_buffer_atributos[posicion_array_pixeles_atributos++];
 
                
 
@@ -2951,7 +2958,7 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 			//cambiada_tinta=0;
 			//cambiada_paper=0;
 
-                        for (bit=0;bit<8;bit++) {
+            for (bit=0;bit<8;bit++) {
 
 				
 				color= ( byte_leido & 128 ? ink : paper ) ;
@@ -2995,11 +3002,13 @@ bits D3-D5: Selection of ink and paper color in extended screen resolution mode 
 
 					
 				tbblue_reg_22++;
-                        }
+            }
 			direccion++;
 
 
-        	}
+        }
+
+		//printf ("posicion_array_layer: %d\n",posicion_array_layer);
 
 
 
