@@ -1498,25 +1498,11 @@ int ancho_linea=256; //512 pixeles a 4bpp
 void temp_sprite_xy_putsprite_origen(int x,int y,int ancho, int alto, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen)
 {
 
-                //int direccion=tsconf_af_ports[0x19]>>3;
-                //direccion=direccion & 31;
-                //direccion=direccion << 17;
-
-		//z80_byte *sprite_origen;
-
-		//sprite_origen=tsconf_ram_mem_table[0];
-
-		//sprite_origen +=direccion;
+               
 
 		int ancho_linea=256; //512 pixeles a 4bpp
 
-		//tnum_x *=8;
-		//tnum_y *=8;
-
-		//a 4bpp
-		//tnum_x /=2;
-
-		//sprite_origen+=(tnum_y*ancho_linea)+tnum_x;
+		
 
 
 	        z80_int *puntero_buf_rainbow;
@@ -1524,19 +1510,7 @@ void temp_sprite_xy_putsprite_origen(int x,int y,int ancho, int alto, int tnum_x
 		int ancho_linea_rainbow=get_total_ancho_rainbow();
 
 
-	        //puntero_buf_rainbow=&rainbow_buffer[ y*2*get_total_ancho_rainbow()+x*2 ];
-
-		//X*2 porque en pantalla de pixeles es doble (en texto no)
-		//x *=2;
-/*
-       //Ver si pixel se sale de limites
-        if (x>=tsconf_current_pixel_width || y>=tsconf_current_pixel_height) {
-                //printf ("fuera de limites\n");
-                return;
-        }
-        //tsconf_current_pixel_width=360;
-        //tsconf_current_pixel_height=288;
-*/
+	      
 
 		int ancho_orig=ancho;
 		z80_byte *sprite_origen_leyendo;
@@ -1668,7 +1642,7 @@ void temp_tsconf_render_tile_layer(z80_byte layer)
 }
 	
 
-void temp_tsconf_render_graficos(void)
+void temp_tsconf_render_sprites(void)
 {
 
 		int i;
@@ -1745,11 +1719,11 @@ void temp_dice_modos_sprites_etc(void)
 		temp_tsconf_render_tile_layer(1);
         }
 
-       if (tsconfig&128) {
+      /* if (tsconfig&128) {
                 //printf ("Sprite layers enable ");
                 //temp_dice_dir_graficos(0x19);
-                temp_tsconf_render_graficos();
-        }
+                temp_tsconf_render_sprites();
+        }*/
 
 
 	//Decir una vez por segundo los modos activos
