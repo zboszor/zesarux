@@ -1100,23 +1100,17 @@ void tsconf_store_scanline_putsprite_putpixel(z80_int *puntero,z80_int color,z80
 }
 
 //Comun para tiles y sprites
-void tsconf_store_scanline_putsprite(int x,int ancho, int alto, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen)
+void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen)
 {
 
                
 
 	  z80_int *puntero_buf_sprite;
 
-	      
 
-		z80_byte *sprite_origen_leyendo;
-
-    //Obtener 
-		
-			sprite_origen_leyendo=sprite_origen;
 			puntero_buf_sprite=&tsconf_layer_sprites[ x*2 ];
 			for (;ancho;ancho-=2) { //-=2 porque son a 4bpp
-				z80_int color_izq=((*sprite_origen_leyendo)>>4)&15;
+				z80_int color_izq=((*sprite_origen)>>4)&15;
 				if (color_izq) { //0 es transparente
 					tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_izq,spal);
 				}
@@ -1124,16 +1118,19 @@ void tsconf_store_scanline_putsprite(int x,int ancho, int alto, int tnum_x GCC_U
         //tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,3,spal); //temp
 				puntero_buf_sprite++;
 				puntero_buf_sprite++;
-				z80_int color_der=((*sprite_origen_leyendo))&15;
+				z80_int color_der=((*sprite_origen))&15;
 				if (color_der) { //0 es transparente
 					tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_der,spal);         
 				}
 
         //tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,3,spal); //temp
+        printf ("%d %d ",color_izq,color_der);
+
+
 				puntero_buf_sprite++;
 				puntero_buf_sprite++;
 
-				sprite_origen_leyendo++;
+				sprite_origen++;
 			}
 		
 		
@@ -1141,7 +1138,7 @@ void tsconf_store_scanline_putsprite(int x,int ancho, int alto, int tnum_x GCC_U
 }
 
 
-void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int alto, int tnum_x, int tnum_y,z80_byte spal)
+void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int tnum_x, int tnum_y,z80_byte spal)
 {
 
                 int direccion=tsconf_af_ports[0x19]>>3;
@@ -1165,9 +1162,10 @@ void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int a
                 sprite_origen+=(tnum_y*ancho_linea)+tnum_x;
 
                 //Sumar a sprite_origen el y_offset
-                sprite_origen +=y_offset*(ancho/2);
+                sprite_origen +=y_offset*(ancho_linea);
+                //printf ("sprite_origen: %d\n",sprite_origen);
 
-		            tsconf_store_scanline_putsprite(x,ancho,alto, tnum_x, tnum_y,spal,sprite_origen);
+		            tsconf_store_scanline_putsprite(x,ancho, tnum_x, tnum_y,spal,sprite_origen);
 }
 
 
@@ -1190,8 +1188,9 @@ void tsconf_store_scanline_sprites(void)
 				salir=1; //Bit Leap, ultimo sprite
 				//printf ("\nUltimo sprite");
 			}
-	                int x=tsconf_fmaps[0x200+offset+2]+256*(tsconf_fmaps[0x200+offset+3]&1);
-        	        int y=tsconf_fmaps[0x200+offset]+256*(tsconf_fmaps[0x200+offset+1]&1);
+	                
+      int x=tsconf_fmaps[0x200+offset+2]+256*(tsconf_fmaps[0x200+offset+3]&1);
+      int y=tsconf_fmaps[0x200+offset]+256*(tsconf_fmaps[0x200+offset+1]&1);
 
 
 			z80_byte xsize=8*(1+((tsconf_fmaps[0x200+offset+3]>>1)&7));
@@ -1213,11 +1212,11 @@ void tsconf_store_scanline_sprites(void)
 	                	//printf ("\nsprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
 				//temp_sprite_xy(x,y,1+8);
         //Ver si esta en rango y
-        if (scanline_copia>=y && scanline_copia<y+ysize && i==1) { //de momento solo sprite 0
+        if (scanline_copia>=y && scanline_copia<y+ysize) { 
           int y_offset=scanline_copia-y;
-          printf ("\nscanline: %d yoff: %d sprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",scanline_copia,y_offset,i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
+          //printf ("\nscanline: %d yoff: %d sprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",scanline_copia,y_offset,i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
           //temp_sprite_xy_putsprite(x,y,xsize,ysize,tnum_x,tnum_y,spal);
-          tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,ysize,tnum_x,tnum_y,spal);
+          tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal);
         }
 				
 			}
