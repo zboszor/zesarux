@@ -1050,20 +1050,14 @@ void tsconf_store_scanline_ula(void)
 
 																color= ( byte_leido & 128 ? ink : paper ) ;
 
-																color=TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color);
+																color= tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color);
 
 																//doble ancho
-																*puntero_buf_rainbow=color;
-																*(puntero_buf_rainbow+1)=color;
+                                            //doble ancho
+                                tsconf_layer_ula[puntero_layer_ula++]=color;
+                                tsconf_layer_ula[puntero_layer_ula++]=color;
+																
 
-																//doble alto
-
-																*(puntero_buf_rainbow+total_ancho_rainbow)=color;
-																*(puntero_buf_rainbow+total_ancho_rainbow+1)=color;
-
-																//Siguiente pixel
-																puntero_buf_rainbow++;
-																puntero_buf_rainbow++;
 
 
 
@@ -1312,7 +1306,9 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
             if (color_sprites==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=color_ula;
             else color_final=color_sprites;
 
-						*puntero_buf_rainbow=TSCONF_INDEX_FIRST_COLOR+color_final;
+            color_final +=TSCONF_INDEX_FIRST_COLOR;
+
+						*puntero_buf_rainbow=color_final;
 					
 						//doble alto
 						*(puntero_buf_rainbow+total_ancho_rainbow)=color_final;
