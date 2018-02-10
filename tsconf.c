@@ -1124,7 +1124,7 @@ void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int
 				}
 
         //tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,3,spal); //temp
-        printf ("%d %d ",color_izq,color_der);
+        //printf ("%d %d ",color_izq,color_der);
 
 
 				puntero_buf_sprite++;
