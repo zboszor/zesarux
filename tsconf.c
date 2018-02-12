@@ -1263,8 +1263,8 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
   //aplicar offset_y
   //esto esta bien asi??
-  scanline_copia -=offset_y;
-  if (offset_y<0) return;
+  scanline_copia +=offset_y;
+  //if (offset_y<0) return;
   
 
   
