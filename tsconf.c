@@ -1261,8 +1261,10 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	int offset_x=tsconf_af_ports[puntero_offset_scroll]+256*(tsconf_af_ports[puntero_offset_scroll+1]&1);
 	int offset_y=tsconf_af_ports[puntero_offset_scroll+2]+256*(tsconf_af_ports[puntero_offset_scroll+3]&1);
 
-  //TODO falta sumar offset_y
-
+  //aplicar offset_y
+  //esto esta bien asi??
+  scanline_copia -=offset_y;
+  if (offset_y<0) return;
   
 
   
