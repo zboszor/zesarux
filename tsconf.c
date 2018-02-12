@@ -1227,6 +1227,8 @@ void tsconf_store_scanline_sprites(void)
 void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 {
 
+  
+
    //linea que se debe leer
         int scanline_copia=t_scanline_draw-tsconf_current_border_height;
 
@@ -1261,9 +1263,19 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
   //TODO falta sumar offset_y
 
+  
+
+  
+  
+
+  //http://forum.tslabs.info/viewtopic.php?f=35&t=157
+
   y=scanline_copia/4;
-  int y_offset=scanline_copia%4;
-  puntero_layer +=64*2*y;
+  puntero_layer +=64*2*y; //64 de ancho, 2 bytes, *y
+
+  //printf ("scanline: %d puntero_layer: %d\n",scanline_copia,64*2*y);
+
+  //Tiles Y va de 0 a 63. scanline copia va de 0 a 255
 
 	//for (y=0;y<64;y++) {
 		for (x=0;x<64;x++) {
@@ -1285,34 +1297,20 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 				//printf ("tile x: %d y: %d tnum_x: %d tnum_y: %d\n",x,y,tnum_x,tnum_y);
 
 				z80_byte *sprite_origen;
-				//sprite_origen=puntero_graficos+(tnum_y*256*8/2)+tnum_x*8/2;
-				sprite_origen=puntero_graficos+(tnum_y*512*8/2)+tnum_x*8/2;
+				
+        int y_offset=scanline_copia%4;
+
+				sprite_origen=puntero_graficos+(tnum_y*256*8)+tnum_x*8/2;
+
+        sprite_origen +=y_offset*256*2;
 
 				//No estoy seguro de las siguientes multiplicacines. habria que revisarlas
 				//temp_sprite_xy_putsprite_origen(x*8+offset_x,y*4+offset_y,   8,8, 0,0,tpal,sprite_origen);
 
-        //tsconf_store_scanline_sprites_putsprite(x*8,y_offset,  8,tnum_x,tnum_y,tpal,layer_tiles);
-
-        //tsconf_store_scanline_putsprite(x,ancho, tnum_x, tnum_y,spal,sprite_origen,layer);
-
-//Sumar a sprite_origen el y_offset
-        int ancho_linea=64*2;
-                //sprite_origen +=y_offset*(ancho_linea);
-                //printf ("sprite_origen: %d\n",sprite_origen);
-
-
-                sprite_origen+=(tnum_y*ancho_linea)+tnum_x;
-
-                //Sumar a sprite_origen el y_offset
-                sprite_origen +=y_offset*(ancho_linea);
                 //printf ("sprite_origen: %d\n",sprite_origen);
 
 		            tsconf_store_scanline_putsprite(x*8+offset_x,8, 0,0,tpal,sprite_origen,layer_tiles);
-
-            //No estoy seguro de las siguientes multiplicacines. habria que revisarlas
-				          //temp_sprite_xy_putsprite_origen(x*8+offset_x,y*4+offset_y, 8,8, 0,0,tpal,sprite_origen);
-
-                //tsconf_store_scanline_putsprite(x*8+offset_x,y_offset, tnum_x, tnum_y,tpal,sprite_origen,layer_tiles);
+       
 
 			//}
 		}

@@ -1703,7 +1703,7 @@ void temp_dice_modos_sprites_etc(void)
 		temp_tsconf_render_tile_layer(0);
 	}*/
 
-       /* if (tsconfig&64) {
+        /*if (tsconfig&64) {
                 //printf ("Tile layer 1 enable- ");
                 //temp_dice_dir_graficos(0x18);
 		temp_tsconf_render_tile_layer(1);
