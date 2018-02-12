@@ -1182,13 +1182,17 @@ void tsconf_store_scanline_sprites(void)
 				salir=1; //Bit Leap, ultimo sprite
 				//printf ("\nUltimo sprite");
 			}
-	                
-      int x=tsconf_fmaps[0x200+offset+2]+256*(tsconf_fmaps[0x200+offset+3]&1);
+			if (tsconf_fmaps[0x200+offset+1]&32) {
       int y=tsconf_fmaps[0x200+offset]+256*(tsconf_fmaps[0x200+offset+1]&1);
+	z80_byte ysize=8*(1+((tsconf_fmaps[0x200+offset+1]>>1)&7));
+	               
 
+        //Ver si esta en rango y
+        if (scanline_copia>=y && scanline_copia<y+ysize) { 
 
+ 
+		      int x=tsconf_fmaps[0x200+offset+2]+256*(tsconf_fmaps[0x200+offset+3]&1);
 			z80_byte xsize=8*(1+((tsconf_fmaps[0x200+offset+3]>>1)&7));
-			z80_byte ysize=8*(1+((tsconf_fmaps[0x200+offset+1]>>1)&7));
 			z80_int tnum=(tsconf_fmaps[0x200+offset+4])+256*(tsconf_fmaps[0x200+offset+5]&15);
 			//Tile Number for upper left corner. Bits 0-5 are X Position in Graphics Bitmap, bits 6-11 - Y Position.
 			z80_int tnum_x=tnum & 63;
@@ -1202,11 +1206,8 @@ void tsconf_store_scanline_sprites(void)
 			Para pasar de cada coordenada y, hay que sumar 512 pixeles (son de 4bpp), por tanto, 256 direcciones
 			*/
 
-			if (tsconf_fmaps[0x200+offset+1]&32) {
 	                	//printf ("\nsprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
 				//temp_sprite_xy(x,y,1+8);
-        //Ver si esta en rango y
-        if (scanline_copia>=y && scanline_copia<y+ysize) { 
           int y_offset=scanline_copia-y;
           //printf ("\nscanline: %d yoff: %d sprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",scanline_copia,y_offset,i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
           //temp_sprite_xy_putsprite(x,y,xsize,ysize,tnum_x,tnum_y,spal);
