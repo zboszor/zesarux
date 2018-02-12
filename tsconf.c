@@ -1030,7 +1030,7 @@ void tsconf_store_scanline_ula(void)
                         paper=(attribute>>3) &7; 
                         bright=(attribute)&64; 
                         flash=(attribute)&128; 
-                        if (flash) { \
+                        if (flash) { 
                           if (estado_parpadeo.v) { 
                                         aux=paper; 
                                         paper=ink; 
