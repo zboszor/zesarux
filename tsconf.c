@@ -120,7 +120,8 @@ char *tsconf_video_sizes_array[]={
 #define TSCONF_SCANLINE_TRANSPARENT_COLOR 65535
 
 z80_int tsconf_layer_ula[TSCONF_MAX_WIDTH_LAYER];
-z80_int tsconf_layer_tiles[TSCONF_MAX_WIDTH_LAYER];
+z80_int tsconf_layer_tiles_zero[TSCONF_MAX_WIDTH_LAYER];
+z80_int tsconf_layer_tiles_one[TSCONF_MAX_WIDTH_LAYER];
 z80_int tsconf_layer_sprites[TSCONF_MAX_WIDTH_LAYER];
 
 z80_byte tsconf_get_video_mode_display(void)
@@ -1094,7 +1095,7 @@ void tsconf_store_scanline_putsprite_putpixel(z80_int *puntero,z80_int color,z80
 }
 
 //Comun para tiles y sprites
-void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen)
+void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
 {
 
                
@@ -1102,7 +1103,9 @@ void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int
 	  z80_int *puntero_buf_sprite;
 
 
-			puntero_buf_sprite=&tsconf_layer_sprites[ x*2 ];
+			//puntero_buf_sprite=&tsconf_layer_sprites[ x*2 ];
+      puntero_buf_sprite=&layer[ x*2 ];
+
 			for (;ancho;ancho-=2) { //-=2 porque son a 4bpp
 				z80_int color_izq=((*sprite_origen)>>4)&15;
 				if (color_izq) { //0 es transparente
@@ -1132,7 +1135,7 @@ void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int
 }
 
 
-void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int tnum_x, int tnum_y,z80_byte spal)
+void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int tnum_x, int tnum_y,z80_byte spal,z80_int *layer)
 {
 
                 int direccion=tsconf_af_ports[0x19]>>3;
@@ -1159,7 +1162,7 @@ void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int t
                 sprite_origen +=y_offset*(ancho_linea);
                 //printf ("sprite_origen: %d\n",sprite_origen);
 
-		            tsconf_store_scanline_putsprite(x,ancho, tnum_x, tnum_y,spal,sprite_origen);
+		            tsconf_store_scanline_putsprite(x,ancho, tnum_x, tnum_y,spal,sprite_origen,layer);
 }
 
 
@@ -1183,35 +1186,34 @@ void tsconf_store_scanline_sprites(void)
 				//printf ("\nUltimo sprite");
 			}
 			if (tsconf_fmaps[0x200+offset+1]&32) {
-      int y=tsconf_fmaps[0x200+offset]+256*(tsconf_fmaps[0x200+offset+1]&1);
-	z80_byte ysize=8*(1+((tsconf_fmaps[0x200+offset+1]>>1)&7));
+        int y=tsconf_fmaps[0x200+offset]+256*(tsconf_fmaps[0x200+offset+1]&1);
+	      z80_byte ysize=8*(1+((tsconf_fmaps[0x200+offset+1]>>1)&7));
 	               
 
         //Ver si esta en rango y
         if (scanline_copia>=y && scanline_copia<y+ysize) { 
 
- 
 		      int x=tsconf_fmaps[0x200+offset+2]+256*(tsconf_fmaps[0x200+offset+3]&1);
-			z80_byte xsize=8*(1+((tsconf_fmaps[0x200+offset+3]>>1)&7));
-			z80_int tnum=(tsconf_fmaps[0x200+offset+4])+256*(tsconf_fmaps[0x200+offset+5]&15);
-			//Tile Number for upper left corner. Bits 0-5 are X Position in Graphics Bitmap, bits 6-11 - Y Position.
-			z80_int tnum_x=tnum & 63;
-			z80_int tnum_y=(tnum>>6)&63;
+			    z80_byte xsize=8*(1+((tsconf_fmaps[0x200+offset+3]>>1)&7));
+			    z80_int tnum=(tsconf_fmaps[0x200+offset+4])+256*(tsconf_fmaps[0x200+offset+5]&15);
+			    //Tile Number for upper left corner. Bits 0-5 are X Position in Graphics Bitmap, bits 6-11 - Y Position.
+			    z80_int tnum_x=tnum & 63;
+    			z80_int tnum_y=(tnum>>6)&63;
 
-			z80_byte spal=(tsconf_fmaps[0x200+offset+5]>>4)&15;
+		    	z80_byte spal=(tsconf_fmaps[0x200+offset+5]>>4)&15;
 
-			/*
-			En demo ny17, xsize=ysize=32. tnum_x va de 0,4,8, etc. Asumimos que para posicionar en el sprite adecuado,
-			es un desplazamiento de tnum_x*8. Mismo para tnum_y
-			Para pasar de cada coordenada y, hay que sumar 512 pixeles (son de 4bpp), por tanto, 256 direcciones
-			*/
+			    /*
+			    En demo ny17, xsize=ysize=32. tnum_x va de 0,4,8, etc. Asumimos que para posicionar en el sprite adecuado,
+			    es un desplazamiento de tnum_x*8. Mismo para tnum_y
+			    Para pasar de cada coordenada y, hay que sumar 512 pixeles (son de 4bpp), por tanto, 256 direcciones
+			    */
 
-	                	//printf ("\nsprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
-				//temp_sprite_xy(x,y,1+8);
+	        //printf ("\nsprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
+				  //temp_sprite_xy(x,y,1+8);
           int y_offset=scanline_copia-y;
           //printf ("\nscanline: %d yoff: %d sprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",scanline_copia,y_offset,i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
           //temp_sprite_xy_putsprite(x,y,xsize,ysize,tnum_x,tnum_y,spal);
-          tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal);
+          tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal,tsconf_layer_sprites);
         }
 				
 			}
@@ -1219,6 +1221,105 @@ void tsconf_store_scanline_sprites(void)
 
 		//printf ("\n");
 }
+
+
+
+void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
+{
+
+   //linea que se debe leer
+        int scanline_copia=t_scanline_draw-tsconf_current_border_height;
+
+				//TODO: tener en cuenta zona invisible border
+				if (scanline_copia<0) return;
+  
+		 int direccion_graficos=tsconf_af_ports[0x17+layer]>>3;
+		 direccion_graficos=direccion_graficos & 31;
+                direccion_graficos=direccion_graficos<<17;
+
+
+		int direccion_tile=tsconf_af_ports[0x16];
+                direccion_tile=direccion_tile<< 14;
+
+		//printf ("direccion_tile: %06XH\n",direccion_tile);
+
+
+
+
+	z80_byte *puntero_layer;
+	z80_byte *puntero_graficos;
+
+	puntero_layer=tsconf_ram_mem_table[0]+direccion_tile;
+	puntero_graficos=tsconf_ram_mem_table[0]+direccion_graficos;
+
+	int x,y;
+
+	z80_byte puntero_offset_scroll=0x40+4*layer;
+
+	int offset_x=tsconf_af_ports[puntero_offset_scroll]+256*(tsconf_af_ports[puntero_offset_scroll+1]&1);
+	int offset_y=tsconf_af_ports[puntero_offset_scroll+2]+256*(tsconf_af_ports[puntero_offset_scroll+3]&1);
+
+  //TODO falta sumar offset_y
+
+  y=scanline_copia/4;
+  int y_offset=scanline_copia%4;
+  puntero_layer +=64*2*y;
+
+	//for (y=0;y<64;y++) {
+		for (x=0;x<64;x++) {
+			z80_byte valor1=*puntero_layer;
+			puntero_layer++;
+			z80_byte valor2=*puntero_layer;
+      puntero_layer++;
+
+			//printf ("valor1: %d valor2: %d\n",valor1,valor2);
+
+			z80_int tnum=valor1+256*(valor2&1);
+
+			z80_byte tpal=(valor2>>4)&3;
+
+			int tnum_x=tnum&63;
+			int tnum_y=(tnum>>6)&63;
+
+			//if (!(tnum_x==0 && tnum_y==0)) {
+				//printf ("tile x: %d y: %d tnum_x: %d tnum_y: %d\n",x,y,tnum_x,tnum_y);
+
+				z80_byte *sprite_origen;
+				//sprite_origen=puntero_graficos+(tnum_y*256*8/2)+tnum_x*8/2;
+				sprite_origen=puntero_graficos+(tnum_y*512*8/2)+tnum_x*8/2;
+
+				//No estoy seguro de las siguientes multiplicacines. habria que revisarlas
+				//temp_sprite_xy_putsprite_origen(x*8+offset_x,y*4+offset_y,   8,8, 0,0,tpal,sprite_origen);
+
+        //tsconf_store_scanline_sprites_putsprite(x*8,y_offset,  8,tnum_x,tnum_y,tpal,layer_tiles);
+
+        //tsconf_store_scanline_putsprite(x,ancho, tnum_x, tnum_y,spal,sprite_origen,layer);
+
+//Sumar a sprite_origen el y_offset
+        int ancho_linea=64*2;
+                //sprite_origen +=y_offset*(ancho_linea);
+                //printf ("sprite_origen: %d\n",sprite_origen);
+
+
+                sprite_origen+=(tnum_y*ancho_linea)+tnum_x;
+
+                //Sumar a sprite_origen el y_offset
+                sprite_origen +=y_offset*(ancho_linea);
+                //printf ("sprite_origen: %d\n",sprite_origen);
+
+		            tsconf_store_scanline_putsprite(x*8+offset_x,8, 0,0,tpal,sprite_origen,layer_tiles);
+
+            //No estoy seguro de las siguientes multiplicacines. habria que revisarlas
+				          //temp_sprite_xy_putsprite_origen(x*8+offset_x,y*4+offset_y, 8,8, 0,0,tpal,sprite_origen);
+
+                //tsconf_store_scanline_putsprite(x*8+offset_x,y_offset, tnum_x, tnum_y,tpal,sprite_origen,layer_tiles);
+
+			//}
+		}
+	//}
+
+}
+
 
 
 //Para zona no de border
@@ -1229,7 +1330,7 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
   //Inicializamos array de capas
   int i;
   for (i=0;i<TSCONF_MAX_WIDTH_LAYER;i++) {
-    tsconf_layer_ula[i]=tsconf_layer_tiles[i]=tsconf_layer_sprites[i]=TSCONF_SCANLINE_TRANSPARENT_COLOR;
+    tsconf_layer_ula[i]=tsconf_layer_tiles_zero[i]=tsconf_layer_tiles_one[i]=tsconf_layer_sprites[i]=TSCONF_SCANLINE_TRANSPARENT_COLOR;
   }
 
   //Dibujamos las capas
@@ -1241,6 +1342,19 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
                 //printf ("Sprite layers enable ");
                 //temp_dice_dir_graficos(0x19);
                 tsconf_store_scanline_sprites();
+  }
+
+
+  if (tsconfig&32) {
+		//printf ("Tile layer 0 enable- ");
+		//temp_dice_dir_graficos(0x17);
+	  tsconf_store_scanline_tiles(0,tsconf_layer_tiles_zero);
+	}
+
+  if (tsconfig&64) {
+                //printf ("Tile layer 1 enable- ");
+                //temp_dice_dir_graficos(0x18);
+    tsconf_store_scanline_tiles(1,tsconf_layer_tiles_one);
   }
 
   //Y las pasamos a buffer rainbow
@@ -1297,15 +1411,21 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 					for (x=0;x<tsconf_current_pixel_width*2;x++) {
 						
 
-            //De momento solo capa ula y sprites
+            //Sprites encima de tiles y encima de ula
             z80_int color_ula=tsconf_layer_ula[x];
+            z80_int color_tiles_zero=tsconf_layer_tiles_zero[x];
+            z80_int color_tiles_one=tsconf_layer_tiles_one[x];
             z80_int color_sprites=tsconf_layer_sprites[x];
 
             z80_int color_final;
 
-            //Si sprite transparente
-            if (color_sprites==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=color_ula;
-            else color_final=color_sprites;
+            //Gestion de capas
+
+            //TODO. Cargar los colores de debajo de cada capa segun cada else (tal y como hace tbblue)
+            if (color_sprites!=TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=color_sprites;
+            else if (color_tiles_one!=TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=color_tiles_one;
+            else if (color_tiles_zero!=TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=color_tiles_zero;
+            else color_final=color_ula;
 
             color_final +=TSCONF_INDEX_FIRST_COLOR;
 

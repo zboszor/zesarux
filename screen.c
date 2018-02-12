@@ -1571,16 +1571,6 @@ void temp_sprite_xy_putsprite(int x,int y,int ancho, int alto, int tnum_x, int t
 void temp_tsconf_render_tile_layer(z80_byte layer)
 {
 
-/*
-                int direccion_tile=tsconf_af_ports[0x17+layer]>>3;
-                direccion_tile=direccion_tile & 31;
-                direccion_tile=direccion_tile << 17;
-
-
-		int direccion_graficos=tsconf_af_ports[0x16];
-	        direccion_graficos=direccion_graficos << 14;
-*/
-
 		 int direccion_graficos=tsconf_af_ports[0x17+layer]>>3;
 		 direccion_graficos=direccion_graficos & 31;
                 direccion_graficos=direccion_graficos<<17;
@@ -1707,17 +1697,17 @@ void temp_dice_modos_sprites_etc(void)
 		
 	
 	}
-	if (tsconfig&32) {
+	/*if (tsconfig&32) {
 		//printf ("Tile layer 0 enable- ");
 		//temp_dice_dir_graficos(0x17);
 		temp_tsconf_render_tile_layer(0);
-	}
+	}*/
 
-        if (tsconfig&64) {
+       /* if (tsconfig&64) {
                 //printf ("Tile layer 1 enable- ");
                 //temp_dice_dir_graficos(0x18);
 		temp_tsconf_render_tile_layer(1);
-        }
+        }*/
 
       /* if (tsconfig&128) {
                 //printf ("Sprite layers enable ");
