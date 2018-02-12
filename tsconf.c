@@ -1270,10 +1270,10 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
   //http://forum.tslabs.info/viewtopic.php?f=35&t=157
 
-  y=scanline_copia/4;
-  puntero_layer +=64*2*y; //64 de ancho, 2 bytes, *y
+  y=scanline_copia/8;
+  puntero_layer +=64*2*2*y; //64 de ancho, 2 bytes, *y
 
-  //printf ("scanline: %d puntero_layer: %d\n",scanline_copia,64*2*y);
+  //printf ("scanline: %d tile y: %d\n",scanline_copia,y);
 
   //Tiles Y va de 0 a 63. scanline copia va de 0 a 255
 
@@ -1298,11 +1298,11 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 				z80_byte *sprite_origen;
 				
-        int y_offset=scanline_copia%4;
+        int y_offset=scanline_copia%8;
 
 				sprite_origen=puntero_graficos+(tnum_y*256*8)+tnum_x*8/2;
 
-        sprite_origen +=y_offset*256*2;
+        sprite_origen +=y_offset*256;
 
 				//No estoy seguro de las siguientes multiplicacines. habria que revisarlas
 				//temp_sprite_xy_putsprite_origen(x*8+offset_x,y*4+offset_y,   8,8, 0,0,tpal,sprite_origen);
