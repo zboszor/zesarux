@@ -12670,28 +12670,56 @@ void delete_generic_footertext(void)
         menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1,"        ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 }
 
-z80_byte screen_convert_rainbow_to_text_char(z80_int *source_bitmap,int source_width,int source_height,int total_ancho)
+int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width,int source_height,int total_ancho)
 {
-	//Devuelve para un rectangulo dado, su "caracter" zx81
-	//De momento algo mas rapido
+	//Para un cuadrado dado, retorna si es 0 (cercano a negro) o 1 (cercano a blanco)
 	int total_superficie=source_width*source_height;
 
 	//Sumar todos los colores
 	int x,y;
-	int color_acumulado=0;
+
+	int acumulado_red,acumulado_green,acumulado_blue;
+	acumulado_red=acumulado_green=acumulado_blue=0;
+
+	int rgbcolor,red,green,blue;
 
 	for (x=0;x<source_width;x++) {
 		for (y=0;y<source_height;y++) {
 			int color=source_bitmap[y*total_ancho+x];
-			color_acumulado +=color;
+
+
+		            rgbcolor=spectrum_colortable[color];
+		            red=(rgbcolor>>16); //&255;
+		            green=(rgbcolor>>8); //&255;
+		            blue=(rgbcolor); //&255;
+
+				acumulado_red +=red;
+				acumulado_green +=green;
+				acumulado_blue +=blue;
+
 		}
 	}
 
-	color_acumulado /=total_superficie;
+	//Dividir los componentes de color
+	acumulado_red /=total_superficie;
+	acumulado_green /=total_superficie;
+	acumulado_blue /=total_superficie;
 
-	if (color_acumulado==TSCONF_INDEX_FIRST_COLOR) return ' ';
-	else return '.';
+	int umbral=256*3; //3 componentes de color de 8 bit
+	int suma_componentes=acumulado_red+acumulado_green+acumulado_blue;
 
+	if (suma_componentes<umbral/2) return 0;
+	else return 1;
+
+}
+
+
+z80_byte screen_convert_rainbow_to_text_char(z80_int *source_bitmap,int source_width,int source_height,int total_ancho)
+{
+	//Devuelve para un rectangulo dado, su "caracter" zx81
+	int cuadrado_izq=screen_convert_rainbow_to_blackwhite(source_bitmap,source_width,source_height,total_ancho);
+	if (cuadrado_izq) return '.';
+	else return ' ';
 }
 
 /*
