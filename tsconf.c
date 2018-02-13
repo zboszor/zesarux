@@ -1112,22 +1112,25 @@ void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int
 			//puntero_buf_sprite=&tsconf_layer_sprites[ x*2 ];
       puntero_buf_sprite=&layer[ x*2 ];
 
+		z80_byte byte_sprite;
+
 			for (;ancho;ancho-=2) { //-=2 porque son a 4bpp
-				z80_int color_izq=((*sprite_origen)>>4)&15;
+				byte_sprite=*sprite_origen;
+				z80_int color_izq=(byte_sprite>>4)&15;
 				if (color_izq) { //0 es transparente
 					tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_izq,spal);
 				}
 
-        //tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,3,spal); //temp
 				puntero_buf_sprite++;
 				puntero_buf_sprite++;
-				z80_int color_der=((*sprite_origen))&15;
+
+
+
+				z80_int color_der=byte_sprite&15;
 				if (color_der) { //0 es transparente
 					tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_der,spal);         
 				}
 
-        //tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,3,spal); //temp
-        //printf ("%d %d ",color_izq,color_der);
 
 
 				puntero_buf_sprite++;
@@ -1284,6 +1287,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
   //printf ("scanline: %d tile y: %d\n",scanline_copia,y);
 
   //Tiles Y va de 0 a 63. scanline copia va de 0 a 255
+        int y_offset=scanline_copia%8;
 
 	//for (y=0;y<64;y++) {
 		for (x=0;x<64;x++) {
@@ -1306,7 +1310,6 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 				z80_byte *sprite_origen;
 				
-        int y_offset=scanline_copia%8;
 
 				sprite_origen=puntero_graficos+(tnum_y*256*8)+tnum_x*8/2;
 
