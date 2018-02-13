@@ -778,7 +778,7 @@ void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit i
 {
 
         z80_int color;
-        z80_byte bit; 
+        z80_byte bit;
         z80_byte line;
         z80_byte byte_leido;
 
