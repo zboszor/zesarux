@@ -532,7 +532,7 @@ void scrstdout_repinta_pantalla(void)
 				int alto_final=alto/FACTOR_DIVISION_TEXT_TSCONF;
 
 				z80_byte *buffer_texto;
-				buffer_texto=malloc(ancho_final*alto_final);
+				buffer_texto=malloc(ancho_final*(alto_final+10)); //Algo mas por si acaso
 				if (buffer_texto==NULL) cpu_panic("Can not allocate text buffer");
 
 				screen_convert_rainbow_to_text(rainbow_buffer,ancho,alto,buffer_texto,FACTOR_DIVISION_TEXT_TSCONF);
