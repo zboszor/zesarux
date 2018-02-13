@@ -693,5 +693,7 @@ extern void screen_set_spectrum_palette_offset(void);
 
 extern int scr_ver_si_refrescar_por_menu_activo(int x,int fila);
 
+extern void tsconf_fast_tilesprite_render(void);
+
 
 #endif

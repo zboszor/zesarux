@@ -124,6 +124,10 @@ z80_int tsconf_layer_tiles_zero[TSCONF_MAX_WIDTH_LAYER];
 z80_int tsconf_layer_tiles_one[TSCONF_MAX_WIDTH_LAYER];
 z80_int tsconf_layer_sprites[TSCONF_MAX_WIDTH_LAYER];
 
+
+//Si se hace render de sprites y tiles usando funcion rapida de renderizado
+z80_bit tsconf_si_render_spritetile_rapido={0};
+
 z80_byte tsconf_get_video_mode_display(void)
 {
   /*
@@ -1337,25 +1341,31 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
   tsconf_store_scanline_ula();
 
 
-  z80_byte tsconfig=tsconf_af_ports[6];
-  if (tsconfig&128) {
-                //printf ("Sprite layers enable ");
-                //temp_dice_dir_graficos(0x19);
-                tsconf_store_scanline_sprites();
+
+  if (tsconf_si_render_spritetile_rapido.v==0) {
+	  z80_byte tsconfig=tsconf_af_ports[6];
+	  if (tsconfig&128) {
+        	        //printf ("Sprite layers enable ");
+	                //temp_dice_dir_graficos(0x19);
+        	        tsconf_store_scanline_sprites();
+	  }
+
+
+	  if (tsconfig&32) {
+			//printf ("Tile layer 0 enable- ");
+			//temp_dice_dir_graficos(0x17);
+		  tsconf_store_scanline_tiles(0,tsconf_layer_tiles_zero);
+		}
+
+	  if (tsconfig&64) {
+        	        //printf ("Tile layer 1 enable- ");
+	                //temp_dice_dir_graficos(0x18);
+	    tsconf_store_scanline_tiles(1,tsconf_layer_tiles_one);
+	  }
+
+
   }
 
-
-  if (tsconfig&32) {
-		//printf ("Tile layer 0 enable- ");
-		//temp_dice_dir_graficos(0x17);
-	  tsconf_store_scanline_tiles(0,tsconf_layer_tiles_zero);
-	}
-
-  if (tsconfig&64) {
-                //printf ("Tile layer 1 enable- ");
-                //temp_dice_dir_graficos(0x18);
-    tsconf_store_scanline_tiles(1,tsconf_layer_tiles_one);
-  }
 
   //Y las pasamos a buffer rainbow
         //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
@@ -1867,7 +1877,7 @@ void screen_tsconf_refresca_rainbow(void) {
 void screen_tsconf_refresca_pantalla(void)
 {
 
-	//temp_dice_modos_sprites_etc();
+	//tsconf_fast_tilesprite_render();
 
 
 	//Como spectrum clasico
@@ -1890,8 +1900,8 @@ void screen_tsconf_refresca_pantalla(void)
 
 	else {
 	//modo rainbow - real video
-				temp_dice_modos_sprites_etc();
-				//temp_tsconf_render_graficos();
+				if (tsconf_si_render_spritetile_rapido.v) tsconf_fast_tilesprite_render();
+
 				screen_tsconf_refresca_rainbow();
 	}
 

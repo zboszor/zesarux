@@ -1675,10 +1675,12 @@ void temp_tsconf_render_sprites(void)
 
 
 
-int temp_dice_modos_sprites_etc_conta=0;
+//int tsconf_fast_tilesprite_render_conta=0;
 
-//Temporal para renderizar tiles y sprites al final de cada frame
-void temp_dice_modos_sprites_etc(void)
+//Rutina rapida para renderizar tiles y sprites al final de cada frame
+//No es como lo hace la maquina real, la maquina real renderiza a cada scanline. Esta se mantiene para tener un metodo rapido de renderizacion
+//Requiere realvideo
+void tsconf_fast_tilesprite_render(void)
 {
 
 	z80_byte tsconfig=tsconf_af_ports[6];
@@ -1697,30 +1699,31 @@ void temp_dice_modos_sprites_etc(void)
 		
 	
 	}
-	/*if (tsconfig&32) {
+	if (tsconfig&32) {
 		//printf ("Tile layer 0 enable- ");
 		//temp_dice_dir_graficos(0x17);
 		temp_tsconf_render_tile_layer(0);
-	}*/
+	}
 
-        /*if (tsconfig&64) {
+        if (tsconfig&64) {
                 //printf ("Tile layer 1 enable- ");
                 //temp_dice_dir_graficos(0x18);
 		temp_tsconf_render_tile_layer(1);
-        }*/
+        }
 
-      /* if (tsconfig&128) {
+        if (tsconfig&128) {
                 //printf ("Sprite layers enable ");
                 //temp_dice_dir_graficos(0x19);
                 temp_tsconf_render_sprites();
-        }*/
+        }
 
 
 	//Decir una vez por segundo los modos activos
-	temp_dice_modos_sprites_etc_conta++;
-	if (temp_dice_modos_sprites_etc_conta%50) return;
+	//tsconf_fast_tilesprite_render_conta++;
+	//if (tsconf_fast_tilesprite_render_conta%50) return;
 	//printf ("tsconfig: %02XH ",tsconfig);
 
+	/*
 	int haytiles=0;
 
 
@@ -1736,10 +1739,13 @@ void temp_dice_modos_sprites_etc(void)
 		haytiles=1;
         }
 
-       if (tsconfig&128) {
+        if (tsconfig&128) {
                 //printf ("Sprite layers enable ");
                 temp_dice_dir_graficos(0x19);
         }
+	*/
+
+
 
 
 	//if (tsconfig&8) printf ("Tiles with number 1 display enable- ");
@@ -1750,11 +1756,11 @@ void temp_dice_modos_sprites_etc(void)
         //if (tsconf_af_ports[0]&32) printf ("nogfx- ");
 
 	//Decir donde Tile map page
-	if (haytiles) {
+	/*if (haytiles) {
 	        int direccion=tsconf_af_ports[0x16];
 	        direccion=direccion << 14;
         	//printf ("Tile map page: %06XH - ",direccion);
-	}
+	}*/
 	
 
 	//printf ("\n");
@@ -5913,7 +5919,6 @@ void screen_store_scanline_rainbow_solo_display(void)
 {
 	//Si maquina tsconf. Dado que tiene border tamaño variable, hacerlo desde aqui tal cual
 	if (MACHINE_IS_TSCONF) {
-
 		screen_store_scanline_rainbow_solo_display_tsconf();
 		return;
 	}
@@ -5921,7 +5926,6 @@ void screen_store_scanline_rainbow_solo_display(void)
 
 	//Funcion aparte para tbblue
 	if (MACHINE_IS_TBBLUE) {
-
 		screen_store_scanline_rainbow_solo_display_tbblue();
 		return;
 	}
