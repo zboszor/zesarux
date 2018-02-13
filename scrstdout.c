@@ -536,9 +536,7 @@ void scrstdout_repinta_pantalla(void)
 	else if (MACHINE_IS_TSCONF) {
 		//con rainbow
 		if (rainbow_enabled.v) {
-
 			scr_refresca_pantalla_tsconf_text(stdout_common_fun_color,stdout_common_fun_caracter,stdout_common_fun_saltolinea,12);
-
 		}
 	}
 	

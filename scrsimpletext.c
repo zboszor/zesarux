@@ -311,7 +311,20 @@ void scr_simpletext_printchar(void)
 
 
 
+void scr_simpletext_common_fun_color(z80_byte color,int *brillo, int *parpadeo)
+{
+	//de momento nada
+}
 
+void scr_simpletext_common_fun_caracter (int x,int y,int brillo, unsigned char inv,z80_byte caracter )
+{
+	printf ("%c",caracter);
+}
+
+void scr_simpletext_common_fun_saltolinea (void)
+{
+	printf ("\n");
+}
 
 
 
@@ -353,7 +366,13 @@ void scrsimpletext_repinta_pantalla(void)
                 screen_text_repinta_pantalla_cpc();
         }
 
-	
+
+	else if (MACHINE_IS_TSCONF) {
+		//con rainbow
+		if (rainbow_enabled.v) {
+			scr_refresca_pantalla_tsconf_text(scr_simpletext_common_fun_color,scr_simpletext_common_fun_caracter,scr_simpletext_common_fun_saltolinea,12);
+		}
+	}	
 	
 	
 	else {
