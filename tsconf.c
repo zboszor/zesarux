@@ -1245,8 +1245,10 @@ void tsconf_store_scanline_sprites(void)
           int y_offset=scanline_copia-y;
           //printf ("\nscanline: %d yoff: %d sprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",scanline_copia,y_offset,i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
           //temp_sprite_xy_putsprite(x,y,xsize,ysize,tnum_x,tnum_y,spal);
-          tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal,layer);
-	layer+=2;
+
+
+	int final_layer_x_offset=x*2;
+          tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal,&layer[final_layer_x_offset]);
         }
 				
 			}
