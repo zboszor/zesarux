@@ -1440,33 +1440,48 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 						
 
             //Sprites encima de tiles y encima de ula
-            z80_int color_ula=tsconf_layer_ula[x];
-            z80_int color_tiles_zero=tsconf_layer_tiles_zero[x];
-            z80_int color_tiles_one=tsconf_layer_tiles_one[x];
             z80_int color_sprites=tsconf_layer_sprites[x];
 
             z80_int color_final;
 
             //Gestion de capas
 
-            //TODO. Cargar los colores de debajo de cada capa segun cada else (tal y como hace tbblue)
-            if (color_sprites!=TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=color_sprites;
-            else if (color_tiles_one!=TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=color_tiles_one;
-            else if (color_tiles_zero!=TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=color_tiles_zero;
-            else color_final=color_ula;
+            if (color_sprites!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+		color_final=color_sprites;
+	    }
+
+            else {
+            	z80_int color_tiles_one=tsconf_layer_tiles_one[x];
+		if (color_tiles_one!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+			color_final=color_tiles_one;
+	    	}
+
+            	else {
+			z80_int color_tiles_zero=tsconf_layer_tiles_zero[x];
+			if (color_tiles_zero!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+				color_final=color_tiles_zero;
+	        	}
+
+		        else {
+        	    		z80_int color_ula=tsconf_layer_ula[x];
+				color_final=color_ula;
+				//Si transparente, color 0
+				if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=0;
+
+				//Si transparente, metemos cuadricula
+				/*if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+					int resto=(x/8+scanline_copia/8)%2;
+					if (resto) color_final=7;
+					else color_final=0;
+				}*/
+	    		}
+		}
+	    }
 
 
-		//Si transparente, metemos cuadricula
-		/*if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) {
-			int resto=(x/8+scanline_copia/8)%2;
-			if (resto) color_final=7;
-			else color_final=0;
-		}*/
 
-		//Si transparente, color 0
-		if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=0;
 
-            else color_final +=TSCONF_INDEX_FIRST_COLOR;
+            color_final +=TSCONF_INDEX_FIRST_COLOR;
 
 						*puntero_buf_rainbow=color_final;
 					
