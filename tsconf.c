@@ -124,6 +124,19 @@ z80_int tsconf_layer_tiles_zero[TSCONF_MAX_WIDTH_LAYER];
 z80_int tsconf_layer_tiles_one[TSCONF_MAX_WIDTH_LAYER];
 z80_int tsconf_layer_sprites[TSCONF_MAX_WIDTH_LAYER];
 
+//Forzar desde menu a desactivar capas 
+z80_bit tsconf_force_disable_layer_ula={0};
+z80_bit tsconf_force_disable_layer_tiles_zero={0};
+z80_bit tsconf_force_disable_layer_tiles_one={0};
+z80_bit tsconf_force_disable_layer_sprites={0};
+
+//Prueba ny17: Todo activado: 71-73 %
+//Sin ula: 66%
+//Sin sprites: 70%
+//Sin tiles_zero: 65%
+//Sin tiles_one: 69%
+//sin ninguna capa: 58%
+
 
 //Si se hace render de sprites y tiles usando funcion rapida de renderizado
 z80_bit tsconf_si_render_spritetile_rapido={0};
@@ -1104,7 +1117,7 @@ void tsconf_store_scanline_putsprite_putpixel(z80_int *puntero,z80_int color,z80
 */
 
 //Comun para tiles y sprites
-void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
+void tsconf_store_scanline_putsprite(int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
 {
 
                
@@ -1165,7 +1178,7 @@ void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int
 }
 
 
-void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int tnum_x, int tnum_y,z80_byte spal,z80_int *layer)
+void tsconf_store_scanline_sprites_putsprite(int y_offset,int ancho, int tnum_x, int tnum_y,z80_byte spal,z80_int *layer)
 {
 
                 int direccion=tsconf_af_ports[0x19]>>3;
@@ -1192,7 +1205,7 @@ void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int t
                 sprite_origen +=y_offset*(ancho_linea);
                 //printf ("sprite_origen: %d\n",sprite_origen);
 
-		            tsconf_store_scanline_putsprite(x,ancho, tnum_x, tnum_y,spal,sprite_origen,layer);
+		            tsconf_store_scanline_putsprite(ancho, tnum_x, tnum_y,spal,sprite_origen,layer);
 }
 
 
@@ -1248,7 +1261,7 @@ void tsconf_store_scanline_sprites(void)
 
 
 	int final_layer_x_offset=x*2;
-          tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal,&layer[final_layer_x_offset]);
+          tsconf_store_scanline_sprites_putsprite(y_offset,xsize,tnum_x,tnum_y,spal,&layer[final_layer_x_offset]);
         }
 				
 			}
@@ -1313,48 +1326,44 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
   //printf ("scanline: %d tile y: %d\n",scanline_copia,y);
 
 	z80_int *layer_final=layer_tiles;
+	layer_final -=offset_x;
 
   //Tiles Y va de 0 a 63. scanline copia va de 0 a 255
-        int y_offset=scanline_copia%8;
+    int y_offset=scanline_copia%8;
 
-	//for (y=0;y<64;y++) {
-		for (x=0;x<64;x++) {
+	for (x=0;x<64;x++) {
 			z80_byte valor1=*puntero_layer;
 			puntero_layer++;
 			z80_byte valor2=*puntero_layer;
-      puntero_layer++;
+      		puntero_layer++;
 
-			//printf ("valor1: %d valor2: %d\n",valor1,valor2);
+			if (offset_x>-8 && offset_x<tsconf_current_pixel_width) { //Solo dibujarlo si esta en rango visible
+				
+				z80_int tnum=valor1+256*(valor2&1);
 
-			z80_int tnum=valor1+256*(valor2&1);
+				z80_byte tpal=(valor2>>4)&3;
 
-			z80_byte tpal=(valor2>>4)&3;
+				int tnum_x=tnum&63;
+				int tnum_y=(tnum>>6)&63;
 
-			int tnum_x=tnum&63;
-			int tnum_y=(tnum>>6)&63;
-
-			//if (!(tnum_x==0 && tnum_y==0)) {
-				//printf ("tile x: %d y: %d tnum_x: %d tnum_y: %d\n",x,y,tnum_x,tnum_y);
-
+			
 				z80_byte *sprite_origen;
 				
-
 				sprite_origen=puntero_graficos+(tnum_y*256*8)+tnum_x*8/2;
 
-        sprite_origen +=y_offset*256;
+        		sprite_origen +=y_offset*256;
 
-				//No estoy seguro de las siguientes multiplicacines. habria que revisarlas
-				//temp_sprite_xy_putsprite_origen(x*8+offset_x,y*4+offset_y,   8,8, 0,0,tpal,sprite_origen);
+				tsconf_store_scanline_putsprite(8, 0,0,tpal,sprite_origen,layer_final);
 
-                //printf ("sprite_origen: %d\n",sprite_origen);
-
-		            tsconf_store_scanline_putsprite(x*8+offset_x,8, 0,0,tpal,sprite_origen,layer_final);
-				layer_final+=16;
+			}
+			
+			layer_final+=16;
        
+	   		offset_x+=8;
 
-			//}
+			
 		}
-	//}
+	
 
 }
 
@@ -1385,12 +1394,12 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
 		//no meter capa de ula. demo zenloops hace esto. Ponerla en negro
 
-		for (i=0;i<TSCONF_MAX_WIDTH_LAYER;i++) tsconf_layer_ula[i]=0;
+		//for (i=0;i<TSCONF_MAX_WIDTH_LAYER;i++) tsconf_layer_ula[i]=0;
 
 
         }
 
-	else tsconf_store_scanline_ula();
+	else if (tsconf_force_disable_layer_ula.v==0) tsconf_store_scanline_ula();
 
 
 
@@ -1399,20 +1408,20 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 	  if (tsconfig&128) {
         	        //printf ("Sprite layers enable ");
 	                //temp_dice_dir_graficos(0x19);
-        	        tsconf_store_scanline_sprites();
+        	        if (tsconf_force_disable_layer_sprites.v==0) tsconf_store_scanline_sprites();
 	  }
 
 
 	  if (tsconfig&32) {
 			//printf ("Tile layer 0 enable- ");
 			//temp_dice_dir_graficos(0x17);
-		  tsconf_store_scanline_tiles(0,tsconf_layer_tiles_zero);
+		  if (tsconf_force_disable_layer_tiles_zero.v==0) tsconf_store_scanline_tiles(0,tsconf_layer_tiles_zero);
 		}
 
 	  if (tsconfig&64) {
         	        //printf ("Tile layer 1 enable- ");
 	                //temp_dice_dir_graficos(0x18);
-	    tsconf_store_scanline_tiles(1,tsconf_layer_tiles_one);
+	    if (tsconf_force_disable_layer_tiles_one.v==0) tsconf_store_scanline_tiles(1,tsconf_layer_tiles_one);
 	  }
 
 
