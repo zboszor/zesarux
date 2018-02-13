@@ -1446,26 +1446,25 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
             //Gestion de capas
 
-            z80_int color_sprites=*layer_one;
-            if (color_sprites!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
-		color_final=color_sprites;
+            color_final=*layer_one;
+            if (color_final!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+		//color_final=color_sprites;
 	    }
 
             else {
-            	z80_int color_tiles_one=*layer_two;
-		if (color_tiles_one!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
-			color_final=color_tiles_one;
+            	color_final=*layer_two;
+		if (color_final!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+			//color_final=color_tiles_one;
 	    	}
 
             	else {
-			z80_int color_tiles_zero=*layer_three;
-			if (color_tiles_zero!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
-				color_final=color_tiles_zero;
+			color_final=*layer_three;
+			if (color_final!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+				//color_final=color_tiles_zero;
 	        	}
 
 		        else {
-        	    		z80_int color_ula=*layer_four;
-				color_final=color_ula;
+        	    		color_final=*layer_four;
 				//Si transparente, color 0
 				if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=0;
 
