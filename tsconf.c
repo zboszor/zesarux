@@ -1399,24 +1399,14 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
 				int total_ancho_rainbow=get_total_ancho_rainbow();
 
-				//scanline_copia tiene coordenada scanline de dentro de zona pantalla
-				//doble de alto
-				//scanline_copia /=2;
 
         //la copiamos a buffer rainbow
         z80_int *puntero_buf_rainbow;
-        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
-        //int y;
 
         int y_rainbow=scanline_copia*2;
 				//printf ("store y: %d\n",y_rainbow);
 
-				//int y_origen_pixeles=scanline_copia; //para hacer doble de alto
-        //if (border_enabled.v==0) y=y-screen_borde_superior;
-
         puntero_buf_rainbow=&rainbow_buffer[ y_rainbow*total_ancho_rainbow ];
-
-        //puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
 
 				//Margenes border
 				puntero_buf_rainbow +=tsconf_current_border_width*2;
@@ -1434,36 +1424,47 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
 
 
+		z80_int *layer_one;
+		z80_int *layer_two;
+		z80_int *layer_three;
+		z80_int *layer_four;
 
 
-					for (x=0;x<tsconf_current_pixel_width*2;x++) {
+		layer_one=tsconf_layer_sprites;
+		layer_two=tsconf_layer_tiles_one;
+		layer_three=tsconf_layer_tiles_zero;
+		layer_four=tsconf_layer_ula;
+
+
+	for (x=0;x<tsconf_current_pixel_width*2;x++) {
 						
-
-            //Sprites encima de tiles y encima de ula
-            z80_int color_sprites=tsconf_layer_sprites[x];
 
             z80_int color_final;
 
+            //Sprites encima de tiles y encima de ula
+
+
             //Gestion de capas
 
+            z80_int color_sprites=*layer_one;
             if (color_sprites!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
 		color_final=color_sprites;
 	    }
 
             else {
-            	z80_int color_tiles_one=tsconf_layer_tiles_one[x];
+            	z80_int color_tiles_one=*layer_two;
 		if (color_tiles_one!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
 			color_final=color_tiles_one;
 	    	}
 
             	else {
-			z80_int color_tiles_zero=tsconf_layer_tiles_zero[x];
+			z80_int color_tiles_zero=*layer_three;
 			if (color_tiles_zero!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
 				color_final=color_tiles_zero;
 	        	}
 
 		        else {
-        	    		z80_int color_ula=tsconf_layer_ula[x];
+        	    		z80_int color_ula=*layer_four;
 				color_final=color_ula;
 				//Si transparente, color 0
 				if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=0;
@@ -1490,7 +1491,12 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
 						//Siguiente pixel
 						puntero_buf_rainbow++;
-					}
+
+		layer_one++;
+		layer_two++;
+		layer_three++;
+		layer_four++;
+	}
 }
 
 			
