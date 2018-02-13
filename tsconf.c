@@ -1307,7 +1307,9 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	layer_final -=offset_x;
 
   //Tiles Y va de 0 a 63. scanline copia va de 0 a 255
-    int y_offset=scanline_copia%8;
+    
+	//En que scanline esta 0...7
+	int desplazamiento_scanline=(scanline_copia & 7)*256;;
 
 	for (x=0;x<64;x++) {
 			z80_byte valor1=*puntero_layer;
@@ -1327,9 +1329,11 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 			
 				z80_byte *sprite_origen;
 				
-				sprite_origen=puntero_graficos+(tnum_y*256*8)+tnum_x*8/2;
+				sprite_origen=puntero_graficos+(tnum_y*256*8) + tnum_x*8/2;
+				
+        		sprite_origen +=desplazamiento_scanline;
 
-        		sprite_origen +=y_offset*256;
+				//printf ("tile x %d sprite_origen %p\n",x,sprite_origen);
 
 				tsconf_store_scanline_putsprite(8, 0,0,tpal,sprite_origen,layer_final);
 
