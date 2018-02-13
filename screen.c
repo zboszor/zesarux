@@ -12716,10 +12716,44 @@ int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width
 
 z80_byte screen_convert_rainbow_to_text_char(z80_int *source_bitmap,int source_width,int source_height,int total_ancho)
 {
+
+	char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+
+	int valor_get_pixel=0;
+
+		/*
+                                if (texto_artistico.v==1) {
+                                        //si caracter desconocido, hacerlo un poco mas artistico
+                                        valor_get_pixel=0;
+                                        if (scr_get_4pixel(x*8,y*8)>=umbral_arttext) valor_get_pixel+=1;
+                                        if (scr_get_4pixel(x*8+4,y*8)>=umbral_arttext) valor_get_pixel+=2;
+                                        if (scr_get_4pixel(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
+                                        if (scr_get_4pixel(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
+
+                                        caracter=caracteres_artisticos[valor_get_pixel];
+                                }
+
+                                else caracter='?';
+		*/
+
+
+
 	//Devuelve para un rectangulo dado, su "caracter" zx81
-	int cuadrado_izq=screen_convert_rainbow_to_blackwhite(source_bitmap,source_width,source_height,total_ancho);
-	if (cuadrado_izq) return '.';
-	else return ' ';
+	int anchomitad=source_width/2;
+	int altomitad=source_height/2;
+
+	int cuadrado_izq=screen_convert_rainbow_to_blackwhite(source_bitmap,anchomitad,altomitad,total_ancho);
+	int cuadrado_der=screen_convert_rainbow_to_blackwhite(source_bitmap,anchomitad,altomitad,total_ancho);
+	int cuadrado_aba=screen_convert_rainbow_to_blackwhite(source_bitmap,anchomitad,altomitad,total_ancho);
+	int cuadrado_abader=screen_convert_rainbow_to_blackwhite(source_bitmap,anchomitad,altomitad,total_ancho);
+
+	if (cuadrado_izq) valor_get_pixel+=1;
+	if (cuadrado_der) valor_get_pixel+=1;
+	if (cuadrado_aba) valor_get_pixel+=1;
+	if (cuadrado_abader) valor_get_pixel+=1;
+
+	return caracteres_artisticos[valor_get_pixel];
+
 }
 
 /*
