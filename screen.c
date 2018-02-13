@@ -1691,7 +1691,7 @@ void tsconf_fast_tilesprite_render(void)
 
 	//S_EN	T1_EN	T0_EN	-	T1Z_EN	T0Z_EN	-	TS_EXT*
 
-        if (tsconf_af_ports[0]&32) {
+        if (tsconf_af_ports[0]&32 || tsconf_force_disable_layer_ula.v) {
 		//Si no hay graficos normales, poner a negro
 		int size=get_total_ancho_rainbow()*get_total_alto_rainbow();
 		if (size) {
@@ -1705,19 +1705,19 @@ void tsconf_fast_tilesprite_render(void)
 	if (tsconfig&32) {
 		//printf ("Tile layer 0 enable- ");
 		//temp_dice_dir_graficos(0x17);
-		temp_tsconf_render_tile_layer(0);
+		if (tsconf_force_disable_layer_tiles_zero.v==0) temp_tsconf_render_tile_layer(0);
 	}
 
         if (tsconfig&64) {
                 //printf ("Tile layer 1 enable- ");
                 //temp_dice_dir_graficos(0x18);
-		temp_tsconf_render_tile_layer(1);
+		if (tsconf_force_disable_layer_tiles_one.v==0) temp_tsconf_render_tile_layer(1);
         }
 
         if (tsconfig&128) {
                 //printf ("Sprite layers enable ");
                 //temp_dice_dir_graficos(0x19);
-                temp_tsconf_render_sprites();
+                if (tsconf_force_disable_layer_sprites.v==0) temp_tsconf_render_sprites();
         }
 
 
