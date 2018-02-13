@@ -1466,34 +1466,6 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 		}
 
 
-	/*
-            if (color_final!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
-		//color_final=color_sprites;
-	    }
-
-            else {
-            	color_final=*layer_two;
-		if (color_final!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
-			//color_final=color_tiles_one;
-	    	}
-
-            	else {
-			color_final=*layer_three;
-			if (color_final!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
-				//color_final=color_tiles_zero;
-	        	}
-
-		        else {
-        	    		color_final=*layer_four;
-				//Si transparente, color 0
-				if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=0;
-
-	    		}
-		}
-	    }
-
-	*/
-
 
             color_final +=TSCONF_INDEX_FIRST_COLOR;
 
