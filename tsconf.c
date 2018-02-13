@@ -1113,7 +1113,8 @@ void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int
 
 
 			//puntero_buf_sprite=&tsconf_layer_sprites[ x*2 ];
-      puntero_buf_sprite=&layer[ x*2 ];
+      //puntero_buf_sprite=&layer[ x*2 ];
+			puntero_buf_sprite=layer;
 
 		z80_byte byte_sprite;
 		z80_int color_final;
@@ -1208,6 +1209,8 @@ void tsconf_store_scanline_sprites(void)
 		int offset=0;
 		int salir=0;
 
+	z80_int *layer=tsconf_layer_sprites;
+
     //Los 85 sprites
 		for (i=0;i<85 && !salir;i++,offset+=6) {
 			if (tsconf_fmaps[0x200+offset+1]&64) {
@@ -1242,7 +1245,8 @@ void tsconf_store_scanline_sprites(void)
           int y_offset=scanline_copia-y;
           //printf ("\nscanline: %d yoff: %d sprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",scanline_copia,y_offset,i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
           //temp_sprite_xy_putsprite(x,y,xsize,ysize,tnum_x,tnum_y,spal);
-          tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal,tsconf_layer_sprites);
+          tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal,layer);
+	layer+=2;
         }
 				
 			}
@@ -1306,6 +1310,8 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
   //printf ("scanline: %d tile y: %d\n",scanline_copia,y);
 
+	z80_int *layer_final=layer_tiles;
+
   //Tiles Y va de 0 a 63. scanline copia va de 0 a 255
         int y_offset=scanline_copia%8;
 
@@ -1340,7 +1346,8 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
                 //printf ("sprite_origen: %d\n",sprite_origen);
 
-		            tsconf_store_scanline_putsprite(x*8+offset_x,8, 0,0,tpal,sprite_origen,layer_tiles);
+		            tsconf_store_scanline_putsprite(x*8+offset_x,8, 0,0,tpal,sprite_origen,layer_final);
+				layer_final+=2;
        
 
 			//}
