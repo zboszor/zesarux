@@ -986,14 +986,6 @@ void scrcurses_refresca_pantalla(void)
 		}
 	}
 
-        else if (MACHINE_IS_TSCONF) {
-                //con rainbow
-                if (rainbow_enabled.v) {
-
-                        scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);  //720x576 -> 31x25
-
-                }
-        }
 
 	else if (MACHINE_IS_SPECTRUM) {
 
@@ -1018,6 +1010,14 @@ void scrcurses_refresca_pantalla(void)
 		}
 
 		else {
+        		if (MACHINE_IS_TSCONF) {
+	                //con rainbow
+
+                        scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);  //720x576 -> 31x25
+
+        		}
+
+			else {
                         //modo rainbow - real video. De momento hacemos igual que sin realvideo
                         //scrcurses_refresca_pantalla_rainbow();
 
@@ -1033,7 +1033,7 @@ void scrcurses_refresca_pantalla(void)
 
                         scrcurses_refresca_pantalla_no_rainbow();
 
-
+			}
 
 
 
