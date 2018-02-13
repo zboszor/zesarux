@@ -12696,7 +12696,7 @@ z80_byte screen_convert_rainbow_to_text_char(z80_int *source_bitmap,int source_w
 
 /*
 Funcion para convertir buffer de rainbow (o cualquier otro buffer de pantalla con colores indexados 16 bits) a texto
-Destino tiene que tener mismas proporciones que origen, por lo que del destino solo se pide tamanyo ancho
+Destino tiene que tener mismas proporciones que origen, por lo que del destino solo se pide factor de division
 
 Se divide origen en cuadriculas, y cada cuadricula en 2x2, y le aplicamos misma conversion que zx81
 
@@ -12704,18 +12704,18 @@ Ejemplo: origen ancho: 100 destino ancho: 10
 cuadriculas: 10 de ancho, cada una dividida en 2x2 -> 20 cuadriculas de ancho
 
 */
-void screen_convert_rainbow_to_text(z80_int *source_bitmap,int source_width,int source_height,z80_byte *destination_text,int destination_width)
+void screen_convert_rainbow_to_text(z80_int *source_bitmap,int source_width,int source_height,z80_byte *destination_text,int division_factor)
 {
-	int incremento_x=source_width/destination_width;
-	int incremento_y=incremento_x;
+	int incremento_x=division_factor;
+	int incremento_y=division_factor;
 
 	int xorig,yorig,xdest,ydest;
 
 	for (yorig=0;yorig<source_height;yorig+=incremento_y) {
 		for (xorig=0;xorig<source_width;xorig+=incremento_x) {
 			z80_byte caracter=screen_convert_rainbow_to_text_char(&source_bitmap[yorig*source_width+xorig],incremento_x,incremento_y,source_width);
-			printf ("%c",caracter);
+			*destination_text=caracter;
+			destination_text++;
 		}
-		printf ("\n");
 	}
 }

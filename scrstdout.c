@@ -526,12 +526,30 @@ void scrstdout_repinta_pantalla(void)
 
 			        ancho=get_total_ancho_rainbow();
 			        alto=get_total_alto_rainbow();
-				#define ANCHO_TEXT_TSCONF 40
+				#define FACTOR_DIVISION_TEXT_TSCONF 10
 
-				//Siempre sera mas ancho que alto. temporal
-				char buffer_texto[ANCHO_TEXT_TSCONF*ANCHO_TEXT_TSCONF];
+				int ancho_final=ancho/FACTOR_DIVISION_TEXT_TSCONF;
+				int alto_final=alto/FACTOR_DIVISION_TEXT_TSCONF;
 
-				screen_convert_rainbow_to_text(rainbow_buffer,ancho,alto,buffer_texto,ANCHO_TEXT_TSCONF);
+				z80_byte *buffer_texto;
+				buffer_texto=malloc(ancho_final*alto_final);
+				if (buffer_texto==NULL) cpu_panic("Can not allocate text buffer");
+
+				screen_convert_rainbow_to_text(rainbow_buffer,ancho,alto,buffer_texto,FACTOR_DIVISION_TEXT_TSCONF);
+
+				z80_byte *buffer_texto_copia;
+				buffer_texto_copia=buffer_texto;
+
+				int x,y;
+				for (y=0;y<alto_final;y++) {
+					for (x=0;x<ancho_final;x++) {
+						printf ("%c",*buffer_texto_copia);
+						buffer_texto_copia++;
+					}
+					printf ("\n");
+				}
+
+				free(buffer_texto);
 		}
 	}
 	
