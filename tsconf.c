@@ -821,13 +821,6 @@ int temp_conta_nogfx;
 
 void tsconf_store_scanline_ula(void) 
 {
-	//Si desactivado plain graphics, no hacemos plain graphics. Pero habra que ver si estan los tiles/sprites (tsu)
-	if (tsconf_af_ports[0]&32) {
-		temp_conta_nogfx++;
-		//if (temp_conta_nogfx%3200==0) printf ("nogfx\n");
-		return;
-	}
-
 
         //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
 
@@ -986,38 +979,51 @@ void tsconf_store_scanline_ula(void)
 					z80_byte *screen;
 					screen=tsconf_ram_mem_table[vram_page]+offset_final;
 
-					z80_byte color;
+					z80_byte color,color_orig;
+					z80_int color_final;
 					for (x=0;x<tsconf_current_pixel_width;x++) {
 						if (videomode==2) {
 							color=*screen;
 							screen++;
 
+							color_final=tsconf_return_cram_color(color);
+						            //doble ancho
+						            tsconf_layer_ula[puntero_layer_ula++]=color_final;
+						            tsconf_layer_ula[puntero_layer_ula++]=color_final;
 						}
 
 
 						if (videomode==1) {
-							color=*screen;
+							color_orig=*screen;
 
-							//Si pixel de la izquierda
-							if ((x%2)==0) {
-								color=(color>>4)&0xF;
-							}
+							//pixel de la izquierda
+							color=(color_orig>>4)&0xF;
 
-							else {
-								color=color&0xF;
-								screen++;
-							}
 
 							//Con paleta
 							color +=tsconf_return_cram_palette_offset();
 
+							color_final=tsconf_return_cram_color(color);
+						            //doble ancho
+						            tsconf_layer_ula[puntero_layer_ula++]=color_final;
+						            tsconf_layer_ula[puntero_layer_ula++]=color_final;
+
+							x++;
+
+                                                        //pixel de la derecha
+                                                        color=color_orig&0xF;
+
+                                                        //Con paleta
+                                                        color +=tsconf_return_cram_palette_offset();
+
+                                                        color_final=tsconf_return_cram_color(color);
+                                                            //doble ancho
+                                                            tsconf_layer_ula[puntero_layer_ula++]=color_final;
+                                                            tsconf_layer_ula[puntero_layer_ula++]=color_final;
+
+                                                        screen++;
 						}
 
-						z80_int color_final=tsconf_return_cram_color(color);
-
-            //doble ancho
-            tsconf_layer_ula[puntero_layer_ula++]=color_final;
-            tsconf_layer_ula[puntero_layer_ula++]=color_final;
 
 					}
 				}
