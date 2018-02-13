@@ -1088,6 +1088,8 @@ void tsconf_store_scanline_ula(void)
 
 
 //Hace putpixel doble de ancho
+//No lo uso, lo hago directamente desde las funciones que lo usan para que gaste menos cpu
+/*
 void tsconf_store_scanline_putsprite_putpixel(z80_int *puntero,z80_int color,z80_byte spal)
 {
 
@@ -1099,6 +1101,7 @@ void tsconf_store_scanline_putsprite_putpixel(z80_int *puntero,z80_int color,z80
 	*puntero=color_final;
 
 }
+*/
 
 //Comun para tiles y sprites
 void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
@@ -1113,28 +1116,47 @@ void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int
       puntero_buf_sprite=&layer[ x*2 ];
 
 		z80_byte byte_sprite;
+		z80_int color_final;
 
 			for (;ancho;ancho-=2) { //-=2 porque son a 4bpp
 				byte_sprite=*sprite_origen;
 				z80_int color_izq=(byte_sprite>>4)&15;
 				if (color_izq) { //0 es transparente
-					tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_izq,spal);
+					//tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_izq,spal);
+
+					//Lo hacemos asi para que sea mas rapido
+					color_final=tsconf_return_cram_color(color_izq+16*spal);
+					*puntero_buf_sprite=color_final;
+					puntero_buf_sprite++;
+					*puntero_buf_sprite=color_final;
+					puntero_buf_sprite++;
 				}
 
-				puntero_buf_sprite++;
-				puntero_buf_sprite++;
+				else {
+					puntero_buf_sprite++;
+					puntero_buf_sprite++;
+				}
 
 
 
 				z80_int color_der=byte_sprite&15;
 				if (color_der) { //0 es transparente
-					tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_der,spal);         
+					//tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_der,spal);         
+
+                                        //Lo hacemos asi para que sea mas rapido
+                                        color_final=tsconf_return_cram_color(color_der+16*spal);
+                                        *puntero_buf_sprite=color_final;
+                                        puntero_buf_sprite++;
+                                        *puntero_buf_sprite=color_final;
+                                        puntero_buf_sprite++;
 				}
 
 
+				else {
+					puntero_buf_sprite++;
+					puntero_buf_sprite++;
+				}
 
-				puntero_buf_sprite++;
-				puntero_buf_sprite++;
 
 				sprite_origen++;
 			}
