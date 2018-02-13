@@ -1430,6 +1430,7 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 		z80_int *layer_four;
 
 
+            	//Sprites encima de tiles y encima de ula
 		layer_one=tsconf_layer_sprites;
 		layer_two=tsconf_layer_tiles_one;
 		layer_three=tsconf_layer_tiles_zero;
@@ -1441,12 +1442,31 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
             z80_int color_final;
 
-            //Sprites encima de tiles y encima de ula
 
 
             //Gestion de capas
 
-            color_final=*layer_one;
+            	color_final=*layer_one;
+		if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+			color_final=*layer_two;
+			if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+				color_final=*layer_three;
+				if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+					color_final=*layer_four;
+					//Si transparente, color 0
+	                                if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=0;
+					//Si transparente, metemos cuadricula
+					/*if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+						int resto=(x/8+scanline_copia/8)%2;
+						if (resto) color_final=7;
+						else color_final=0;
+					}*/
+				}	
+			}
+		}
+
+
+	/*
             if (color_final!=TSCONF_SCANLINE_TRANSPARENT_COLOR) {
 		//color_final=color_sprites;
 	    }
@@ -1468,17 +1488,11 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 				//Si transparente, color 0
 				if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=0;
 
-				//Si transparente, metemos cuadricula
-				/*if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) {
-					int resto=(x/8+scanline_copia/8)%2;
-					if (resto) color_final=7;
-					else color_final=0;
-				}*/
 	    		}
 		}
 	    }
 
-
+	*/
 
 
             color_final +=TSCONF_INDEX_FIRST_COLOR;
