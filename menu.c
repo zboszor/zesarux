@@ -680,6 +680,8 @@ int audio_new_ayplayer_opcion_seleccionada=0;
 
 int plusthreedisk_opcion_seleccionada=0;
 
+int tsconf_layer_settings_opcion_seleccionada=0;
+
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
 z80_bit menu_splash_text_active;
 
@@ -27853,6 +27855,67 @@ void menu_display_tsconf_fast_render(MENU_ITEM_PARAMETERS)
 	tsconf_si_render_spritetile_rapido.v ^=1;
 }
 
+void menu_tsconf_layer_settings_ula(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_ula.v ^=1;
+}
+
+
+void menu_tsconf_layer_settings_sprites(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_sprites.v ^=1;
+}
+
+void menu_tsconf_layer_settings_tiles_zero(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_tiles_zero.v ^=1;
+}
+
+void menu_tsconf_layer_settings_tiles_one(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_tiles_one.v ^=1;
+}
+
+void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_tsconf_layer_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+
+		menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_ula,NULL,"ULA: %s",(tsconf_force_disable_layer_ula.v ? "Disabled" : "Enabled"));
+		menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites,NULL,"Sprites: %s",(tsconf_force_disable_layer_sprites.v ? "Disabled" : "Enabled"));
+		menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_zero,NULL,"Tiles zero: %s",(tsconf_force_disable_layer_tiles_zero.v ? "Disabled" : "Enabled"));
+		menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_one,NULL,"Tiles one: %s",(tsconf_force_disable_layer_tiles_one.v ? "Disabled" : "Enabled"));
+		
+
+
+
+
+                menu_add_item_menu(array_menu_tsconf_layer_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_tsconf_layer_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_tsconf_layer_settings);
+
+                retorno_menu=menu_dibuja_menu(&tsconf_layer_settings_opcion_seleccionada,&item_seleccionado,array_menu_tsconf_layer_settings,"TSConf Layers" );
+
+                cls_menu_overlay();
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
+
 
 //menu display settings
 void menu_settings_display(MENU_ITEM_PARAMETERS)
@@ -27941,6 +28004,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Enables fast render of Tiles and Sprites for TSConf. Uses less host cpu but it's less "
 				"realistic: doesn't do scanline render but full frame render");
 					
+
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"TSConf Layers");
                 }
 
 
