@@ -1311,6 +1311,9 @@ printf (
 
 		"--realvideo                Enable real video display - for Spectrum (rainbow and other advanced effects) and ZX80/81 (non standard & hi-res modes)\n"
 		"--no-detect-realvideo      Disable real video autodetection\n"
+
+		"--tsconf-fast-render       Enables fast render of Tiles and Sprites for TSConf. Uses less host cpu but it's less realistic: doesn't do scanline render but full frame render\n"
+
 		"--snoweffect               Enable snow effect support for Spectrum\n"
 		"--enableulaplus            Enable ULAplus video modes\n"
 		"--enablespectra            Enable Spectra video modes\n"
@@ -5439,6 +5442,11 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--no-detect-realvideo")) {
 				autodetect_rainbow.v=0;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--tsconf-fast-render")) {
+				tsconf_si_render_spritetile_rapido.v=1;
+			}
+
 
 			else if (!strcmp(argv[puntero_parametro],"--enableulaplus")) {
 				command_line_ulaplus.v=1;

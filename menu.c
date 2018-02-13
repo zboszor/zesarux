@@ -27848,6 +27848,12 @@ void menu_display_timex_ugly_hack(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_display_tsconf_fast_render(MENU_ITEM_PARAMETERS)
+{
+	tsconf_si_render_spritetile_rapido.v ^=1;
+}
+
+
 //menu display settings
 void menu_settings_display(MENU_ITEM_PARAMETERS)
 {
@@ -27925,6 +27931,15 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_tooltip(array_menu_settings_display,"Enables full vdac colour palette");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Full vdac colour palette gives you different colour levels for every 5 bit colour component.\n"
 					"Disabling it, gives you 5 bit values different from 0..23, but from 24 to 31 are all set to value 255");
+
+
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tsconf_fast_render,NULL,"TSConf Fast Render: %s",
+				(tsconf_si_render_spritetile_rapido.v ? "Yes" : "No") );
+
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Enables fast render of Tiles and Sprites for TSConf");
+
+			menu_add_item_menu_ayuda(array_menu_settings_display,"Enables fast render of Tiles and Sprites for TSConf. Uses less host cpu but it's less "
+				"realistic: doesn't do scanline render but full frame render");
 					
                 }
 

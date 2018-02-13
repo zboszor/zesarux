@@ -85,5 +85,7 @@ extern z80_byte tsconf_rgb_5_to_8(z80_byte color);
 
 extern void screen_store_scanline_rainbow_solo_display_tsconf(void);
 
+extern z80_bit tsconf_si_render_spritetile_rapido;
+
 
 #endif

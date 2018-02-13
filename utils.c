@@ -3191,6 +3191,9 @@ int util_write_configfile(void)
 
   if (autodetect_rainbow.v==0)                ADD_STRING_CONFIG,"--no-detect-realvideo");
 
+  if (tsconf_si_render_spritetile_rapido.v)   ADD_STRING_CONFIG,"--tsconf-fast-render");
+
+
   if (ulaplus_presente.v)                     ADD_STRING_CONFIG,"--enableulaplus");
   if (spectra_enabled.v)                      ADD_STRING_CONFIG,"--enablespectra");
   if (timex_video_emulation.v)                ADD_STRING_CONFIG,"--enabletimexvideo");
