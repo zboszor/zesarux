@@ -74,6 +74,9 @@ int screen_print_y=0;
 //Indica si terminal soporta codigos ANSI o no
 int screen_text_accept_ansi=0;
 
+//contraste para renderizados de modo texto. 0=todo negro, 100=todo blanco
+int screen_text_contrast=50;
+
 //si se muestran determinados mensajes en splash, como los de cambio de modo de video
 //no confundir con el mensaje de bienvenida
 z80_bit screen_show_splash_texts={1};
@@ -12708,7 +12711,13 @@ int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width
 	int umbral=256*3; //3 componentes de color de 8 bit
 	int suma_componentes=acumulado_red+acumulado_green+acumulado_blue;
 
-	if (suma_componentes<umbral/2) return 0;
+	//screen_text_contrast: valor general que va de 0 a 100. contraste 50: division entre 2
+	//contraste para renderizados de modo texto. 0=todo negro, 100=todo blanco
+
+	//suma de componentes maximo da valor umbral
+	int valor_final=(suma_componentes*100/umbral);
+
+	if (valor_final>=screen_text_contrast) return 0;
 	else return 1;
 
 }
@@ -12743,14 +12752,14 @@ z80_byte screen_convert_rainbow_to_text_char(z80_int *source_bitmap,int source_w
 	int altomitad=source_height/2;
 
 	int cuadrado_izq=screen_convert_rainbow_to_blackwhite(source_bitmap,anchomitad,altomitad,total_ancho);
-	int cuadrado_der=screen_convert_rainbow_to_blackwhite(source_bitmap,anchomitad,altomitad,total_ancho);
-	int cuadrado_aba=screen_convert_rainbow_to_blackwhite(source_bitmap,anchomitad,altomitad,total_ancho);
-	int cuadrado_abader=screen_convert_rainbow_to_blackwhite(source_bitmap,anchomitad,altomitad,total_ancho);
+	int cuadrado_der=screen_convert_rainbow_to_blackwhite(&source_bitmap[anchomitad],anchomitad,altomitad,total_ancho);
+	int cuadrado_aba=screen_convert_rainbow_to_blackwhite(&source_bitmap[altomitad*total_ancho],anchomitad,altomitad,total_ancho);
+	int cuadrado_abader=screen_convert_rainbow_to_blackwhite(&source_bitmap[altomitad*total_ancho+anchomitad],anchomitad,altomitad,total_ancho);
 
 	if (cuadrado_izq) valor_get_pixel+=1;
-	if (cuadrado_der) valor_get_pixel+=1;
-	if (cuadrado_aba) valor_get_pixel+=1;
-	if (cuadrado_abader) valor_get_pixel+=1;
+	if (cuadrado_der) valor_get_pixel+=2;
+	if (cuadrado_aba) valor_get_pixel+=4;
+	if (cuadrado_abader) valor_get_pixel+=8;
 
 	return caracteres_artisticos[valor_get_pixel];
 
