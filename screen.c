@@ -75,7 +75,7 @@ int screen_print_y=0;
 int screen_text_accept_ansi=0;
 
 //contraste para renderizados de modo texto. 0=todo negro, 100=todo blanco
-int screen_text_brightness=1;
+int screen_text_brightness=50;
 
 //si se muestran determinados mensajes en splash, como los de cambio de modo de video
 //no confundir con el mensaje de bienvenida
@@ -12705,13 +12705,13 @@ int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width
 
 	for (x=0;x<source_width;x++) {
 		for (y=0;y<source_height;y++) {
-			int color=source_bitmap[y*total_ancho+x];
+			z80_int color=source_bitmap[y*total_ancho+x];
 
 
 		            rgbcolor=spectrum_colortable[color];
-		            red=(rgbcolor>>16); //&255;
-		            green=(rgbcolor>>8); //&255;
-		            blue=(rgbcolor); //&255;
+		            red=(rgbcolor>>16)&255;
+		            green=(rgbcolor>>8)&255;
+		            blue=(rgbcolor)&255;
 
 				acumulado_red +=red;
 				acumulado_green +=green;
@@ -12719,6 +12719,8 @@ int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width
 
 		}
 	}
+
+	//printf ("%d %d %d %d\n",acumulado_red,acumulado_green,acumulado_blue,total_superficie);
 
 	//Dividir los componentes de color
 	acumulado_red /=total_superficie;
