@@ -774,7 +774,7 @@ void scr_tsconf_putpixel_zoom_rainbow_text_mode(unsigned color,z80_int *puntero_
 //Muestra un caracter en pantalla, al estilo del spectrum o zx80/81 o jupiter ace
 //entrada: puntero=direccion a tabla del caracter
 //ink, paper
-void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_int *puntero_rainbow,int ancho_rainbow)
+void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_int *puntero_layer)
 {
 
         z80_int color;
@@ -782,13 +782,12 @@ void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit i
         z80_byte line;
         z80_byte byte_leido;
 
-		z80_int *puntero_rainbow_orig;
+		
 
         for (line=0;line<alto;line++,y++) {
 
-			puntero_rainbow_orig=puntero_rainbow;
           	byte_leido=*puntero++;
-          	//if (inverse.v==1) byte_leido = byte_leido ^255;
+          	if (inverse.v==1) byte_leido = byte_leido ^255;
 
           	for (bit=0;bit<8;bit++) {
                 if (byte_leido & 128 ) color=tinta;
@@ -797,14 +796,14 @@ void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit i
                 byte_leido=(byte_leido&127)<<1;
 
 								
-								if (puntero_rainbow!=NULL) {
+								if (puntero_layer!=NULL) {
 									//Lo mete en buffer rainbow
 
 											color=tsconf_return_cram_color(tsconf_return_cram_palette_offset()+color);
 
 											//scr_tsconf_putpixel_zoom_rainbow_text_mode(color,puntero_rainbow,ancho_rainbow);
-											*puntero_rainbow=color;
-											puntero_rainbow++;
+											*puntero_layer=color;
+											puntero_layer++;
 
 								}
 
@@ -820,8 +819,8 @@ void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit i
 
            }
 
-			puntero_rainbow=puntero_rainbow_orig;
-			puntero_rainbow +=ancho_rainbow;
+			//puntero_rainbow=puntero_rainbow_orig;
+			//puntero_rainbow +=ancho_rainbow;
         }
 }
 
@@ -922,13 +921,10 @@ void tsconf_store_scanline_ula(void)
                 caracter=screen[puntero];
                 atributo=screen[puntero+128];
 
-				//printf ("%d ",atributo);
+				
 
                 puntero++;
-
-                //caracter_text=caracter;
-                //if (caracter<32 || caracter>127) caracter_text='.';
-                //printf ("%c",caracter_text);
+               
 
                 offset_caracter=caracter*8;
 
@@ -939,8 +935,8 @@ void tsconf_store_scanline_ula(void)
                 tinta=atributo&15;
                 papel=(atributo>>4)&15;
 
-                //scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],1,x,y,inverse,tinta,papel,puntero_buf_rainbow,total_ancho_rainbow);
-				scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],1,x,y,inverse,tinta,papel,&tsconf_layer_ula[puntero_layer_ula],total_ancho_rainbow);
+
+				scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],1,x,y,inverse,tinta,papel,&tsconf_layer_ula[puntero_layer_ula]);
 
 
 				puntero_layer_ula+=ancho_caracter;
@@ -1563,7 +1559,7 @@ void screen_tsconf_refresca_text_mode(void)
 		tinta=atributo&15;
 		papel=(atributo>>4)&15;
 
-		scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],8,x,y,inverse,tinta,papel,NULL,0);
+		scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],8,x,y,inverse,tinta,papel,NULL);
 
 
 		x+=ancho_caracter;
