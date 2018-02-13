@@ -75,7 +75,7 @@ int screen_print_y=0;
 int screen_text_accept_ansi=0;
 
 //contraste para renderizados de modo texto. 0=todo negro, 100=todo blanco
-int screen_text_brightness=50;
+int screen_text_brightness=1;
 
 //si se muestran determinados mensajes en splash, como los de cambio de modo de video
 //no confundir con el mensaje de bienvenida
@@ -12673,6 +12673,23 @@ void delete_generic_footertext(void)
         menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1,"        ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 }
 
+
+int rgb_to_grey(int r,int g,int b)
+{
+/* luminosity method
+The luminosity method is a more sophisticated version of the average method. It also averages the values, but it forms a weighted average to account for human perception. We’re more sensitive to green than other colors, so green is weighted most heavily. The formula for luminosity is 0.21 R + 0.72 G + 0.07 B.
+
+https://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/
+*/
+
+	r=r*21/100;
+	g=g*72/100;
+	b=b*7/100;
+
+	return r+g+b;
+
+}
+
 int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width,int source_height,int total_ancho)
 {
 	//Para un cuadrado dado, retorna si es 0 (cercano a negro) o 1 (cercano a blanco)
@@ -12708,18 +12725,28 @@ int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width
 	acumulado_green /=total_superficie;
 	acumulado_blue /=total_superficie;
 
-	int umbral=256*3; //3 componentes de color de 8 bit
-	int suma_componentes=acumulado_red+acumulado_green+acumulado_blue;
+	int color_gris_final;
+
+	//color_gris_final=acumulado_red+acumulado_green+acumulado_blue;
+	color_gris_final=rgb_to_grey(acumulado_red,acumulado_green,acumulado_blue);
+
+	//rango 0 a 256. pasar a 0.100
+	int porc_gris=(color_gris_final*100)/256;
+
+	//printf ("%d\n",porc_gris);
+
 
 	//screen_text_brightness: valor general que va de 0 a 100. contraste 50: division entre 2
 	//contraste para renderizados de modo texto. 0=todo negro, 100=todo blanco
 
 	//suma de componentes maximo da valor umbral
-	int porcentaje_final=(suma_componentes*100/umbral);
-	porcentaje_final +=screen_text_brightness;
+	int bw_final;
 
-	if (porcentaje_final>=100) return 1;
+	int brillo=100-screen_text_brightness;
+
+	if (porc_gris>=brillo) return 1;
 	else return 0;
+
 
 }
 
