@@ -1292,14 +1292,23 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
   //http://forum.tslabs.info/viewtopic.php?f=35&t=157
 
- /*y=scanline_copia/8;
-  puntero_layer +=64*2*2*y; //64 de ancho, 2 bytes, *y*/
+	//y=scanline_copia/8;
+  	//puntero_layer +=256*y; //Cada linea en mapa de tiles ocupa 256 bytes
+
+	//Lo de antes es equivalente a:
+	puntero_layer +=32*(scanline_copia & 0xFFF8); //Ignorar los primeros 3 bits, es como dividir entre 8 y multiplicar de nuevo por 8
+
+  /*
+  O sea: se almacena en la forma (64 (layer0) + 64 (layer1)) x 64 tile = (128 + 128) x 64 bytes = 16kB = 1 page
+  En la misma zona de memoria estan los 64 datos de layer0 (2 bytes por cada) y los 64 datos de layer1
+  */
 
 
-  /*y=scanline_copia/8;
-  puntero_layer +=32*8*y; //64 de ancho, 2 bytes, *y */
 
-  puntero_layer +=32*(scanline_copia & 0xFFF8); //Ignorar los primeros 3 bits, es como dividir entre 8 y multiplicar de nuevo por 8
+
+
+
+  
 
   //printf ("scanline: %d tile y: %d\n",scanline_copia,y);
 
@@ -1309,7 +1318,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
   //Tiles Y va de 0 a 63. scanline copia va de 0 a 255
     
 	//En que scanline esta 0...7
-	int desplazamiento_scanline=(scanline_copia & 7)*256;;
+	int desplazamiento_scanline=(scanline_copia & 7)*256;
 
 	for (x=0;x<64;x++) {
 			z80_byte valor1=*puntero_layer;
