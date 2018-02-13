@@ -1347,7 +1347,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
                 //printf ("sprite_origen: %d\n",sprite_origen);
 
 		            tsconf_store_scanline_putsprite(x*8+offset_x,8, 0,0,tpal,sprite_origen,layer_final);
-				layer_final+=2;
+				layer_final+=16;
        
 
 			//}
