@@ -518,6 +518,22 @@ void scrstdout_repinta_pantalla(void)
 	else if (MACHINE_IS_CPC) {
                 screen_text_repinta_pantalla_cpc();
         }
+
+	else if (MACHINE_IS_TSCONF) {
+		//con rainbow
+		if (rainbow_enabled.v) {
+			        int ancho,alto;
+
+			        ancho=get_total_ancho_rainbow();
+			        alto=get_total_alto_rainbow();
+				#define ANCHO_TEXT_TSCONF 40
+
+				//Siempre sera mas ancho que alto. temporal
+				char buffer_texto[ANCHO_TEXT_TSCONF*ANCHO_TEXT_TSCONF];
+
+				screen_convert_rainbow_to_text(rainbow_buffer,ancho,alto,buffer_texto,ANCHO_TEXT_TSCONF);
+		}
+	}
 	
 	
 	else {

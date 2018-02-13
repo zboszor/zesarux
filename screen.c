@@ -12669,3 +12669,53 @@ void delete_generic_footertext(void)
 {
         menu_putstring_footer(WINDOW_FOOTER_ELEMENT_X_GENERICTEXT,1,"        ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
 }
+
+z80_byte screen_convert_rainbow_to_text_char(z80_int *source_bitmap,int source_width,int source_height,int total_ancho)
+{
+	//Devuelve para un rectangulo dado, su "caracter" zx81
+	//De momento algo mas rapido
+	int total_superficie=source_width*source_height;
+
+	//Sumar todos los colores
+	int x,y;
+	int color_acumulado=0;
+
+	for (x=0;x<source_width;x++) {
+		for (y=0;y<source_height;y++) {
+			int color=source_bitmap[y*total_ancho+x];
+			color_acumulado +=color;
+		}
+	}
+
+	color_acumulado /=total_superficie;
+
+	if (color_acumulado==TSCONF_INDEX_FIRST_COLOR) return ' ';
+	else return '.';
+
+}
+
+/*
+Funcion para convertir buffer de rainbow (o cualquier otro buffer de pantalla con colores indexados 16 bits) a texto
+Destino tiene que tener mismas proporciones que origen, por lo que del destino solo se pide tamanyo ancho
+
+Se divide origen en cuadriculas, y cada cuadricula en 2x2, y le aplicamos misma conversion que zx81
+
+Ejemplo: origen ancho: 100 destino ancho: 10
+cuadriculas: 10 de ancho, cada una dividida en 2x2 -> 20 cuadriculas de ancho
+
+*/
+void screen_convert_rainbow_to_text(z80_int *source_bitmap,int source_width,int source_height,z80_byte *destination_text,int destination_width)
+{
+	int incremento_x=source_width/destination_width;
+	int incremento_y=incremento_x;
+
+	int xorig,yorig,xdest,ydest;
+
+	for (yorig=0;yorig<source_height;yorig+=incremento_y) {
+		for (xorig=0;xorig<source_width;xorig+=incremento_x) {
+			z80_byte caracter=screen_convert_rainbow_to_text_char(&source_bitmap[yorig*source_width+xorig],incremento_x,incremento_y,source_width);
+			printf ("%c",caracter);
+		}
+		printf ("\n");
+	}
+}
