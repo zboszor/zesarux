@@ -1302,12 +1302,6 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
   O sea: se almacena en la forma (64 (layer0) + 64 (layer1)) x 64 tile = (128 + 128) x 64 bytes = 16kB = 1 page
   En la misma zona de memoria estan los 64 datos de layer0 (2 bytes por cada) y los 64 datos de layer1
   */
-
-
-
-
-
-
   
 
   //printf ("scanline: %d tile y: %d\n",scanline_copia,y);
@@ -1315,10 +1309,10 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	z80_int *layer_final=layer_tiles;
 	layer_final -=offset_x;
 
-  //Tiles Y va de 0 a 63. scanline copia va de 0 a 255
     
 	//En que scanline esta 0...7
 	int desplazamiento_scanline=(scanline_copia & 7)*256;
+	//Cada linea del bitmap ocupa 256 bytes
 
 	for (x=0;x<64;x++) {
 			z80_byte valor1=*puntero_layer;
