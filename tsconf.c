@@ -1133,8 +1133,7 @@ void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int
 				}
 
 				else {
-					puntero_buf_sprite++;
-					puntero_buf_sprite++;
+					puntero_buf_sprite+=2;
 				}
 
 
@@ -1153,8 +1152,7 @@ void tsconf_store_scanline_putsprite(int x,int ancho, int tnum_x GCC_UNUSED, int
 
 
 				else {
-					puntero_buf_sprite++;
-					puntero_buf_sprite++;
+					puntero_buf_sprite+=2;
 				}
 
 
