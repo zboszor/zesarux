@@ -1246,21 +1246,22 @@ void tsconf_store_scanline_sprites(void)
 void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 {
 
-  
+ 
 
    //linea que se debe leer
-        int scanline_copia=t_scanline_draw-tsconf_current_border_height;
+    int scanline_copia=t_scanline_draw-tsconf_current_border_height;
 
-				//TODO: tener en cuenta zona invisible border
-				if (scanline_copia<0) return;
+	//TODO: tener en cuenta zona invisible border
+	if (scanline_copia<0) return;
   
-		 int direccion_graficos=tsconf_af_ports[0x17+layer]>>3;
-		 direccion_graficos=direccion_graficos & 31;
-                direccion_graficos=direccion_graficos<<17;
+	int direccion_graficos=tsconf_af_ports[0x17+layer]>>3;
+	
+	direccion_graficos=direccion_graficos & 31;
+    direccion_graficos=direccion_graficos<<17;
 
 
-		int direccion_tile=tsconf_af_ports[0x16];
-                direccion_tile=direccion_tile<< 14;
+	int direccion_tile=tsconf_af_ports[0x16];
+    direccion_tile=direccion_tile<< 14;
 
 		//printf ("direccion_tile: %06XH\n",direccion_tile);
 
@@ -1291,8 +1292,12 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
   //http://forum.tslabs.info/viewtopic.php?f=35&t=157
 
-  y=scanline_copia/8;
+ y=scanline_copia/8;
   puntero_layer +=64*2*2*y; //64 de ancho, 2 bytes, *y
+
+
+  /* y=scanline_copia;
+  puntero_layer +=32*y; //64 de ancho, 2 bytes, *y */
 
   //printf ("scanline: %d tile y: %d\n",scanline_copia,y);
 
@@ -1377,21 +1382,18 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
   if (tsconf_si_render_spritetile_rapido.v==0) {
 	  z80_byte tsconfig=tsconf_af_ports[6];
 	  if (tsconfig&128) {
-        	        //printf ("Sprite layers enable ");
-	                //temp_dice_dir_graficos(0x19);
-        	        if (tsconf_force_disable_layer_sprites.v==0) tsconf_store_scanline_sprites();
+        //printf ("Sprite layers enable ");
+        if (tsconf_force_disable_layer_sprites.v==0) tsconf_store_scanline_sprites();
 	  }
 
 
 	  if (tsconfig&32) {
 			//printf ("Tile layer 0 enable- ");
-			//temp_dice_dir_graficos(0x17);
 		  if (tsconf_force_disable_layer_tiles_zero.v==0) tsconf_store_scanline_tiles(0,tsconf_layer_tiles_zero);
 		}
 
 	  if (tsconfig&64) {
-        	        //printf ("Tile layer 1 enable- ");
-	                //temp_dice_dir_graficos(0x18);
+        	//printf ("Tile layer 1 enable- ");
 	    if (tsconf_force_disable_layer_tiles_one.v==0) tsconf_store_scanline_tiles(1,tsconf_layer_tiles_one);
 	  }
 
@@ -1923,9 +1925,7 @@ void screen_tsconf_refresca_rainbow(void) {
 void screen_tsconf_refresca_pantalla(void)
 {
 
-	//tsconf_fast_tilesprite_render();
-
-
+	
 	//Como spectrum clasico
 
 	//modo clasico. sin rainbow
