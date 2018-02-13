@@ -526,7 +526,7 @@ void scrstdout_repinta_pantalla(void)
 
 			        ancho=get_total_ancho_rainbow();
 			        alto=get_total_alto_rainbow();
-				#define FACTOR_DIVISION_TEXT_TSCONF 10
+				#define FACTOR_DIVISION_TEXT_TSCONF 12
 
 				int ancho_final=ancho/FACTOR_DIVISION_TEXT_TSCONF;
 				int alto_final=alto/FACTOR_DIVISION_TEXT_TSCONF;
