@@ -773,10 +773,7 @@ void scr_tsconf_putpixel_zoom_rainbow_text_mode(unsigned color,z80_int *puntero_
 
 //Muestra un caracter en pantalla, al estilo del spectrum o zx80/81 o jupiter ace
 //entrada: puntero=direccion a tabla del caracter
-//x,y: coordenadas en x-0..31 e y 0..23 del zx81
-//inverse si o no
 //ink, paper
-//si emula fast mode o no
 void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_int *puntero_rainbow,int ancho_rainbow)
 {
 
@@ -803,7 +800,8 @@ void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit i
 								if (puntero_rainbow!=NULL) {
 									//Lo mete en buffer rainbow
 
-											scr_tsconf_putpixel_zoom_rainbow_text_mode(color,puntero_rainbow,ancho_rainbow);
+											//scr_tsconf_putpixel_zoom_rainbow_text_mode(color,puntero_rainbow,ancho_rainbow);
+											*puntero_rainbow=color;
 											puntero_rainbow++;
 
 								}
@@ -835,75 +833,47 @@ int temp_conta_nogfx;
 void tsconf_store_scanline_ula(void) 
 {
 
-        //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
+    //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
 
-        //linea que se debe leer
-        int scanline_copia=t_scanline_draw-tsconf_current_border_height;
+    //linea que se debe leer
+    int scanline_copia=t_scanline_draw-tsconf_current_border_height;
 
-				//TODO: tener en cuenta zona invisible border
-				if (scanline_copia<0) return;
+	//TODO: tener en cuenta zona invisible border
+	if (scanline_copia<0) return;
 
-				//Si zona border inferior
-				if (scanline_copia>tsconf_current_pixel_height) return;
+	//Si zona border inferior
+	if (scanline_copia>tsconf_current_pixel_height) return;
 
-				int total_ancho_rainbow=get_total_ancho_rainbow();
+	int total_ancho_rainbow=get_total_ancho_rainbow();
 
-				//scanline_copia tiene coordenada scanline de dentro de zona pantalla
-				//doble de alto
-				//scanline_copia /=2;
+	int y_origen_pixeles=scanline_copia; //para hacer doble de alto
+      
 
-        //la copiamos a buffer rainbow
-        z80_int *puntero_buf_rainbow;
-        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
-        //int y;
-
-        int y_rainbow=scanline_copia*2;
-				//printf ("store y: %d\n",y_rainbow);
-
-				int y_origen_pixeles=scanline_copia; //para hacer doble de alto
-        //if (border_enabled.v==0) y=y-screen_borde_superior;
-
-        puntero_buf_rainbow=&rainbow_buffer[ y_rainbow*total_ancho_rainbow ];
-
-        //puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
-
-				//Margenes border
-				puntero_buf_rainbow +=tsconf_current_border_width*2;
-				puntero_buf_rainbow +=total_ancho_rainbow*tsconf_current_border_height*2;
-
-        int x,bit;
-        z80_int direccion;
-	      z80_int dir_atributo;
-        z80_byte byte_leido;
+    int x,bit;
+    z80_int direccion;
+	z80_int dir_atributo;
+    z80_byte byte_leido;
 
 
-        int color=0;
-        int fila;
+    int color=0;
+    int fila;
 
-        z80_byte attribute,bright,flash;
-	      z80_int ink,paper,aux;
+    z80_byte attribute,bright,flash;
+	z80_int ink,paper,aux;
 
-				//scanline_copia tiene coordenada scanline de dentro de zona pantalla
+    z80_byte *screen=get_base_mem_pantalla();
 
-
-        z80_byte *screen=get_base_mem_pantalla();
-
-        direccion=screen_addr_table[(y_origen_pixeles<<5)];
+    direccion=screen_addr_table[(y_origen_pixeles<<5)];
 
 				
+    fila=y_origen_pixeles/8;
+    dir_atributo=6144+(fila*32);
 
 
-
-        fila=y_origen_pixeles/8;
-        dir_atributo=6144+(fila*32);
-
-
-  int puntero_layer_ula=0;
+  	int puntero_layer_ula=0;
 
 	z80_byte videomode=tsconf_get_video_mode_display();
 
-
-	//int posicion_array_pixeles_atributos=0;
 
 	if (videomode==3) {
 		//modo texto
@@ -932,20 +902,18 @@ void tsconf_store_scanline_ula(void)
 
 		z80_bit inverse;
 
-    inverse.v=0;
+ 		inverse.v=0;
 
-    z80_int offset_caracter;
+    	z80_int offset_caracter;
 
-    //z80_byte tinta,papel;
-    unsigned int tinta,papel;
+    	//z80_byte tinta,papel;
+    	unsigned int tinta,papel;
 
-    z80_byte atributo;
+    	z80_byte atributo;
 
     
 
         for (x=0;x<ancho_linea;x+=ancho_caracter) {
-                //caracter=peek_byte_no_time(puntero);
-                //atributo=peek_byte_no_time(puntero+128);
 
                 caracter=screen[puntero];
                 atributo=screen[puntero+128];
@@ -958,17 +926,18 @@ void tsconf_store_scanline_ula(void)
 
                 offset_caracter=caracter*8;
 
-								//Sumarle scanline % 8
-								offset_caracter +=(y % 8);
+				//Sumarle scanline % 8
+				offset_caracter +=(y % 8);
 
                 //No tengo ni idea de si se leen los atributos asi, pero parece similar al real
                 tinta=atributo&15;
                 papel=(atributo>>4)&15;
 
-                scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],1,x,y,inverse,tinta,papel,puntero_buf_rainbow,total_ancho_rainbow);
+                //scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],1,x,y,inverse,tinta,papel,puntero_buf_rainbow,total_ancho_rainbow);
+				scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],1,x,y,inverse,tinta,papel,&tsconf_layer_ula[puntero_layer_ula],total_ancho_rainbow);
 
-								puntero_buf_rainbow+=ancho_caracter;
 
+				puntero_layer_ula+=ancho_caracter;
 
 
 		}
@@ -1573,17 +1542,12 @@ void screen_tsconf_refresca_text_mode(void)
 	z80_byte atributo;
 
 	for (;puntero<7680;) {
-		//caracter=peek_byte_no_time(puntero);
-		//atributo=peek_byte_no_time(puntero+128);
 
 		caracter=screen[puntero];
 		atributo=screen[puntero+128];
 
 		puntero++;
 
-		//caracter_text=caracter;
-		//if (caracter<32 || caracter>127) caracter_text='.';
-		//printf ("%c",caracter_text);
 
 		offset_caracter=caracter*8;
 
