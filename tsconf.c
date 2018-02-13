@@ -782,23 +782,25 @@ void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit i
         z80_byte line;
         z80_byte byte_leido;
 
-				z80_int *puntero_rainbow_orig;
+		z80_int *puntero_rainbow_orig;
 
         for (line=0;line<alto;line++,y++) {
-					puntero_rainbow_orig=puntero_rainbow;
-          byte_leido=*puntero++;
-          if (inverse.v==1) byte_leido = byte_leido ^255;
-          for (bit=0;bit<8;bit++) {
+
+			puntero_rainbow_orig=puntero_rainbow;
+          	byte_leido=*puntero++;
+          	//if (inverse.v==1) byte_leido = byte_leido ^255;
+
+          	for (bit=0;bit<8;bit++) {
                 if (byte_leido & 128 ) color=tinta;
                 else color=papel;
 
                 byte_leido=(byte_leido&127)<<1;
 
-								//Para modo texto se aplica paleta??
-								color=TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color);
-
+								
 								if (puntero_rainbow!=NULL) {
 									//Lo mete en buffer rainbow
+
+											color=tsconf_return_cram_color(tsconf_return_cram_palette_offset()+color);
 
 											//scr_tsconf_putpixel_zoom_rainbow_text_mode(color,puntero_rainbow,ancho_rainbow);
 											*puntero_rainbow=color;
@@ -808,16 +810,18 @@ void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit i
 
 
 								else {
+									color=tsconf_return_cram_color(tsconf_return_cram_palette_offset()+color);
+
 									//if (scr_ver_si_refrescar_por_menu_activo((x+bit)/8,y/8)) {
 
-										scr_tsconf_putpixel_text_mode(x+bit,y,color);
+										scr_tsconf_putpixel_text_mode(x+bit,y,TSCONF_INDEX_FIRST_COLOR+color);
 									//}
 								}
 
            }
 
-					 puntero_rainbow=puntero_rainbow_orig;
-					 puntero_rainbow +=ancho_rainbow;
+			puntero_rainbow=puntero_rainbow_orig;
+			puntero_rainbow +=ancho_rainbow;
         }
 }
 
@@ -917,6 +921,8 @@ void tsconf_store_scanline_ula(void)
 
                 caracter=screen[puntero];
                 atributo=screen[puntero+128];
+
+				//printf ("%d ",atributo);
 
                 puntero++;
 
@@ -1545,6 +1551,8 @@ void screen_tsconf_refresca_text_mode(void)
 
 		caracter=screen[puntero];
 		atributo=screen[puntero+128];
+
+		//printf ("%d ",atributo);
 
 		puntero++;
 
