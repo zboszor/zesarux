@@ -75,7 +75,7 @@ int screen_print_y=0;
 int screen_text_accept_ansi=0;
 
 //contraste para renderizados de modo texto. 0=todo negro, 100=todo blanco
-int screen_text_contrast=50;
+int screen_text_brightness=50;
 
 //si se muestran determinados mensajes en splash, como los de cambio de modo de video
 //no confundir con el mensaje de bienvenida
@@ -12711,14 +12711,15 @@ int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width
 	int umbral=256*3; //3 componentes de color de 8 bit
 	int suma_componentes=acumulado_red+acumulado_green+acumulado_blue;
 
-	//screen_text_contrast: valor general que va de 0 a 100. contraste 50: division entre 2
+	//screen_text_brightness: valor general que va de 0 a 100. contraste 50: division entre 2
 	//contraste para renderizados de modo texto. 0=todo negro, 100=todo blanco
 
 	//suma de componentes maximo da valor umbral
-	int valor_final=(suma_componentes*100/umbral);
+	int porcentaje_final=(suma_componentes*100/umbral);
+	porcentaje_final +=screen_text_brightness;
 
-	if (valor_final>=screen_text_contrast) return 0;
-	else return 1;
+	if (porcentaje_final>=100) return 1;
+	else return 0;
 
 }
 
