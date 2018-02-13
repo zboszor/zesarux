@@ -1338,7 +1338,25 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
   }
 
   //Dibujamos las capas
-  tsconf_store_scanline_ula();
+
+        if (tsconf_af_ports[0]&32) {
+                //Si no hay graficos normales, poner a negro
+		
+                /*int size=get_total_ancho_rainbow()*get_total_alto_rainbow();
+                if (size) {
+                        z80_int *p;
+                        p=rainbow_buffer;
+                        for (;size;size--,p++) *p=0;
+                }*/
+
+		//no meter capa de ula. demo zenloops hace esto. Ponerla en negro
+
+		for (i=0;i<TSCONF_MAX_WIDTH_LAYER;i++) tsconf_layer_ula[i]=0;
+
+
+        }
+
+	else tsconf_store_scanline_ula();
 
 
 
@@ -1437,7 +1455,18 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
             else if (color_tiles_zero!=TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=color_tiles_zero;
             else color_final=color_ula;
 
-            color_final +=TSCONF_INDEX_FIRST_COLOR;
+
+		//Si transparente, metemos cuadricula
+		/*if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+			int resto=(x/8+scanline_copia/8)%2;
+			if (resto) color_final=7;
+			else color_final=0;
+		}*/
+
+		//Si transparente, color 0
+		if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=0;
+
+            else color_final +=TSCONF_INDEX_FIRST_COLOR;
 
 						*puntero_buf_rainbow=color_final;
 					
