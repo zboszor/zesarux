@@ -24010,6 +24010,23 @@ void menu_display_arttext_thres(MENU_ITEM_PARAMETERS)
 
 }
 
+
+void menu_display_text_brightness(MENU_ITEM_PARAMETERS)
+{
+
+        char string_bri[4];
+
+        sprintf (string_bri,"%d",screen_text_brightness);
+
+        menu_ventana_scanf("Brightness? (0-100)",string_bri,4);
+
+	int valor=parse_string_to_number(string_bri);
+	if (valor<0 || valor>100) debug_printf (VERBOSE_ERR,"Invalid brightness value %d",valor);
+
+	else screen_text_brightness=valor;
+
+}
+
 void menu_display_load_screen(MENU_ITEM_PARAMETERS)
 {
 
@@ -25049,6 +25066,8 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 					"on curses, stdout and simpletext drivers with text artistic emulation enabled");
 			menu_add_item_menu_ayuda(array_menu_display_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
 					"on curses, stdout and simpletext drivers with text artistic emulation enabled");
+
+
 
 		}
 
@@ -28151,6 +28170,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 		}
 
 
+
+
 		if (menu_display_cursesstdout_cond() ) {
 	                //solo en caso de curses o stdout
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"Text artistic emulation: %s", (texto_artistico.v==1 ? "On" : "Off"));
@@ -28167,6 +28188,12 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 					"on curses, stdout and simpletext drivers with text artistic emulation enabled");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
 					"on curses, stdout and simpletext drivers with text artistic emulation enabled");
+
+			if (rainbow_enabled.v) {
+				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_text_brightness,NULL,"Text brightness: %d",screen_text_brightness);
+				menu_add_item_menu_tooltip(array_menu_settings_display,"Text brightness used on some machines and text drivers, like tsconf");
+				menu_add_item_menu_ayuda(array_menu_settings_display,"Text brightness used on some machines and text drivers, like tsconf");
+			}
 
 		}
 
