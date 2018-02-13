@@ -984,12 +984,6 @@ void tsconf_store_scanline_ula(void)
 					for (x=0;x<tsconf_current_pixel_width;x++) {
 						if (videomode==2) {
 							color=*screen;
-							screen++;
-
-							color_final=tsconf_return_cram_color(color);
-						            //doble ancho
-						            tsconf_layer_ula[puntero_layer_ula++]=color_final;
-						            tsconf_layer_ula[puntero_layer_ula++]=color_final;
 						}
 
 
@@ -1016,13 +1010,15 @@ void tsconf_store_scanline_ula(void)
                                                         //Con paleta
                                                         color +=tsconf_return_cram_palette_offset();
 
-                                                        color_final=tsconf_return_cram_color(color);
-                                                            //doble ancho
-                                                            tsconf_layer_ula[puntero_layer_ula++]=color_final;
-                                                            tsconf_layer_ula[puntero_layer_ula++]=color_final;
-
-                                                        screen++;
 						}
+
+
+						color_final=tsconf_return_cram_color(color);
+                                                //doble ancho
+                                                tsconf_layer_ula[puntero_layer_ula++]=color_final;
+                                                tsconf_layer_ula[puntero_layer_ula++]=color_final;
+
+						screen++;
 
 
 					}
