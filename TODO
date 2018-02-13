@@ -1445,7 +1445,7 @@ para lightgun la mayoria de puertos son teclado o kempston, en que ya se control
 
 -funcion screen_print_splash_text que se pueda mostrar texto con menu abierto. Ideal por ejemplo para open flap del z88
 
--realvideo en spectrum para curses, stdout, simpletext
+-realvideo en spectrum para curses, stdout, simpletext -> YA esta. hecho para tsconf. hay funcion generica para convertir rainbow a texto (blanco y negro)
 
 -Posibilidad de desactivar puntero raton para el resto de drivers: curses, cocoa
 
