@@ -695,5 +695,7 @@ extern int scr_ver_si_refrescar_por_menu_activo(int x,int fila);
 
 extern void tsconf_fast_tilesprite_render(void);
 
+extern int screen_text_brightness;
+
 
 #endif

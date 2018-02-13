@@ -785,6 +785,8 @@ struct s_items_ayuda items_ayuda[]={
 	{"set-machine","|sm","machine_name","Set machine"},
 	{"set-memory-zone","|smz","zone","Set memory zone number"},
   {"set-register","|sr","register=value","Changes register value. Example: set-register DE=3344H"},
+
+	{"set-text-brightness",NULL,"brightness","Change text render brightness value (0-100)"},
 	{"set-verbose-level",NULL,NULL,"Sets verbose level for console output"},
 	{"set-window-zoom",NULL,"zoom","Sets window zoom"},
   {"smartload","|sl","file","Smart-loads a file. Use with care, may produce unexpected behaviour when emulator is doing a machine reset for example"},
@@ -3883,6 +3885,18 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
 	}
 
 }
+
+	else if (!strcmp(comando_sin_parametros,"set-text-brightness")) {
+		if (parametros[0]==0) escribir_socket(misocket,"ERROR. No parameter set");
+	        else {
+			int bri=parse_string_to_number(parametros);
+			if (bri<0 || bri>100) {
+				escribir_socket_format(misocket,"ERROR. Invalid brightness value %d",bri);
+			}
+
+			else screen_text_brightness=bri;
+		}
+	}
 
 	else if (!strcmp(comando_sin_parametros,"set-register") || !strcmp(comando_sin_parametros,"sr")) {
 		if (debug_change_register(parametros)) {
