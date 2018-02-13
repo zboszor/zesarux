@@ -1309,6 +1309,8 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	z80_int *layer_final=layer_tiles;
 	layer_final -=offset_x;
 
+	puntero_layer +=128*layer;
+
     
 	//En que scanline esta 0...7
 	int desplazamiento_scanline=(scanline_copia & 7)*256;
