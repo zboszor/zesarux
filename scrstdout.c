@@ -482,6 +482,20 @@ void scrstdout_establece_tablas_teclado(int c)
 	
 }
 
+void stdout_common_fun_color(z80_byte color,int *brillo, int *parpadeo)
+{
+	//de momento nada
+}
+
+void stdout_common_fun_caracter (int x,int y,int brillo, unsigned char inv,z80_byte caracter )
+{
+	printf ("%c",caracter);
+}
+
+void stdout_common_fun_saltolinea (void)
+{
+	printf ("\n");
+}
 
 void scrstdout_repinta_pantalla(void)
 {
@@ -522,34 +536,9 @@ void scrstdout_repinta_pantalla(void)
 	else if (MACHINE_IS_TSCONF) {
 		//con rainbow
 		if (rainbow_enabled.v) {
-			        int ancho,alto;
 
-			        ancho=get_total_ancho_rainbow();
-			        alto=get_total_alto_rainbow();
-				#define FACTOR_DIVISION_TEXT_TSCONF 12
+			scr_refresca_pantalla_tsconf_text(stdout_common_fun_color,stdout_common_fun_caracter,stdout_common_fun_saltolinea,12);
 
-				int ancho_final=ancho/FACTOR_DIVISION_TEXT_TSCONF;
-				int alto_final=alto/FACTOR_DIVISION_TEXT_TSCONF;
-
-				z80_byte *buffer_texto;
-				buffer_texto=malloc(ancho_final*(alto_final+10)); //Algo mas por si acaso
-				if (buffer_texto==NULL) cpu_panic("Can not allocate text buffer");
-
-				screen_convert_rainbow_to_text(rainbow_buffer,ancho,alto,buffer_texto,FACTOR_DIVISION_TEXT_TSCONF);
-
-				z80_byte *buffer_texto_copia;
-				buffer_texto_copia=buffer_texto;
-
-				int x,y;
-				for (y=0;y<alto_final;y++) {
-					for (x=0;x<ancho_final;x++) {
-						printf ("%c",*buffer_texto_copia);
-						buffer_texto_copia++;
-					}
-					printf ("\n");
-				}
-
-				free(buffer_texto);
 		}
 	}
 	

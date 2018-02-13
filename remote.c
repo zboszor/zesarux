@@ -3439,7 +3439,7 @@ char buffer_retorno[2048];
 
 
 	else if (!strcmp(comando_sin_parametros,"get-ocr")) {
-		char buffer_ocr[4096];
+		char buffer_ocr[8192];
 		ocr_get_text(buffer_ocr);
 		escribir_socket (misocket,buffer_ocr);
 	}

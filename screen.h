@@ -698,4 +698,7 @@ extern void tsconf_fast_tilesprite_render(void);
 extern int screen_text_brightness;
 
 
+extern void scr_refresca_pantalla_tsconf_text(void (*fun_color) (z80_byte color,int *brillo, int *parpadeo), void (*fun_caracter) (int x,int y,int brillo, unsigned char inv,z80_byte caracter ) , void (*fun_saltolinea) (void) , int factor_division);
+
+
 #endif

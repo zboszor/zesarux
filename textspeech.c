@@ -1035,5 +1035,10 @@ void ocr_get_text(char *s)
 
     else if (MACHINE_IS_CPC) ocr_enviar_speech_pantalla_cpc();
 
+    else if (MACHINE_IS_TSCONF) {
+		if (rainbow_enabled.v) {
+		}
+	}
+
     ocr_text_buffer[ocr_index_position++]=0;
 }

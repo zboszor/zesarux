@@ -884,6 +884,19 @@ void scrcurses_refresca_pantalla_cpc_fun_color(z80_byte color, int *brillo, int 
 
 }
 
+
+void scrcurses_refresca_pantalla_common_fun_color(z80_byte color, int *brillo, int *parpadeo)
+{
+
+                                if (colores) {
+                                  asigna_color_atributo(color,brillo,parpadeo);
+                                }
+                                else {
+                                  *brillo=0;
+                                }
+
+}
+
 void scrcurses_refresca_pantalla_cpc_fun_saltolinea(void)
 {
 
@@ -891,7 +904,24 @@ void scrcurses_refresca_pantalla_cpc_fun_saltolinea(void)
 
 }
 
+
+void scrcurses_refresca_pantalla_common_fun_saltolinea(void)
+{
+
+//En este driver no hacemos nada
+
+}
+
 void scrcurses_refresca_pantalla_cpc_fun_caracter(int x,int y,int brillo, unsigned char inv,z80_byte caracter )
+{
+                       move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
+
+                                if (inv) addch(caracter | WA_REVERSE | brillo );
+                                else addch(caracter|brillo);
+
+}
+
+void scrcurses_refresca_pantalla_common_fun_caracter(int x,int y,int brillo, unsigned char inv,z80_byte caracter )
 {
                        move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
 
@@ -955,6 +985,15 @@ void scrcurses_refresca_pantalla(void)
 			scrcurses_refresca_pantalla_zx8081_rainbow();
 		}
 	}
+
+        else if (MACHINE_IS_TSCONF) {
+                //con rainbow
+                if (rainbow_enabled.v) {
+
+                        scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);  //720x576 -> 31x25
+
+                }
+        }
 
 	else if (MACHINE_IS_SPECTRUM) {
 

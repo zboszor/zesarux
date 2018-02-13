@@ -12812,11 +12812,62 @@ void screen_convert_rainbow_to_text(z80_int *source_bitmap,int source_width,int 
 
 	int xorig,yorig,xdest,ydest;
 
-	for (yorig=0;yorig<source_height;yorig+=incremento_y) {
-		for (xorig=0;xorig<source_width;xorig+=incremento_x) {
+	int ancho_dest=source_width/division_factor;
+
+	for (yorig=0,ydest=0;yorig<source_height;yorig+=incremento_y,ydest++) {
+		for (xorig=0,xdest=0;xorig<source_width;xorig+=incremento_x,xdest++) {
 			z80_byte caracter=screen_convert_rainbow_to_text_char(&source_bitmap[yorig*source_width+xorig],incremento_x,incremento_y,source_width);
-			*destination_text=caracter;
-			destination_text++;
+
+			destination_text[ydest*ancho_dest+xdest]=caracter;
+			//*destination_text=caracter;
+			//destination_text++;
 		}
 	}
+}
+
+
+
+
+void scr_refresca_pantalla_tsconf_text(void (*fun_color) (z80_byte color,int *brillo, int *parpadeo), void (*fun_caracter) (int x,int y,int brillo, unsigned char inv,z80_byte caracter ) , void (*fun_saltolinea) (void) , int factor_division)
+{
+
+	//Si no esta realvideo, salir
+	if (rainbow_enabled.v==0) return;
+
+
+
+			        int ancho,alto;
+
+			        ancho=get_total_ancho_rainbow();
+			        alto=get_total_alto_rainbow();
+
+				int ancho_final=ancho/factor_division;
+				int alto_final=alto/factor_division;
+
+				z80_byte *buffer_texto;
+				buffer_texto=malloc(ancho_final*(alto_final+10)); //Algo mas por si acaso
+				if (buffer_texto==NULL) cpu_panic("Can not allocate text buffer");
+
+				screen_convert_rainbow_to_text(rainbow_buffer,ancho,alto,buffer_texto,factor_division);
+
+				z80_byte *buffer_texto_copia;
+				buffer_texto_copia=buffer_texto;
+	
+				int brillo=0;
+				int parpadeo=0;
+
+				fun_color(56,&brillo,&parpadeo);
+
+				int x,y;
+				for (y=0;y<alto_final;y++) {
+					for (x=0;x<ancho_final;x++) {
+						z80_byte caracter=buffer_texto_copia[y*ancho_final+x];
+						fun_caracter (x,y,0,0,caracter);
+					}
+					fun_saltolinea();
+				}
+
+				free(buffer_texto);
+
+
 }
