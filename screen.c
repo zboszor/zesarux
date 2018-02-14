@@ -84,6 +84,12 @@ z80_bit screen_show_splash_texts={1};
 //mostrar uso de cpu en footer
 z80_bit screen_show_cpu_usage={0};
 
+//Si pantalla final rainbow se reduce tamanyo a 4/3 (dividir por 4, mult por 3)
+z80_bit screen_reduce_43={0};
+
+int screen_reduce_offset_x=0;
+int screen_reduce_offset_y=0;
+
 //Rutinas de pantalla
 void (*scr_refresca_pantalla) (void);
 void (*scr_refresca_pantalla_solo_driver) (void);
@@ -3078,6 +3084,58 @@ scr_putpixel_zoom_timex_mode6_interlaced(x_hi+bit,y,col6);
 }
 
 
+z80_int *scalled_rainbow_buffer=NULL;
+void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
+{
+
+	int x,y;
+
+	int ancho_destino=(ancho*3)/4;
+	int alto_destino=(alto*3)/4;
+
+	int diferencia_ancho=ancho-ancho_destino;
+	int diferencia_alto=alto-alto_destino;
+
+	//Controlar offsets
+	if (screen_reduce_offset_x>diferencia_ancho) screen_reduce_offset_x=diferencia_ancho;
+	if (screen_reduce_offset_y>diferencia_alto) screen_reduce_offset_y=diferencia_alto-1;
+
+	dest +=screen_reduce_offset_x;
+	dest +=screen_reduce_offset_y*ancho;
+
+	for (y=0;y<alto;y++) {
+		
+
+		for (x=0;x<ancho;x+=4) {
+			*dest=*orig;
+			dest++;
+			orig++;
+			
+			*dest=*orig;
+			dest++;
+			orig++;
+			
+			*dest=*orig;
+			dest++;
+			orig++;
+			
+			//Saltar el cuarto
+			orig++;
+			
+		}
+		
+		dest+=diferencia_ancho;
+
+
+		if ( (y%4)==3) {
+			//Saltar la cuarta linea
+			orig+=ancho;
+			y++;
+		}
+	}
+
+}
+
 
 //Refresco pantalla con rainbow
 
@@ -3131,6 +3189,25 @@ void scr_refresca_pantalla_rainbow_comun(void)
 	puntero=rainbow_buffer;
 	int dibujar;
 
+
+	if (screen_reduce_43.v) {
+		int ancho_destino=ancho; // (ancho*3)/4;
+		int alto_destino=alto; //(alto*3)/4;
+
+		//solo asignar buffer la primera vez
+		if (scalled_rainbow_buffer==NULL) {
+			scalled_rainbow_buffer=malloc(ancho*alto*2); //*2 por que son valores de 16 bits
+			if (scalled_rainbow_buffer==NULL) cpu_panic("Can not allocate scalled rainbow buffer");
+		}
+
+		screen_scale_rainbow_43(rainbow_buffer,ancho,alto,scalled_rainbow_buffer);
+
+		//alto=alto_destino;
+		//ancho=ancho_destino;
+		puntero=scalled_rainbow_buffer;
+		
+	}
+
 	for (y=0;y<alto;y++) {
 		//Truco para tener a partir de una posicion y modo timex 512x192
 
@@ -3169,6 +3246,7 @@ void scr_refresca_pantalla_rainbow_comun(void)
 	}
 
 	//timex_ugly_hack_last_hires=0;
+
 
 
 }
