@@ -3191,8 +3191,8 @@ void scr_refresca_pantalla_rainbow_comun(void)
 
 
 	if (screen_reduce_075.v) {
-		int ancho_destino=ancho; // (ancho*3)/4;
-		int alto_destino=alto; //(alto*3)/4;
+		//int ancho_destino=ancho; // (ancho*3)/4;
+		//int alto_destino=alto; //(alto*3)/4;
 
 		//solo asignar buffer la primera vez
 		if (scalled_rainbow_buffer==NULL) {

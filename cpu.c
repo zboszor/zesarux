@@ -1377,9 +1377,9 @@ printf (
 
 		"--zoomx n                  Horizontal Zoom Factor\n"
 		"--zoomy n                  Vertical Zoom Factor\n"
-		"--reduce-075                Reduce display size 4/3 (divide by 4, multiply by 3)\n"
-		"--reduce-075-offset-x n     Destination offset x on reduced display\n"
-		"--reduce-075-offset-y n     Destination offset y on reduced display\n"
+		"--reduce-075               Reduce display size 4/3 (divide by 4, multiply by 3)\n"
+		"--reduce-075-offset-x n    Destination offset x on reduced display\n"
+		"--reduce-075-offset-y n    Destination offset y on reduced display\n"
 
 		"--menucharwidth n          Character size width for menus valid values: 8,7,6 or 5\n"
 		"--frameskip n              Set frameskip (0=none, 1=25 FPS, 2=16 FPS, etc)\n"

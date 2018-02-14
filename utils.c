@@ -3006,7 +3006,7 @@ int util_write_configfile(void)
 //Solo la agrego si no es 8, que esto es experimental
   if (menu_char_width!=8)		      ADD_STRING_CONFIG,"--menucharwidth %d",menu_char_width);
 
-  if (screen_reduce_43.v)			ADD_STRING_CONFIG,"--reduce-075");
+  if (screen_reduce_075.v)			ADD_STRING_CONFIG,"--reduce-075");
 
 
 
