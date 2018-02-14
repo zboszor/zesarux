@@ -29723,22 +29723,22 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
 	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
 	"WXXXXXXXXXXXXXXXXXXXXXXXXW",	
-	"W                XXXX    W",			
-	"W                XXXX    W",			
-	"W                XXXX   RW", 		
-	"W                XXXX  RRW",		
-	"W            XXXX     RRRW",		
-	"W            XXXX    RRRRW",	//10	
-	"W            XXXX   RRRRYW",		
-	"W            XXXX  RRRRYYW",		
-	"W        XXXX     RRRRYYYW",		
-	"W        XXXX    RRRRYYYYW",		
-	"W        XXXX   RRRRYYYYGW",		
-	"W        XXXX  RRRRYYYYGGW",		
-	"W    XXXX     RRRRYYYYGGGW",		
-	"W    XXXX    RRRRYYYYGGGGW",		
-	"W    XXXX   RRRRYYYYGGGGBW",		
-	"W    XXXX  RRRRYYYYGGGGBBW",    //20
+	"WWWWWWWWWWWWWWWWWXXXXWWWWW",			
+	"                WXXXXW   W",			
+	"                WXXXXW  RW", 		
+	"             WWWWXXXXW RRW",		
+	"            WXXXXWWWW RRRW",		
+	"            WXXXXW   RRRRW",	//10	
+	"            WXXXXW  RRRRYW",		
+	"         WWWWXXXXW RRRRYYW",		
+	"        WXXXXWWWW RRRRYYYW",		
+	"        WXXXXW   RRRRYYYYW",		
+	"        WXXXXW  RRRRYYYYGW",		
+	"     WWWWXXXXW RRRRYYYYGGW",		
+	"    WXXXXWWWW RRRRYYYYGGGW",		
+	"    WXXXXW   RRRRYYYYGGGGW",		
+	"    WXXXXW  RRRRYYYYGGGGCW",		
+	"WWWWWXXXXW RRRRYYYYGGGGCCW",    //20
 	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
 	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
 	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
@@ -29746,6 +29746,40 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 	"WWWWWWWWWWWWWWWWWWWWWWWWWW" 		//25
 };
 
+
+//Retorna color de paleta spectrum segun letra color logo ascii W: white, X: Black, etc
+int return_color_zesarux_ascii(char c)
+{
+	switch (c) {
+		case 'W':
+			return 7;
+		break;
+
+		case 'X':
+			return 0;
+		break;
+
+		case 'R':
+			return 2;
+		break;
+
+		case 'G':
+			return 4;
+		break;
+
+		case 'C':
+			return 5;
+		break;
+
+		case 'Y':
+			return 6;
+		break;
+
+		default:
+			return 0;
+		break;
+	}
+}
 
 void set_splash_zesarux_logo(void)
 {

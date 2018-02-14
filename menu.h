@@ -365,6 +365,8 @@ extern int overlay_usado_screen_array[];
 #define ZESARUX_ASCII_LOGO_ALTO 26
 extern char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO];
 
+extern int return_color_zesarux_ascii(char c);
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \

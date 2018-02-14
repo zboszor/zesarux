@@ -3141,6 +3141,28 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 }
 
 
+
+void screen_scale_putpixel(z80_int *destino,int x,int y,int ancho,int color)
+{
+	int offset=y*ancho+x;
+
+	destino[offset]=color;
+}
+
+void screen_scale_put_watermark(z80_int *destino,int x,int y,int ancho, int alto)
+{
+	int fila,columna;
+
+	for (fila=0;fila<ZESARUX_ASCII_LOGO_ALTO;fila++) {
+		char *texto=zesarux_ascii_logo[fila];
+		for (columna=0;columna<ZESARUX_ASCII_LOGO_ANCHO;columna++) {
+			char caracter=texto[columna];
+
+			if (caracter!=' ') screen_scale_putpixel(destino,x+columna,y+fila,ancho,return_color_zesarux_ascii(caracter));
+		}
+	}
+}
+
 //Refresco pantalla con rainbow
 
 
@@ -3232,6 +3254,12 @@ void scr_refresca_pantalla_rainbow_comun(void)
 		}
 
 		screen_scale_rainbow_43(rainbow_buffer,ancho,alto,scalled_rainbow_buffer);
+
+		//Meter marca de agua en la derecha, abajo
+		int watermark_x=((ancho*3)/4)-ZESARUX_ASCII_LOGO_ANCHO-4;
+		int watermark_y=((alto*3)/4)-ZESARUX_ASCII_LOGO_ALTO-4;
+
+		screen_scale_put_watermark(scalled_rainbow_buffer,watermark_x,watermark_y,scalled_rainbow_ancho,scalled_rainbow_alto);
 
 		//alto=alto_destino;
 		//ancho=ancho_destino;
