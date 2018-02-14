@@ -3141,15 +3141,17 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 }
 
 
-
-void screen_scale_putpixel(z80_int *destino,int x,int y,int ancho,int color)
+//Meter pixel en un buffer rainbow de color indexado 16 bits. Usado en watermark
+void screen_generic_putpixel_indexcolour(z80_int *destino,int x,int y,int ancho,int color)
 {
 	int offset=y*ancho+x;
 
 	destino[offset]=color;
 }
 
-void screen_scale_put_watermark(z80_int *destino,int x,int y,int ancho, int alto)
+
+//Mete la marca de agua en un bitmap generico
+void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) )
 {
 	int fila,columna;
 
@@ -3158,7 +3160,7 @@ void screen_scale_put_watermark(z80_int *destino,int x,int y,int ancho, int alto
 		for (columna=0;columna<ZESARUX_ASCII_LOGO_ANCHO;columna++) {
 			char caracter=texto[columna];
 
-			if (caracter!=' ') screen_scale_putpixel(destino,x+columna,y+fila,ancho,return_color_zesarux_ascii(caracter));
+			if (caracter!=' ') putpixel(destino,x+columna,y+fila,ancho,return_color_zesarux_ascii(caracter));
 		}
 	}
 }
@@ -3216,6 +3218,7 @@ void scr_refresca_pantalla_rainbow_comun(void)
 	int dibujar;
 
 
+	//Si se reduce la pantalla 0.75
 	if (screen_reduce_075.v) {
 		//int ancho_destino=ancho; // (ancho*3)/4;
 		//int alto_destino=alto; //(alto*3)/4;
@@ -3255,17 +3258,59 @@ void scr_refresca_pantalla_rainbow_comun(void)
 
 		screen_scale_rainbow_43(rainbow_buffer,ancho,alto,scalled_rainbow_buffer);
 
-		//Meter marca de agua en la derecha, abajo
-		int watermark_x=((ancho*3)/4)-ZESARUX_ASCII_LOGO_ANCHO-4;
-		int watermark_y=((alto*3)/4)-ZESARUX_ASCII_LOGO_ALTO-4;
+		//Si reducimos la pantalla, forzamos meter watermark
+		//Meter marca de agua en la derecha, abajo, en la zona de pantalla reducida
+		int posicion=3; //0: arriba izq 1: arriba der 2 abajo izq 3 abajo der
+		int watermark_x=screen_reduce_offset_x;
+		int watermark_y=screen_reduce_offset_y;
 
-		screen_scale_put_watermark(scalled_rainbow_buffer,watermark_x,watermark_y,scalled_rainbow_ancho,scalled_rainbow_alto);
+		int rango_extremo=4;
 
-		//alto=alto_destino;
-		//ancho=ancho_destino;
+		switch (posicion) {
+			case 0:
+				watermark_x +=rango_extremo;
+				watermark_y +=rango_extremo;
+			break;
+
+			case 1:
+				watermark_x +=((ancho*3)/4)-ZESARUX_ASCII_LOGO_ANCHO-rango_extremo;
+				watermark_y +=rango_extremo;
+			break;
+
+			case 2:
+				watermark_x +=rango_extremo;
+				watermark_y +=((alto*3)/4)-ZESARUX_ASCII_LOGO_ALTO-rango_extremo;
+			break;				
+
+			case 3:
+				watermark_x +=((ancho*3)/4)-ZESARUX_ASCII_LOGO_ANCHO-rango_extremo;
+				watermark_y +=((alto*3)/4)-ZESARUX_ASCII_LOGO_ALTO-rango_extremo;
+			break;			
+
+		}
+
+		//int watermark_x=screen_reduce_offset_x+((ancho*3)/4)-ZESARUX_ASCII_LOGO_ANCHO-4;
+		//int watermark_y=screen_reduce_offset_y+((alto*3)/4)-ZESARUX_ASCII_LOGO_ALTO-4;
+
+		screen_put_watermark_generic(scalled_rainbow_buffer,watermark_x,watermark_y,scalled_rainbow_ancho,screen_generic_putpixel_indexcolour);
+
+		//Y decimos que el puntero de dibujado ahora lo pilla de la pantalla escalada
 		puntero=scalled_rainbow_buffer;
 		
 	}
+	//Fin reduccion pantalla 0.75
+
+
+
+	//Prueba de meter la marca de agua en el buffer rainbow tal cual
+	//Meter marca de agua en la derecha, abajo
+	//int watermark_x=ancho-ZESARUX_ASCII_LOGO_ANCHO-4;
+	//int watermark_y=alto-ZESARUX_ASCII_LOGO_ALTO-4;
+	//screen_put_watermark_generic(puntero,watermark_x,watermark_y,ancho,screen_generic_putpixel_indexcolour);
+
+
+
+
 
 	for (y=0;y<alto;y++) {
 		//Truco para tener a partir de una posicion y modo timex 512x192
