@@ -3085,6 +3085,10 @@ scr_putpixel_zoom_timex_mode6_interlaced(x_hi+bit,y,col6);
 
 
 z80_int *scalled_rainbow_buffer=NULL;
+int scalled_rainbow_ancho=0;
+int scalled_rainbow_alto=0;
+
+
 void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 {
 
@@ -3194,10 +3198,37 @@ void scr_refresca_pantalla_rainbow_comun(void)
 		//int ancho_destino=ancho; // (ancho*3)/4;
 		//int alto_destino=alto; //(alto*3)/4;
 
-		//solo asignar buffer la primera vez
-		if (scalled_rainbow_buffer==NULL) {
+		//solo asignar buffer la primera vez o si ha cambiado el tamanyo
+		int asignar=0;
+		
+		//Si ha cambiado el tamanyo
+		if (scalled_rainbow_ancho!=ancho || scalled_rainbow_alto!=alto) {
+			//Liberar si existia
+			if (scalled_rainbow_buffer!=NULL) {
+				debug_printf(VERBOSE_DEBUG,"Freeing previous scaled rainbow buffer");
+				free (scalled_rainbow_buffer);
+				scalled_rainbow_buffer=NULL;
+
+
+			}
+
+			asignar=1;
+		}
+
+		//O si no hay buffer asignado
+		if (scalled_rainbow_buffer==NULL) asignar=1;
+
+		if (asignar) {
+			debug_printf(VERBOSE_DEBUG,"Allocating scaled rainbow buffer");
 			scalled_rainbow_buffer=malloc(ancho*alto*2); //*2 por que son valores de 16 bits
 			if (scalled_rainbow_buffer==NULL) cpu_panic("Can not allocate scalled rainbow buffer");
+
+			//Llenarlo de cero
+			int i;
+			for (i=0;i<ancho*alto;i++) scalled_rainbow_buffer[i]=0;
+
+			scalled_rainbow_ancho=ancho;
+			scalled_rainbow_alto=alto;
 		}
 
 		screen_scale_rainbow_43(rainbow_buffer,ancho,alto,scalled_rainbow_buffer);

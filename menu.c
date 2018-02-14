@@ -29513,6 +29513,8 @@ void menu_inicio(void)
 }
 
 
+
+//Escribe bloque de cuadrado de color negro  
 void set_splash_zesarux_logo_put_space(int x,int y)
 {
 	if (!strcmp(scr_driver_name,"aa")) {
@@ -29522,6 +29524,7 @@ void set_splash_zesarux_logo_put_space(int x,int y)
 }
 
 
+//Hace cuadrado de 2x2
 void set_splash_zesarux_logo_cuadrado(int x,int y)
 {
 	set_splash_zesarux_logo_put_space(x,y);
@@ -29533,7 +29536,7 @@ void set_splash_zesarux_logo_cuadrado(int x,int y)
 
 
 
-
+//Escribe caracter  128 (franja de color-triangulo)
 void set_splash_zesarux_franja_color(int x,int y,int tinta, int papel)
 {
 	if (si_complete_video_driver() ) {
@@ -29544,6 +29547,7 @@ void set_splash_zesarux_franja_color(int x,int y,int tinta, int papel)
 	}
 }
 
+//Escribe caracter ' ' con color
 void set_splash_zesarux_cuadrado_color(int x,int y,int color)
 {
 	if (si_complete_video_driver() ) {
@@ -29619,21 +29623,44 @@ void set_splash_zesarux_logo_paso(int paso)
 	/*
 
     012345678901
-0	 	XXXXXXXXXXXX
-1		XXXXXXXXXXXX
-2		        XX
-3		        XX /
-4	        XX  /
-5			    XX / /
-6	 		  XX  / /
-7				XX / / /
-8			XX  / / /
-9			XX / / / /
-0		XXXXXXXXXXXX
-1		XXXXXXXXXXXX
+0	XXXXXXXXXXXX
+1	XXXXXXXXXXXX
+2	        XX
+3	        XX /
+4	      XX  /
+5	      XX / /
+6	    XX  / /
+7		XX / / /
+8	  XX  / / /
+9	  XX / / / /
+0	XXXXXXXXXXXX
+1	XXXXXXXXXXXX
 
     012345678901
 	*/
+
+/*
+  RRRY
+ RRRYY
+RRRYYY
+
+*/
+
+/*
+	        XX .
+	      XX  .x
+	      XX .x.
+	    XX  .x.x
+		XX .x.x.
+	  XX  .x.x.x
+	  XX .x.x.x.
+	XXXXXXXXXXXX
+	XXXXXXXXXXXX
+
+    012345678901
+	*/
+
+
 
 	int j;
 
@@ -29686,6 +29713,38 @@ void set_splash_zesarux_logo_paso(int paso)
 	set_splash_zesarux_franja_color(x_inicial+ancho_z*2-1,y_inicial+ancho_z*2-3,5,4);
 
 }
+
+
+
+char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
+    //01234567890123456789012345
+    "WWWWWWWWWWWWWWWWWWWWWWWWWW",     //0
+  	"WXXXXXXXXXXXXXXXXXXXXXXXXW",      
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",	
+	"W                XXXX    W",			
+	"W                XXXX    W",			
+	"W                XXXX   RW", 		
+	"W                XXXX  RRW",		
+	"W            XXXX     RRRW",		
+	"W            XXXX    RRRRW",	//10	
+	"W            XXXX   RRRRYW",		
+	"W            XXXX  RRRRYYW",		
+	"W        XXXX     RRRRYYYW",		
+	"W        XXXX    RRRRYYYYW",		
+	"W        XXXX   RRRRYYYYGW",		
+	"W        XXXX  RRRRYYYYGGW",		
+	"W    XXXX     RRRRYYYYGGGW",		
+	"W    XXXX    RRRRYYYYGGGGW",		
+	"W    XXXX   RRRRYYYYGGGGBW",		
+	"W    XXXX  RRRRYYYYGGGGBBW",    //20
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",
+	"WWWWWWWWWWWWWWWWWWWWWWWWWW" 		//25
+};
 
 
 void set_splash_zesarux_logo(void)
