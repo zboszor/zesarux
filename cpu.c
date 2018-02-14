@@ -1377,9 +1377,9 @@ printf (
 
 		"--zoomx n                  Horizontal Zoom Factor\n"
 		"--zoomy n                  Vertical Zoom Factor\n"
-		"--reduce-43                Reduce display size 4/3 (divide by 4, multiply by 3)\n"
-		"--reduce-43-offset-x n     Destination offset x on reduced display\n"
-		"--reduce-43-offset-y n     Destination offset y on reduced display\n"
+		"--reduce-075                Reduce display size 4/3 (divide by 4, multiply by 3)\n"
+		"--reduce-075-offset-x n     Destination offset x on reduced display\n"
+		"--reduce-075-offset-y n     Destination offset y on reduced display\n"
 
 		"--menucharwidth n          Character size width for menus valid values: 8,7,6 or 5\n"
 		"--frameskip n              Set frameskip (0=none, 1=25 FPS, 2=16 FPS, etc)\n"
@@ -4284,16 +4284,16 @@ int parse_cmdline_options(void) {
 				zoom_y=atoi(argv[puntero_parametro]);
 			}
 
-			else if (!strcmp(argv[puntero_parametro],"--reduce-43")) {
-				screen_reduce_43.v=1;
+			else if (!strcmp(argv[puntero_parametro],"--reduce-075")) {
+				screen_reduce_075.v=1;
 			}
 
-			else if (!strcmp(argv[puntero_parametro],"--reduce-43-offset-x")) {
+			else if (!strcmp(argv[puntero_parametro],"--reduce-075-offset-x")) {
 				siguiente_parametro_argumento();
 				screen_reduce_offset_x=atoi(argv[puntero_parametro]);
 			}
 
-			else if (!strcmp(argv[puntero_parametro],"--reduce-43-offset-y")) {
+			else if (!strcmp(argv[puntero_parametro],"--reduce-075-offset-y")) {
 				siguiente_parametro_argumento();
 				screen_reduce_offset_y=atoi(argv[puntero_parametro]);
 			}

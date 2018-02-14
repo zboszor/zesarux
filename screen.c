@@ -85,7 +85,7 @@ z80_bit screen_show_splash_texts={1};
 z80_bit screen_show_cpu_usage={0};
 
 //Si pantalla final rainbow se reduce tamanyo a 4/3 (dividir por 4, mult por 3)
-z80_bit screen_reduce_43={0};
+z80_bit screen_reduce_075={0};
 
 int screen_reduce_offset_x=0;
 int screen_reduce_offset_y=0;
@@ -3190,7 +3190,7 @@ void scr_refresca_pantalla_rainbow_comun(void)
 	int dibujar;
 
 
-	if (screen_reduce_43.v) {
+	if (screen_reduce_075.v) {
 		int ancho_destino=ancho; // (ancho*3)/4;
 		int alto_destino=alto; //(alto*3)/4;
 
