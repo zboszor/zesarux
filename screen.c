@@ -332,6 +332,9 @@ z80_bit inverse_video;
 //Meter marca de agua en la derecha, abajo, en la zona de pantalla reducida
 int screen_watermark_position=3; //0: arriba izq 1: arriba der 2 abajo izq 3 abajo der
 
+//Si marca de agua habilitada
+z80_bit screen_watermark_enabled={1};
+
 
 //Indica que el driver de video (por el momento, solo xwindows y fbdev) debe repintar la pantalla
 //teniendo en cuenta si hay menu activo, y por tanto evitar pintar zonas donde hay texto del menu
@@ -3265,6 +3268,30 @@ z80_int *screen_scale_075_function(int ancho,int alto)
 
 }
 
+void screen_add_watermark_rainbow(void)
+{
+	if (screen_watermark_enabled.v) {
+		int watermark_x;
+		int watermark_y;
+
+		int ancho,alto;
+
+		ancho=get_total_ancho_rainbow();
+		alto=get_total_alto_rainbow();
+
+		//Misma variable que watermark general
+		screen_get_offsets_watermark_position(screen_watermark_position,ancho,alto,&watermark_x,&watermark_y);
+
+		screen_put_watermark_generic(rainbow_buffer,watermark_x,watermark_y,ancho,screen_generic_putpixel_indexcolour);
+
+	}
+			//Prueba de meter la marca de agua en el buffer rainbow tal cual
+	//Meter marca de agua en la derecha, abajo
+	//int watermark_x=ancho-ZESARUX_ASCII_LOGO_ANCHO-4;
+	//int watermark_y=alto-ZESARUX_ASCII_LOGO_ALTO-4;
+	//screen_put_watermark_generic(puntero,watermark_x,watermark_y,ancho,screen_generic_putpixel_indexcolour);
+	
+}
 
 //Refresco pantalla con rainbow
 
@@ -3327,11 +3354,7 @@ void scr_refresca_pantalla_rainbow_comun(void)
 
 
 
-	//Prueba de meter la marca de agua en el buffer rainbow tal cual
-	//Meter marca de agua en la derecha, abajo
-	//int watermark_x=ancho-ZESARUX_ASCII_LOGO_ANCHO-4;
-	//int watermark_y=alto-ZESARUX_ASCII_LOGO_ALTO-4;
-	//screen_put_watermark_generic(puntero,watermark_x,watermark_y,ancho,screen_generic_putpixel_indexcolour);
+
 
 
 
@@ -7676,6 +7699,9 @@ void scr_fadeout(void)
 
 void cpu_loop_refresca_pantalla(void)
 {
+
+	screen_add_watermark_rainbow();
+
 	//Si esta en top speed, solo 1 frame
 	if (timer_condicion_top_speed() ) {
 		//printf ("top_speed_real_frames:%d\n",top_speed_real_frames);

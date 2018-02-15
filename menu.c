@@ -682,6 +682,7 @@ int plusthreedisk_opcion_seleccionada=0;
 
 int tsconf_layer_settings_opcion_seleccionada=0;
 int window_settings_opcion_seleccionada=0;
+int osd_settings_opcion_seleccionada=0;
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
 z80_bit menu_splash_text_active;
@@ -23515,6 +23516,21 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_window_settings,"Changes Window Size Zoom (width and height)");
                 }
 
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_footer,NULL,"Window F~~ooter: %s",(menu_footer ? "Yes" : "No") );
+		menu_add_item_menu_shortcut(array_menu_window_settings,'o');
+		menu_add_item_menu_tooltip(array_menu_window_settings,"Show on footer some machine information");
+		menu_add_item_menu_ayuda(array_menu_window_settings,"Show on footer some machine information, like tape loading");
+
+
+		//Uso cpu no se ve en windows
+#ifndef MINGW
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_cpu_usage,NULL,"Show CPU usage: %s",(screen_show_cpu_usage.v ? "Yes" : "No") );
+		menu_add_item_menu_tooltip(array_menu_window_settings,"Show CPU usage on footer");
+		menu_add_item_menu_ayuda(array_menu_window_settings,"It tells you how much host cpu machine is using ZEsarUX. So it's better to have it low. "
+														"Higher values mean you need a faster host machine to use ZEsarUX");
+#endif
+
+
 
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_window_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
@@ -23538,6 +23554,53 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_osd_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_osd_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+
+		menu_add_item_menu_inicial_format(&array_menu_osd_settings,MENU_OPCION_NORMAL,menu_interface_show_splash_texts,NULL,"Show splash texts: %s",(screen_show_splash_texts.v ? "Yes" : "No") );
+		menu_add_item_menu_tooltip(array_menu_osd_settings,"Show on display some splash texts, like display mode change");
+		menu_add_item_menu_ayuda(array_menu_osd_settings,"Show on display some splash texts, like display mode change");
+
+
+		//Teclado en pantalla
+		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
+			menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_onscreen_keyboard,NULL,"On Screen ~~Keyboard");
+			menu_add_item_menu_shortcut(array_menu_osd_settings,'k');
+			menu_add_item_menu_tooltip(array_menu_osd_settings,"Open on screen keyboard");
+			menu_add_item_menu_ayuda(array_menu_osd_settings,"You can also get this pressing F8, only for Spectrum and ZX80/81 machines");
+		}
+
+
+
+                menu_add_item_menu(array_menu_osd_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_osd_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_osd_settings);
+
+                retorno_menu=menu_dibuja_menu(&osd_settings_opcion_seleccionada,&item_seleccionado,array_menu_osd_settings,"OSD Settings");
+
+                cls_menu_overlay();
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
+
+
 
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
@@ -23553,6 +23616,9 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"Window settings");
 
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_settings,NULL,"OSD settings");
+
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"Menu char width: %d",menu_char_width);
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
@@ -23560,32 +23626,8 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_footer,NULL,"Window F~~ooter: %s",(menu_footer ? "Yes" : "No") );
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'o');
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Show on footer some machine information");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Show on footer some machine information, like tape loading");
 
 
-		//Teclado en pantalla
-		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_onscreen_keyboard,NULL,"On Screen ~~Keyboard");
-			menu_add_item_menu_shortcut(array_menu_interface_settings,'k');
-			menu_add_item_menu_tooltip(array_menu_interface_settings,"Open on screen keyboard");
-			menu_add_item_menu_ayuda(array_menu_interface_settings,"You can also get this pressing F8, only for Spectrum and ZX80/81 machines");
-		}
-
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_show_splash_texts,NULL,"Show splash texts: %s",(screen_show_splash_texts.v ? "Yes" : "No") );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Show on display some splash texts, like display mode change");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Show on display some splash texts, like display mode change");
-
-		//Uso cpu no se ve en windows
-#ifndef MINGW
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_show_cpu_usage,NULL,"Show CPU usage: %s",(screen_show_cpu_usage.v ? "Yes" : "No") );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Show CPU usage on footer");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"It tells you how much host cpu machine is using ZEsarUX. So it's better to have it low. "
-														"Higher values mean you need a faster host machine to use ZEsarUX");
-#endif
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_tooltip,NULL,"Tooltips: %s",(tooltip_enabled.v ? "Enabled" : "Disabled") );
