@@ -705,5 +705,6 @@ extern z80_bit screen_reduce_075;
 extern int screen_reduce_offset_x;
 extern int screen_reduce_offset_y;
 
+extern int screen_watermark_position;
 
 #endif

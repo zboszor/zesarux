@@ -329,6 +329,9 @@ int screen_simpletext_driver=0;
 z80_bit inverse_video;
 
 
+//Meter marca de agua en la derecha, abajo, en la zona de pantalla reducida
+int screen_watermark_position=3; //0: arriba izq 1: arriba der 2 abajo izq 3 abajo der
+
 
 //Indica que el driver de video (por el momento, solo xwindows y fbdev) debe repintar la pantalla
 //teniendo en cuenta si hay menu activo, y por tanto evitar pintar zonas donde hay texto del menu
@@ -3259,14 +3262,14 @@ void scr_refresca_pantalla_rainbow_comun(void)
 		screen_scale_rainbow_43(rainbow_buffer,ancho,alto,scalled_rainbow_buffer);
 
 		//Si reducimos la pantalla, forzamos meter watermark
-		//Meter marca de agua en la derecha, abajo, en la zona de pantalla reducida
-		int posicion=3; //0: arriba izq 1: arriba der 2 abajo izq 3 abajo der
+
 		int watermark_x=screen_reduce_offset_x;
 		int watermark_y=screen_reduce_offset_y;
 
 		int rango_extremo=4;
 
-		switch (posicion) {
+		//Misma variable que watermark general
+		switch (screen_watermark_position) {
 			case 0:
 				watermark_x +=rango_extremo;
 				watermark_y +=rango_extremo;
@@ -3283,6 +3286,7 @@ void scr_refresca_pantalla_rainbow_comun(void)
 			break;				
 
 			case 3:
+			default:
 				watermark_x +=((ancho*3)/4)-ZESARUX_ASCII_LOGO_ANCHO-rango_extremo;
 				watermark_y +=((alto*3)/4)-ZESARUX_ASCII_LOGO_ALTO-rango_extremo;
 			break;			

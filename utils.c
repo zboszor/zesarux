@@ -3013,6 +3013,7 @@ int util_write_configfile(void)
 						ADD_STRING_CONFIG,"--reduce-075-offset-x %d",screen_reduce_offset_x);
 						ADD_STRING_CONFIG,"--reduce-075-offset-y %d",screen_reduce_offset_y);
 
+                                                ADD_STRING_CONFIG,"--watermark-position %d",screen_watermark_position);
 
 
   if (autoframeskip.v==0)                     ADD_STRING_CONFIG,"--disable-autoframeskip");

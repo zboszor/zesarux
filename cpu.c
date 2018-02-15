@@ -1381,6 +1381,8 @@ printf (
 		"--reduce-075-offset-x n    Destination offset x on reduced display\n"
 		"--reduce-075-offset-y n    Destination offset y on reduced display\n"
 
+		"--watermark-position n     Where to put watermark. 0: Top left, 1: Top right. 2: Bottom left. 3: Bottom right\n"
+
 		"--menucharwidth n          Character size width for menus valid values: 8,7,6 or 5\n"
 		"--frameskip n              Set frameskip (0=none, 1=25 FPS, 2=16 FPS, etc)\n"
 		"--disable-autoframeskip    Disable autoframeskip\n"
@@ -4298,6 +4300,10 @@ int parse_cmdline_options(void) {
 				screen_reduce_offset_y=atoi(argv[puntero_parametro]);
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--watermark-position")) {
+				siguiente_parametro_argumento();
+				screen_watermark_position=atoi(argv[puntero_parametro]);
+			}
 
 			else if (!strcmp(argv[puntero_parametro],"--menucharwidth")) {
 				siguiente_parametro_argumento();
