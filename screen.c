@@ -3110,6 +3110,9 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 	if (screen_reduce_offset_x>diferencia_ancho) screen_reduce_offset_x=diferencia_ancho;
 	if (screen_reduce_offset_y>diferencia_alto) screen_reduce_offset_y=diferencia_alto-1;
 
+	if (screen_reduce_offset_x<0) screen_reduce_offset_x=0;
+	if (screen_reduce_offset_y<0) screen_reduce_offset_y=0;	
+
 	dest +=screen_reduce_offset_x;
 	dest +=screen_reduce_offset_y*ancho;
 

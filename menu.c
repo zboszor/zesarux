@@ -23492,6 +23492,27 @@ void menu_interface_charwidth(MENU_ITEM_PARAMETERS)
 	if (menu_char_width==4) menu_char_width=8;
 }
 
+void menu_window_settings_reduce_075(MENU_ITEM_PARAMETERS)
+{
+	screen_reduce_075.v ^=1;
+}
+
+void menu_window_settings_reduce_075_ofx(MENU_ITEM_PARAMETERS)
+{
+        char string_offset[3];
+        sprintf (string_offset,"%d",screen_reduce_offset_x);
+        menu_ventana_scanf("Offset x",string_offset,3);
+        screen_reduce_offset_x=parse_string_to_number(string_offset);
+}
+
+void menu_window_settings_reduce_075_ofy(MENU_ITEM_PARAMETERS)
+{
+        char string_offset[3];
+        sprintf (string_offset,"%d",screen_reduce_offset_y);
+        menu_ventana_scanf("Offset y",string_offset,3);
+        screen_reduce_offset_y=parse_string_to_number(string_offset);
+}
+
 void menu_window_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_window_settings;
@@ -23515,6 +23536,21 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_tooltip(array_menu_window_settings,"Change Window Zoom");
                         menu_add_item_menu_ayuda(array_menu_window_settings,"Changes Window Size Zoom (width and height)");
                 }
+
+
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075,NULL,"Reduce to 0.75: %s",(screen_reduce_075.v ? "Yes" : "No") );
+		menu_add_item_menu_tooltip(array_menu_window_settings,"Reduce machine display output by 0.75");
+		menu_add_item_menu_ayuda(array_menu_window_settings,"Reduce machine display output by 0.75");
+
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075_ofx,NULL,"Reduce offset x: %d",screen_reduce_offset_x);
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075_ofy,NULL,"Reduce offset y: %d",screen_reduce_offset_y);
+		
+
+		/*"--reduce-075               Reduce display size 4/3 (divide by 4, multiply by 3)\n"
+		"--reduce-075-offset-x n    Destination offset x on reduced display\n"
+		"--reduce-075-offset-y n    Destination offset y on reduced display\n"*/
+
+
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_footer,NULL,"Window F~~ooter: %s",(menu_footer ? "Yes" : "No") );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'o');
@@ -23604,10 +23640,9 @@ z80_bit screen_watermark_enabled={1};*/
 		menu_add_item_menu_tooltip(array_menu_osd_settings,"Adds a watermark to the display. Needs realvideo");
 		menu_add_item_menu_ayuda(array_menu_osd_settings,"Adds a watermark to the display. Needs realvideo");
 
-		if (screen_watermark_enabled.v) {
-			menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark_position,NULL,"Watermark position: %d",screen_watermark_position);
-		}
-
+		//Esta posicion afecta tanto al watermark normal como al forzado de 0.75
+		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark_position,NULL,"Watermark position: %d",screen_watermark_position);
+		
 
                 menu_add_item_menu(array_menu_osd_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_osd_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
@@ -23645,10 +23680,11 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable menu with multitask");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Setting multitask on makes the emulation does not stop when the menu is active");
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"Window settings");
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"~~Window settings");
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'w');
 
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_settings,NULL,"OSD settings");
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_settings,NULL,"~OSD settings");
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'o');
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"Menu char width: %d",menu_char_width);
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");

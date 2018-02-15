@@ -1377,6 +1377,7 @@ printf (
 
 		"--zoomx n                  Horizontal Zoom Factor\n"
 		"--zoomy n                  Vertical Zoom Factor\n"
+		
 		"--reduce-075               Reduce display size 4/3 (divide by 4, multiply by 3)\n"
 		"--reduce-075-offset-x n    Destination offset x on reduced display\n"
 		"--reduce-075-offset-y n    Destination offset y on reduced display\n"
