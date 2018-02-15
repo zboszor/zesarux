@@ -333,7 +333,7 @@ void cpu_core_loop_spectrum(void)
 
 
 				//Soporte interrupciones raster zxuno
-				if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE) zxuno_tbblue_handle_raster_interrupts();
+				if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF) zxuno_tbblue_handle_raster_interrupts();
 
 
 

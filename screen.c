@@ -12737,8 +12737,44 @@ z80_byte get_zxuno_tbblue_rasterline(void)
 	else return tbblue_registers[35];
 }
 
+int tsconf_handle_raster_interrupts_prev_horiz=0;
+
+void tsconf_handle_raster_interrupts(void)
+{
+
+	//registro intmask 2aH bit 2
+	if ((tsconf_af_ports[0x2a]&2)==0) return;
+
+	//printf ("tsconf raster line mask");
+	z80_byte int_raster_x=(tsconf_af_ports[0x22]);
+	z80_byte int_raster_y=(tsconf_af_ports[0x23]);
+
+	//printf ("tsconf raster set to %d %d\n",int_raster_x,int_raster_y);
+	//Ver en que posicion de t-estados por linea estamos
+
+	int estados_en_linea=t_estados & screen_testados_linea;
+
+	//primero comparar scanline
+	if (t_scanline==int_raster_y) {
+		//printf ("disparada raster y: %d\n",int_raster_y);
+		//Y ahora ver si nos "hemos" pasado de la posicion estados_en_linea anterior
+		if (estados_en_linea>=tsconf_handle_raster_interrupts_prev_horiz) {
+			//Generar interrupcion
+			interrupcion_maskable_generada.v=1;
+			printf ("disparada raster y: %d x: %d\n",int_raster_y,int_raster_x);
+		}
+	}
+
+
+	tsconf_handle_raster_interrupts_prev_horiz=estados_en_linea;
+}
+
 void zxuno_tbblue_handle_raster_interrupts()
 {
+	if (MACHINE_IS_TSCONF) {
+		tsconf_handle_raster_interrupts();
+		return;
+	}
 
 /*
 TBBUE y ZXUNO gestionan la interrupcion raster de la misma manera
