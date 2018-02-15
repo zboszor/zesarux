@@ -1381,6 +1381,7 @@ printf (
 		"--reduce-075-offset-x n    Destination offset x on reduced display\n"
 		"--reduce-075-offset-y n    Destination offset y on reduced display\n"
 
+		"--enable-watermark         Adds a watermark to the display. Needs realvideo\n"
 		"--watermark-position n     Where to put watermark. 0: Top left, 1: Top right. 2: Bottom left. 3: Bottom right\n"
 
 		"--menucharwidth n          Character size width for menus valid values: 8,7,6 or 5\n"
@@ -4298,6 +4299,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--reduce-075-offset-y")) {
 				siguiente_parametro_argumento();
 				screen_reduce_offset_y=atoi(argv[puntero_parametro]);
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--enable-watermark")) {
+				screen_watermark_enabled.v=1;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--watermark-position")) {

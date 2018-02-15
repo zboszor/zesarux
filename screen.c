@@ -333,7 +333,7 @@ z80_bit inverse_video;
 int screen_watermark_position=3; //0: arriba izq 1: arriba der 2 abajo izq 3 abajo der
 
 //Si marca de agua habilitada
-z80_bit screen_watermark_enabled={1};
+z80_bit screen_watermark_enabled={0};
 
 
 //Indica que el driver de video (por el momento, solo xwindows y fbdev) debe repintar la pantalla
