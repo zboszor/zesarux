@@ -12745,6 +12745,9 @@ void tsconf_handle_raster_interrupts(void)
 	//registro intmask 2aH bit 2
 	if ((tsconf_af_ports[0x2a]&2)==0) return;
 
+	//Depende de DI???
+	if (iff1.v==0) return;
+
 	//printf ("tsconf raster line mask");
 	z80_byte int_raster_x=(tsconf_af_ports[0x22]);
 	z80_byte int_raster_y=(tsconf_af_ports[0x23]);
@@ -12758,10 +12761,13 @@ void tsconf_handle_raster_interrupts(void)
 	if (t_scanline==int_raster_y) {
 		//printf ("disparada raster y: %d\n",int_raster_y);
 		//Y ahora ver si nos "hemos" pasado de la posicion estados_en_linea anterior
-		if (estados_en_linea>=tsconf_handle_raster_interrupts_prev_horiz) {
+		if (estados_en_linea>=int_raster_x && estados_en_linea>=tsconf_handle_raster_interrupts_prev_horiz) {
 			//Generar interrupcion
 			interrupcion_maskable_generada.v=1;
 			printf ("disparada raster y: %d x: %d\n",int_raster_y,int_raster_x);
+
+			//Hay que resetear ese bit???
+			tsconf_af_ports[0x2a] &=(255-2);
 		}
 	}
 
