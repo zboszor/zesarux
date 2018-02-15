@@ -3273,7 +3273,8 @@ z80_int *screen_scale_075_function(int ancho,int alto)
 
 void screen_add_watermark_rainbow(void)
 {
-	if (screen_watermark_enabled.v) {
+	//Si esta opcion de watermark general pero no esta el reduce de 0.75 (porque este reduce fuerza siempre watermark)
+	if (screen_watermark_enabled.v && screen_reduce_075.v==0) {
 		int watermark_x;
 		int watermark_y;
 
