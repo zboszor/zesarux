@@ -681,6 +681,7 @@ int audio_new_ayplayer_opcion_seleccionada=0;
 int plusthreedisk_opcion_seleccionada=0;
 
 int tsconf_layer_settings_opcion_seleccionada=0;
+int window_settings_opcion_seleccionada=0;
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
 z80_bit menu_splash_text_active;
@@ -23490,6 +23491,53 @@ void menu_interface_charwidth(MENU_ITEM_PARAMETERS)
 	if (menu_char_width==4) menu_char_width=8;
 }
 
+void menu_window_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_window_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+        	menu_add_item_menu_inicial_format(&array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_fullscreen,NULL,"~~Full Screen: %s",(ventana_fullscreen ? "On" : "Off") );
+		menu_add_item_menu_shortcut(array_menu_window_settings,'f');
+
+		if (!MACHINE_IS_Z88) {
+	                menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_border,menu_interface_border_cond,"~~Border enabled: %s", (border_enabled.v==1 ? "On" : "Off") );
+			menu_add_item_menu_shortcut(array_menu_window_settings,'b');
+		}
+
+
+                if (si_complete_video_driver() ) {
+                        menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_zoom,menu_interface_zoom_cond,"Window Size ~~Zoom: %d",zoom_x);
+			menu_add_item_menu_shortcut(array_menu_window_settings,'z');
+                        menu_add_item_menu_tooltip(array_menu_window_settings,"Change Window Zoom");
+                        menu_add_item_menu_ayuda(array_menu_window_settings,"Changes Window Size Zoom (width and height)");
+                }
+
+
+                menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_window_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_window_settings);
+
+                retorno_menu=menu_dibuja_menu(&window_settings_opcion_seleccionada,&item_seleccionado,array_menu_window_settings,"Window Settings" );
+
+                cls_menu_overlay();
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
+
 
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
@@ -23497,31 +23545,20 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
         menu_item item_seleccionado;
         int retorno_menu;
         do {
-                menu_add_item_menu_inicial_format(&array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_fullscreen,NULL,"~~Full Screen: %s",(ventana_fullscreen ? "On" : "Off") );
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'f');
 
-		if (!MACHINE_IS_Z88) {
-	                menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_border,menu_interface_border_cond,"~~Border enabled: %s", (border_enabled.v==1 ? "On" : "Off") );
-			menu_add_item_menu_shortcut(array_menu_interface_settings,'b');
-		}
+		menu_add_item_menu_inicial_format(&array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"M~~ultitask menu: %s", (menu_multitarea==1 ? "On" : "Off"));
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'u');
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable menu with multitask");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Setting multitask on makes the emulation does not stop when the menu is active");
 
-
-                if (si_complete_video_driver() ) {
-                        menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_zoom,menu_interface_zoom_cond,"Window Size ~~Zoom: %d",zoom_x);
-			menu_add_item_menu_shortcut(array_menu_interface_settings,'z');
-                        menu_add_item_menu_tooltip(array_menu_interface_settings,"Change Window Zoom");
-                        menu_add_item_menu_ayuda(array_menu_interface_settings,"Changes Window Size Zoom (width and height)");
-                }
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"Window settings");
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"Menu char width: %d",menu_char_width);
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"M~~ultitask menu: %s", (menu_multitarea==1 ? "On" : "Off"));
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'u');
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable menu with multitask");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Setting multitask on makes the emulation does not stop when the menu is active");
+
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_footer,NULL,"Window F~~ooter: %s",(menu_footer ? "Yes" : "No") );
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'o');
