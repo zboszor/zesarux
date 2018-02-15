@@ -3168,6 +3168,105 @@ void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho, void (
 	}
 }
 
+
+void screen_get_offsets_watermark_position(int position,int ancho, int alto, int *x, int *y)
+{
+
+	int watermark_x=*x;
+	int watermark_y=*y;
+
+	int rango_extremo=4;
+
+		switch (position) {
+			case 0:
+				watermark_x=rango_extremo;
+				watermark_y=rango_extremo;
+			break;
+
+			case 1:
+				watermark_x=ancho-ZESARUX_ASCII_LOGO_ANCHO-rango_extremo;
+				watermark_y=rango_extremo;
+			break;
+
+			case 2:
+				watermark_x=rango_extremo;
+				watermark_y=alto-ZESARUX_ASCII_LOGO_ALTO-rango_extremo;
+			break;				
+
+			case 3:
+			default:
+				watermark_x=ancho-ZESARUX_ASCII_LOGO_ANCHO-rango_extremo;
+				watermark_y=alto-ZESARUX_ASCII_LOGO_ALTO-rango_extremo;
+			break;			
+
+		}
+
+		*x=watermark_x;
+		*y=watermark_y;
+}
+
+z80_int *screen_scale_075_function(int ancho,int alto)
+{
+			//int ancho_destino=ancho; // (ancho*3)/4;
+		//int alto_destino=alto; //(alto*3)/4;
+
+		//solo asignar buffer la primera vez o si ha cambiado el tamanyo
+		int asignar=0;
+		
+		//Si ha cambiado el tamanyo
+		if (scalled_rainbow_ancho!=ancho || scalled_rainbow_alto!=alto) {
+			//Liberar si existia
+			if (scalled_rainbow_buffer!=NULL) {
+				debug_printf(VERBOSE_DEBUG,"Freeing previous scaled rainbow buffer");
+				free (scalled_rainbow_buffer);
+				scalled_rainbow_buffer=NULL;
+
+
+			}
+
+			asignar=1;
+		}
+
+		//O si no hay buffer asignado
+		if (scalled_rainbow_buffer==NULL) asignar=1;
+
+		if (asignar) {
+			debug_printf(VERBOSE_DEBUG,"Allocating scaled rainbow buffer");
+			scalled_rainbow_buffer=malloc(ancho*alto*2); //*2 por que son valores de 16 bits
+			if (scalled_rainbow_buffer==NULL) cpu_panic("Can not allocate scalled rainbow buffer");
+
+			//Llenarlo de cero
+			int i;
+			for (i=0;i<ancho*alto;i++) scalled_rainbow_buffer[i]=0;
+
+			scalled_rainbow_ancho=ancho;
+			scalled_rainbow_alto=alto;
+		}
+
+		screen_scale_rainbow_43(rainbow_buffer,ancho,alto,scalled_rainbow_buffer);
+
+		//Si reducimos la pantalla, forzamos meter watermark
+
+		int watermark_x;
+		int watermark_y;
+
+		//Misma variable que watermark general
+		screen_get_offsets_watermark_position(screen_watermark_position,((ancho*3)/4),((alto*3)/4),&watermark_x,&watermark_y);
+
+		watermark_x +=screen_reduce_offset_x;
+		watermark_y +=screen_reduce_offset_y;
+
+		
+		screen_put_watermark_generic(scalled_rainbow_buffer,watermark_x,watermark_y,scalled_rainbow_ancho,screen_generic_putpixel_indexcolour);
+
+		//Y decimos que el puntero de dibujado ahora lo pilla de la pantalla escalada
+		return scalled_rainbow_buffer;
+		
+
+
+}
+
+
 //Refresco pantalla con rainbow
 
 
@@ -3223,6 +3322,9 @@ void scr_refresca_pantalla_rainbow_comun(void)
 
 	//Si se reduce la pantalla 0.75
 	if (screen_reduce_075.v) {
+		puntero=screen_scale_075_function(ancho,alto);
+
+/*
 		//int ancho_destino=ancho; // (ancho*3)/4;
 		//int alto_destino=alto; //(alto*3)/4;
 
@@ -3248,7 +3350,7 @@ void scr_refresca_pantalla_rainbow_comun(void)
 
 		if (asignar) {
 			debug_printf(VERBOSE_DEBUG,"Allocating scaled rainbow buffer");
-			scalled_rainbow_buffer=malloc(ancho*alto*2); //*2 por que son valores de 16 bits
+			scalled_rainbow_buffer=malloc(ancho*alto*2); // *2 por que son valores de 16 bits
 			if (scalled_rainbow_buffer==NULL) cpu_panic("Can not allocate scalled rainbow buffer");
 
 			//Llenarlo de cero
@@ -3263,43 +3365,21 @@ void scr_refresca_pantalla_rainbow_comun(void)
 
 		//Si reducimos la pantalla, forzamos meter watermark
 
-		int watermark_x=screen_reduce_offset_x;
-		int watermark_y=screen_reduce_offset_y;
-
-		int rango_extremo=4;
+		int watermark_x;
+		int watermark_y;
 
 		//Misma variable que watermark general
-		switch (screen_watermark_position) {
-			case 0:
-				watermark_x +=rango_extremo;
-				watermark_y +=rango_extremo;
-			break;
+		screen_get_offsets_watermark_position(screen_watermark_position,((ancho*3)/4),((alto*3)/4),&watermark_x,&watermark_y);
 
-			case 1:
-				watermark_x +=((ancho*3)/4)-ZESARUX_ASCII_LOGO_ANCHO-rango_extremo;
-				watermark_y +=rango_extremo;
-			break;
+		watermark_x +=screen_reduce_offset_x;
+		watermark_y +=screen_reduce_offset_y;
 
-			case 2:
-				watermark_x +=rango_extremo;
-				watermark_y +=((alto*3)/4)-ZESARUX_ASCII_LOGO_ALTO-rango_extremo;
-			break;				
-
-			case 3:
-			default:
-				watermark_x +=((ancho*3)/4)-ZESARUX_ASCII_LOGO_ANCHO-rango_extremo;
-				watermark_y +=((alto*3)/4)-ZESARUX_ASCII_LOGO_ALTO-rango_extremo;
-			break;			
-
-		}
-
-		//int watermark_x=screen_reduce_offset_x+((ancho*3)/4)-ZESARUX_ASCII_LOGO_ANCHO-4;
-		//int watermark_y=screen_reduce_offset_y+((alto*3)/4)-ZESARUX_ASCII_LOGO_ALTO-4;
-
+		
 		screen_put_watermark_generic(scalled_rainbow_buffer,watermark_x,watermark_y,scalled_rainbow_ancho,screen_generic_putpixel_indexcolour);
 
 		//Y decimos que el puntero de dibujado ahora lo pilla de la pantalla escalada
 		puntero=scalled_rainbow_buffer;
+		*/
 		
 	}
 	//Fin reduccion pantalla 0.75
