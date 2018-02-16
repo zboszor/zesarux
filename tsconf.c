@@ -110,7 +110,7 @@ char *tsconf_video_sizes_array[]={
   "360x288"
 };
 
-
+z80_bit tsconf_fired_frame_interrupt={0};
 
 //360 pixeles de ancho maximo (720 en modo texto)
 //Le damos mas margen por si acaso
@@ -1241,6 +1241,17 @@ void tsconf_store_scanline_sprites(void)
 		//printf ("\n");
 }
 
+//Retorna los dos bytes de definicion de un tile para una columna x dada (teniendo en cuenta que >=64, resetea a 0)
+void tsconf_tile_return_column_values(z80_byte *start_line,int x,z80_byte *valor1,z80_byte *valor2)
+{
+
+	x=x&63;
+
+	z80_byte *puntero=&start_line[x*2];
+	*valor1=*puntero;
+	puntero++;
+	*valor2=*puntero;
+}
 
 
 void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
@@ -1274,7 +1285,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	puntero_layer=tsconf_ram_mem_table[0]+direccion_tile;
 	puntero_graficos=tsconf_ram_mem_table[0]+direccion_graficos;
 
-	int x,y;
+	
 
 	z80_byte puntero_offset_scroll=0x40+4*layer;
 
@@ -1307,7 +1318,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
   //printf ("scanline: %d tile y: %d\n",scanline_copia,y);
 
 	z80_int *layer_final=layer_tiles;
-	layer_final -=offset_x;
+	//layer_final -=offset_x;
 
 	puntero_layer +=128*layer;
 
@@ -1316,13 +1327,23 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	int desplazamiento_scanline=(scanline_copia & 7)*256;
 	//Cada linea del bitmap ocupa 256 bytes
 
-	for (x=0;x<64;x++) {
-			z80_byte valor1=*puntero_layer;
-			puntero_layer++;
-			z80_byte valor2=*puntero_layer;
-      		puntero_layer++;
+	z80_byte valor1, valor2;
 
-			if (offset_x>-8 && offset_x<tsconf_current_pixel_width) { //Solo dibujarlo si esta en rango visible
+	int total_tiles;
+	int tile_x=offset_x/8;
+
+	for (total_tiles=0;total_tiles<64;total_tiles++,tile_x++) {
+			/*valor1=*puntero_layer;
+			puntero_layer++;
+			valor2=*puntero_layer;
+      		puntero_layer++;*/
+
+			tsconf_tile_return_column_values(puntero_layer,tile_x,&valor1,&valor2);
+			//if (tile_x>=64) printf ("tile_x: %d\n",tile_x);
+
+			//if (offset_x>-8 && offset_x<tsconf_current_pixel_width) { //Solo dibujarlo si esta en rango visible
+
+			//if (offset_x>-8) { //Solo dibujarlo si esta en rango visible
 				
 				z80_int tnum=valor1+256*(valor2&1);
 
@@ -1342,14 +1363,17 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 				tsconf_store_scanline_putsprite(8, 0,0,tpal,sprite_origen,layer_final);
 
-			}
+			//}
 			
 			layer_final+=16;
        
 	   		offset_x+=8;
+			   //if (offset_x>=tsconf_current_pixel_width) offset_x -=tsconf_current_pixel_width;
 
 			
 		}
+
+	//if (offset_x<tsconf_current_pixel_width) printf ("no llegado al final: %d %d\n",offset_x,tsconf_current_pixel_width);
 	
 
 }
