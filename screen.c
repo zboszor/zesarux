@@ -12750,9 +12750,17 @@ void tsconf_handle_raster_interrupts(void)
 
 	//printf ("tsconf raster line mask");
 	z80_byte int_raster_x=(tsconf_af_ports[0x22]);
-	z80_byte int_raster_y=(tsconf_af_ports[0x23]);
+	//Si > 223, desactivado
+	if (int_raster_x>223) return;
 
-	//printf ("tsconf raster set to %d %d\n",int_raster_x,int_raster_y);
+	int int_raster_y=(tsconf_af_ports[0x23])+256*(tsconf_af_ports[0x24]&1);
+
+	
+
+	//Si >319, desactivado
+	if (int_raster_y>319) return;
+
+	printf ("tsconf raster set to %d %d\n",int_raster_x,int_raster_y);
 	//Ver en que posicion de t-estados por linea estamos
 
 	int estados_en_linea=t_estados & screen_testados_linea;
