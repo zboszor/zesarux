@@ -1303,11 +1303,14 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
   //http://forum.tslabs.info/viewtopic.php?f=35&t=157
 
-	//y=scanline_copia/8;
-  	//puntero_layer +=256*y; //Cada linea en mapa de tiles ocupa 256 bytes
+	int y=scanline_copia/8;
+	//Valores mayores que 64, volver al principio
+	y=y&63;
+	
+	puntero_layer +=256*y; //Cada linea en mapa de tiles ocupa 256 bytes
 
 	//Lo de antes es equivalente a:
-	puntero_layer +=32*(scanline_copia & 0xFFF8); //Ignorar los primeros 3 bits, es como dividir entre 8 y multiplicar de nuevo por 8
+	//puntero_layer +=32*(scanline_copia & 0xFFF8); //Ignorar los primeros 3 bits, es como dividir entre 8 y multiplicar de nuevo por 8
 
   /*
   O sea: se almacena en la forma (64 (layer0) + 64 (layer1)) x 64 tile = (128 + 128) x 64 bytes = 16kB = 1 page
@@ -1317,7 +1320,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
   //printf ("scanline: %d tile y: %d\n",scanline_copia,y);
 
-	z80_int *layer_final=layer_tiles;
+	z80_int *layer_final=&layer_tiles[8]; //Empezamos en posicion 8 para tener 8 pixeles de margen por la izquierda
 	//layer_final -=offset_x;
 
 	puntero_layer +=128*layer;
@@ -1331,6 +1334,9 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 	int total_tiles;
 	int tile_x=offset_x/8;
+
+	//Luego a layer final, restarle entre 0 y 7 segun offset
+	layer_final -=(offset_x%8);
 
 	for (total_tiles=0;total_tiles<64;total_tiles++,tile_x++) {
 			/*valor1=*puntero_layer;
@@ -1483,8 +1489,8 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
             	//Sprites encima de tiles y encima de ula
 		layer_one=tsconf_layer_sprites;
-		layer_two=tsconf_layer_tiles_one;
-		layer_three=tsconf_layer_tiles_zero;
+		layer_two=&tsconf_layer_tiles_one[8];     //Empieza en offset 8. Tenemos 8 pixeles de margen a la izquierda que no se ven
+		layer_three=&tsconf_layer_tiles_zero[8]; //Empieza en offset 8. Tenemos 8 pixeles de margen a la izquierda que no se ven
 		layer_four=tsconf_layer_ula;
 
 
