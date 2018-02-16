@@ -1470,6 +1470,9 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 {
 
 	//El dibujado de borde no es real. Tendria que usar un buffer border como en spectrum ,pero de momento ya me vale
+	/*
+	De momento he visto que la demo "fast" cambia los colores del border, aunque no todo el border de golpe, no a cada scanline 
+	*/
 
 	//Zona de borde superior o inferior. Dibujar directamente en buffer rainbow
 	if (t_scanline_draw<tsconf_current_border_height || t_scanline_draw>=tsconf_current_border_height+tsconf_current_pixel_height) {

@@ -330,12 +330,11 @@ void scrstdout_actualiza_tablas_teclado(void){
 	//solo hacerlo 1 vez por segundo
 	//if (stdout_simpletext_automatic_redraw.v && contador_segundo==0) {
 	
-	//hacerlo 50 veces por segundo
-	//if (stdout_simpletext_automatic_redraw.v) {
-	
 	//hacerlo 5 veces por segundo
-	//if (stdout_simpletext_automatic_redraw.v && (contador_segundo%10)==0) {
-	if (stdout_simpletext_automatic_redraw.v && (contador_segundo%200)==0) {
+	//if (stdout_simpletext_automatic_redraw.v && (contador_segundo%200)==0) {
+
+	//10 veces por segundo
+	if (stdout_simpletext_automatic_redraw.v && (contador_segundo%100)==0) {	
 		scrstdout_repinta_pantalla();
 	}
 	
