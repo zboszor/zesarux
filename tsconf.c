@@ -830,16 +830,67 @@ void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit i
 int temp_conta_nogfx;
 
 
+void tsconf_store_scanline_border_supinf(void)
+{
+//printf ("border\n");
+//  tsconf_current_border_width=(360-tsconf_current_pixel_width)/2;
+  //tsconf_current_border_height=(288-tsconf_current_pixel_height)/2;
+
+	int ancho,alto;
+
+        ancho=get_total_ancho_rainbow();
+        alto=get_total_alto_rainbow();
+
+  z80_int *destino;
+  destino=&rainbow_buffer[t_scanline_draw*2*ancho]; //doble pixel en altura
+
+	int color; //TODO. solo pillamos un color por scanline
+
+	color=out_254 & 7;
+
+	color=TSCONF_INDEX_FIRST_COLOR+tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color);
+
+	//color +=240; //Colores de speccy en tsconf empiezan en 240
+
+
+
+//      printf ("Refresco border\n");
+
+        int x,y;
+
+        //parte superior e inferior
+       
+                for (x=0;x<ancho;x++) {
+					*destino=color;       //doble pixel en altura
+					destino[ancho]=color;
+
+					destino++;
+                              
+                }
+      
+
+        //laterales
+        /*for (y=0;y<tsconf_current_pixel_height;y++) {
+                for (x=0;x<tsconf_current_border_width;x++) {
+                        scr_tsconf_putpixel_zoom_border(x,y+tsconf_current_border_height,color);
+                        scr_tsconf_putpixel_zoom_border(x+tsconf_current_border_width+tsconf_current_pixel_width,y+tsconf_current_border_height,color);
+                }
+
+        }*/
+
+}
+
 
 
 
 void tsconf_store_scanline_ula(void) 
 {
 
-    //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
+
+	int scanline_copia=t_scanline_draw;
 
     //linea que se debe leer
-    int scanline_copia=t_scanline_draw-tsconf_current_border_height;
+    scanline_copia -=tsconf_current_border_height;
 
 	//TODO: tener en cuenta zona invisible border
 	if (scanline_copia<0) return;
@@ -1254,15 +1305,19 @@ void tsconf_tile_return_column_values(z80_byte *start_line,int x,z80_byte *valor
 }
 
 
+
+
+
 void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 {
 
- 
+	int scanline_copia=t_scanline_draw;
+
 
    //linea que se debe leer
-    int scanline_copia=t_scanline_draw-tsconf_current_border_height;
+    scanline_copia -= tsconf_current_border_height;
 
-	//TODO: tener en cuenta zona invisible border
+	//TODO: tener en cuenta zona invisible border ??
 	if (scanline_copia<0) return;
   
 	int direccion_graficos=tsconf_af_ports[0x17+layer]>>3;
@@ -1386,10 +1441,15 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 
 
-//Para zona no de border
+//Para zona de border o border
 void screen_store_scanline_rainbow_solo_display_tsconf(void)
 {
 
+
+	if (t_scanline_draw<tsconf_current_border_height || t_scanline_draw>=tsconf_current_border_height+tsconf_current_pixel_height) {
+		tsconf_store_scanline_border_supinf();
+		return;
+	}
 
   //Inicializamos array de capas
   int i;
@@ -1419,6 +1479,23 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 	else if (tsconf_force_disable_layer_ula.v==0) tsconf_store_scanline_ula();
 
 
+//Si estamos en zona de superior o inferior, ni sprites ni tiles
+int spritestiles=1;
+
+
+  //Y las pasamos a buffer rainbow
+        //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
+
+        //linea que se debe leer
+        int scanline_copia=t_scanline_draw-tsconf_current_border_height;
+
+				//TODO: tener en cuenta zona invisible border
+				if (scanline_copia<0) spritestiles=0;
+
+				//Si zona border inferior
+				if (scanline_copia>tsconf_current_pixel_height) spritestiles=0;
+
+  if (spritestiles) {
 
   if (tsconf_si_render_spritetile_rapido.v==0) {
 	  z80_byte tsconfig=tsconf_af_ports[6];
@@ -1440,21 +1517,12 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
 
   }
+  }
 
 
-  //Y las pasamos a buffer rainbow
-        //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
 
-        //linea que se debe leer
-        int scanline_copia=t_scanline_draw-tsconf_current_border_height;
 
-				//TODO: tener en cuenta zona invisible border
-				if (scanline_copia<0) return;
-
-				//Si zona border inferior
-				if (scanline_copia>tsconf_current_pixel_height) return;
-
-				int total_ancho_rainbow=get_total_ancho_rainbow();
+		int total_ancho_rainbow=get_total_ancho_rainbow();
 
 
         //la copiamos a buffer rainbow

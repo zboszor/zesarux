@@ -12760,7 +12760,7 @@ void tsconf_handle_raster_interrupts(void)
 
 
 	//temp. que de momento no hemos corregido los scanlines totales para que sean 320
-	if (int_raster_y>310) int_raster_y=310;
+	//if (int_raster_y>310) int_raster_y=310;
 
 
 	//printf ("tsconf raster set to %d %d\n",int_raster_x,int_raster_y);

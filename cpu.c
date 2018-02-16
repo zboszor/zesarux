@@ -2747,13 +2747,13 @@ void set_machine_params(void)
 
 				 			ula_contend_port_early=ula_contend_port_early_tsconf;
 				 			ula_contend_port_late=ula_contend_port_late_tsconf;
-					                screen_testados_linea=228;
+					        screen_testados_linea=224;
 
 
 							screen_total_borde_izquierdo=0;
 							screen_total_borde_derecho=0;
 
-							screen_invisible_borde_superior	=120; //para que sumen 200 320
+							screen_invisible_borde_superior	=128; //para que sumen 320
 							screen_borde_superior=0;
 							screen_total_borde_inferior=0;
 
