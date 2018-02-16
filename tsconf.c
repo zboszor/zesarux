@@ -129,6 +129,7 @@ z80_bit tsconf_force_disable_layer_ula={0};
 z80_bit tsconf_force_disable_layer_tiles_zero={0};
 z80_bit tsconf_force_disable_layer_tiles_one={0};
 z80_bit tsconf_force_disable_layer_sprites={0};
+z80_bit tsconf_force_disable_layer_border={0};
 
 //Prueba ny17: Todo activado: 71-73 %
 //Sin ula: 66%
@@ -829,20 +830,23 @@ void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit i
 
 int temp_conta_nogfx;
 
-
-void tsconf_store_scanline_border_supinf(void)
+//tipo: 0 arriba, abajo. 1 izquierda derecha
+void tsconf_store_scanline_border_supinf_izqder(int tipo)
 {
 //printf ("border\n");
 //  tsconf_current_border_width=(360-tsconf_current_pixel_width)/2;
   //tsconf_current_border_height=(288-tsconf_current_pixel_height)/2;
 
-	int ancho,alto;
+  //Si no esta esa capa, salir
+  if (tsconf_force_disable_layer_border.v) return;
 
-        ancho=get_total_ancho_rainbow();
+	int ancho_linea,alto;
+
+        ancho_linea=get_total_ancho_rainbow();
         alto=get_total_alto_rainbow();
 
   z80_int *destino;
-  destino=&rainbow_buffer[t_scanline_draw*2*ancho]; //doble pixel en altura
+  destino=&rainbow_buffer[t_scanline_draw*2*ancho_linea]; //doble pixel en altura
 
 	int color; //TODO. solo pillamos un color por scanline
 
@@ -860,14 +864,34 @@ void tsconf_store_scanline_border_supinf(void)
 
         //parte superior e inferior
        
-                for (x=0;x<ancho;x++) {
-					*destino=color;       //doble pixel en altura
-					destino[ancho]=color;
+	   	if (tipo==0) {
+                for (x=0;x<ancho_linea;x++) {
+					*destino=color;       
+					destino[ancho_linea]=color; //doble pixel en altura
 
 					destino++;
                               
                 }
+		}
       
+	  	//laterales
+		
+	  	if (tipo==1) {
+			  	int ancho_border=tsconf_current_border_width*2;
+                for (x=0;x<ancho_border;x++) {
+					
+					//izq
+					*destino=color;       
+					destino[ancho_linea]=color; //doble pixel en altura
+
+					//der
+					destino[ancho_border+tsconf_current_pixel_width*2]=color;  
+					destino[ancho_border+tsconf_current_pixel_width*2+ancho_linea]=color;    //doble pixel en altura   
+
+					destino++;
+                              
+                }
+		}
 
         //laterales
         /*for (y=0;y<tsconf_current_pixel_height;y++) {
@@ -1441,15 +1465,21 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 
 
-//Para zona de border o border
+//Para zona de border o pantalla
 void screen_store_scanline_rainbow_solo_display_tsconf(void)
 {
 
+	//El dibujado de borde no es real. Tendria que usar un buffer border como en spectrum ,pero de momento ya me vale
 
+	//Zona de borde superior o inferior. Dibujar directamente en buffer rainbow
 	if (t_scanline_draw<tsconf_current_border_height || t_scanline_draw>=tsconf_current_border_height+tsconf_current_pixel_height) {
-		tsconf_store_scanline_border_supinf();
+		tsconf_store_scanline_border_supinf_izqder(0);
+		//No hay mas que eso en el scanline. volver
 		return;
 	}
+
+	//Border laterales. Dibujar directamente en buffer rainbow
+	tsconf_store_scanline_border_supinf_izqder(1);
 
   //Inicializamos array de capas
   int i;

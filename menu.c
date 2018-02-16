@@ -28024,6 +28024,12 @@ void menu_tsconf_layer_settings_tiles_one(MENU_ITEM_PARAMETERS)
 	tsconf_force_disable_layer_tiles_one.v ^=1;
 }
 
+void menu_tsconf_layer_settings_border(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_border.v ^=1;
+}
+
+
 void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_tsconf_layer_settings;
@@ -28037,7 +28043,8 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites,NULL,"Sprites: %s",(tsconf_force_disable_layer_sprites.v ? "Disabled" : "Enabled"));
 		menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_zero,NULL,"Tiles zero: %s",(tsconf_force_disable_layer_tiles_zero.v ? "Disabled" : "Enabled"));
 		menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_one,NULL,"Tiles one: %s",(tsconf_force_disable_layer_tiles_one.v ? "Disabled" : "Enabled"));
-		
+		menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_border,NULL,"Border: %s",(tsconf_force_disable_layer_border.v ? "Disabled" : "Enabled"));
+				
 
 
 

@@ -24,7 +24,7 @@ Improved QL emulation:
 Improved file viewer from file utilities: 
 *specific file viewers for these kind of files: .tap, .zx, .zsf, .sp, .z80, .sna, .spg, .p, .o, .mmc/.ide (fat browser, plus3dos browser), .dsk, .trd, .tzx, .cdt, .flash (zxuno flash, z88 flash, superupgrade flash), .epr, .eprom
 *default hexadecimal file viewer for unknown files
-Improved TSConf rendering: now tiles and sprites are drawn per scanline
+Improved TSConf rendering: now tiles and sprites are drawn per scanline. Border drawing
 Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
 Improved menus, a new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
 Improved menu: now character width can be reduced to 7,6 or 5 pixels width
