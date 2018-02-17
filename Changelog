@@ -12,6 +12,8 @@ Added setting to disable persistent writes on IDE and MMC
 Added two more GUI styles: Clean and CleanInverse
 Added second Easter Egg ;)
 Added improved Spectrum 16/48/+ colour palette
+Added setting to add a watermark on the display
+Added setting to reduce display to a factor of 0.75. Used on RunZX event
 Improved joystick support: 
 * added joystick test menu
 * buttons to events and buttons to joystick configuration are saved on configuration file
@@ -24,7 +26,7 @@ Improved QL emulation:
 Improved file viewer from file utilities: 
 *specific file viewers for these kind of files: .tap, .zx, .zsf, .sp, .z80, .sna, .spg, .p, .o, .mmc/.ide (fat browser, plus3dos browser), .dsk, .trd, .tzx, .cdt, .flash (zxuno flash, z88 flash, superupgrade flash), .epr, .eprom
 *default hexadecimal file viewer for unknown files
-Improved TSConf rendering: now tiles and sprites are drawn per scanline. Border drawing
+Improved TSConf rendering: now tiles and sprites are drawn per scanline. Border drawing. Handling of scroll registers
 Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
 Improved menus, a new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
 Improved menu: now character width can be reduced to 7,6 or 5 pixels width
