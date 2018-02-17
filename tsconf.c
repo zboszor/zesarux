@@ -826,7 +826,10 @@ void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit i
 }
 
 
-
+int tsconf_get_current_visible_scanline(void)
+{
+	return t_scanline_draw-screen_invisible_borde_superior;;
+}
 
 int temp_conta_nogfx;
 
@@ -840,13 +843,18 @@ void tsconf_store_scanline_border_supinf_izqder(int tipo)
   //Si no esta esa capa, salir
   if (tsconf_force_disable_layer_border.v) return;
 
+  //Si borde invisible superior
+  int visible_scanline=tsconf_get_current_visible_scanline();
+
+  if (visible_scanline<0) return;
+
 	int ancho_linea,alto;
 
         ancho_linea=get_total_ancho_rainbow();
         alto=get_total_alto_rainbow();
 
   z80_int *destino;
-  destino=&rainbow_buffer[t_scanline_draw*2*ancho_linea]; //doble pixel en altura
+  destino=&rainbow_buffer[visible_scanline*2*ancho_linea]; //doble pixel en altura
 
 	int color; //TODO. solo pillamos un color por scanline
 
@@ -911,12 +919,12 @@ void tsconf_store_scanline_ula(void)
 {
 
 
-	int scanline_copia=t_scanline_draw;
+	int scanline_copia=tsconf_get_current_visible_scanline();
 
     //linea que se debe leer
     scanline_copia -=tsconf_current_border_height;
 
-	//TODO: tener en cuenta zona invisible border
+	//zona borde superior
 	if (scanline_copia<0) return;
 
 	//Si zona border inferior
@@ -1335,7 +1343,7 @@ void tsconf_tile_return_column_values(z80_byte *start_line,int x,z80_byte *valor
 void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 {
 
-	int scanline_copia=t_scanline_draw;
+	int scanline_copia=tsconf_get_current_visible_scanline();
 
 
    //linea que se debe leer
@@ -1469,13 +1477,15 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 void screen_store_scanline_rainbow_solo_display_tsconf(void)
 {
 
+	int linea_render_visible=tsconf_get_current_visible_scanline();
+
 	//El dibujado de borde no es real. Tendria que usar un buffer border como en spectrum ,pero de momento ya me vale
 	/*
 	De momento he visto que la demo "fast" cambia los colores del border, aunque no todo el border de golpe, no a cada scanline 
 	*/
 
 	//Zona de borde superior o inferior. Dibujar directamente en buffer rainbow
-	if (t_scanline_draw<tsconf_current_border_height || t_scanline_draw>=tsconf_current_border_height+tsconf_current_pixel_height) {
+	if (linea_render_visible<tsconf_current_border_height || linea_render_visible>=tsconf_current_border_height+tsconf_current_pixel_height) {
 		tsconf_store_scanline_border_supinf_izqder(0);
 		//No hay mas que eso en el scanline. volver
 		return;
@@ -1520,9 +1530,9 @@ int spritestiles=1;
         //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
 
         //linea que se debe leer
-        int scanline_copia=t_scanline_draw-tsconf_current_border_height;
+        int scanline_copia=linea_render_visible-tsconf_current_border_height;
 
-				//TODO: tener en cuenta zona invisible border
+				//borde superior
 				if (scanline_copia<0) spritestiles=0;
 
 				//Si zona border inferior

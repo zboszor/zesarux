@@ -2750,12 +2750,23 @@ void set_machine_params(void)
 					        screen_testados_linea=224;
 
 
-							screen_total_borde_izquierdo=0;
-							screen_total_borde_derecho=0;
+							//screen_total_borde_izquierdo=0;
+							//screen_total_borde_derecho=0;
 
-							screen_invisible_borde_superior	=128; //para que sumen 320
-							screen_borde_superior=0;
-							screen_total_borde_inferior=0;
+							screen_invisible_borde_superior	=16; //para que sumen 320
+							screen_borde_superior=64;
+							screen_total_borde_inferior=48;
+
+
+                        //los timings son realmente estos pero entonces necesitariamos mas tamanyo de ventana de ancho
+                        /*screen_total_borde_izquierdo=64;
+                        screen_total_borde_derecho=64;
+                        screen_invisible_borde_derecho=64;*/
+
+                        //dejamos estos que es el tamanyo normal
+                        screen_total_borde_izquierdo=48;
+                        screen_total_borde_derecho=48;
+                        screen_invisible_borde_derecho=96;							
 
 							//screen_invisible_borde_derecho=??;
 		
