@@ -638,7 +638,8 @@ void recalcular_get_total_ancho_rainbow(void)
         }
 
 	else if (MACHINE_IS_TSCONF) {
-		get_total_ancho_rainbow_cached=(screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+TSCONF_DISPLAY_WIDTH;
+		//get_total_ancho_rainbow_cached=(screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+TSCONF_DISPLAY_WIDTH;
+		get_total_ancho_rainbow_cached=TSCONF_DISPLAY_WIDTH;
 	}
 
 	else if (MACHINE_IS_SAM) {
@@ -678,7 +679,8 @@ void recalcular_get_total_alto_rainbow(void)
         }
 
 	else if (MACHINE_IS_TSCONF) {
-		get_total_alto_rainbow_cached=(screen_borde_superior+screen_total_borde_inferior)*border_enabled.v+TSCONF_DISPLAY_HEIGHT;
+		//get_total_alto_rainbow_cached=(screen_borde_superior+screen_total_borde_inferior)*border_enabled.v+TSCONF_DISPLAY_HEIGHT;
+		get_total_alto_rainbow_cached=TSCONF_DISPLAY_HEIGHT;
 	}
 
         else if (MACHINE_IS_SAM) {
@@ -10065,7 +10067,7 @@ int screen_get_emulated_display_width_no_zoom(void)
 	}
 
 	else if (MACHINE_IS_TSCONF) {
-        return TSCONF_DISPLAY_WIDTH+TSCONF_LEFT_BORDER_NO_ZOOM*2;
+        return TSCONF_DISPLAY_WIDTH;
 	}
 
         else if (MACHINE_IS_SAM) {
@@ -10098,7 +10100,7 @@ int screen_get_emulated_display_height_no_zoom(void)
 	}
 
 	else if (MACHINE_IS_TSCONF) {
-        return TSCONF_DISPLAY_HEIGHT+TSCONF_TOP_BORDER_NO_ZOOM*2;
+        return TSCONF_DISPLAY_HEIGHT;
 	}
 
         else if (MACHINE_IS_SAM) {
@@ -10136,7 +10138,7 @@ int screen_get_emulated_display_width_no_zoom_border_en(void)
 	}
 
 	else if (MACHINE_IS_TSCONF) {
-	return TSCONF_DISPLAY_WIDTH+(TSCONF_LEFT_BORDER_NO_ZOOM*2)*border_enabled.v;
+	return TSCONF_DISPLAY_WIDTH;
 	}
 
         else if (MACHINE_IS_SAM) {
@@ -10171,7 +10173,7 @@ int screen_get_emulated_display_height_no_zoom_bottomborder_en(void)
         }
 
 	else if (MACHINE_IS_TSCONF) {
-        return TSCONF_DISPLAY_HEIGHT+(TSCONF_TOP_BORDER_NO_ZOOM)*border_enabled.v;
+        return TSCONF_DISPLAY_HEIGHT;
         }
 
         else if (MACHINE_IS_SAM) {
@@ -10208,7 +10210,7 @@ int screen_get_emulated_display_height_no_zoom_border_en(void)
 	}
 
 	else if (MACHINE_IS_TSCONF) {
-	return TSCONF_DISPLAY_HEIGHT+(TSCONF_TOP_BORDER_NO_ZOOM*2)*border_enabled.v;
+	return TSCONF_DISPLAY_HEIGHT;
 	}
 
         else if (MACHINE_IS_SAM) {
