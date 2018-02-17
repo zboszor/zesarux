@@ -12767,7 +12767,7 @@ void tsconf_fire_line_interrupt(void)
                                                         reg_pc=value_8_to_16(dir_h,dir_l);
                                                         t_estados += 7;
 
-	printf ("Saltamos a %04XH\n",reg_pc);
+	printf ("Calling interrupt line handler at %04XH\n",reg_pc);
 
 }
 
@@ -12804,14 +12804,14 @@ void tsconf_handle_raster_interrupts(void)
 
 	//primero comparar scanline
 	if (t_scanline==int_raster_y) {
-		printf ("t: %d ",t_estados);
+		//printf ("t: %d ",t_estados);
 		//printf ("disparada raster y: %d\n",int_raster_y);
 		//Y ahora ver si nos "hemos" pasado de la posicion estados_en_linea anterior
 		if (estados_en_linea>=int_raster_x && estados_en_linea>=tsconf_handle_raster_interrupts_prev_horiz) {
 			//Generar interrupcion
 			tsconf_fire_line_interrupt();
-			printf ("disparada raster y: %d x: %d\n",int_raster_y,int_raster_x);
-			printf ("Reg VSINTH: %d\n",tsconf_af_ports[0x24]);
+			printf ("Fired line interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d\n",int_raster_y,int_raster_x,t_scanline,estados_en_linea);
+			//printf ("Reg VSINTH: %d\n",tsconf_af_ports[0x24]);
 
 			//tsconf_fired_frame_interrupt.v=1; //Est
 
