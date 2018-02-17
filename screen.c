@@ -12737,6 +12737,38 @@ z80_byte get_zxuno_tbblue_rasterline(void)
 	else return tbblue_registers[35];
 }
 
+void tsconf_fire_line_interrupt(void)
+{
+							
+						
+						z80_byte reg_pc_h,reg_pc_l;
+                                                reg_pc_h=value_16_to_8h(reg_pc);
+                                                reg_pc_l=value_16_to_8l(reg_pc);
+
+                                                poke_byte(--reg_sp,reg_pc_h);
+                                                poke_byte(--reg_sp,reg_pc_l);
+
+						reg_r++;
+
+						
+
+
+						//desactivar interrupciones al generar una
+						iff1.v=0;
+						
+
+						        z80_int temp_i;
+                                                        z80_byte dir_l,dir_h;
+                                                        temp_i=reg_i*256+253;  //interrupciones de linea el vector es XXFD
+                                                         dir_l=peek_byte(temp_i++);
+                                                        dir_h=peek_byte(temp_i);
+                                                        reg_pc=value_8_to_16(dir_h,dir_l);
+                                                        t_estados += 7;
+
+	printf ("Saltamos a %04XH\n",reg_pc);
+
+}
+
 int tsconf_handle_raster_interrupts_prev_horiz=0;
 
 void tsconf_handle_raster_interrupts(void)
@@ -12775,11 +12807,11 @@ void tsconf_handle_raster_interrupts(void)
 		//Y ahora ver si nos "hemos" pasado de la posicion estados_en_linea anterior
 		if (estados_en_linea>=int_raster_x && estados_en_linea>=tsconf_handle_raster_interrupts_prev_horiz) {
 			//Generar interrupcion
-			interrupcion_maskable_generada.v=1;
+			tsconf_fire_line_interrupt();
 			printf ("disparada raster y: %d x: %d\n",int_raster_y,int_raster_x);
 			printf ("Reg VSINTH: %d\n",tsconf_af_ports[0x24]);
 
-			tsconf_fired_frame_interrupt.v=1;
+			//tsconf_fired_frame_interrupt.v=1; //Est
 
 			//Hay que resetear ese bit???
 			//tsconf_af_ports[0x2a] &=(255-2);

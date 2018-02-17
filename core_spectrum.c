@@ -489,12 +489,7 @@ void cpu_core_loop_spectrum(void)
                         	                }
                                 	}
 
-				 	//En zxuno, ver registro Int enable mask
-					 if (MACHINE_IS_TSCONF && (tsconf_af_ports[0x2A]&1)==0 && tsconf_fired_frame_interrupt.v) {
-						 //TODO: si se habia disparado una interrupcion de line, no poner a 0 esto
-						 printf ("Frame interrupts disabled on tsconf\n");
-						 interrupcion_maskable_generada.v=0;
-					 }
+				 	
 
 
 				}
@@ -572,7 +567,7 @@ void cpu_core_loop_spectrum(void)
 
 			//printf ("Generada interrupcion Z80\n");
 
-			tsconf_fired_frame_interrupt.v=0;
+			
 
 			//if (interrupcion_non_maskable_generada.v) printf ("generada nmi\n");
 

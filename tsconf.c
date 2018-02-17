@@ -110,7 +110,7 @@ char *tsconf_video_sizes_array[]={
   "360x288"
 };
 
-z80_bit tsconf_fired_frame_interrupt={0};
+//z80_bit tsconf_fired_frame_interrupt={0};
 
 //360 pixeles de ancho maximo (720 en modo texto)
 //Le damos mas margen por si acaso

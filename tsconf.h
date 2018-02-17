@@ -93,6 +93,6 @@ extern z80_bit tsconf_force_disable_layer_tiles_one;
 extern z80_bit tsconf_force_disable_layer_sprites;
 extern z80_bit tsconf_force_disable_layer_border;
 
-extern z80_bit tsconf_fired_frame_interrupt;
+//extern z80_bit tsconf_fired_frame_interrupt;
 
 #endif
