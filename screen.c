@@ -12776,7 +12776,7 @@ void tsconf_fire_line_interrupt(void)
                                                         dir_h=peek_byte(temp_i);
                                                         z80_int debug_im2=value_8_to_16(dir_h,dir_l);
                                                         
-	printf ("(IM2 handler is at %04XH\n",debug_im2);
+	printf ("(IM2 handler is at %04XH)\n",debug_im2);
 
 }
 
