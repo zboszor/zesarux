@@ -12769,6 +12769,15 @@ void tsconf_fire_line_interrupt(void)
 
 	printf ("Calling interrupt line handler at %04XH\n",reg_pc);
 
+	//Solo sacar el handler para im2 a modo de debug
+	
+                                                        temp_i=reg_i*256+255;  
+                                                         dir_l=peek_byte(temp_i++);
+                                                        dir_h=peek_byte(temp_i);
+                                                        z80_int debug_im2=value_8_to_16(dir_h,dir_l);
+                                                        
+	printf ("(IM2 handler is at %04XH\n",debug_im2);
+
 }
 
 int tsconf_handle_raster_interrupts_prev_horiz=0;
