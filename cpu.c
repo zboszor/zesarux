@@ -2744,41 +2744,34 @@ void set_machine_params(void)
 											 }
 
 						else if (MACHINE_IS_TSCONF) {
-									                         contend_read=contend_read_tsconf;
-							                         contend_read_no_mreq=contend_read_no_mreq_tsconf;
-					                         contend_write_no_mreq=contend_write_no_mreq_tsconf;
+							contend_read=contend_read_tsconf;
+							contend_read_no_mreq=contend_read_no_mreq_tsconf;
+					        contend_write_no_mreq=contend_write_no_mreq_tsconf;
 
 				 			ula_contend_port_early=ula_contend_port_early_tsconf;
 				 			ula_contend_port_late=ula_contend_port_late_tsconf;
 					        screen_testados_linea=224;
 
 
-							//screen_total_borde_izquierdo=0;
-							//screen_total_borde_derecho=0;
-
+		
 							screen_invisible_borde_superior	=16; //para que sumen 320
 							screen_borde_superior=64;
 							screen_total_borde_inferior=48;
 
 
-                        //los timings son realmente estos pero entonces necesitariamos mas tamanyo de ventana de ancho
-                        /*screen_total_borde_izquierdo=64;
-                        screen_total_borde_derecho=64;
-                        screen_invisible_borde_derecho=64;*/
+                        	//los timings son realmente estos :
+                        	screen_total_borde_izquierdo=64;
+                        	screen_total_borde_derecho=64;
+                        	screen_invisible_borde_derecho=64;
 
-                        //dejamos estos que es el tamanyo normal
-                        screen_total_borde_izquierdo=48;
-                        screen_total_borde_derecho=48;
-                        screen_invisible_borde_derecho=96;							
+                        	//estos son los falseados para pentagon para no tener que hacer un tamaño de pantalla mayor
+                        	/*
+							screen_total_borde_izquierdo=48;
+                        	screen_total_borde_derecho=48;
+                        	screen_invisible_borde_derecho=96;
+							*/
 
-							//screen_invisible_borde_derecho=??;
-		
-
-				                 	//screen_invisible_borde_derecho=104;
-								//Puede haber border de tamaño 0
-							//screen_invisible_borde_superior=0;
-					//screen_borde_superior=0;
-				//screen_total_borde_inferior=0;
+							
 				}
 
                else if (MACHINE_IS_TIMEX_TS2068) {
