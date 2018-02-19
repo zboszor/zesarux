@@ -4870,7 +4870,7 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--tempdir")) {
                                 siguiente_parametro_argumento();
-                                sprintf(emulator_tmpdir,"%s/",argv[puntero_parametro]);
+                                sprintf(emulator_tmpdir_set_by_user,"%s/",argv[puntero_parametro]);
                         }
 
 			else if (!strcmp(argv[puntero_parametro],"--loadbinary")) {

@@ -611,6 +611,6 @@ extern int util_compress_data_repetitions(z80_byte *origen,z80_byte *destino,int
 
 extern int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,int longitud,z80_byte magic_byte);
 
-extern char emulator_tmpdir[];
+extern char emulator_tmpdir_set_by_user[];
 
 #endif

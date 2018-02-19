@@ -3098,9 +3098,9 @@ int util_write_configfile(void)
   }
 
 
-  if (emulator_tmpdir[0]!=0) {
+  if (emulator_tmpdir_set_by_user[0]!=0) {
 	//Quitar barra del final si la hay
-	util_copy_path_delete_last_slash(emulator_tmpdir,buffer_temp);
+	util_copy_path_delete_last_slash(emulator_tmpdir_set_by_user,buffer_temp);
  		      ADD_STRING_CONFIG,"--tempdir \"%s\"",buffer_temp);
   }
 
@@ -6617,13 +6617,22 @@ long long int parse_string_to_long_number(char *texto)
 
 }*/
 
+
+//carpeta temporal usada por el emulador
 char emulator_tmpdir[PATH_MAX]="";
+
+//carpeta temporal que ha especificado el usuario
+char emulator_tmpdir_set_by_user[PATH_MAX]="";
 
 //Retorna directorio temporal para el usuario y lo crea
 //Formato: /tmp/zesarux-<uid>
 //donde <uid> es el uid del usuario
 char *get_tmpdir_base(void)
 {
+
+	//Si lo ha cambiado el usuario
+	if (emulator_tmpdir_set_by_user[0]!=0) strcpy(emulator_tmpdir,emulator_tmpdir_set_by_user);
+
 
 	if (emulator_tmpdir[0]==0) {
 
