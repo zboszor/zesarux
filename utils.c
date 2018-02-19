@@ -3090,6 +3090,9 @@ int util_write_configfile(void)
   }
 
 
+  if (emulator_tmpdir[0]!=0) 		      ADD_STRING_CONFIG,"--tempdir \"%s\"",emulator_tmpdir);
+
+
   //TODO loadbinary
   if (texto_artistico.v==0)                   ADD_STRING_CONFIG,"--disablearttext");
                                               ADD_STRING_CONFIG,"--arttextthresold %d",umbral_arttext);
@@ -6607,8 +6610,6 @@ char emulator_tmpdir[PATH_MAX]="";
 //Retorna directorio temporal para el usuario y lo crea
 //Formato: /tmp/zesarux-<uid>
 //donde <uid> es el uid del usuario
-//nota: siempre esta llenando char emulator_tmpdir, cada vez
-//nota2: siempre crea la carpeta, exista ya o no
 char *get_tmpdir_base(void)
 {
 

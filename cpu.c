@@ -1222,6 +1222,7 @@ printf (
 		"--autoloadsnap             Load last snapshot on start\n"
 		"--autosavesnap             Save snapshot on exit\n"
 		"--autosnappath path        Folder to save/load automatic snapshots\n"
+		"--tempdir path             Folder to save temporary files\n"
 
 		"\n"
 		"\n"
@@ -4864,6 +4865,12 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--autosnappath")) {
                                 siguiente_parametro_argumento();
                                 sprintf(autosave_snapshot_path_buffer,"%s/",argv[puntero_parametro]);
+                        }
+
+
+			else if (!strcmp(argv[puntero_parametro],"--tempdir")) {
+                                siguiente_parametro_argumento();
+                                sprintf(emulator_tmpdir,"%s/",argv[puntero_parametro]);
                         }
 
 			else if (!strcmp(argv[puntero_parametro],"--loadbinary")) {
