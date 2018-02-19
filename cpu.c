@@ -1222,7 +1222,7 @@ printf (
 		"--autoloadsnap             Load last snapshot on start\n"
 		"--autosavesnap             Save snapshot on exit\n"
 		"--autosnappath path        Folder to save/load automatic snapshots\n"
-		"--tempdir path             Folder to save temporary files\n"
+		"--tempdir path             Folder to save temporary files. Folder must exist and have read and writable permission\n"
 
 		"\n"
 		"\n"
