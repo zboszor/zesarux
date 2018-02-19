@@ -1415,6 +1415,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
     
 	//En que scanline esta 0...7
 	int desplazamiento_scanline=(scanline_copia & 7)*256;
+
 	//Cada linea del bitmap ocupa 256 bytes
 
 	z80_byte valor1, valor2;
@@ -1426,18 +1427,10 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	layer_final -=(offset_x%8);
 
 	for (total_tiles=0;total_tiles<64;total_tiles++,tile_x++) {
-			/*valor1=*puntero_layer;
-			puntero_layer++;
-			valor2=*puntero_layer;
-      		puntero_layer++;*/
+			
 
 			tsconf_tile_return_column_values(puntero_layer,tile_x,&valor1,&valor2);
-			//if (tile_x>=64) printf ("tile_x: %d\n",tile_x);
-
-			//if (offset_x>-8 && offset_x<tsconf_current_pixel_width) { //Solo dibujarlo si esta en rango visible
-
-			//if (offset_x>-8) { //Solo dibujarlo si esta en rango visible
-				
+						
 				z80_int tnum=valor1+256*(valor2&1);
 
 				z80_byte tpal=(valor2>>4)&3;
@@ -1456,17 +1449,14 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 				tsconf_store_scanline_putsprite(8, 0,0,tpal,sprite_origen,layer_final);
 
-			//}
-			
-			layer_final+=16;
+					
+				layer_final+=16;
        
-	   		offset_x+=8;
-			   //if (offset_x>=tsconf_current_pixel_width) offset_x -=tsconf_current_pixel_width;
+	   			offset_x+=8;
 
 			
-		}
+	}
 
-	//if (offset_x<tsconf_current_pixel_width) printf ("no llegado al final: %d %d\n",offset_x,tsconf_current_pixel_width);
 	
 
 }
