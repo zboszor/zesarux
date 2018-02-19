@@ -2970,6 +2970,14 @@ void util_write_config_aux_realjoystick(int button_type, int button, char *texto
   		}
 }
 
+void util_copy_path_delete_last_slash(char *origen, char *destino)
+{
+    //Quitar barra del final si la hay
+    strcpy(destino,origen);
+    int i=strlen(destino);
+    if (i>1 && destino[i-1]=='/') destino[i-1]=0;
+}
+
 
 //1 si ok
 //0 si error
@@ -3090,7 +3098,11 @@ int util_write_configfile(void)
   }
 
 
-  if (emulator_tmpdir[0]!=0) 		      ADD_STRING_CONFIG,"--tempdir \"%s\"",emulator_tmpdir);
+  if (emulator_tmpdir[0]!=0) {
+	//Quitar barra del final si la hay
+	util_copy_path_delete_last_slash(emulator_tmpdir,buffer_temp);
+ 		      ADD_STRING_CONFIG,"--tempdir \"%s\"",buffer_temp);
+  }
 
 
   //TODO loadbinary
