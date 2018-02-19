@@ -3111,6 +3111,10 @@ int util_write_configfile(void)
   if (chardetect_printchar_enabled.v)         ADD_STRING_CONFIG,"--enableprintchartrap");
   if (stdout_simpletext_automatic_redraw.v)   ADD_STRING_CONFIG,"--autoredrawstdout");
   if (screen_text_accept_ansi)                ADD_STRING_CONFIG,"--sendansi");
+
+                                              ADD_STRING_CONFIG,"--textfps %d",50/scrstdout_simpletext_refresh_factor);
+
+
   if (chardetect_line_width!=32)              ADD_STRING_CONFIG,"--linewidth %d",chardetect_line_width);
   if (chardetect_detect_char_enabled.v && trap_char_detection_routine_number==TRAP_CHAR_DETECTION_ROUTINE_AUTOMATIC)
                                               ADD_STRING_CONFIG,"--automaticdetectchar");

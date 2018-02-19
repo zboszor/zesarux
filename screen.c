@@ -160,7 +160,21 @@ int putpixel_max_y=-1;
 int putpixel_min_y=99999;
 
 
+//Parametro de refresco para drivers stdout y simpletext
+//Si vale 1, refresca a cada frame (50 fps)
+//Si vale 2, refresca cada dos frames (25 fps)
+//Si vale 3, refresca cada tres frames (16 fps)
+//Si vale 4, refresca cada cuatro frames (12.5 fps)
+//Si vale 5, refresca cada cinco frames (10 fps)
+//Si vale 10, 5 fps
+//Si vale 25, 2 fps
+//Si vale 50, 1 fps
 
+//De fps a esta variable: variable=50/fps -> siempre que fps no sea cero
+
+//Valores seleccionables: 50, 25, 10, 5, 2,1
+// -> 1,2,5,10,25,1
+int scrstdout_simpletext_refresh_factor=5;
 
 
 total_palette_colours total_palette_colours_array[TOTAL_PALETAS_COLORES]={
@@ -13208,3 +13222,15 @@ void scr_refresca_pantalla_tsconf_text(void (*fun_color) (z80_byte color,int *br
 
 
 }
+
+
+void scr_set_fps_stdout_simpletext(int fps)
+{
+	if (fps<1 || fps>50) {
+		debug_printf(VERBOSE_ERR,"Invalid value");
+		return;
+	}
+	scrstdout_simpletext_refresh_factor=50/fps;
+
+}
+

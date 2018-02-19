@@ -710,4 +710,8 @@ extern int screen_watermark_position;
 
 extern z80_bit screen_watermark_enabled;
 
+extern int scrstdout_simpletext_refresh_factor;
+
+extern void scr_set_fps_stdout_simpletext(int fps);
+
 #endif

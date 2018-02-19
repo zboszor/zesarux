@@ -322,6 +322,8 @@ int scrstdout_getch()
  */
 
 
+
+
 void scrstdout_actualiza_tablas_teclado(void){
 	
 	
@@ -334,7 +336,8 @@ void scrstdout_actualiza_tablas_teclado(void){
 	//if (stdout_simpletext_automatic_redraw.v && (contador_segundo%200)==0) {
 
 	//10 veces por segundo
-	if (stdout_simpletext_automatic_redraw.v && (contador_segundo%100)==0) {	
+	//if (stdout_simpletext_automatic_redraw.v && (contador_segundo%100)==0) {	
+	if (stdout_simpletext_automatic_redraw.v && (contador_segundo%(20*scrstdout_simpletext_refresh_factor))==0) {
 		scrstdout_repinta_pantalla();
 	}
 	

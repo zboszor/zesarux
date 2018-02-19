@@ -184,7 +184,8 @@ z80_byte scrsimpletext_lee_puerto(z80_byte puerto_h,z80_byte puerto_l){
 void scrsimpletext_actualiza_tablas_teclado(void){
 	
 	
-	if (stdout_simpletext_automatic_redraw.v && (contador_segundo%200)==0) {
+	//if (stdout_simpletext_automatic_redraw.v && (contador_segundo%200)==0) {
+	if (stdout_simpletext_automatic_redraw.v && (contador_segundo%(20*scrstdout_simpletext_refresh_factor))==0) {
 		scrsimpletext_repinta_pantalla();
 	}
 	

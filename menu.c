@@ -683,6 +683,7 @@ int plusthreedisk_opcion_seleccionada=0;
 int tsconf_layer_settings_opcion_seleccionada=0;
 int window_settings_opcion_seleccionada=0;
 int osd_settings_opcion_seleccionada=0;
+int textdrivers_settings_opcion_seleccionada=0;
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
 z80_bit menu_splash_text_active;
@@ -5444,6 +5445,41 @@ int menu_cond_simpletext(void)
         return 0;
 }
 
+int menu_display_curses_cond(void)
+{
+	if (!strcmp(scr_driver_name,"curses")) return 1;
+
+	else return 0;
+}
+
+int menu_display_aa_cond(void)
+{
+        if (!strcmp(scr_driver_name,"aa")) return 1;
+
+        else return 0;
+}
+
+int menu_display_cursesstdout_cond(void)
+{
+	if (menu_display_curses_cond() ) return 1;
+	if (menu_cond_stdout() ) return 1;
+
+	return 0;
+}
+
+int menu_cond_stdout_simpletext(void)
+{
+	if (menu_cond_stdout() || menu_cond_simpletext() ) return 1;
+	return 0;
+}
+
+int menu_display_cursesstdoutsimpletext_cond(void)
+{
+	if (menu_display_cursesstdout_cond() ) return 1;
+	if (menu_cond_simpletext() ) return 1;
+
+	return 0;
+}
 
 /*
 int menu_cond_no_stdout(void)
@@ -24098,12 +24134,6 @@ void menu_display_arttext(MENU_ITEM_PARAMETERS)
 	texto_artistico.v ^=1;
 }
 
-int menu_display_cursesstdout_cond(void)
-{
-	if (!strcmp(scr_driver_name,"curses")) return 1;
-	if (!strcmp(scr_driver_name,"stdout")) return 1;
-	return 0;
-}
 
 
 #ifdef COMPILE_AA
@@ -24116,19 +24146,6 @@ void menu_display_slowaa(MENU_ITEM_PARAMETERS){}
 #endif
 
 
-int menu_display_curses_cond(void)
-{
-	if (!strcmp(scr_driver_name,"curses")) return 1;
-
-	else return 0;
-}
-
-int menu_display_aa_cond(void)
-{
-        if (!strcmp(scr_driver_name,"aa")) return 1;
-
-        else return 0;
-}
 
 
 
@@ -24917,325 +24934,7 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 
 				);
 
-    /*            char string_vofile_shown[10];
-                menu_tape_settings_trunc_name(vofilename,string_vofile_shown,10);
-
-
-	                menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_vofile,NULL,"Video out to file: %s",string_vofile_shown);
-        	        menu_add_item_menu_tooltip(array_menu_display_settings,"Saves the video output to a file");
-                	menu_add_item_menu_ayuda(array_menu_display_settings,"The generated file have raw format. You can see the file parameters "
-					"on the console enabling verbose debug level to 2 minimum.\n"
-					"Note: Gigascreen, Interlaced effects or menu windows are not saved to file."
-
-					);
-
-			if (menu_vofile_cond() ) {
-				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_vofile_fps,menu_vofile_cond,"FPS Video file: %d",50/vofile_fps);
-	        	        menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_vofile_insert,menu_vofile_cond,"Video file inserted: %s",(vofile_inserted.v ? "Yes" : "No" ));
-			}
-
-			else {
-
-                	  menu_add_item_menu(array_menu_display_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-			}
-
-
-
-                if (!MACHINE_IS_Z88) {
-
-
-                        menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_autodetect_rainbow,NULL,"Autodetect Real Video: %s",(autodetect_rainbow.v==1 ? "On" : "Off"));
-                        menu_add_item_menu_tooltip(array_menu_display_settings,"Autodetect the need to enable Real Video");
-                        menu_add_item_menu_ayuda(array_menu_display_settings,"This option detects whenever is needed to enable Real Video. "
-                                        "On Spectrum, it detects the reading of idle bus or repeated border changes. "
-                                        "On ZX80/81, it detects the I register on a non-normal value when executing video display. "
-					"On all machines, it also detects when loading a real tape. "
-                                        );
-                }
-
-
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_rainbow,menu_display_rainbow_cond,"~~Real Video: %s",(rainbow_enabled.v==1 ? "On" : "Off"));
-			menu_add_item_menu_shortcut(array_menu_display_settings,'r');
-
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Enable Real Video. Enabling it makes display as a real machine");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Real Video makes display works as in the real machine. It uses a bit more CPU than disabling it.\n\n"
-					"On Spectrum, display is drawn every scanline. "
-					"It enables hi-res colour (rainbow) on the screen and on the border, Gigascreen, Interlaced, ULAplus, Spectra, Timex Video, snow effect, idle bus reading and some other advanced features. "
-					"Also enables all the Inves effects.\n"
-					"Disabling it, the screen is drawn once per frame (1/50) and the previous effects "
-					"are not supported.\n\n"
-					"On ZX80/ZX81, enables hi-res display and loading/saving stripes on the screen, and the screen is drawn every scanline.\n"
-					"By disabling it, the screen is drawn once per frame, no hi-res display, and only text mode is supported.\n\n"
-					"On Z88, display is drawn the same way as disabling it; it is only used when enabling Video out to file.\n\n"
-					"Real Video can be enabled on all the video drivers, but on curses, stdout and simpletext (in Spectrum and Z88 machines), the display drawn is the same "
-					"as on non-Real Video, but you can have idle bus support on these drivers. "
-					"Curses, stdout and simpletext drivers on ZX80/81 machines do have Real Video display."
-					);
-
-
-		if (MACHINE_IS_CPC) {
-				if (cpc_forzar_modo_video.v==0)
-					menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_cpc_force_mode,NULL,"Force Video Mode: No");
-				else
-					menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_cpc_force_mode,NULL,"Force Video Mode: %d",
-						cpc_forzar_modo_video_modo);
-		}
-
-
-		if (!MACHINE_IS_Z88) {
-
-
-			if (menu_cond_realvideo() ) {
-				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_interlace,menu_cond_realvideo,"~~Interlaced mode: %s", (video_interlaced_mode.v==1 ? "On" : "Off"));
-				menu_add_item_menu_shortcut(array_menu_display_settings,'i');
-				menu_add_item_menu_tooltip(array_menu_display_settings,"Enable interlaced mode");
-				menu_add_item_menu_ayuda(array_menu_display_settings,"Interlaced mode draws the screen like the machine on a real TV: "
-					"Every odd frame, odd lines on TV are drawn; every even frame, even lines on TV are drawn. It can be used "
-					"to emulate twice the vertical resolution of the machine (384) or simulate different colours. "
-					"This effect is only emulated with vertical zoom multiple of two: 2,4,6... etc");
-
-
-				if (video_interlaced_mode.v) {
-					menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_interlace_scanlines,NULL,"S~~canlines: %s", (video_interlaced_scanlines.v==1 ? "On" : "Off"));
-					menu_add_item_menu_shortcut(array_menu_display_settings,'c');
-					menu_add_item_menu_tooltip(array_menu_display_settings,"Enable scanlines on interlaced mode");
-					menu_add_item_menu_ayuda(array_menu_display_settings,"Scanlines draws odd lines a bit darker than even lines");
-				}
-
-
-				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_gigascreen,NULL,"~~Gigascreen: %s",(gigascreen_enabled.v==1 ? "On" : "Off"));
-				menu_add_item_menu_shortcut(array_menu_display_settings,'g');
-				menu_add_item_menu_tooltip(array_menu_display_settings,"Enable gigascreen colours");
-				menu_add_item_menu_ayuda(array_menu_display_settings,"Gigascreen enables more than 15 colours by combining pixels "
-							"of even and odd frames. The total number of different colours is 102");
-
-
-
-
-				if (menu_cond_spectrum()) {
-					menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_snow_effect,NULL,"Snow effect support: %s", (snow_effect_enabled.v==1 ? "On" : "Off"));
-					menu_add_item_menu_tooltip(array_menu_display_settings,"Enable snow effect on Spectrum");
-					menu_add_item_menu_ayuda(array_menu_display_settings,"Snow effect is a bug on some Spectrum models "
-						"(models except +2A and +3) that draws corrupted pixels when I register is pointed to "
-						"slow RAM.");
-						// Even on 48k models it resets the machine after some seconds drawing corrupted pixels");
-
-					if (snow_effect_enabled.v==1) {
-						menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_snow_effect_margin,NULL,"Snow effect threshold: %d",snow_effect_min_value);
-					}
-				}
-
-
-				if (MACHINE_IS_INVES) {
-					menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_inves_ula_bright_error,NULL,"Inves bright error: %s",(inves_ula_bright_error.v ? "yes" : "no"));
-					menu_add_item_menu_tooltip(array_menu_display_settings,"Emulate Inves oddity when black colour and change from bright 0 to bright 1");
-					menu_add_item_menu_ayuda(array_menu_display_settings,"Emulate Inves oddity when black colour and change from bright 0 to bright 1");
-
-				}
-
-
-
-			}
-		}
-
-		//para stdout
-#ifdef COMPILE_STDOUT
-		if (menu_cond_stdout() ) {
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_automatic_redraw,NULL,"Stdout automatic redraw: %s", (stdout_simpletext_automatic_redraw.v==1 ? "On" : "Off"));
-			menu_add_item_menu_tooltip(array_menu_display_settings,"It enables automatic display redraw");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"It enables automatic display redraw");
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_send_ansi,NULL,"Send ANSI Control Sequence: %s",(screen_text_accept_ansi==1 ? "On" : "Off"));
-
-		}
-
-#endif
-
-
-
-		if (menu_cond_zx8081_realvideo()) {
-
-		//z80_bit video_zx8081_estabilizador_imagen;
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_estabilizador_imagen,menu_cond_zx8081_realvideo,"Horizontal stabilization: %s", (video_zx8081_estabilizador_imagen.v==1 ? "On" : "Off"));
-                        menu_add_item_menu_tooltip(array_menu_display_settings,"Horizontal image stabilization");
-                        menu_add_item_menu_ayuda(array_menu_display_settings,"Horizontal image stabilization. Usually enabled.");
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_slow_adjust,menu_cond_zx8081_realvideo,"~~LNCTR video adjust:  %s", (video_zx8081_lnctr_adjust.v==1 ? "On" : "Off"));
-			//l repetida con load screen, pero como esa es de spectrum, no coinciden
-			menu_add_item_menu_shortcut(array_menu_display_settings,'l');
-			menu_add_item_menu_tooltip(array_menu_display_settings,"LNCTR video adjust");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"LNCTR video adjust change sprite offset when drawing video images. "
-				"If you see your hi-res image is not displayed well, try changing it");
-
-
-
-
-        	        menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_x_offset,menu_cond_zx8081_realvideo,"Video x_offset: %d",offset_zx8081_t_coordx);
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Video horizontal image offset");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Video horizontal image offset, usually you don't need to change this");
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_minimo_vsync,menu_cond_zx8081_realvideo,"Video min. vsync lenght: %d",minimo_duracion_vsync);
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Video minimum vsync lenght in t-states");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Video minimum vsync lenght in t-states");
-
-
-                        menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_autodetect_wrx,NULL,"Autodetect WRX: %s",(autodetect_wrx.v==1 ? "On" : "Off"));
-                        menu_add_item_menu_tooltip(array_menu_display_settings,"Autodetect the need to enable WRX mode on ZX80/81");
-                        menu_add_item_menu_ayuda(array_menu_display_settings,"This option detects whenever is needed to enable WRX. "
-                                                "On ZX80/81, it detects the I register on a non-normal value when executing video display. "
-						"In some cases, chr$128 and udg modes are detected incorrectly as WRX");
-
-
-	                menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_zx8081_wrx,menu_cond_zx8081_realvideo,"~~WRX: %s", (wrx_present.v ? "On" : "Off"));
-			menu_add_item_menu_shortcut(array_menu_display_settings,'w');
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Enables WRX hi-res mode");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Enables WRX hi-res mode");
-
-
-
-		}
-
-		else {
-
-			if (menu_cond_zx8081() ) {
-				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_emulate_fast_zx8081,menu_cond_zx8081_no_realvideo,"ZX80/81 detect fast mode: %s", (video_fast_mode_emulation.v==1 ? "On" : "Off"));
-				menu_add_item_menu_tooltip(array_menu_display_settings,"Detect fast mode and simulate it, on non-realvideo mode");
-				menu_add_item_menu_ayuda(array_menu_display_settings,"Detect fast mode and simulate it, on non-realvideo mode");
-			}
-
-		}
-
-		if (MACHINE_IS_ZX8081) {
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_autodetect_chroma81,NULL,"Autodetect Chroma81: %s",(autodetect_chroma81.v ? "Yes" : "No"));
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Autodetect Chroma81");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Detects when Chroma81 video mode is needed and enable it");
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_chroma81,NULL,"Chro~~ma81 support: %s",(chroma81.v ? "Yes" : "No"));
-			menu_add_item_menu_shortcut(array_menu_display_settings,'m');
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Enables Chroma81 colour video mode");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Enables Chroma81 colour video mode");
-
-		}
-
-
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_ulaplus,NULL,"ULA~~plus support: %s",(ulaplus_presente.v ? "Yes" : "No"));
-			menu_add_item_menu_shortcut(array_menu_display_settings,'p');
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Enables ULAplus support");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"The following ULAplus modes are supported:\n"
-						"Mode 1: Standard 256x192 64 colours\n"
-						"Mode 3: Linear mode 128x96, 16 colours per pixel (radastan mode)\n"
-						"Mode 5: Linear mode 256x96, 16 colours per pixel (ZEsarUX mode 0)\n"
-						"Mode 7: Linear mode 128x192, 16 colours per pixel (ZEsarUX mode 1)\n"
-						"Mode 9: Linear mode 256x192, 16 colours per pixel (ZEsarUX mode 2)\n"
-			);
-
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_timex_video,NULL,"~~Timex video support: %s",(timex_video_emulation.v ? "Yes" : "No"));
-                        menu_add_item_menu_shortcut(array_menu_display_settings,'t');
-                        menu_add_item_menu_tooltip(array_menu_display_settings,"Enables Timex Video modes");
-                        menu_add_item_menu_ayuda(array_menu_display_settings,"The following Timex Video modes are emulated:\n"
-						"Mode 0: Video data at address 16384 and 8x8 color attributes at address 22528 (like on ordinary Spectrum)\n"
-						"Mode 1: Video data at address 24576 and 8x8 color attributes at address 30720\n"
-						"Mode 2: Multicolor mode: video data at address 16384 and 8x1 color attributes at address 24576\n"
-						"Mode 6: Hi-res mode 512x192, monochrome.");
-
-			if (timex_video_emulation.v) {
-				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_timex_video_512192,NULL,"Timex Real 512x192: %s",(timex_mode_512192_real.v ? "Yes" : "No"));
-				menu_add_item_menu_tooltip(array_menu_display_settings,"Selects between real 512x192 or scaled 256x192");
-				menu_add_item_menu_ayuda(array_menu_display_settings,"Real 512x192 does not support scanline effects (it draws the display at once). "
-							"If not enabled real, it draws scaled 256x192 but does support scanline effects");
-			}
-
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_spectra,NULL,"Sp~~ectra support: %s",(spectra_enabled.v ? "Yes" : "No"));
-			menu_add_item_menu_shortcut(array_menu_display_settings,'e');
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Enables Spectra video modes");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Enables Spectra video modes. All video modes are fully emulated");
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_spritechip,NULL,"~~ZGX Sprite Chip: %s",(spritechip_enabled.v ? "Yes" : "No") );
-			menu_add_item_menu_shortcut(array_menu_display_settings,'z');
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Enables ZGX Sprite Chip");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Enables ZGX Sprite Chip");
-
-
-		}
-
-
-
-
-		if (MACHINE_IS_SPECTRUM && rainbow_enabled.v==0) {
-	                menu_add_item_menu(array_menu_display_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_emulate_zx8081display_spec,menu_display_settings_disp_zx8081_spectrum,"ZX80/81 Display on Speccy: %s", (simulate_screen_zx8081.v==1 ? "On" : "Off"));
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Simulates the resolution of ZX80/81 on the Spectrum");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"It makes the resolution of display on Spectrum like a ZX80/81, with no colour. "
-					"This mode is not supported with real video enabled");
-
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_emulate_zx8081_thres,menu_display_emulate_zx8081_cond,"Pixel threshold: %d",umbral_simulate_screen_zx8081);
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Pixel Threshold to draw black or white in a 4x4 rectangle, "
-					   "when ZX80/81 Display on Speccy enabled");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Pixel Threshold to draw black or white in a 4x4 rectangle, "
-					   "when ZX80/81 Display on Speccy enabled");
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_refresca_sin_colores,NULL,"Colours enabled: %s",(scr_refresca_sin_colores.v ? "No" : "Yes"));
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Disables colours for Spectrum display");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Disables colours for Spectrum display");
-
-		}
-
-
-		if (menu_display_cursesstdout_cond() ) {
-	                //solo en caso de curses o stdout
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"Text artistic emulation: %s", (texto_artistico.v==1 ? "On" : "Off"));
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Write different artistic characters for unknown 4x4 rectangles, "
-					"on stdout and curses drivers");
-
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Write different artistic characters for unknown 4x4 rectangles, "
-					"on curses, stdout and simpletext drivers. "
-					"If disabled, unknown characters are written with ?");
-
-
-			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_arttext_thres,menu_display_arttext_cond,"Pixel threshold: %d",umbral_arttext);
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
-					"on curses, stdout and simpletext drivers with text artistic emulation enabled");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
-					"on curses, stdout and simpletext drivers with text artistic emulation enabled");
-
-
-
-		}
-
-
-		if (menu_display_aa_cond() ) {
-
-#ifdef COMPILE_AA
-			sprintf (buffer_string,"Slow AAlib emulation: %s", (scraa_fast==0 ? "On" : "Off"));
-#else
-			sprintf (buffer_string,"Slow AAlib emulation: Off");
-#endif
-			menu_add_item_menu(array_menu_display_settings,buffer_string,MENU_OPCION_NORMAL,menu_display_slowaa,menu_display_aa_cond);
-
-			menu_add_item_menu_tooltip(array_menu_display_settings,"Enable slow aalib emulation; slow is a little better");
-			menu_add_item_menu_ayuda(array_menu_display_settings,"Enable slow aalib emulation; slow is a little better");
-
-		}
-*/
+ 
 
                 menu_add_item_menu(array_menu_display_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_display_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
@@ -28070,6 +27769,117 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_display_stdout_simpletext_fps(MENU_ITEM_PARAMETERS)
+{
+	    char string_fps[3];
+
+        sprintf (string_fps,"%d",50/scrstdout_simpletext_refresh_factor);
+
+        menu_ventana_scanf("FPS? (1-50)",string_fps,3);
+
+        int valor=parse_string_to_number(string_fps);
+		scr_set_fps_stdout_simpletext(valor);
+
+}
+
+
+void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_textdrivers_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+		char buffer_string[50];
+
+		menu_add_item_menu_inicial(&array_menu_textdrivers_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+                //para stdout y simpletext
+//#ifdef COMPILE_STDOUT
+                if (menu_cond_stdout_simpletext() ) {
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_automatic_redraw,NULL,"Stdout automatic redraw: %s", (stdout_simpletext_automatic_redraw.v==1 ? "On" : "Off"));
+                        menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"It enables automatic display redraw");
+                        menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"It enables automatic display redraw");
+
+
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_send_ansi,NULL,"Send ANSI Control Sequence: %s",(screen_text_accept_ansi==1 ? "On" : "Off"));
+
+						if (stdout_simpletext_automatic_redraw.v) {
+							menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_fps,NULL,"Redraw fps: %d", 50/scrstdout_simpletext_refresh_factor);
+						}
+
+                }
+
+//#endif
+
+
+				if (menu_display_cursesstdout_cond() ) {
+                        //solo en caso de curses o stdout
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"Text artistic emulation: %s", (texto_artistico.v==1 ? "On" : "Off"));
+                        menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Write different artistic characters for unknown 4x4 rectangles, "
+                                        "on stdout and curses drivers");
+
+                        menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Write different artistic characters for unknown 4x4 rectangles, "
+                                        "on curses, stdout and simpletext drivers. "
+                                        "If disabled, unknown characters are written with ?");
+
+
+                        menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext_thres,menu_display_arttext_cond,"Pixel threshold: %d",umbral_arttext);
+                        menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
+                                        "on curses, stdout and simpletext drivers with text artistic emulation enabled");
+                        menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Pixel Threshold to decide which artistic character write in a 4x4 rectangle, "
+                                        "on curses, stdout and simpletext drivers with text artistic emulation enabled");
+
+                        if (rainbow_enabled.v) {
+                                menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_brightness,NULL,"Text brightness: %d",screen_text_brightness);
+                                menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Text brightness used on some machines and text drivers, like tsconf");
+                                menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Text brightness used on some machines and text drivers, like tsconf");
+                        }
+
+                }
+
+
+
+
+
+
+if (menu_display_aa_cond() ) {
+
+#ifdef COMPILE_AA
+                        sprintf (buffer_string,"Slow AAlib emulation: %s", (scraa_fast==0 ? "On" : "Off"));
+#else
+                        sprintf (buffer_string,"Slow AAlib emulation: Off");
+#endif
+                        menu_add_item_menu(array_menu_textdrivers_settings,buffer_string,MENU_OPCION_NORMAL,menu_display_slowaa,menu_display_aa_cond);
+
+                        menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Enable slow aalib emulation; slow is a little better");
+                        menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Enable slow aalib emulation; slow is a little better");
+
+                }
+
+
+
+                menu_add_item_menu(array_menu_textdrivers_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_textdrivers_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                menu_add_ESC_item(array_menu_textdrivers_settings);
+
+                retorno_menu=menu_dibuja_menu(&textdrivers_settings_opcion_seleccionada,&item_seleccionado,array_menu_textdrivers_settings,"Text Driver Settings" );
+
+                cls_menu_overlay();
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
 
 
 //menu display settings
@@ -28082,7 +27892,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 	do {
 
 		//char string_aux[50],string_aux2[50],emulate_zx8081_disp[50],string_arttext[50],string_aaslow[50],emulate_zx8081_thres[50],string_arttext_threshold[50];
-		char buffer_string[50];
+		//char buffer_string[50];
 
 
                 char string_vofile_shown[10];
@@ -28229,6 +28039,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 		}
 
 		//para stdout
+
+		/*
 #ifdef COMPILE_STDOUT
 		if (menu_cond_stdout() ) {
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_automatic_redraw,NULL,"Stdout automatic redraw: %s", (stdout_simpletext_automatic_redraw.v==1 ? "On" : "Off"));
@@ -28242,6 +28054,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 #endif
 
+		*/
 
 
 		if (menu_cond_zx8081_realvideo()) {
@@ -28406,7 +28219,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 
-
+/*
 		if (menu_display_cursesstdout_cond() ) {
 	                //solo en caso de curses o stdout
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"Text artistic emulation: %s", (texto_artistico.v==1 ? "On" : "Off"));
@@ -28431,7 +28244,13 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 			}
 
 		}
+*/
 
+		if (menu_display_cursesstdoutsimpletext_cond() || menu_display_aa_cond() ) {
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_textdrivers_settings,NULL,"Text driver settings");
+		}
+
+		/*
 
 		if (menu_display_aa_cond() ) {
 
@@ -28446,6 +28265,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Enable slow aalib emulation; slow is a little better");
 
 		}
+		*/
 
 
                 menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);

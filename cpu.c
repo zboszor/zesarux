@@ -1349,10 +1349,12 @@ printf (
                 "--aaslow                   Use slow rendering on aalib\n"
 #endif
 
-	        "--arttextthresold n        Pixel threshold for artistic emulation for curses & stdout & simpletext (1..16. 4=normal)\n"
-	        "--disablearttext           Disable artistic emulation for curses & stdout & simpletext\n"
+	    "--arttextthresold n        Pixel threshold for artistic emulation for curses & stdout & simpletext (1..16. 4=normal)\n"
+	    "--disablearttext           Disable artistic emulation for curses & stdout & simpletext\n"
 		"--autoredrawstdout         Enable automatic display redraw for stdout & simpletext drivers\n"
 		"--sendansi                 Sends ANSI terminal control escape sequences for stdout & simpletext drivers, to use colours and cursor control\n"
+
+		"--textfps n                Sets FPS for stdout and simpletext text drivers\n"
 
 #ifdef COMPILE_FBDEV
                 "--no-use-ttyfbdev          Do not use a tty on fbdev driver. It disables keyboard\n"
@@ -4914,6 +4916,14 @@ int parse_cmdline_options(void) {
 		        else if (!strcmp(argv[puntero_parametro],"--autoredrawstdout")) {
 				stdout_simpletext_automatic_redraw.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--textfps")) {
+                                siguiente_parametro_argumento();
+                                int valor=atoi(argv[puntero_parametro]);
+                                scr_set_fps_stdout_simpletext(valor);
+                        }
+
+
 
 			else if (!strcmp(argv[puntero_parametro],"--sendansi")) {
                                 screen_text_accept_ansi=1;
