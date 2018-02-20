@@ -300,7 +300,7 @@ void tsconf_fire_dma_interrupt(void)
 int tsconf_return_dma_address(z80_byte bajo,z80_byte medio,z80_byte alto)
 {
 
-printf ("%d %d %d\n",bajo,medio,alto);
+//printf ("%d %d %d\n",bajo,medio,alto);
 
 	int f_bajo=bajo&254; //Descartar bit bajo
 	int f_medio=medio&63; //Descartar los dos bits altos
@@ -311,7 +311,7 @@ printf ("%d %d %d\n",bajo,medio,alto);
 
 	int final=f_bajo | f_medio | f_alto;
 
-	printf ("%d\n",final);
+	//printf ("%d\n",final);
 
 	return final;
 }
@@ -374,12 +374,13 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 	debug_tsconf_dma_ddev=dma_ddev;
 	debug_tsconf_dma_rw=dma_rw;
 
+		debug_printf (VERBOSE_DEBUG,"DMA operaton type: %s",tsconf_dma_types[dma_ddev*2+dma_rw]);
 
 		switch (dma_ddev) {
 
 			case 1:
 				if (dma_rw==0) {
-					printf ("RAM (Src) is copied to RAM (Dst)\n");
+					//printf ("RAM (Src) is copied to RAM (Dst)\n");
 
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_ram_mem_table[0];
@@ -388,7 +389,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 				}
 				else {
-					printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero\n");
+					//printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero\n");
 
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_ram_mem_table[0];
@@ -402,7 +403,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			case 4:
 
 				if (dma_rw==0) {
-					printf ("RAM (Dst) is filled with word from RAM (Src)\n");
+					//printf ("RAM (Dst) is filled with word from RAM (Src)\n");
 
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_ram_mem_table[0];
@@ -411,7 +412,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			
 				}
 				else {
-					printf ("RAM (Src) is copied to CRAM (Dst)\n");
+					//printf ("RAM (Src) is copied to CRAM (Dst)\n");
 
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_fmaps;
@@ -426,13 +427,12 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 			case 5:
 				if (dma_rw==0) {
-					printf ("Unemulated DMA FDD dump into RAM**\n");
-					sleep(3);
+					debug_printf (VERBOSE_ERR,"Unemulated DMA FDD dump into RAM**");
 					return;
 				}
 
 				else {
-					printf ("RAM (Src) is copied to SFILE (Dst)\n"); //Digger usa esto
+					//printf ("RAM (Src) is copied to SFILE (Dst)\n"); //Digger usa esto
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=&tsconf_fmaps[0x200];
 
@@ -444,8 +444,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			break;
 
 			default:
-				printf ("Unemulated dma type: rw: %d ddev: %02XH\n",dma_rw,dma_ddev);
-				sleep(3);
+				debug_printf (VERBOSE_ERR,"Unemulated dma type: rw: %d ddev: %02XH",dma_rw,dma_ddev);
 				return;
 			break;
 		}
@@ -603,10 +602,11 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 
   if (puerto_h==0x27) {
 	  //Dmactrl
-	  printf ("Writing DMA CTRL. value: %02XH\n",tsconf_af_ports[0x27]);
+	  //printf ("Writing DMA CTRL. value: %02XH\n",tsconf_af_ports[0x27]);
 		int dmasource=tsconf_return_dma_address(tsconf_af_ports[0x1a],tsconf_af_ports[0x1b],tsconf_af_ports[0x1c]);
 		int dmadest=tsconf_return_dma_address(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
-		printf ("DMA source: %XH dest: %XH\n",dmasource,dmadest);
+		debug_printf (VERBOSE_DEBUG,"Writing DMA DMA source: %XH dest: %XH DMALen: %02XH DMACtrl: %02XH DMANum: %02XH",
+			dmasource,dmadest,tsconf_af_ports[0x26],tsconf_af_ports[0x27],tsconf_af_ports[0x28]);
 		int dma_burst_length=(tsconf_af_ports[0x26]+1)*2;
 		int dma_num=tsconf_af_ports[0x28]+1;
 		//int dma_length=dma_burst_length*dma_num;
@@ -619,7 +619,7 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 		z80_byte dma_d_algn=((tsconf_af_ports[0x27])>>4)&1;
 		z80_byte dma_s_algn=((tsconf_af_ports[0x27])>>5)&1;
 
-		printf ("DMA movement type: ");
+		//printf ("DMA movement type: ");
 
 		tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw);
 
@@ -1257,8 +1257,10 @@ void tsconf_store_scanline_ula(void)
 	int y_offset=tsconf_af_ports[4]+256*(tsconf_af_ports[5]&1);
 
 	
-	//TODO: controlar si sale de rango
+	//controlar si sale de rango
 	y_origen_pixeles +=y_offset;
+
+	y_origen_pixeles=y_origen_pixeles % 512;
       
 
     int x,bit;
@@ -1377,22 +1379,22 @@ void tsconf_store_scanline_ula(void)
 					int x_offset=tsconf_af_ports[2]+256*(tsconf_af_ports[3]&1);
 					//edge grinder usa scroll x
 					
-					int offset_orig;
+					int posicion_byte_inicial;
 
 					//16 colores
 					if (videomode==1) {
 						offset=y_origen_pixeles*256;
-						offset_orig=offset;
 
 						offset +=x_offset/2;
+						posicion_byte_inicial=x_offset/2;
 					}
 
 					//256 colores
 					else {
 						offset=y_origen_pixeles*512;
-						offset_orig=offset;
 
 						offset +=x_offset;
+						posicion_byte_inicial=x_offset;
 					}
 
 
@@ -1408,13 +1410,33 @@ void tsconf_store_scanline_ula(void)
 
 					z80_byte vram_page=tsconf_get_vram_page()+pagina_offset;
 					z80_byte *screen;
+
 					screen=tsconf_ram_mem_table[vram_page]+offset_final;
+
+					z80_byte *screen_izquierda=screen; //primera posicion con x=0
+
+
+					//Sumamos scrolll x
+					//16 colores
+					if (videomode==1) {
+						screen +=x_offset/2;
+						posicion_byte_inicial=x_offset/2;
+					}
+
+					//256 colores
+					else {
+						screen +=x_offset;
+						posicion_byte_inicial=x_offset;
+					}
+
 
 					z80_byte color,color_orig;
 					z80_int color_final;
 
+					
 
-					for (x=0;x<tsconf_current_pixel_width;x++) {
+
+					for (x=0;x<tsconf_current_pixel_width;x++,posicion_byte_inicial++) {
 						if (videomode==2) { //256 colores
 							color=*screen;
 						}
@@ -1453,7 +1475,12 @@ void tsconf_store_scanline_ula(void)
 
 						screen++;
 
-						
+
+						if (posicion_byte_inicial>=512) {  //Volver a inicial
+							//printf ("---LLegado scroll derecha\n");
+							screen=screen_izquierda;
+							posicion_byte_inicial=0;
+						}
 
 
 					}
