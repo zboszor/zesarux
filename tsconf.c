@@ -465,10 +465,10 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 }
 
 
-//Max 20
+//Max 18
 char *tsconf_dma_types[]={
 //   01234567890123456789
-	"(Reserved)",   //1
+	"(Reserved)",   //0
 	"(Reserved)",
 	"RAM to RAM",
 	"Pixels to RAM",
@@ -476,14 +476,15 @@ char *tsconf_dma_types[]={
 	"RAM to SPI	",
 	"IDE to RAM",
 	"RAM to IDE",
-	"RAM filled from RAM",
-	"RAM to CRAM",   //10
-	"FDD dump into RAM",
+	"RAM fill from RAM",
+	"RAM to CRAM",   
+	"FDD dump into RAM", //10
 	"RAM to SFILE",
-	"Pixels to RAM blit",
+//   01234567890123456789	
+	"Pixels to RAM blit", //12
 	"(Reserved)",
 	"(Reserved)",
-	"(Reserved)" //16
+	"(Reserved)" //15
 };
 
 void tsconf_write_af_port(z80_byte puerto_h,z80_byte value)

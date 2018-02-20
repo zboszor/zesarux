@@ -22402,21 +22402,7 @@ void menu_debug_spritefinder(MENU_ITEM_PARAMETERS)
 
 void menu_debug_tsconf_dma_dibuja_ventana(void)
 {
-	menu_dibuja_ventana(0,5,32,19,"TSConf DMA");
-}
-
-int menu_debug_tsconf_dma_si_mostrar(void)
-{
-	return 1;
-
-	/*
-	        mostrar_player=1;
-        if (audio_ay_player_mem==NULL) mostrar_player=0;
-        if (ay_player_playing.v==0) mostrar_player=0;
-
-        return mostrar_player;
-	*/
-
+	menu_dibuja_ventana(3,7,26,13,"TSConf DMA");
 }
 
 
@@ -22443,8 +22429,10 @@ void menu_debug_tsconf_dma_overlay(void)
 
 		//Construimos 16 valores posibles segun rw (bit bajo) y ddev (bits altos)
 		int dma_type=debug_tsconf_dma_ddev*2+debug_tsconf_dma_rw;
-						//  012345678912
-		sprintf (texto_dma,"Type: %s",tsconf_dma_types[dma_type]);
+						//18 maximo el tipo
+						//  012345678901234567890123
+						//24. mas dos de margen banda y banda: 26
+		sprintf (texto_dma,"Type: %s",tsconf_dma_types[12/*dma_type*/]);
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 
 		sprintf (texto_dma,"Source:      %06XH",debug_tsconf_dma_source);
@@ -22534,7 +22522,7 @@ void menu_debug_tsconf_dma(MENU_ITEM_PARAMETERS)
 
 	
 
-			int lin=11;
+			int lin=9;
 
 		
 				menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_dma,MENU_OPCION_NORMAL,menu_debug_tsconf_dma_disable,NULL,"~~DMA: %s",
@@ -22635,7 +22623,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 
 		if (MACHINE_IS_TSCONF) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_dma,NULL,"Debug DMA");
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_dma,NULL,"Debug TSConf DMA");
 		}
 
 		menu_add_item_menu(array_menu_debug_settings,"View He~~xdump",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);
