@@ -17372,7 +17372,15 @@ void menu_quickload(MENU_ITEM_PARAMETERS)
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
                         menu_filesel_chdir(directorio);
                 }
+
+				util_get_file_no_directory(quickfile,menu_filesel_posicionar_archivo_nombre);
+
+				menu_filesel_posicionar_archivo.v=1;
+
         }
+
+
+
 
 
 
@@ -30336,6 +30344,29 @@ void menu_filesel_localiza_letra(char letra)
 
 }
 
+void menu_filesel_localiza_archivo(char *nombrebuscar)
+{
+	debug_printf (VERBOSE_DEBUG,"Searching last file %s",nombrebuscar);
+	int i;
+	filesel_item *p;
+        p=primer_filesel_item;
+
+	for (i=0;i<filesel_total_items;i++) {
+		debug_printf (VERBOSE_DEBUG,"File number: %d Name: %s",i,p->d_name);
+		//if (menu_minus_letra(p->d_name[0])>=menu_minus_letra(letra)) {
+		if (strcasecmp(nombrebuscar,p->d_name)<=0) {
+            		filesel_linea_seleccionada=0;
+                	filesel_archivo_seleccionado=i;
+					debug_printf (VERBOSE_DEBUG,"Found at position %d",i);
+			return;
+		}
+
+
+                p=p->next;
+        }
+
+}
+
 
 int si_menu_filesel_no_mas_alla_ultimo_item(int linea)
 {
@@ -30786,6 +30817,12 @@ void menu_filesel_print_text_contents(void)
 	menu_escribe_texto_ventana(1,2,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Directory Contents:");
 }
 
+
+//Si hay que iniciar el filesel pero mover el cursor a un archivo concreto
+z80_bit menu_filesel_posicionar_archivo={0};
+char menu_filesel_posicionar_archivo_nombre[PATH_MAX]="";
+
+
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
 //Si sale con ESC, devuelve en menu_filesel_last_directory_seen ultimo directorio
@@ -30855,6 +30892,13 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		//menu_print_dir(filesel_archivo_seleccionado);
 
 		all_interlace_scr_refresca_pantalla();
+
+
+		if (menu_filesel_posicionar_archivo.v) {
+			menu_filesel_localiza_archivo(menu_filesel_posicionar_archivo_nombre);
+
+			menu_filesel_posicionar_archivo.v=0;
+		}
 
 
 		do {

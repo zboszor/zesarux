@@ -367,6 +367,9 @@ extern char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO];
 
 extern int return_color_zesarux_ascii(char c);
 
+extern z80_bit menu_filesel_posicionar_archivo;
+extern char menu_filesel_posicionar_archivo_nombre[];
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \
