@@ -99,6 +99,34 @@ audiodac_type audiodac_types[MAX_AUDIODAC_TYPES]={
 	{"GS Covox",0xB3},
 	{"Custom",0}
 };
+
+void audiodac_print_types(void)
+{
+	int i;
+	for (i=0;i<MAX_AUDIODAC_TYPES;i++) printf ("\"%s\" ",audiodac_types[i].name);
+}
+
+//Retorna 0 si error
+int audiodac_set_type(char *texto)
+{
+	int i;
+	for (i=0;i<MAX_AUDIODAC_TYPES;i++) {
+		if (!strcasecmp(texto,audiodac_types[i].name)) {
+			audiodac_selected_type=i;
+			return 1;
+		}
+	}
+
+	return 0;
+
+}
+
+void audiodac_set_custom_port(z80_byte valor)
+{
+	audiodac_types[MAX_AUDIODAC_TYPES-1].port=valor;
+	audiodac_selected_type=MAX_AUDIODAC_TYPES-1;
+}
+
 /*
 http://velesoft.speccy.cz/da_for_zx-cz.htm
 

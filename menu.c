@@ -28578,8 +28578,9 @@ void menu_audio_audiodac_set_port(MENU_ITEM_PARAMETERS)
 					return;
 	}
 
-	audiodac_types[MAX_AUDIODAC_TYPES-1].port=valor_port;
-	audiodac_selected_type=MAX_AUDIODAC_TYPES-1;
+	audiodac_set_custom_port(valor_port);
+	//audiodac_types[MAX_AUDIODAC_TYPES-1].port=valor_port;
+	//audiodac_selected_type=MAX_AUDIODAC_TYPES-1;
 
 }
 

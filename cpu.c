@@ -1236,6 +1236,12 @@ printf (
     "--disablerealbeeper        Disable real Beeper sound\n"
 		"--totalaychips  n          Number of ay chips. Default 1\n"
 		"--enableaudiodac           Enable DAC emulation. By default Specdrum\n"
+		"--audiodactype type        Select one of audiodac types: "
+);
+		audiodac_print_types();
+
+printf (
+		"\n"
 		"--audiovolume n            Sets the audio output volume to percentage n\n"
 		"--zx8081vsyncsound         Enable vsync/tape sound on ZX80/81\n"
 
@@ -5564,6 +5570,16 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--enableaudiodac")) {
 																audiodac_enabled.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--audiodactype")) {
+					siguiente_parametro_argumento();
+
+					if (!audiodac_set_type(argv[puntero_parametro]) ) {
+						printf ("Invalid audiodactype\n");
+						exit (1);
+					}
+
 			}
 
 

@@ -12781,7 +12781,7 @@ void tsconf_fire_line_interrupt(void)
                                                         reg_pc=value_8_to_16(dir_h,dir_l);
                                                         t_estados += 7;
 
-	printf ("Calling interrupt line handler at %04XH\n",reg_pc);
+	debug_printf (VERBOSE_DEBUG,"Calling interrupt line handler at %04XH",reg_pc);
 
 	//Solo sacar el handler para im2 a modo de debug
 	
@@ -12790,7 +12790,7 @@ void tsconf_fire_line_interrupt(void)
                                                         dir_h=peek_byte(temp_i);
                                                         z80_int debug_im2=value_8_to_16(dir_h,dir_l);
                                                         
-	printf ("(IM2 handler is at %04XH)\n",debug_im2);
+	debug_printf (VERBOSE_DEBUG,"(IM2 handler is at %04XH)",debug_im2);
 
 }
 
@@ -12833,7 +12833,7 @@ void tsconf_handle_raster_interrupts(void)
 		if (estados_en_linea>=int_raster_x && estados_en_linea>=tsconf_handle_raster_interrupts_prev_horiz) {
 			//Generar interrupcion
 			tsconf_fire_line_interrupt();
-			printf ("Fired line interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d\n",int_raster_y,int_raster_x,t_scanline,estados_en_linea);
+			debug_printf (VERBOSE_DEBUG,"Fired line interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d",int_raster_y,int_raster_x,t_scanline,estados_en_linea);
 			//printf ("Reg VSINTH: %d\n",tsconf_af_ports[0x24]);
 
 			//tsconf_fired_frame_interrupt.v=1; //Est
