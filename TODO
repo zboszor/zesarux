@@ -5,6 +5,10 @@ nombre fichero en ventana menu?
 borrar registros tsconf en hard reset? scroll se queda activo a veces
 TSConf: demo twist.spg, deformacion se ve perfecta con fast render pero no con normal
 
+corregir descompresion rzx para que no use el comando "cat":
+sprintf (uncompress_command,"cat %s | %s -c  > \"%s\" ",origen,external_tool_gunzip,destino);
+
+
 
 Revisar "clicks" en versión Windows, tanto pthreads como no pthreads. Parece que la no pthreads, antes de la 6.1, no pasaba?
 Recreated: que funcione en windows y linux
