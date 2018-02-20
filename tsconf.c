@@ -418,6 +418,8 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 				destination++;
 
 				source--;
+
+				i++; //esto es asi??? realmente copia la misma cantidad de bytes, solo que de dos en dos?
 			}
 			
 			else {
