@@ -7,6 +7,7 @@ opcion tipo specdrump linea comandos
 opcion para desactivar dma
 cargar scl
 nombre fichero en ventana menu?
+que muestre ultima operacion dma
 borrar registros tsconf en hard reset? scroll se queda activo a veces
 agregar interrupt dma
 TSConf: demo twist.spg, deformacion se ve perfecta con fast render pero no con normal
