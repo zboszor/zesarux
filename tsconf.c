@@ -269,6 +269,55 @@ printf ("%d %d %d\n",bajo,medio,alto);
 	return final;
 }
 
+//de momento solo para tipo ram
+void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,int s_align,int d_align,int addr_align_size)
+{
+	int orig_source;
+	int orig_destination;
+
+
+
+
+	z80_byte *source_pointer=(tsconf_ram_mem_table[0]);
+	z80_byte *destination_pointer=(tsconf_ram_mem_table[0]);
+
+	for (;burst_number>0;burst_number--){
+		int i;
+
+	orig_source=source;
+	orig_destination=destination;
+
+		for (i=0;i<burst_length;i++) {
+
+			destination_pointer[destination]=source_pointer[source];
+
+			destination++;
+			source++;
+		}
+
+		if (d_align) {
+			int lower;
+
+			if (addr_align_size) { //1 alinear a 512
+				printf ("alinear a 512\n");
+				lower=orig_destination&0x1FF;
+				destination=destination&0xFFFE00;
+				destination |=lower;
+				destination +=512;
+			}
+			else { //0 alinear a 256
+				printf ("alinear a 256\n");
+				lower=orig_destination&0xFF;
+				destination=destination&0xFFFF00;
+				destination |=lower;
+				destination +=256;
+			}
+
+		}
+
+	}
+}
+
 void tsconf_write_af_port(z80_byte puerto_h,z80_byte value)
 {
 
@@ -338,7 +387,7 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 
   if (puerto_h==0x27) {
 	  //Dmactrl
-	  printf ("Writing DMA CTRL\n");
+	  printf ("Writing DMA CTRL. value: %02XH\n",tsconf_af_ports[0x27]);
 		int dmasource=tsconf_return_dma_address(tsconf_af_ports[0x1a],tsconf_af_ports[0x1b],tsconf_af_ports[0x1c]);
 		int dmadest=tsconf_return_dma_address(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
 		printf ("DMA source: %XH dest: %XH\n",dmasource,dmadest);
@@ -349,6 +398,10 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 
 		z80_byte dma_ddev=tsconf_af_ports[0x27]&7;
 		z80_byte dma_rw=((tsconf_af_ports[0x27])>>7)&1;
+
+		z80_byte dma_a_sz=((tsconf_af_ports[0x27])>>3)&1;
+		z80_byte dma_d_algn=((tsconf_af_ports[0x27])>>4)&1;
+		z80_byte dma_s_algn=((tsconf_af_ports[0x27])>>5)&1;
 
 		printf ("DMA movement type: ");
 
@@ -365,6 +418,12 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 					if (dma_length) {
 						printf ("moviendo datos\n");
 						memcpy(destino,origen,dma_length);
+
+						tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz);
+
+
+//void tsconf_dma_operation(z80_byte *source,z80_byte *destination,int burst_length,int burst_number,int s_align,int d_align,int addr_align_size)
+
 
 						/*int i;
 						for (i=0;i<dma_length;i+=2) {
