@@ -374,12 +374,21 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 				if (dma_rw==0) {
 					printf ("RAM (Dst) is filled with word from RAM (Src)\n");
 												//Prueba chapuza
-					z80_byte *dma_origen=(tsconf_ram_mem_table[0])+dmasource;
-					z80_byte *dma_destino=(tsconf_ram_mem_table[0])+dmadest;
+					z80_byte *origen=(tsconf_ram_mem_table[0])+dmasource;
+					z80_byte *destino=(tsconf_ram_mem_table[0])+dmadest;
 
 					if (dma_length) {
 						printf ("moviendo datos\n");
-						memcpy(dma_destino,dma_origen,dma_length);
+						int i;
+						for (i=0;i<dma_length;i+=2) {
+							*destino=*origen;
+							destino++;
+							origen++;
+							*destino=*origen;
+							destino++;
+							origen++;
+						}
+						//memcpy(dma_destino,dma_origen,dma_length);
 					}
 				}
 				else {
