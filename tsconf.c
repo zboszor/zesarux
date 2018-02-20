@@ -292,8 +292,20 @@ int tsconf_align_address(int orig_destination,int destination,int addr_align_siz
 	return destination;
 }
 
-//de momento solo para tipo ram
-void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,int s_align,int d_align,int addr_align_size,z80_byte dma_ddev,z80_byte dma_rw)
+int debug_tsconf_dma_source=0;
+int debug_tsconf_dma_destination=0;
+int debug_tsconf_dma_burst_length=0;
+int debug_tsconf_dma_burst_number=0;
+z80_byte debug_tsconf_dma_s_align=0;
+z80_byte debug_tsconf_dma_d_align=0;
+z80_byte debug_tsconf_dma_addr_align_size=0;
+z80_byte debug_tsconf_dma_ddev=0;
+z80_byte debug_tsconf_dma_rw=0;
+
+
+z80_bit tsconf_dma_disabled={0};
+
+void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,z80_byte s_align,z80_byte d_align,z80_byte addr_align_size,z80_byte dma_ddev,z80_byte dma_rw)
 {
 	int orig_source;
 	int orig_destination;
@@ -303,6 +315,18 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 	z80_byte *source_pointer;
 	z80_byte *destination_pointer;
+
+	//Guardamos estos valores en variable de debug para mostrarlos en menu debug, solo a titulo informativo
+	debug_tsconf_dma_source=source;
+	debug_tsconf_dma_destination=destination;;
+	debug_tsconf_dma_burst_length=burst_length;
+	debug_tsconf_dma_burst_number=burst_number;
+	debug_tsconf_dma_s_align=s_align;
+	debug_tsconf_dma_s_align=s_align;
+	debug_tsconf_dma_addr_align_size=addr_align_size;
+	debug_tsconf_dma_ddev=dma_ddev;
+	debug_tsconf_dma_rw=dma_rw;
+
 
 		switch (dma_ddev) {
 
@@ -380,6 +404,8 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 		}
 
 
+	//Si desactivada la dma, volver
+	if (tsconf_dma_disabled.v) return;
 
 	for (;burst_number>0;burst_number--){
 		int i;
@@ -437,6 +463,28 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 	}
 }
+
+
+//Max 20
+char *tsconf_dma_types[]={
+//   01234567890123456789
+	"(Reserved)",   //1
+	"(Reserved)",
+	"RAM to RAM",
+	"Pixels to RAM",
+	"SPI to RAM",
+	"RAM to SPI	",
+	"IDE to RAM",
+	"RAM to IDE",
+	"RAM filled from RAM",
+	"RAM to CRAM",   //10
+	"FDD dump into RAM",
+	"RAM to SFILE",
+	"Pixels to RAM blit",
+	"(Reserved)",
+	"(Reserved)",
+	"(Reserved)" //16
+};
 
 void tsconf_write_af_port(z80_byte puerto_h,z80_byte value)
 {
@@ -513,8 +561,8 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 		printf ("DMA source: %XH dest: %XH\n",dmasource,dmadest);
 		int dma_burst_length=(tsconf_af_ports[0x26]+1)*2;
 		int dma_num=tsconf_af_ports[0x28]+1;
-		int dma_length=dma_burst_length*dma_num;
-		printf ("DMA length: %d x %d = %d\n",dma_burst_length,dma_num,dma_length);
+		//int dma_length=dma_burst_length*dma_num;
+		//printf ("DMA length: %d x %d = %d\n",dma_burst_length,dma_num,dma_length);
 
 		z80_byte dma_ddev=tsconf_af_ports[0x27]&7;
 		z80_byte dma_rw=((tsconf_af_ports[0x27])>>7)&1;
@@ -527,82 +575,7 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 
 		tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw);
 
-		/*
-		switch (dma_ddev) {
-
-			case 1:
-				if (dma_rw==0) {
-					printf ("RAM (Src) is copied to RAM (Dst)\n");
-
-							//Prueba chapuza
-					z80_byte *origen=(tsconf_ram_mem_table[0])+dmasource;
-					z80_byte *destino=(tsconf_ram_mem_table[0])+dmadest;
-
-					if (dma_length) {
-						printf ("moviendo datos\n");
-						//memcpy(destino,origen,dma_length);
-
-						tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw);
-					}
-				}
-				else printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero\n");
-			break;
-
-			case 4:
-				if (dma_rw==0) {
-					tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw);
-
-					printf ("RAM (Dst) is filled with word from RAM (Src)\n");
-					//sleep(4);
-												//Prueba chapuza
-					z80_byte *origen=(tsconf_ram_mem_table[0])+dmasource;
-					z80_byte *destino=(tsconf_ram_mem_table[0])+dmadest;
-
-					if (dma_length) {
-						printf ("moviendo datos\n");
-						//memcpy(destino,origen,dma_length);
-						int i;
-						for (i=0;i<dma_length;i++) {
-							*destino=*origen;
-							destino++;
-							origen++;
-							*destino=*origen;
-							destino++;
-							origen++;
-
-							//temp
-							origen-=2;
-						}
-						
-					}
-				}
-				else {
-					printf ("RAM (Src) is copied to CRAM (Dst)\n");
-
-						//Prueba chapuza
-					z80_byte *origen=(tsconf_ram_mem_table[0])+dmasource;
-					z80_byte *destino=(&tsconf_fmaps[0])+dmadest;
-
-					if (dma_length) {
-						printf ("moviendo datos\n");
-						//memcpy(destino,origen,dma_length);
-
-						int i;
-						for (i=0;i<dma_length;i++) {
-							*destino=*origen;
-							destino++;
-							origen++;
-						}
-						//memcpy(dma_destino,dma_origen,dma_length);
-					}
-				}
-			break;
-
-			default:
-				printf ("Unknown\n");
-			break;
-		}
-		*/
+		
   }
 
   //Si cambia registro #21AF (memconfig) o page0-3

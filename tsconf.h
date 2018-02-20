@@ -95,4 +95,18 @@ extern z80_bit tsconf_force_disable_layer_border;
 
 //extern z80_bit tsconf_fired_frame_interrupt;
 
+extern int debug_tsconf_dma_source;
+extern int debug_tsconf_dma_destination;
+extern int debug_tsconf_dma_burst_length;
+extern int debug_tsconf_dma_burst_number;
+extern z80_byte debug_tsconf_dma_s_align;
+extern z80_byte debug_tsconf_dma_d_align;
+extern z80_byte debug_tsconf_dma_addr_align_size;
+extern z80_byte debug_tsconf_dma_ddev;
+extern z80_byte debug_tsconf_dma_rw;
+
+extern char *tsconf_dma_types[];
+
+extern z80_bit tsconf_dma_disabled;
+
 #endif

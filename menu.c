@@ -684,6 +684,7 @@ int tsconf_layer_settings_opcion_seleccionada=0;
 int window_settings_opcion_seleccionada=0;
 int osd_settings_opcion_seleccionada=0;
 int textdrivers_settings_opcion_seleccionada=0;
+int debug_tsconf_dma_opcion_seleccionada=0;
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
 z80_bit menu_splash_text_active;
@@ -22399,6 +22400,181 @@ void menu_debug_spritefinder(MENU_ITEM_PARAMETERS)
 	else spritefinder_enable();
 }
 
+void menu_debug_tsconf_dma_dibuja_ventana(void)
+{
+	menu_dibuja_ventana(0,5,32,19,"TSConf DMA");
+}
+
+int menu_debug_tsconf_dma_si_mostrar(void)
+{
+	return 1;
+
+	/*
+	        mostrar_player=1;
+        if (audio_ay_player_mem==NULL) mostrar_player=0;
+        if (ay_player_playing.v==0) mostrar_player=0;
+
+        return mostrar_player;
+	*/
+
+}
+
+
+//Usado dentro del overlay de tsconf_dma
+//int menu_tsconf_dma_valor_contador_segundo_anterior;
+
+
+
+
+void menu_debug_tsconf_dma_overlay(void)
+{
+
+    normal_overlay_texto_menu();
+
+    int linea;
+
+
+    linea=1;
+
+    
+    	//mostrarlos siempre a cada refresco
+
+		char texto_dma[33];
+
+		//Construimos 16 valores posibles segun rw (bit bajo) y ddev (bits altos)
+		int dma_type=debug_tsconf_dma_ddev*2+debug_tsconf_dma_rw;
+						//  012345678912
+		sprintf (texto_dma,"Type: %s",tsconf_dma_types[dma_type]);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		sprintf (texto_dma,"Source:      %06XH",debug_tsconf_dma_source);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		sprintf (texto_dma,"Destination: %06XH",debug_tsconf_dma_destination);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		sprintf (texto_dma,"Burst lenght: %3d",debug_tsconf_dma_burst_length);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		sprintf (texto_dma,"Burst number: %3d",debug_tsconf_dma_burst_number);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		sprintf (texto_dma,"Align: %s %s",(debug_tsconf_dma_s_align ? "Source" : "      "),(debug_tsconf_dma_d_align ? "Destination" : "") );
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+		sprintf (texto_dma,"Align size: %d",(debug_tsconf_dma_addr_align_size+1)*256);
+		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
+
+
+
+
+		menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+	
+	
+
+
+    //esto hara ejecutar esto 2 veces por segundo
+    /*if ( ((contador_segundo%500) == 0 && menu_tsconf_dma_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+
+        menu_tsconf_dma_valor_contador_segundo_anterior=contador_segundo;
+        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+       
+    
+			char textoplayer[40];
+
+     
+
+				int valor_contador_segundo_anterior;
+
+				valor_contador_segundo_anterior=contador_segundo;
+
+int mostrar_player;
+
+int mostrar_antes_player=-1;
+
+	mostrar_player=menu_debug_tsconf_dma_si_mostrar();
+
+
+			mostrar_antes_player=mostrar_player;
+         
+
+
+	}*/
+}
+
+
+
+
+
+
+void menu_debug_tsconf_dma_disable(MENU_ITEM_PARAMETERS)
+{
+	tsconf_dma_disabled.v ^=1;
+}
+
+
+void menu_debug_tsconf_dma(MENU_ITEM_PARAMETERS)
+{
+
+
+         //Cambiamos funcion overlay de texto de menu
+		set_menu_overlay_function(menu_debug_tsconf_dma_overlay);
+
+
+
+	menu_item *array_menu_debug_tsconf_dma;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+        			
+            //Hay que redibujar la ventana desde este bucle
+            menu_debug_tsconf_dma_dibuja_ventana();
+
+	
+
+			int lin=11;
+
+		
+				menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_dma,MENU_OPCION_NORMAL,menu_debug_tsconf_dma_disable,NULL,"~~DMA: %s",
+					(tsconf_dma_disabled.v ? "Disabled" : "Enabled") );
+				menu_add_item_menu_shortcut(array_menu_debug_tsconf_dma,'d');
+				menu_add_item_menu_ayuda(array_menu_debug_tsconf_dma,"Disable DMA");
+				menu_add_item_menu_tabulado(array_menu_debug_tsconf_dma,1,lin);
+
+
+
+
+		//Nombre de ventana solo aparece en el caso de stdout
+                retorno_menu=menu_dibuja_menu(&debug_tsconf_dma_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_dma,"TSConf DMA" );
+
+
+	cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+       //restauramos modo normal de texto de menu
+       set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+        cls_menu_overlay();
+
+}
+
+
+
+
 //menu debug settings
 void menu_debug_settings(MENU_ITEM_PARAMETERS)
 {
@@ -22456,6 +22632,10 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_cpu_transaction_log,NULL,"~~CPU Transaction Log");
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'c');
+		}
+
+		if (MACHINE_IS_TSCONF) {
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_dma,NULL,"Debug DMA");
 		}
 
 		menu_add_item_menu(array_menu_debug_settings,"View He~~xdump",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);
@@ -27792,7 +27972,7 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
 
 		char buffer_string[50];
 
-		menu_add_item_menu_inicial(&array_menu_textdrivers_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+		menu_add_item_menu_inicial(&array_menu_textdrivers_settings,"---",MENU_OPCION_NORMAL,NULL,NULL);
 
 
                 //para stdout y simpletext
