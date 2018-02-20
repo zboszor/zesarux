@@ -359,12 +359,23 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 					printf ("RAM (Src) is copied to RAM (Dst)\n");
 
 							//Prueba chapuza
-					z80_byte *dma_origen=(tsconf_ram_mem_table[0])+dmasource;
-					z80_byte *dma_destino=(tsconf_ram_mem_table[0])+dmadest;
+					z80_byte *origen=(tsconf_ram_mem_table[0])+dmasource;
+					z80_byte *destino=(tsconf_ram_mem_table[0])+dmadest;
 
 					if (dma_length) {
 						printf ("moviendo datos\n");
-						memcpy(dma_destino,dma_origen,dma_length);
+						memcpy(destino,origen,dma_length);
+
+						/*int i;
+						for (i=0;i<dma_length;i+=2) {
+							*destino=*origen;
+							destino++;
+							origen++;
+							*destino=*origen;
+							destino++;
+							origen++;
+						}*/
+
 					}
 				}
 				else printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero\n");
@@ -379,7 +390,8 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 
 					if (dma_length) {
 						printf ("moviendo datos\n");
-						int i;
+						memcpy(destino,origen,dma_length);
+						/*int i;
 						for (i=0;i<dma_length;i+=2) {
 							*destino=*origen;
 							destino++;
@@ -388,19 +400,27 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 							destino++;
 							origen++;
 						}
-						//memcpy(dma_destino,dma_origen,dma_length);
+						*/
 					}
 				}
 				else {
 					printf ("RAM (Src) is copied to CRAM (Dst)\n");
 
 						//Prueba chapuza
-					z80_byte *dma_origen=(tsconf_ram_mem_table[0])+dmasource;
-					z80_byte *dma_destino=(&tsconf_fmaps[0])+dmadest;
+					z80_byte *origen=(tsconf_ram_mem_table[0])+dmasource;
+					z80_byte *destino=(&tsconf_fmaps[0])+dmadest;
 
 					if (dma_length) {
 						printf ("moviendo datos\n");
-						memcpy(dma_destino,dma_origen,dma_length);
+						memcpy(destino,origen,dma_length);
+
+						/*int i;
+						for (i=0;i<dma_length;i++) {
+							*destino=*origen;
+							destino++;
+							origen++;
+						}*/
+						//memcpy(dma_destino,dma_origen,dma_length);
 					}
 				}
 			break;
@@ -1130,13 +1150,28 @@ void tsconf_store_scanline_ula(void)
 		}
 	}
 
-
+				//16 o 256 clores
 				if (videomode==1 || videomode==2) {
 					//puntero a vram
 					//Indice a linea
 					int offset;
+
+					
+
+					/*if (videomode==1) { //16 colores
+						//offset=y_origen_pixeles*(tsconf_current_pixel_width/2);
+						offset=y_origen_pixeles*512;
+					}
+					
+					else {
+						//offset=y_origen_pixeles*(tsconf_current_pixel_width);
+						offset=y_origen_pixeles*512;
+					}*/
+
+
 					if (videomode==1) offset=y_origen_pixeles*256;
 					else offset=y_origen_pixeles*512;
+
 
 					//Ver cuantas paginas salta esto
 					int pagina_offset=offset/16384;
@@ -1151,12 +1186,12 @@ void tsconf_store_scanline_ula(void)
 					z80_byte color,color_orig;
 					z80_int color_final;
 					for (x=0;x<tsconf_current_pixel_width;x++) {
-						if (videomode==2) {
+						if (videomode==2) { //256 colores
 							color=*screen;
 						}
 
 
-						if (videomode==1) {
+						if (videomode==1) { //16 colores
 							color_orig=*screen;
 
 							//pixel de la izquierda
