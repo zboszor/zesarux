@@ -1619,20 +1619,20 @@ void menu_call_onscreen_keyboard_from_menu(void)
 int menu_si_pulsada_tecla_osd(void)
 {
 	if (menu_button_osdkeyboard.v) {
-		debug_printf(VERBOSE_DEBUG,"Pressed OSD default key");
+		//debug_printf(VERBOSE_DEBUG,"Pressed OSD default key");
 		return 1;
 	}
 
 	if (menu_button_f_function.v==0) return 0;
 
-	debug_printf(VERBOSE_DEBUG,"Pressed F key");
+	//debug_printf(VERBOSE_DEBUG,"Pressed F key");
 
 	//Tecla F pulsada, ver si es la asignada a osd
         int indice=menu_button_f_function_index;
 
         enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
 	if (accion==F_FUNCION_OSDKEYBOARD) {
-		debug_printf(VERBOSE_DEBUG,"Pressed F key mapped to OSD");
+		//debug_printf(VERBOSE_DEBUG,"Pressed F key mapped to OSD");
 		return 1;
 	}
 
@@ -22402,7 +22402,7 @@ void menu_debug_spritefinder(MENU_ITEM_PARAMETERS)
 
 void menu_debug_tsconf_dma_dibuja_ventana(void)
 {
-	menu_dibuja_ventana(3,7,26,13,"TSConf DMA");
+	menu_dibuja_ventana(2,7,27,13,"TSConf DMA");
 }
 
 
@@ -22446,7 +22446,7 @@ void menu_debug_tsconf_dma_overlay(void)
 
 		sprintf (texto_dma,"Burst number: %3d",debug_tsconf_dma_burst_number);
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
-
+						//Maximo 25
 		sprintf (texto_dma,"Align: %s %s",(debug_tsconf_dma_s_align ? "Source" : "      "),(debug_tsconf_dma_d_align ? "Destination" : "") );
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 

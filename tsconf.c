@@ -30,6 +30,7 @@
 #include "menu.h"
 #include "screen.h"
 #include "ula.h"
+#include "operaciones.h"
 
 
 z80_byte tsconf_last_port_eff7;
@@ -250,6 +251,52 @@ void tsconf_set_emulator_setting_turbo(void)
         cpu_set_turbo_speed();
 }
 
+
+void tsconf_fire_dma_interrupt(void)
+{
+	//Depende de DI???
+	if (iff1.v==0) return;
+
+	//registro intmask 2aH bit 2
+	if ((tsconf_af_ports[0x2a]&4)==0) return;				
+						
+						z80_byte reg_pc_h,reg_pc_l;
+                                                reg_pc_h=value_16_to_8h(reg_pc);
+                                                reg_pc_l=value_16_to_8l(reg_pc);
+
+                                                poke_byte(--reg_sp,reg_pc_h);
+                                                poke_byte(--reg_sp,reg_pc_l);
+
+						reg_r++;
+
+						
+
+
+						//desactivar interrupciones al generar una
+						iff1.v=0;
+						
+
+						        z80_int temp_i;
+                                                        z80_byte dir_l,dir_h;
+                                                        temp_i=reg_i*256+0xFB;  //interrupciones de dma el vector es XXFB
+                                                         dir_l=peek_byte(temp_i++);
+                                                        dir_h=peek_byte(temp_i);
+                                                        reg_pc=value_8_to_16(dir_h,dir_l);
+                                                        t_estados += 7;
+
+	printf ("Calling interrupt dma handler at %04XH\n",reg_pc);
+
+	//Solo sacar el handler para im2 a modo de debug
+	
+                                                        temp_i=reg_i*256+255;  
+                                                         dir_l=peek_byte(temp_i++);
+                                                        dir_h=peek_byte(temp_i);
+                                                        z80_int debug_im2=value_8_to_16(dir_h,dir_l);
+                                                        
+	printf ("(IM2 handler is at %04XH)\n",debug_im2);
+
+}
+
 int tsconf_return_dma_address(z80_byte bajo,z80_byte medio,z80_byte alto)
 {
 
@@ -318,11 +365,11 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 	//Guardamos estos valores en variable de debug para mostrarlos en menu debug, solo a titulo informativo
 	debug_tsconf_dma_source=source;
-	debug_tsconf_dma_destination=destination;;
+	debug_tsconf_dma_destination=destination;
 	debug_tsconf_dma_burst_length=burst_length;
 	debug_tsconf_dma_burst_number=burst_number;
 	debug_tsconf_dma_s_align=s_align;
-	debug_tsconf_dma_s_align=s_align;
+	debug_tsconf_dma_d_align=d_align;
 	debug_tsconf_dma_addr_align_size=addr_align_size;
 	debug_tsconf_dma_ddev=dma_ddev;
 	debug_tsconf_dma_rw=dma_rw;
@@ -575,6 +622,8 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 		printf ("DMA movement type: ");
 
 		tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw);
+
+		if (tsconf_dma_disabled.v==0) tsconf_fire_dma_interrupt();
 
 		
   }
@@ -1207,8 +1256,8 @@ void tsconf_store_scanline_ula(void)
 	//sumar offset
 	int y_offset=tsconf_af_ports[4]+256*(tsconf_af_ports[5]&1);
 
+	
 	//TODO: controlar si sale de rango
-
 	y_origen_pixeles +=y_offset;
       
 
@@ -1324,8 +1373,31 @@ void tsconf_store_scanline_ula(void)
 					}*/
 
 
-					if (videomode==1) offset=y_origen_pixeles*256;
-					else offset=y_origen_pixeles*512;
+
+					int x_offset=tsconf_af_ports[2]+256*(tsconf_af_ports[3]&1);
+					//edge grinder usa scroll x
+					
+					int offset_orig;
+
+					//16 colores
+					if (videomode==1) {
+						offset=y_origen_pixeles*256;
+						offset_orig=offset;
+
+						offset +=x_offset/2;
+					}
+
+					//256 colores
+					else {
+						offset=y_origen_pixeles*512;
+						offset_orig=offset;
+
+						offset +=x_offset;
+					}
+
+
+
+
 
 
 					//Ver cuantas paginas salta esto
@@ -1340,6 +1412,8 @@ void tsconf_store_scanline_ula(void)
 
 					z80_byte color,color_orig;
 					z80_int color_final;
+
+
 					for (x=0;x<tsconf_current_pixel_width;x++) {
 						if (videomode==2) { //256 colores
 							color=*screen;
@@ -1378,6 +1452,8 @@ void tsconf_store_scanline_ula(void)
                                                 tsconf_layer_ula[puntero_layer_ula++]=color_final;
 
 						screen++;
+
+						
 
 
 					}

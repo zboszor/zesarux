@@ -1,16 +1,11 @@
 -Prioridades para la 6.1 
 
-"Debug pressed F key" continuo en menu, pulsando F6 (smartload) y multitask tanto con como off
-implementar registros offset x 2,3, controlar si sale de rango Y
-tsconf dma  limitar tamanyo
 opcion tipo specdrump linea comandos
-opcion para desactivar dma
 cargar scl
 nombre fichero en ventana menu?
-que muestre ultima operacion dma
 borrar registros tsconf en hard reset? scroll se queda activo a veces
-agregar interrupt dma
 TSConf: demo twist.spg, deformacion se ve perfecta con fast render pero no con normal
+
 Revisar "clicks" en versión Windows, tanto pthreads como no pthreads. Parece que la no pthreads, antes de la 6.1, no pasaba?
 Recreated: que funcione en windows y linux
 QL: lectura de bloques basic no siempre funciona
