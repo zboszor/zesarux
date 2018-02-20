@@ -22432,7 +22432,7 @@ void menu_debug_tsconf_dma_overlay(void)
 						//18 maximo el tipo
 						//  012345678901234567890123
 						//24. mas dos de margen banda y banda: 26
-		sprintf (texto_dma,"Type: %s",tsconf_dma_types[12/*dma_type*/]);
+		sprintf (texto_dma,"Type: %s",tsconf_dma_types[dma_type]);
 		menu_escribe_linea_opcion(linea++,-1,1,texto_dma);
 
 		sprintf (texto_dma,"Source:      %06XH",debug_tsconf_dma_source);
