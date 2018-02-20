@@ -1113,7 +1113,14 @@ void tsconf_store_scanline_ula(void)
 
 	int total_ancho_rainbow=get_total_ancho_rainbow();
 
-	int y_origen_pixeles=scanline_copia; //para hacer doble de alto
+	int y_origen_pixeles=scanline_copia; 
+
+	//sumar offset
+	int y_offset=tsconf_af_ports[4]+256*(tsconf_af_ports[5]&1);
+
+	//TODO: controlar si sale de rango
+
+	y_origen_pixeles +=y_offset;
       
 
     int x,bit;
