@@ -132,6 +132,7 @@ void load_spg_snapshot(char *filename)
   		//comp.ts.zclk = hdr10->clk & 3;
       tsconf_af_ports[0x13]= hdr10->win3_pg;
       debug_printf(VERBOSE_DEBUG,"Paging RAM %02XH to C000H",hdr10->win3_pg);
+			tsconf_set_memory_pages();
 
 
 
