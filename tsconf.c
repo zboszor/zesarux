@@ -275,14 +275,14 @@ int tsconf_align_address(int orig_destination,int destination,int addr_align_siz
 			int lower;
 
 				if (addr_align_size) { //1 alinear a 512
-				printf ("alinear a 512\n");
+				//printf ("alinear a 512\n");
 				lower=orig_destination&0x1FF;
 				destination=destination&0xFFFE00;
 				destination |=lower;
 				destination +=512;
 			}
 			else { //0 alinear a 256
-				printf ("alinear a 256\n");
+				//printf ("alinear a 256\n");
 				lower=orig_destination&0xFF;
 				destination=destination&0xFFFF00;
 				destination |=lower;
@@ -293,16 +293,93 @@ int tsconf_align_address(int orig_destination,int destination,int addr_align_siz
 }
 
 //de momento solo para tipo ram
-void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,int s_align,int d_align,int addr_align_size)
+void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,int s_align,int d_align,int addr_align_size,z80_byte dma_ddev,z80_byte dma_rw)
 {
 	int orig_source;
 	int orig_destination;
 
 
+	int source_mask,destination_mask;
+
+	z80_byte *source_pointer;
+	z80_byte *destination_pointer;
+
+		switch (dma_ddev) {
+
+			case 1:
+				if (dma_rw==0) {
+					printf ("RAM (Src) is copied to RAM (Dst)\n");
+
+					source_pointer=tsconf_ram_mem_table[0];
+					destination_pointer=tsconf_ram_mem_table[0];
+
+					source_mask=destination_mask=0x3FFFFF; //4 mb
+
+				}
+				else {
+					printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero\n");
+
+					source_pointer=tsconf_ram_mem_table[0];
+					destination_pointer=tsconf_ram_mem_table[0];
+
+					source_mask=destination_mask=0x3FFFFF; //4 mb
+
+				}
+
+			break;
+
+			case 4:
+
+				if (dma_rw==0) {
+					printf ("RAM (Dst) is filled with word from RAM (Src)\n");
+
+					source_pointer=tsconf_ram_mem_table[0];
+					destination_pointer=tsconf_ram_mem_table[0];
+
+					source_mask=destination_mask=0x3FFFFF; //4 mb
+			
+				}
+				else {
+					printf ("RAM (Src) is copied to CRAM (Dst)\n");
+
+					source_pointer=tsconf_ram_mem_table[0];
+					destination_pointer=tsconf_fmaps;
+
+					source_mask=0x3FFFFF; //4 mb
+
+					destination_mask=0x1FF; //4 mb
+		
+				}
+			break;
 
 
-	z80_byte *source_pointer=(tsconf_ram_mem_table[0]);
-	z80_byte *destination_pointer=(tsconf_ram_mem_table[0]);
+			case 5:
+				if (dma_rw==0) {
+					printf ("Unemulated DMA FDD dump into RAM**\n");
+					sleep(3);
+					return;
+				}
+
+				else {
+					printf ("RAM (Src) is copied to SFILE (Dst)\n"); //Digger usa esto
+					source_pointer=tsconf_ram_mem_table[0];
+					destination_pointer=&tsconf_fmaps[0x200];
+
+					source_mask=0x3FFFFF; //4 mb
+
+					destination_mask=0x1FF; //4 mb					
+				}
+
+			break;
+
+			default:
+				printf ("Unemulated dma type: rw: %d ddev: %02XH\n",dma_rw,dma_ddev);
+				sleep(3);
+				return;
+			break;
+		}
+
+
 
 	for (;burst_number>0;burst_number--){
 		int i;
@@ -312,16 +389,44 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 		for (i=0;i<burst_length;i++) {
 
-			destination_pointer[destination]=source_pointer[source];
+			destination &=destination_mask;
+			source &=source_mask;
+
+			if (dma_ddev==1 && dma_rw==1) { 
+
+				//printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero\n");
+				//edge_grinder usa esto
+
+				//TODO de momento suponer 256 colores. 
+				if (source_pointer[source]) destination_pointer[destination]=source_pointer[source];
+			}
+
+			else {
+				destination_pointer[destination]=source_pointer[source];	
+			}
 
 			destination++;
-			source++;
+
+			//Si es fill. en que se diferencia de copia normal de byte??
+			if (dma_ddev==4 && dma_rw==0) {
+				source++;
+
+				destination &=destination_mask;
+				source &=source_mask;
+
+				destination_pointer[destination]=source_pointer[source];
+				destination++;
+
+				source--;
+			}
+			
+			else {
+				source++;
+			}
 		}
 
 		if (d_align) {
 			destination=tsconf_align_address(orig_destination,destination,addr_align_size);
-		
-
 		}
 
 		if (s_align) {
@@ -418,6 +523,9 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 
 		printf ("DMA movement type: ");
 
+		tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw);
+
+		/*
 		switch (dma_ddev) {
 
 			case 1:
@@ -430,24 +538,9 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 
 					if (dma_length) {
 						printf ("moviendo datos\n");
-						memcpy(destino,origen,dma_length);
+						//memcpy(destino,origen,dma_length);
 
-						tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz);
-
-
-//void tsconf_dma_operation(z80_byte *source,z80_byte *destination,int burst_length,int burst_number,int s_align,int d_align,int addr_align_size)
-
-
-						/*int i;
-						for (i=0;i<dma_length;i+=2) {
-							*destino=*origen;
-							destino++;
-							origen++;
-							*destino=*origen;
-							destino++;
-							origen++;
-						}*/
-
+						tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw);
 					}
 				}
 				else printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero\n");
@@ -455,7 +548,10 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 
 			case 4:
 				if (dma_rw==0) {
+					tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw);
+
 					printf ("RAM (Dst) is filled with word from RAM (Src)\n");
+					//sleep(4);
 												//Prueba chapuza
 					z80_byte *origen=(tsconf_ram_mem_table[0])+dmasource;
 					z80_byte *destino=(tsconf_ram_mem_table[0])+dmadest;
@@ -464,13 +560,16 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 						printf ("moviendo datos\n");
 						//memcpy(destino,origen,dma_length);
 						int i;
-						for (i=0;i<dma_length;i+=2) {
+						for (i=0;i<dma_length;i++) {
 							*destino=*origen;
 							destino++;
 							origen++;
 							*destino=*origen;
 							destino++;
 							origen++;
+
+							//temp
+							origen-=2;
 						}
 						
 					}
@@ -484,14 +583,14 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 
 					if (dma_length) {
 						printf ("moviendo datos\n");
-						memcpy(destino,origen,dma_length);
+						//memcpy(destino,origen,dma_length);
 
-						/*int i;
+						int i;
 						for (i=0;i<dma_length;i++) {
 							*destino=*origen;
 							destino++;
 							origen++;
-						}*/
+						}
 						//memcpy(dma_destino,dma_origen,dma_length);
 					}
 				}
@@ -501,6 +600,7 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 				printf ("Unknown\n");
 			break;
 		}
+		*/
   }
 
   //Si cambia registro #21AF (memconfig) o page0-3
