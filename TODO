@@ -2,7 +2,9 @@
 
 "Debug pressed F key" continuo en menu, pulsando F6 (smartload) y multitask tanto con como off
 implementar registros offset x 2,3, controlar si sale de rango Y
-TSConf: demo ny17.spg, deformacion se ve perfecta con fast render pero no con normal
+tsconf dma  limitar tamanyo
+agregar interrupt dma
+TSConf: demo twist.spg, deformacion se ve perfecta con fast render pero no con normal
 Revisar "clicks" en versión Windows, tanto pthreads como no pthreads. Parece que la no pthreads, antes de la 6.1, no pasaba?
 Recreated: que funcione en windows y linux
 QL: lectura de bloques basic no siempre funciona

@@ -269,6 +269,29 @@ printf ("%d %d %d\n",bajo,medio,alto);
 	return final;
 }
 
+int tsconf_align_address(int orig_destination,int destination,int addr_align_size)
+{
+
+			int lower;
+
+				if (addr_align_size) { //1 alinear a 512
+				printf ("alinear a 512\n");
+				lower=orig_destination&0x1FF;
+				destination=destination&0xFFFE00;
+				destination |=lower;
+				destination +=512;
+			}
+			else { //0 alinear a 256
+				printf ("alinear a 256\n");
+				lower=orig_destination&0xFF;
+				destination=destination&0xFFFF00;
+				destination |=lower;
+				destination +=256;
+			}
+
+	return destination;
+}
+
 //de momento solo para tipo ram
 void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,int s_align,int d_align,int addr_align_size)
 {
@@ -296,23 +319,13 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 		}
 
 		if (d_align) {
-			int lower;
+			destination=tsconf_align_address(orig_destination,destination,addr_align_size);
+		
 
-			if (addr_align_size) { //1 alinear a 512
-				printf ("alinear a 512\n");
-				lower=orig_destination&0x1FF;
-				destination=destination&0xFFFE00;
-				destination |=lower;
-				destination +=512;
-			}
-			else { //0 alinear a 256
-				printf ("alinear a 256\n");
-				lower=orig_destination&0xFF;
-				destination=destination&0xFFFF00;
-				destination |=lower;
-				destination +=256;
-			}
+		}
 
+		if (s_align) {
+			source=tsconf_align_address(orig_source,source,addr_align_size);
 		}
 
 	}
@@ -449,8 +462,8 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 
 					if (dma_length) {
 						printf ("moviendo datos\n");
-						memcpy(destino,origen,dma_length);
-						/*int i;
+						//memcpy(destino,origen,dma_length);
+						int i;
 						for (i=0;i<dma_length;i+=2) {
 							*destino=*origen;
 							destino++;
@@ -459,7 +472,7 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 							destino++;
 							origen++;
 						}
-						*/
+						
 					}
 				}
 				else {
