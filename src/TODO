@@ -3,7 +3,7 @@
 
 cargar scl
 nombre fichero en ventana menu?
-borrar registros tsconf en hard reset? scroll se queda activo a veces
+borrar registros tsconf en hard reset? scroll se queda activo a veces. quiza ahora con la dma ya no pasa. revisar. si que pasa
 TSConf: demo twist.spg, deformacion se ve perfecta con fast render pero no con normal
 tsconf: alguna tecla parece quedarse pulsada o no ir: bobmer, xnx, uwol, etc
 tsconf: driver texto curses, simpletext, stdout

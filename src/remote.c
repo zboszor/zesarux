@@ -1508,6 +1508,7 @@ void remote_cpu_run_loop(int misocket,int verbose,int limite,int datos_vuelve)
 
 	char buf[30];
 
+	//Hacer el socket que no se quede bloqueado si no hay datos.
 	if (datos_vuelve) {
 		int flags = fcntl(sock_conectat, F_GETFL, 0);
 		fcntl(sock_conectat, F_SETFL, flags | O_NONBLOCK);
@@ -1527,12 +1528,11 @@ void remote_cpu_run_loop(int misocket,int verbose,int limite,int datos_vuelve)
 		debug_run_until_return_interrupt();
 	  }
 
+	//Si se vuelve cuando hay datos en el socket. Con esto, usa mucha mas cpu (46% respecto a un 19% si no se esta mirando el socket)
 	if (datos_vuelve) {
 		int leidos = read(sock_conectat, buf, 30);
 		if (leidos>0) {
-			salir=1;
-		        int flags = fcntl(sock_conectat, F_GETFL, 0);
-	        	fcntl(sock_conectat, F_SETFL, flags ^ O_NONBLOCK);
+			salir=1;      	
 		}
 	}
 
@@ -1546,12 +1546,15 @@ void remote_cpu_run_loop(int misocket,int verbose,int limite,int datos_vuelve)
 	  if (menu_abierto) salir=1;
 	}
 
+	//Dejar el socket tranquilito como estaba antes
+	if (datos_vuelve) {
+		int flags = fcntl(sock_conectat, F_GETFL, 0);
+		fcntl(sock_conectat, F_SETFL, flags ^ O_NONBLOCK);
+	}
+
 }
 
-//int   towindows_remote_cpu_run_misocket;
-//int towindows_remote_cpu_run_verbose;
-//int towindows_remote_cpu_run_limite;
-//int towindows_remote_cpu_run_loop=0;
+
 
 //Ejecutar hasta siguiente punto de paro o cualquier otro evento que abra el menu
 //Variables: verbose: si se muestra desensamblado en cada instruccion,
