@@ -210,3 +210,5 @@ __FEATURES__
 __Some screenshots__
 
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_overscan.jpg "Overscan demo")
+
+You can find some ZEsarUX videos on my [Youtube channel](https://www.youtube.com/user/chernandezba)
