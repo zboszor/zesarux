@@ -16,7 +16,7 @@ sprintf (uncompress_command,"cat %s | %s -c  > \"%s\" ",origen,external_tool_gun
 Revisar "clicks" en versión Windows, tanto pthreads como no pthreads. Parece que la no pthreads, antes de la 6.1, no pasaba?
 Recreated: que funcione en windows y linux
 QL: lectura de bloques basic no siempre funciona
-TsConf: dma, color border registro 0xf. Offset grafico (GXOff*) se emula??
+TsConf: color border registro 0xf
 Mas utilidades de visor archivos: convertir?
 Formato zsf: completar para mas maquinas
 Mirar porque fallan muchos dsk
