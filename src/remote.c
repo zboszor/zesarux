@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
 
 
 #include "cpu.h"
@@ -760,7 +761,7 @@ struct s_items_ayuda items_ayuda[]={
 																				"If specify address but not lenght, only 1 byte is read"
 	},
   {"reset-cpu",NULL,NULL,"Resets CPU"},
-  {"run","|r","[verbose] [limit]","Run cpu when on cpu step mode. Returns when a breakpoint is fired or any other event which opens the menu. Set verbose parameter to get verbose output. limit parameter is a number of opcodes to run before returning. verbose or limit parameter can be written in different order, for example:\nrun verbose\nor\nrun 100\nor\nrun verbose 100\n"
+  {"run","|r","[verbose] [limit] [stop-on-data]","Run cpu when on cpu step mode. Returns when a breakpoint is fired or any other event which opens the menu. Set verbose parameter to get verbose output. limit parameter is a number of opcodes to run before returning. stop-on-data tells that the command will return when a data is sent to the socket (for example keypress on telnet client). verbose or limit or stop-on-data parameters can be written in different order, for example:\nrun verbose\nor\nrun 100\nor\nrun verbose 100\n"
    "Notice this command does not run the usual cpu loop, instead it is controlled from ZRCP. If you close the connection, the run loop will die"},
 	{"save-binary-internal",NULL,"pointer lenght file [offset]","Dumps internal memory to file for a given memory pointer. "
 				"Pointer can be any of the hexdump-internal command\n"
@@ -1502,8 +1503,15 @@ void remote_cpu_step_over(int misocket) {
 
 }
 
-void remote_cpu_run_loop(int misocket,int verbose,int limite)
+void remote_cpu_run_loop(int misocket,int verbose,int limite,int datos_vuelve)
 {
+
+	char buf[30];
+
+	if (datos_vuelve) {
+		int flags = fcntl(sock_conectat, F_GETFL, 0);
+		fcntl(sock_conectat, F_SETFL, flags | O_NONBLOCK);
+	}
 
 	int total_instrucciones=0;
 
@@ -1518,6 +1526,16 @@ void remote_cpu_run_loop(int misocket,int verbose,int limite)
 	  if (debug_core_lanzado_inter.v && (remote_debug_settings&32)) {
 		debug_run_until_return_interrupt();
 	  }
+
+	if (datos_vuelve) {
+		int leidos = read(sock_conectat, buf, 30);
+		if (leidos>0) {
+			salir=1;
+		        int flags = fcntl(sock_conectat, F_GETFL, 0);
+	        	fcntl(sock_conectat, F_SETFL, flags ^ O_NONBLOCK);
+		}
+	}
+
 	  total_instrucciones++;
 	  if (limite) {
 	    if (total_instrucciones==limite) {
@@ -1538,7 +1556,7 @@ void remote_cpu_run_loop(int misocket,int verbose,int limite)
 //Ejecutar hasta siguiente punto de paro o cualquier otro evento que abra el menu
 //Variables: verbose: si se muestra desensamblado en cada instruccion,
 //limite: si se ejecutan N instrucciones y se finaliza. Si es 0, no tiene limite (hasta apertura de menu o breakpoint)
-void remote_cpu_run(int misocket,int verbose,int limite)
+void remote_cpu_run(int misocket,int verbose,int limite,int datosvuelve)
 {
 
   if (menu_event_remote_protocol_enterstep.v==0) {
@@ -1567,12 +1585,12 @@ void remote_cpu_run(int misocket,int verbose,int limite)
   }
   	debug_printf (VERBOSE_DEBUG,"Exiting remote_cpu_run_loop from ZRCP to main loop");
  #else
-  remote_cpu_run_loop(misocket,verbose,limite);
+  remote_cpu_run_loop(misocket,verbose,limite,datosvuelve);
  #endif
 */
 
 //Opcion B. Hacemos esto normal y luego en menu, el menu_event_remote_protocol_enterstep refresca la pantalla por si solo cada 1 segundo
-  remote_cpu_run_loop(misocket,verbose,limite);
+  remote_cpu_run_loop(misocket,verbose,limite,datosvuelve);
 
 
 
@@ -3675,12 +3693,14 @@ char buffer_retorno[2048];
     int limit=0;
 
     int par=0;
+	int datosvuelve=0;
 
     remote_parse_commands_argvc(parametros);
 
     //ver cada parametro. pueden venir en diferente orden
     for (par=0;par<remote_command_argc;par++) {
       if (!strcasecmp(remote_command_argv[par],"verbose")) verbose=1;
+      else if (!strcasecmp(remote_command_argv[par],"stop-on-data")) datosvuelve=1;
       else limit=parse_string_to_number(remote_command_argv[par]);
     }
 
@@ -3698,7 +3718,7 @@ char buffer_retorno[2048];
     //if (parametros[0]!=0) verbose=1;
     if (limit==0) escribir_socket(misocket,"Running until a breakpoint, menu opening or other event\n");
     else escribir_socket_format(misocket,"Running until a breakpoint, menu opening, %d opcodes run, or other event\n",limit);
-    remote_cpu_run(misocket,verbose,limit);
+    remote_cpu_run(misocket,verbose,limit,datosvuelve);
   }
 
 

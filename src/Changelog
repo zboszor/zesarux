@@ -15,6 +15,7 @@ Added improved Spectrum 16/48/+ colour palette
 Added setting to add a watermark on the display
 Added setting to reduce display to a factor of 0.75. Used on RunZX event
 Added TSConf DMA emulation, line interrupt
+Improved ZRCP: run command can now be stopped when pressing a key (or sending data to the socket)
 Improved joystick support: 
 * added joystick test menu
 * buttons to events and buttons to joystick configuration are saved on configuration file
