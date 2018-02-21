@@ -44,6 +44,23 @@ Copyright 2017 Miodrag Milanovic. Distributed under BSD-3 License, you may read 
 
 
 
+
+Available versions for download here:
+* Source code
+* Binary compiled versions:
+* Linux 32/64 Bits
+* Mac OS X
+* Windows
+* Raspberry pi (raspbian)
+
+Other by 3rd party:
+* Arch Linux:
+* Retropie/EmulationStation
+* Open Pandora
+* PocketCHIP
+* MorhpOS
+
+
 __FEATURES__
 
 * Runs on any Unix system and Windows: tested on Linux x86, Linux x86_64, Linux Raspbian, Mac OS X, Windows native, Windows + Cygwin
