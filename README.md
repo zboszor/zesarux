@@ -224,11 +224,26 @@ __FEATURES__
 
 __Some screenshots__
 
+ZX Spectrum Overscan demo
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_overscan.jpg "Overscan demo")
+
+ZX-81 Mazogs
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_mazogs.png "Mazogs")
+
+Sinclair QL
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_ql.png "QL")
+
+Cambridge Z88
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_z88.png "Z88")
+
+ZX Spectrum Sir Fred running on curses (text) driver
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_sirfred_curses.png "Sirfred curses")
+
+ZX-Uno
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_zxuno.png "ZX-Uno")
+
+ZX-Evolution TSConf
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_tsconf.jpeg "ZX-Evolution TSConf")
+
 
 You can find some ZEsarUX videos on my [Youtube channel](https://www.youtube.com/user/chernandezba)

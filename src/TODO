@@ -26,6 +26,14 @@ porque no habilita el nested_function de divmmc. Sera tan facil como guardar el 
 activar ese nested (por defecto tenerlo desactivado). En caso de zxuno, divmmc en zsf no debe guardar/grabar su memoria ram ya que es 
 la propia memoria de zxuno quien lo tiene, lo mismo para tbblue, y prism
 
+
+Notas: para ver las descargas de github:
+https://api.github.com/repos/chernandezba/zesarux/releases
+
+buscar "download_count"
+
+curl -s https://api.github.com/repos/chernandezba/zesarux/releases | egrep '"name"|"download_count"'
+
 --- Cosas para la version 6.1
 
 QL:
