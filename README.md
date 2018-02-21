@@ -66,10 +66,6 @@ __FEATURES__
 *  Jupiter Ace
 *  Amstrad CPC 464
 
-
-
-
-
 * Is the only emulator for machines: ZX-Uno, Chloe 140/280, Prism, TBBlue and Chrome
 
 * Almost perfect emulation of timing of all Spectrum machines
