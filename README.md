@@ -43,7 +43,7 @@ Includes National Semiconductor SC/MP CPU Emulator
 Copyright 2017 Miodrag Milanovic. Distributed under BSD-3 License, you may read it on the LICENSE_SCMP_CORE
 
 
-* *  FEATURES * * 
+*  __FEATURES__
 
 * Runs on any Unix system and Windows: tested on Linux x86, Linux x86_64, Linux Raspbian, Mac OS X, Windows native, Windows + Cygwin
 
