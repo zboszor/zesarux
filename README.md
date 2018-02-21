@@ -48,7 +48,7 @@ __FEATURES__
 * Runs on any Unix system and Windows: tested on Linux x86, Linux x86_64, Linux Raspbian, Mac OS X, Windows native, Windows + Cygwin
 
 * Emulates:
- *  Science of Cambridge MK14
+*    Science of Cambridge MK14
 *  Sinclair ZX80
 *  Sinclair ZX81
 *  Spectrum models: 16k, 48k (English and Spanish), Inves Spectrum +, Spectrum 128k (English and Spanish), Spectrum +2 (English, Spanish and French), Spectrum +2A (English and Spanish), Spectrum +3 (English and Spanish), Microdigital TK90X (Portuguese and Spanish), TK95 
