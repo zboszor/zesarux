@@ -1,0 +1,58 @@
+Begin configure on date miércoles, 21 de febrero de 2018, 11:16:35 CET
+Configure sentence: ./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-cocoa-opengl
+Initial CFLAGS=
+Initial LDFLAGS=
+uname: illegal option -- o
+usage: uname [-amnprsv]
+configure.compile.c:1:10: fatal error: 'linux/fb.h' file not found
+#include <linux/fb.h>
+         ^~~~~~~~~~~~
+1 error generated.
+configure.compile.c:1:10: fatal error: 'aalib.h' file not found
+#include <aalib.h>
+         ^~~~~~~~~
+1 error generated.
+configure.compile.c:1:10: fatal error: 'caca.h' file not found
+#include <caca.h>
+         ^~~~~~~~
+1 error generated.
+configure.compile.c:1:10: fatal error: 'openssl/md5.h' file not found
+#include <openssl/md5.h>
+         ^~~~~~~~~~~~~~~
+1 error generated.
+configure.compile.c:6:9: warning: implicit declaration of function 'sched_setscheduler' is invalid in C99 [-Wimplicit-function-declaration]
+        sched_setscheduler(0, SCHED_RR, &sparam);
+        ^
+1 warning generated.
+Undefined symbols for architecture x86_64:
+  "_sched_setscheduler", referenced from:
+      _main in configure-4a9efe.o
+ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+configure.compile.c:1:10: fatal error: 'sys/soundcard.h' file not found
+#include <sys/soundcard.h>
+         ^~~~~~~~~~~~~~~~~
+1 error generated.
+configure.compile.c:1:10: fatal error: 'alsa/asoundlib.h' file not found
+#include <alsa/asoundlib.h>
+         ^~~~~~~~~~~~~~~~~~
+1 error generated.
+configure.compile.c:1:10: fatal error: 'pulse/pulseaudio.h' file not found
+#include <pulse/pulseaudio.h>
+         ^~~~~~~~~~~~~~~~~~~~
+1 error generated.
+clang: warning: -framework SDL: 'linker' input unused [-Wunused-command-line-argument]
+configure.compile.c:4:11: fatal error: 'SDL.h' file not found
+        #include <SDL.h>
+                 ^~~~~~~
+1 error generated.
+configure.compile.c:4:10: fatal error: 'sndfile.h' file not found
+#include <sndfile.h>
+         ^~~~~~~~~~~
+1 error generated.
+configure.compile.c:1:10: fatal error: 'linux/joystick.h' file not found
+#include <linux/joystick.h>
+         ^~~~~~~~~~~~~~~~~~
+1 error generated.
+Final CFLAGS= -Wall -Wextra -fsigned-char
+Final LDFLAGS= -lncurses -lX11 -L/usr/X11R6/lib -L/opt/X11/lib -lXext -lXxf86vm -lpthread -framework CoreAudio -framework AudioUnit -framework CoreServices -framework Foundation -framework AppKit -framework OpenGL
