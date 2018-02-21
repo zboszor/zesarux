@@ -26,3 +26,10 @@ _EOF
 echo "__FEATURES__"
 echo
 cat FEATURES
+
+echo
+cat << _EOF
+__Some screenshots__
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_overscan.jpg "Overscan demo")
+_EOF

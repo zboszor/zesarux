@@ -206,3 +206,7 @@ __FEATURES__
 
 * Other features: Visualmem menu, CPU Statistics
 
+
+__Some screenshots__
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_overscan.jpg "Overscan demo")
