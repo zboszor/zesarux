@@ -113,12 +113,19 @@ char *tsconf_video_sizes_array[]={
 
 //z80_bit tsconf_fired_frame_interrupt={0};
 
-//360 pixeles de ancho maximo (720 en modo texto)
-//Le damos mas margen por si acaso
+#define TSCONF_SCANLINE_TRANSPARENT_COLOR 65535
 //32768 colores maximo. Tenemos array de z80_int (16 bits). color 65535 es transparente
 
-#define TSCONF_MAX_WIDTH_LAYER 800
-#define TSCONF_SCANLINE_TRANSPARENT_COLOR 65535
+
+
+
+
+//360 pixeles de ancho maximo (720 en modo texto)
+//Pero coordenadas sprites pueden ir de 0 a 511, teniendo en cuenta que ocupan x2 de ancho, pues son 1024
+//sumamos tambien +8 porque los tiles empiezan en posicion 8 y tienen esos 8 primeros de margen por la izquierda
+//Le damos mas margen por si acaso
+
+#define TSCONF_MAX_WIDTH_LAYER (1024+8+256)
 
 z80_int tsconf_layer_ula[TSCONF_MAX_WIDTH_LAYER];
 z80_int tsconf_layer_tiles_zero[TSCONF_MAX_WIDTH_LAYER];
@@ -1702,14 +1709,16 @@ void tsconf_store_scanline_sprites(void)
 			    Para pasar de cada coordenada y, hay que sumar 512 pixeles (son de 4bpp), por tanto, 256 direcciones
 			    */
 
-	        //printf ("\nsprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
+	        //if (x>320) printf ("\nsprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
 				  //temp_sprite_xy(x,y,1+8);
           int y_offset=scanline_copia-y;
           //printf ("\nscanline: %d yoff: %d sprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",scanline_copia,y_offset,i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
           //temp_sprite_xy_putsprite(x,y,xsize,ysize,tnum_x,tnum_y,spal);
 
+			
+	int final_layer_x_offset=x*2;  //*2 porque la resolucion de pixeles es de 360 maximo mientras que el scanline entero es de 720,
+	//y solo se pueden usar 720 con el modo texto
 
-	int final_layer_x_offset=x*2;
           tsconf_store_scanline_sprites_putsprite(y_offset,xsize,tnum_x,tnum_y,spal,&layer[final_layer_x_offset]);
         }
 				
