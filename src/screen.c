@@ -13093,7 +13093,7 @@ int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width
 	//contraste para renderizados de modo texto. 0=todo negro, 100=todo blanco
 
 	//suma de componentes maximo da valor umbral
-	int bw_final;
+	//int bw_final;
 
 	int brillo=100-screen_text_brightness;
 
