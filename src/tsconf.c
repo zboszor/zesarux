@@ -110,7 +110,7 @@ char *tsconf_video_sizes_array[]={
   "320x240",
   "360x288"
 };
-
+ 
 //z80_bit tsconf_fired_frame_interrupt={0};
 
 #define TSCONF_SCANLINE_TRANSPARENT_COLOR 65535
@@ -1194,7 +1194,7 @@ void tsconf_store_scanline_border_supinf_izqder(int tipo)
 
 //      printf ("Refresco border\n");
 
-        int x,y;
+        int x;
 
         //parte superior e inferior
        
@@ -1256,7 +1256,7 @@ void tsconf_store_scanline_ula(void)
 	//Si zona border inferior
 	if (scanline_copia>tsconf_current_pixel_height) return;
 
-	int total_ancho_rainbow=get_total_ancho_rainbow();
+	//int total_ancho_rainbow=get_total_ancho_rainbow();
 
 	int y_origen_pixeles=scanline_copia; 
 
