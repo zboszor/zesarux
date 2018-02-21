@@ -61,6 +61,19 @@ Other by 3rd party:
 * MorhpOS
 
 
+
+
+__DONATE__
+ZEsarUX is free software and you don't need to pay to use it. 
+ZEsarUX will always cost you nothing to use, but that doesn't mean it costs me nothing to make.
+So if you want to demonstrate your appreciation to it, you can donate using Paypal. Just click:
+
+https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=E5RSRST8N7KWS&lc=ES&item_name=Donativo%20ZEsarUX&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
+
+
+Thanks!
+
+
 __FEATURES__
 
 * Runs on any Unix system and Windows: tested on Linux x86, Linux x86_64, Linux Raspbian, Mac OS X, Windows native, Windows + Cygwin
@@ -205,6 +218,7 @@ __FEATURES__
 * Supports command line settings, configuration file settings and per-game configuration settings
 
 * Other features: Visualmem menu, CPU Statistics
+
 
 
 __Some screenshots__

@@ -23,10 +23,19 @@ Other by 3rd party:
 
 _EOF
 
+
+echo
+echo
+echo "__DONATE__"
+cat DONATE
+
+echo
+echo
 echo "__FEATURES__"
 echo
 cat FEATURES
 
+echo
 echo
 cat << _EOF
 __Some screenshots__
