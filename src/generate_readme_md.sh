@@ -27,6 +27,7 @@ _EOF
 echo
 echo
 echo "__DONATE__"
+echo
 cat DONATE
 
 echo
