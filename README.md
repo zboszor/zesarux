@@ -43,28 +43,29 @@ Includes National Semiconductor SC/MP CPU Emulator
 Copyright 2017 Miodrag Milanovic. Distributed under BSD-3 License, you may read it on the LICENSE_SCMP_CORE
 
 
+
 __FEATURES__
 
 * Runs on any Unix system and Windows: tested on Linux x86, Linux x86_64, Linux Raspbian, Mac OS X, Windows native, Windows + Cygwin
 
 * Emulates:
-*  Science of Cambridge MK14
-*  Sinclair ZX80
-*  Sinclair ZX81
-*  Spectrum models: 16k, 48k (English and Spanish), Inves Spectrum +, Spectrum 128k (English and Spanish), Spectrum +2 (English, Spanish and French), Spectrum +2A (English and Spanish), Spectrum +3 (English and Spanish), Microdigital TK90X (Portuguese and Spanish), TK95 
-*  Sinclair QL
-*  Cambridge Z88
-*  Timex TS 2068 
-*  Sam Coupe
-*  Pentagon 
-*  Chloe 140 SE, 280 SE
-*  Chrome
-*  Prism
-*  ZX-Uno
-*  ZX-Evolution TS-Conf
-*  TBBlue/ZX Spectrum Next
-*  Jupiter Ace
-*  Amstrad CPC 464
+* Science of Cambridge MK14
+* Sinclair ZX80
+* Sinclair ZX81
+* Spectrum models: 16k, 48k (English and Spanish), Inves Spectrum +, Spectrum 128k (English and Spanish), Spectrum +2 (English, Spanish and French), Spectrum +2A (English and Spanish), Spectrum +3 (English and Spanish), Microdigital TK90X (Portuguese and Spanish), TK95 
+* Sinclair QL
+* Cambridge Z88
+* Timex TS 2068 
+* Sam Coupe
+* Pentagon 
+* Chloe 140 SE, 280 SE
+* Chrome
+* Prism
+* ZX-Uno
+* ZX-Evolution TS-Conf
+* TBBlue/ZX Spectrum Next
+* Jupiter Ace
+* Amstrad CPC 464
 
 * Is the only emulator for machines: ZX-Uno, Chloe 140/280, Prism, TBBlue and Chrome
 

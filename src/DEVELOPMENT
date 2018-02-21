@@ -15,6 +15,8 @@ En changelog, decir qué comandos nuevos de ZRCP, haciendo diff con version ante
 * Actualizar features, segun lo agregado a Changelog
 * vigilar funciones F de pruebas en xwindows, desactivar las que sean de pruebas
 
+* generar README.md mediante ./generate_readme_md.sh
+
 nombres ediciones:
 toi acid, sabre wulf, turbo esprit, great escape, target renegade, cliff hanger,  Night Shift, Saint Dragon, silent service, bubble bobble, dynamite Dan 2, rygar, frank n stein, match day, Hysteria, Star raiders 2, Bruce lee, El zorro , Exploding fist, Three weeks in Paradise, Exolon, Koronis Rift, Fox Fights back, Gauntlet, world destruction
 
