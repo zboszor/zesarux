@@ -1,17 +1,16 @@
 -Prioridades para la 6.1 
 
-Segfault con sprites+tsconf+windwows. peta facil en ny17
+valores de espejo en sprites...
 cargar scl
 nombre fichero en ventana menu?
 borrar registros tsconf en hard reset? scroll se queda activo a veces. quiza ahora con la dma ya no pasa. revisar. si que pasa
-TSConf: demo twist.spg, deformacion se ve perfecta con fast render pero no con normal
+TSConf: demo twist de fast.spg, deformacion se ve perfecta con fast render pero no con normal
 tsconf: alguna tecla parece quedarse pulsada o no ir: bobmer, xnx, uwol, etc
 tsconf: driver texto curses, simpletext, stdout
 
+
 corregir descompresion rzx para que no use el comando "cat":
 sprintf (uncompress_command,"cat %s | %s -c  > \"%s\" ",origen,external_tool_gunzip,destino);
-
-
 
 Revisar "clicks" en versión Windows, tanto pthreads como no pthreads. Parece que la no pthreads, antes de la 6.1, no pasaba?
 Recreated: que funcione en windows y linux

@@ -27880,13 +27880,13 @@ void menu_display_tsconf_fast_render(MENU_ITEM_PARAMETERS)
 
 void menu_tsconf_layer_dibuja_ventana(void)
 {
-        menu_dibuja_ventana(7,3,18,17,"TSConf Layers");
+        menu_dibuja_ventana(7,3,19,17,"TSConf Layers");
 }
 
 int menu_tsconf_layer_valor_contador_segundo_anterior;
 
 char *menu_tsconf_layer_aux_usedunused_used="Used";
-char *menu_tsconf_layer_aux_usedunused_unused="Used";
+char *menu_tsconf_layer_aux_usedunused_unused="Unused";
 
 char *menu_tsconf_layer_aux_usedunused(int value)
 {
@@ -27937,7 +27937,7 @@ void menu_tsconf_layer_overlay(void)
     if ( ((contador_segundo%500) == 0 && menu_tsconf_layer_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 
         menu_tsconf_layer_valor_contador_segundo_anterior=contador_segundo;
-        printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
        
 
 		menu_tsconf_layer_overlay_mostrar_texto();

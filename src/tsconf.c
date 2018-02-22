@@ -2012,11 +2012,6 @@ int spritestiles=1;
         int x;
   
 	   
-      
-
-
-
-
 				//scanline_copia tiene coordenada scanline de dentro de zona pantalla
 
 
