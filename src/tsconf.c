@@ -1869,7 +1869,34 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 }
 
+int tsconf_if_ula_enabled(void)
+{
+	if (tsconf_af_ports[0]&32) return 0;
+	return 1;
+}
 
+int tsconf_if_sprites_enabled(void)
+{
+	z80_byte tsconfig=tsconf_af_ports[6];
+	if (tsconfig&128) return 1;
+	else return 0;
+        //printf ("Sprite layers enable ");
+}
+
+int tsconf_if_tiles_zero_enabled(void)
+{
+	z80_byte tsconfig=tsconf_af_ports[6];
+	if (tsconfig&32) return 1;
+	else return 0;
+}
+
+
+int tsconf_if_tiles_one_enabled(void)
+{
+	z80_byte tsconfig=tsconf_af_ports[6];
+	if (tsconfig&64) return 1;
+	else return 0;
+}
 
 //Para zona de border o pantalla
 void screen_store_scanline_rainbow_solo_display_tsconf(void)
@@ -1900,7 +1927,7 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 
   //Dibujamos las capas
 
-        if (tsconf_af_ports[0]&32) {
+        //if (tsconf_af_ports[0]&32) {
                 //Si no hay graficos normales, poner a negro
 		
                 /*int size=get_total_ancho_rainbow()*get_total_alto_rainbow();
@@ -1915,9 +1942,11 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
 		//for (i=0;i<TSCONF_MAX_WIDTH_LAYER;i++) tsconf_layer_ula[i]=0;
 
 
-        }
+        //}
 
-	else if (tsconf_force_disable_layer_ula.v==0) tsconf_store_scanline_ula();
+	//else if (tsconf_force_disable_layer_ula.v==0) tsconf_store_scanline_ula();
+
+	if (tsconf_if_ula_enabled() && tsconf_force_disable_layer_ula.v==0) tsconf_store_scanline_ula();
 
 
 //Si estamos en zona de superior o inferior, ni sprites ni tiles
@@ -1940,18 +1969,20 @@ int spritestiles=1;
 
   if (tsconf_si_render_spritetile_rapido.v==0) {
 	  z80_byte tsconfig=tsconf_af_ports[6];
-	  if (tsconfig&128) {
+	  //if (tsconfig&128) {
+	  if (tsconf_if_sprites_enabled() ) {
         //printf ("Sprite layers enable ");
         if (tsconf_force_disable_layer_sprites.v==0) tsconf_store_scanline_sprites();
 	  }
 
-
-	  if (tsconfig&32) {
+	  //if (tsconfig&32) {
+	  if (tsconf_if_tiles_zero_enabled() ) {
 			//printf ("Tile layer 0 enable- ");
 		  if (tsconf_force_disable_layer_tiles_zero.v==0) tsconf_store_scanline_tiles(0,tsconf_layer_tiles_zero);
 		}
 
-	  if (tsconfig&64) {
+	  //if (tsconfig&64) {
+	  if (tsconf_if_tiles_one_enabled() ) {
         	//printf ("Tile layer 1 enable- ");
 	    if (tsconf_force_disable_layer_tiles_one.v==0) tsconf_store_scanline_tiles(1,tsconf_layer_tiles_one);
 	  }

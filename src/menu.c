@@ -27878,6 +27878,74 @@ void menu_display_tsconf_fast_render(MENU_ITEM_PARAMETERS)
 	tsconf_si_render_spritetile_rapido.v ^=1;
 }
 
+void menu_tsconf_layer_dibuja_ventana(void)
+{
+        menu_dibuja_ventana(7,3,18,17,"TSConf Layers");
+}
+
+int menu_tsconf_layer_valor_contador_segundo_anterior;
+
+char *menu_tsconf_layer_aux_usedunused_used="Used";
+char *menu_tsconf_layer_aux_usedunused_unused="Used";
+
+char *menu_tsconf_layer_aux_usedunused(int value)
+{
+	if (value) return menu_tsconf_layer_aux_usedunused_used;
+	else return menu_tsconf_layer_aux_usedunused_unused;
+}
+
+void menu_tsconf_layer_overlay_mostrar_texto(void)
+{
+ int linea;
+
+    linea=1;
+
+    
+        //mostrarlos siempre a cada refresco
+
+                char texto_layer[33];
+
+                sprintf (texto_layer,"ULA:     %s",menu_tsconf_layer_aux_usedunused(tsconf_if_ula_enabled()));
+                menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+				linea +=3;
+
+                sprintf (texto_layer,"Sprites: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
+                menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
+				linea +=3;			
+
+                sprintf (texto_layer,"Tiles 0: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_zero_enabled()));
+                menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+				linea +=3;
+         
+                sprintf (texto_layer,"Tiles 1: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_one_enabled()));
+                menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+				linea +=3;
+
+				menu_escribe_linea_opcion(linea,-1,1,"Border: ");
+				linea +=3;
+}
+
+void menu_tsconf_layer_overlay(void)
+{
+
+    normal_overlay_texto_menu();
+
+ 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+ 
+    //esto hara ejecutar esto 2 veces por segundo
+    if ( ((contador_segundo%500) == 0 && menu_tsconf_layer_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+
+        menu_tsconf_layer_valor_contador_segundo_anterior=contador_segundo;
+        printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+       
+
+		menu_tsconf_layer_overlay_mostrar_texto();
+
+    }
+}
+
+
 void menu_tsconf_layer_settings_ula(MENU_ITEM_PARAMETERS)
 {
 	tsconf_force_disable_layer_ula.v ^=1;
@@ -27910,28 +27978,47 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
         menu_item *array_menu_tsconf_layer_settings;
         menu_item item_seleccionado;
         int retorno_menu;
+
+         //Cambiamos funcion overlay de texto de menu
+                set_menu_overlay_function(menu_tsconf_layer_overlay);
+
         do {
 
+            //Hay que redibujar la ventana desde este bucle
+            menu_tsconf_layer_dibuja_ventana();
 
+			//Valido tanto para cuando multitarea es off y para que nada mas entrar aqui, se vea, sin tener que esperar el medio segundo 
+			//que he definido en el overlay para que aparezca
+			menu_tsconf_layer_overlay_mostrar_texto();
 
-		menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_ula,NULL,"ULA: %s",(tsconf_force_disable_layer_ula.v ? "Disabled" : "Enabled"));
-		menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites,NULL,"Sprites: %s",(tsconf_force_disable_layer_sprites.v ? "Disabled" : "Enabled"));
-		menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_zero,NULL,"Tiles zero: %s",(tsconf_force_disable_layer_tiles_zero.v ? "Disabled" : "Enabled"));
-		menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_one,NULL,"Tiles one: %s",(tsconf_force_disable_layer_tiles_one.v ? "Disabled" : "Enabled"));
-		menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_border,NULL,"Border: %s",(tsconf_force_disable_layer_border.v ? "Disabled" : "Enabled"));
+            int lin=2;
+
+			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_ula,NULL,"%s",(tsconf_force_disable_layer_ula.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites,NULL,"%s",(tsconf_force_disable_layer_sprites.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_zero,NULL,"%s",(tsconf_force_disable_layer_tiles_zero.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_one,NULL,"%s",(tsconf_force_disable_layer_tiles_one.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_border,NULL,"%s",(tsconf_force_disable_layer_border.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
 				
 
+            retorno_menu=menu_dibuja_menu(&tsconf_layer_settings_opcion_seleccionada,&item_seleccionado,array_menu_tsconf_layer_settings,"TSConf Layers" );
 
+            cls_menu_overlay();
 
-
-                menu_add_item_menu(array_menu_tsconf_layer_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_tsconf_layer_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-		menu_add_ESC_item(array_menu_tsconf_layer_settings);
-
-                retorno_menu=menu_dibuja_menu(&tsconf_layer_settings_opcion_seleccionada,&item_seleccionado,array_menu_tsconf_layer_settings,"TSConf Layers" );
-
-                cls_menu_overlay();
-
+				//Nombre de ventana solo aparece en el caso de stdout
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
                         //llamamos por valor de funcion
                         if (item_seleccionado.menu_funcion!=NULL) {
@@ -27942,6 +28029,12 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
                 }
 
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+       //restauramos modo normal de texto de menu
+       set_menu_overlay_function(normal_overlay_texto_menu);
+
+	   cls_menu_overlay();
+
 
 }
 

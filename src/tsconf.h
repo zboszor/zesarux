@@ -109,4 +109,10 @@ extern char *tsconf_dma_types[];
 
 extern z80_bit tsconf_dma_disabled;
 
+
+extern int tsconf_if_ula_enabled(void);
+extern int tsconf_if_sprites_enabled(void);
+extern int tsconf_if_tiles_zero_enabled(void);
+extern int tsconf_if_tiles_one_enabled(void);
+
 #endif
