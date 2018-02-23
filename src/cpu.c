@@ -1322,6 +1322,9 @@ printf (
 		"--tsconf-fast-render       Enables fast render of Tiles and Sprites for TSConf. Uses less host cpu but it's less realistic: doesn't do scanline render but full frame render\n"
 
 		"--snoweffect               Enable snow effect support for Spectrum\n"
+		"--enablegigascreen         Enable Gigascreen video support\n"
+		"--enableinterlaced         Enable Gigascreen video support\n"
+
 		"--enableulaplus            Enable ULAplus video modes\n"
 		"--enablespectra            Enable Spectra video modes\n"
 		"--enabletimexvideo         Enable Timex video modes\n"
@@ -4209,6 +4212,8 @@ z80_bit command_line_spectra={0};
 z80_bit command_line_timex_video={0};
 z80_bit command_line_spritechip={0};
 z80_bit command_line_ulaplus={0};
+z80_bit command_line_gigascreen={0};
+z80_bit command_line_interlaced={0};
 z80_bit command_line_chroma81={0};
 z80_bit command_line_zxpand={0};
 z80_bit command_line_esxdos_handler={0};
@@ -5510,6 +5515,14 @@ int parse_cmdline_options(void) {
 				command_line_ulaplus.v=1;
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--enablegigascreen")) {
+				command_line_gigascreen.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--enableinterlaced")) {
+				command_line_interlaced.v=1;
+			}						
+
 			else if (!strcmp(argv[puntero_parametro],"--enablespectra")) {
 				command_line_spectra.v=1;
 			}
@@ -6579,6 +6592,10 @@ struct sched_param sparam;
 	if (command_line_spectra.v) spectra_enable();
 
 	if (command_line_ulaplus.v) enable_ulaplus();
+
+	if (command_line_gigascreen.v) enable_gigascreen();
+
+	if (command_line_interlaced.v) enable_interlace();		
 
 	if (command_line_timex_video.v) enable_timex_video();
 
