@@ -3106,7 +3106,9 @@ scr_putpixel_zoom_timex_mode6_interlaced(x_hi+bit,y,col6);
 }
 
 
-z80_int *scalled_rainbow_buffer=NULL;
+z80_int *new_scalled_rainbow_buffer=NULL;
+
+
 int scalled_rainbow_ancho=0;
 int scalled_rainbow_alto=0;
 
@@ -3227,16 +3229,16 @@ void screen_get_offsets_watermark_position(int position,int ancho, int alto, int
 		*y=watermark_y;
 }
 
-z80_int *screen_scale_075_function(int ancho,int alto)
+void screen_scale_075_and_watermark_function(z80_int *origen,z80_int *destino,int ancho,int alto)
 {
 			//int ancho_destino=ancho; // (ancho*3)/4;
 		//int alto_destino=alto; //(alto*3)/4;
 
 		//solo asignar buffer la primera vez o si ha cambiado el tamanyo
-		int asignar=0;
+		//int asignar=0;
 		
 		//Si ha cambiado el tamanyo
-		if (scalled_rainbow_ancho!=ancho || scalled_rainbow_alto!=alto) {
+		/*if (scalled_rainbow_ancho!=ancho || scalled_rainbow_alto!=alto) {
 			//Liberar si existia
 			if (scalled_rainbow_buffer!=NULL) {
 				debug_printf(VERBOSE_DEBUG,"Freeing previous scaled rainbow buffer");
@@ -3254,7 +3256,7 @@ z80_int *screen_scale_075_function(int ancho,int alto)
 
 		if (asignar) {
 			debug_printf(VERBOSE_DEBUG,"Allocating scaled rainbow buffer");
-			scalled_rainbow_buffer=malloc(ancho*alto*2); //*2 por que son valores de 16 bits
+			scalled_rainbow_buffer=malloc(ancho*alto*2); // *2 por que son valores de 16 bits
 			if (scalled_rainbow_buffer==NULL) cpu_panic("Can not allocate scalled rainbow buffer");
 
 			//Llenarlo de cero
@@ -3264,10 +3266,11 @@ z80_int *screen_scale_075_function(int ancho,int alto)
 			scalled_rainbow_ancho=ancho;
 			scalled_rainbow_alto=alto;
 		}
+		*/
 
-		screen_scale_rainbow_43(rainbow_buffer,ancho,alto,scalled_rainbow_buffer);
+		screen_scale_rainbow_43(origen,ancho,alto,destino);
 
-		//Si reducimos la pantalla, forzamos meter watermark
+		//Forzamos meter watermark
 
 		int watermark_x;
 		int watermark_y;
@@ -3279,13 +3282,59 @@ z80_int *screen_scale_075_function(int ancho,int alto)
 		watermark_y +=screen_reduce_offset_y;
 
 		
-		screen_put_watermark_generic(scalled_rainbow_buffer,watermark_x,watermark_y,scalled_rainbow_ancho,screen_generic_putpixel_indexcolour);
+		screen_put_watermark_generic(destino,watermark_x,watermark_y,scalled_rainbow_ancho,screen_generic_putpixel_indexcolour);
 
 		//Y decimos que el puntero de dibujado ahora lo pilla de la pantalla escalada
-		return scalled_rainbow_buffer;	
+		//return scalled_rainbow_buffer;	
 
 
 }
+
+
+void screen_scale_075_function(int ancho,int alto)
+{
+
+
+		//solo asignar buffer la primera vez o si ha cambiado el tamanyo
+		int asignar=0;
+		
+		//Si ha cambiado el tamanyo
+		if (scalled_rainbow_ancho!=ancho || scalled_rainbow_alto!=alto) {
+			//Liberar si existia
+			if (new_scalled_rainbow_buffer!=NULL) {
+				debug_printf(VERBOSE_DEBUG,"Freeing previous scaled rainbow buffer");
+				free (new_scalled_rainbow_buffer);
+				new_scalled_rainbow_buffer=NULL;
+
+
+			}
+
+			asignar=1;
+		}
+
+		//O si no hay buffer asignado
+		if (new_scalled_rainbow_buffer==NULL) asignar=1;
+
+		if (asignar) {
+			debug_printf(VERBOSE_DEBUG,"Allocating scaled rainbow buffer");
+			new_scalled_rainbow_buffer=malloc(ancho*alto*2); //*2 por que son valores de 16 bits
+			if (new_scalled_rainbow_buffer==NULL) cpu_panic("Can not allocate scalled rainbow buffer");
+
+			//Llenarlo de cero
+			int i;
+			for (i=0;i<ancho*alto;i++) new_scalled_rainbow_buffer[i]=0;
+
+			scalled_rainbow_ancho=ancho;
+			scalled_rainbow_alto=alto;
+		}
+		
+
+		//Destino va a ser el mismo
+		//screen_scale_075_and_watermark_function(rainbow_buffer,rainbow_buffer,ancho,alto);
+		screen_scale_075_and_watermark_function(rainbow_buffer,new_scalled_rainbow_buffer,ancho,alto);
+
+}
+
 
 void screen_add_watermark_rainbow(void)
 {
@@ -3368,7 +3417,8 @@ void scr_refresca_pantalla_rainbow_comun(void)
 
 	//Si se reduce la pantalla 0.75
 	if (screen_reduce_075.v) {
-		puntero=screen_scale_075_function(ancho,alto);
+		screen_scale_075_function(ancho,alto);
+		puntero=new_scalled_rainbow_buffer;
 	}
 	//Fin reduccion pantalla 0.75
 
