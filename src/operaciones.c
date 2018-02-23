@@ -5970,10 +5970,18 @@ if (MACHINE_IS_SPECTRUM_128_P2)
 
 
 
+if (MACHINE_IS_TSCONF) {
+	//temp tsconf
+	//Lo lee: alteregobeta, xnx. parece tener que ver con teclado
+	if (puerto==0x1f) return 0;
 
+	//xnx lee estos tambien:
+	//In Port fbdf unknown asked, PC after=0xe292
+	//In Port ffdf unknown asked, PC after=0xe2a2
 
-
+}
 	//debug_printf (VERBOSE_DEBUG,"In Port %x unknown asked, PC after=0x%x",puerto_l+256*puerto_h,reg_pc);
+	//printf ("In Port %x unknown asked, PC after=0x%x\n",puerto_l+256*puerto_h,reg_pc);
 	//printf ("idle bus port: %d\n",puerto_l+256*puerto_h);
 	return valor_idle_bus_port;
 

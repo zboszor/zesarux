@@ -1,12 +1,17 @@
 -Prioridades para la 6.1 
 
-valores de espejo en sprites...
-cargar scl
+
+
+
+
 nombre fichero en ventana menu?
+
 borrar registros tsconf en hard reset? scroll se queda activo a veces. quiza ahora con la dma ya no pasa. revisar. si que pasa
 TSConf: demo twist de fast.spg, deformacion se ve perfecta con fast render pero no con normal
-tsconf: alguna tecla parece quedarse pulsada o no ir: bobmer, xnx, uwol, etc
+tsconf: alguna tecla parece quedarse pulsada o no ir: bomber, xnx, uwol, etc
 tsconf: driver texto curses, simpletext, stdout
+valores de espejo en sprites tsconf...
+TsConf: color border registro 0xf
 
 
 corregir descompresion rzx para que no use el comando "cat":
@@ -15,7 +20,7 @@ sprintf (uncompress_command,"cat %s | %s -c  > \"%s\" ",origen,external_tool_gun
 Revisar "clicks" en versión Windows, tanto pthreads como no pthreads. Parece que la no pthreads, antes de la 6.1, no pasaba?
 Recreated: que funcione en windows y linux
 QL: lectura de bloques basic no siempre funciona
-TsConf: color border registro 0xf
+
 Mas utilidades de visor archivos: convertir?
 Formato zsf: completar para mas maquinas
 Mirar porque fallan muchos dsk
@@ -26,6 +31,8 @@ ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo
 porque no habilita el nested_function de divmmc. Sera tan facil como guardar el setting de diviface-paged-enabled y si es asi, 
 activar ese nested (por defecto tenerlo desactivado). En caso de zxuno, divmmc en zsf no debe guardar/grabar su memoria ram ya que es 
 la propia memoria de zxuno quien lo tiene, lo mismo para tbblue, y prism
+
+
 
 probar como hacer transparencia en menu:
 -un layer de color indexado 16 bits para pantalla de spectrum
@@ -38,6 +45,9 @@ Color 65535 consideraremos transparente
 Para ello, las rutinas que escriben texto en menu, deben usar otro destino destino: esto es complicado, pues hay rutinas de dibujar sprite en pantalla
 que son comunes para zx8081 (y modo simulado zx81 de spectrum) y menu
 ->drivers de texto usaran texto sobre pantalla como hasta ahora
+
+
+
 
 Notas: para ver las descargas de github:
 https://api.github.com/repos/chernandezba/zesarux/releases
@@ -123,7 +133,8 @@ Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En men�
 
 -Posible ocr con traducción de cirílico?
 
-
+-cargar scl:
+http://www.zx-modules.de/fileformats/sclformat.html
 
 -Config sinclair1/2 interface 2 joystick está bien? Ver página wos joystick
 
