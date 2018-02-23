@@ -3374,8 +3374,6 @@ void screen_scale_075_function(int ancho,int alto)
 				debug_printf(VERBOSE_DEBUG,"Freeing previous scaled rainbow buffer");
 				free (new_scalled_rainbow_buffer);
 				new_scalled_rainbow_buffer=NULL;
-
-
 			}
 
 			asignar=1;
@@ -7994,18 +7992,20 @@ void enable_border(void)
 {
 	border_enabled.v=1;
 	modificado_border.v=1;
-        //Recalcular algunos valores cacheados
-        recalcular_get_total_ancho_rainbow();
-        recalcular_get_total_alto_rainbow();
+    
+	//Recalcular algunos valores cacheados
+    recalcular_get_total_ancho_rainbow();
+    recalcular_get_total_alto_rainbow();
 }
 
 void disable_border(void)
 {
-        border_enabled.v=0;
+    border_enabled.v=0;
 	modificado_border.v=1;
-        //Recalcular algunos valores cacheados
-        recalcular_get_total_ancho_rainbow();
-        recalcular_get_total_alto_rainbow();
+    
+	//Recalcular algunos valores cacheados
+    recalcular_get_total_ancho_rainbow();
+    recalcular_get_total_alto_rainbow();
 }
 
 
