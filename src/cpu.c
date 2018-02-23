@@ -1323,7 +1323,7 @@ printf (
 
 		"--snoweffect               Enable snow effect support for Spectrum\n"
 		"--enablegigascreen         Enable Gigascreen video support\n"
-		"--enableinterlaced         Enable Gigascreen video support\n"
+		"--enableinterlaced         Enable Interlaced video support\n"
 
 		"--enableulaplus            Enable ULAplus video modes\n"
 		"--enablespectra            Enable Spectra video modes\n"
