@@ -5975,8 +5975,9 @@ if (MACHINE_IS_SPECTRUM_128_P2)
 		//Lo lee: alteregobeta, xnx. parece tener que ver con teclado
 		//Aunque luego veo que el 1f es del betadisk.... :OOO
 		//Otro: POS     - power of sound turbo-AY (bit 0 of port #1F)
-		//printf ("In Port %x unknown asked, PC after=0x%x\n",puerto_l+256*puerto_h,reg_pc);
+		
 		if (puerto==0x1f) return 0;
+		//printf ("In Port %x unknown asked, PC after=0x%x\n",puerto_l+256*puerto_h,reg_pc);
 
 		//xnx lee estos tambien:
 		//In Port fbdf unknown asked, PC after=0xe292
@@ -5984,7 +5985,7 @@ if (MACHINE_IS_SPECTRUM_128_P2)
 
 	}
 
-	
+
 	//debug_printf (VERBOSE_DEBUG,"In Port %x unknown asked, PC after=0x%x",puerto_l+256*puerto_h,reg_pc);
 	//printf ("In Port %x unknown asked, PC after=0x%x\n",puerto_l+256*puerto_h,reg_pc);
 	//printf ("idle bus port: %d\n",puerto_l+256*puerto_h);
