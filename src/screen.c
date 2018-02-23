@@ -3113,7 +3113,7 @@ void screen_scale_075_gigascreen_function(int ancho,int alto)
                         if (new_scalled_rainbow_buffer_gigascren_one!=NULL) {
                                 debug_printf(VERBOSE_DEBUG,"Freeing previous scaled gigascreen rainbow buffers");
                                 free (new_scalled_rainbow_buffer_gigascren_one);
-								free (new_scalled_rainbow_buffer_gigascren_one);
+								free (new_scalled_rainbow_buffer_gigascren_two);
                                 new_scalled_rainbow_buffer_gigascren_one=NULL;
 								new_scalled_rainbow_buffer_gigascren_two=NULL;
                         }
