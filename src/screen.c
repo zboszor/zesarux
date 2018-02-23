@@ -2912,9 +2912,247 @@ BITS INK PAPER BORDER
 
 
 
+void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
+{
+
+	int x,y;
+
+	int ancho_destino=(ancho*3)/4;
+	int alto_destino=(alto*3)/4;
+
+	int diferencia_ancho=ancho-ancho_destino;
+	int diferencia_alto=alto-alto_destino;
+
+	//Controlar offsets
+	if (screen_reduce_offset_x>diferencia_ancho) screen_reduce_offset_x=diferencia_ancho;
+	if (screen_reduce_offset_y>diferencia_alto) screen_reduce_offset_y=diferencia_alto-1;
+
+	if (screen_reduce_offset_x<0) screen_reduce_offset_x=0;
+	if (screen_reduce_offset_y<0) screen_reduce_offset_y=0;	
+
+	dest +=screen_reduce_offset_x;
+	dest +=screen_reduce_offset_y*ancho;
+
+	for (y=0;y<alto;y++) {
+		
+
+		for (x=0;x<ancho;x+=4) {
+			*dest=*orig;
+			dest++;
+			orig++;
+			
+			*dest=*orig;
+			dest++;
+			orig++;
+			
+			*dest=*orig;
+			dest++;
+			orig++;
+			
+			//Saltar el cuarto
+			orig++;
+			
+		}
+		
+		dest+=diferencia_ancho;
+
+
+		if ( (y%4)==3) {
+			//Saltar la cuarta linea
+			orig+=ancho;
+			y++;
+		}
+	}
+
+}
+
+
+//Meter pixel en un buffer rainbow de color indexado 16 bits. Usado en watermark
+void screen_generic_putpixel_indexcolour(z80_int *destino,int x,int y,int ancho,int color)
+{
+	int offset=y*ancho+x;
+
+	destino[offset]=color;
+}
+
+
+//Mete la marca de agua en un bitmap generico
+void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) )
+{
+	int fila,columna;
+
+	for (fila=0;fila<ZESARUX_ASCII_LOGO_ALTO;fila++) {
+		char *texto=zesarux_ascii_logo[fila];
+		for (columna=0;columna<ZESARUX_ASCII_LOGO_ANCHO;columna++) {
+			char caracter=texto[columna];
+
+			if (caracter!=' ') putpixel(destino,x+columna,y+fila,ancho,return_color_zesarux_ascii(caracter));
+		}
+	}
+}
+
+
+void screen_get_offsets_watermark_position(int position,int ancho, int alto, int *x, int *y)
+{
+
+	int watermark_x=*x;
+	int watermark_y=*y;
+
+	int rango_extremo=4;
+
+		switch (position) {
+			case 0:
+				watermark_x=rango_extremo;
+				watermark_y=rango_extremo;
+			break;
+
+			case 1:
+				watermark_x=ancho-ZESARUX_ASCII_LOGO_ANCHO-rango_extremo;
+				watermark_y=rango_extremo;
+			break;
+
+			case 2:
+				watermark_x=rango_extremo;
+				watermark_y=alto-ZESARUX_ASCII_LOGO_ALTO-rango_extremo;
+			break;				
+
+			case 3:
+			default:
+				watermark_x=ancho-ZESARUX_ASCII_LOGO_ANCHO-rango_extremo;
+				watermark_y=alto-ZESARUX_ASCII_LOGO_ALTO-rango_extremo;
+			break;			
+
+		}
+
+		*x=watermark_x;
+		*y=watermark_y;
+}
+
+//Comunes a escalado normal y escalado con gigascreen
+int scalled_rainbow_ancho=0;
+int scalled_rainbow_alto=0;
+
+//Punteros de escalado 0.75 para gigascreen
+z80_int *new_scalled_rainbow_buffer_gigascren_one=NULL;
+z80_int *new_scalled_rainbow_buffer_gigascren_two=NULL;
+
+void screen_scale_075_and_watermark_function(z80_int *origen,z80_int *destino,int ancho,int alto)
+{
+			//int ancho_destino=ancho; // (ancho*3)/4;
+		//int alto_destino=alto; //(alto*3)/4;
+
+		//solo asignar buffer la primera vez o si ha cambiado el tamanyo
+		//int asignar=0;
+		
+		//Si ha cambiado el tamanyo
+		/*if (scalled_rainbow_ancho!=ancho || scalled_rainbow_alto!=alto) {
+			//Liberar si existia
+			if (scalled_rainbow_buffer!=NULL) {
+				debug_printf(VERBOSE_DEBUG,"Freeing previous scaled rainbow buffer");
+				free (scalled_rainbow_buffer);
+				scalled_rainbow_buffer=NULL;
+
+
+			}
+
+			asignar=1;
+		}
+
+		//O si no hay buffer asignado
+		if (scalled_rainbow_buffer==NULL) asignar=1;
+
+		if (asignar) {
+			debug_printf(VERBOSE_DEBUG,"Allocating scaled rainbow buffer");
+			scalled_rainbow_buffer=malloc(ancho*alto*2); // *2 por que son valores de 16 bits
+			if (scalled_rainbow_buffer==NULL) cpu_panic("Can not allocate scalled rainbow buffer");
+
+			//Llenarlo de cero
+			int i;
+			for (i=0;i<ancho*alto;i++) scalled_rainbow_buffer[i]=0;
+
+			scalled_rainbow_ancho=ancho;
+			scalled_rainbow_alto=alto;
+		}
+		*/
+
+		screen_scale_rainbow_43(origen,ancho,alto,destino);
+
+		//Forzamos meter watermark
+
+		int watermark_x;
+		int watermark_y;
+
+		//Misma variable que watermark general
+		screen_get_offsets_watermark_position(screen_watermark_position,((ancho*3)/4),((alto*3)/4),&watermark_x,&watermark_y);
+
+		watermark_x +=screen_reduce_offset_x;
+		watermark_y +=screen_reduce_offset_y;
+
+		
+		screen_put_watermark_generic(destino,watermark_x,watermark_y,scalled_rainbow_ancho,screen_generic_putpixel_indexcolour);
+
+		//Y decimos que el puntero de dibujado ahora lo pilla de la pantalla escalada
+		//return scalled_rainbow_buffer;	
+
+
+}
+
+
+
+
+void screen_scale_075_gigascreen_function(int ancho,int alto)
+{
+
+
+                //solo asignar buffer la primera vez o si ha cambiado el tamanyo
+                int asignar=0;
+                
+                //Si ha cambiado el tamanyo
+                if (scalled_rainbow_ancho!=ancho || scalled_rainbow_alto!=alto) {
+                        //Liberar si existia
+                        if (new_scalled_rainbow_buffer_gigascren_one!=NULL) {
+                                debug_printf(VERBOSE_DEBUG,"Freeing previous scaled gigascreen rainbow buffers");
+                                free (new_scalled_rainbow_buffer_gigascren_one);
+								free (new_scalled_rainbow_buffer_gigascren_one);
+                                new_scalled_rainbow_buffer_gigascren_one=NULL;
+								new_scalled_rainbow_buffer_gigascren_two=NULL;
+                        }
+
+                        asignar=1;
+                }
+
+                //O si no hay buffer asignado
+                if (new_scalled_rainbow_buffer_gigascren_one==NULL) asignar=1;
+
+				if (asignar) {
+                        debug_printf(VERBOSE_DEBUG,"Allocating scaled gigascreen rainbow buffers");
+                        new_scalled_rainbow_buffer_gigascren_one=malloc(ancho*alto*2); //*2 por que son valores de 16 bits
+						new_scalled_rainbow_buffer_gigascren_two=malloc(ancho*alto*2); //*2 por que son valores de 16 bits
+
+                        if (new_scalled_rainbow_buffer_gigascren_one==NULL || new_scalled_rainbow_buffer_gigascren_two==NULL) cpu_panic("Can not allocate scalled gigascreen rainbow buffers");
+
+                        //Llenarlo de cero
+                        int i;
+                        for (i=0;i<ancho*alto;i++) {
+							new_scalled_rainbow_buffer_gigascren_one[i]=0;
+							new_scalled_rainbow_buffer_gigascren_two[i]=0;
+						}
+
+                        scalled_rainbow_ancho=ancho;
+                        scalled_rainbow_alto=alto;
+                }
+
+				screen_scale_075_and_watermark_function(rainbow_buffer_one,new_scalled_rainbow_buffer_gigascren_one,ancho,alto);
+				screen_scale_075_and_watermark_function(rainbow_buffer_two,new_scalled_rainbow_buffer_gigascren_two,ancho,alto);
+}
+
+
 void scr_refresca_pantalla_rainbow_comun_gigascreen(void)
 {
 	if ((interlaced_numero_frame&1)==0) {
+
+
+
 
 		//printf ("refresco con gigascreen\n");
 
@@ -2943,6 +3181,16 @@ void scr_refresca_pantalla_rainbow_comun_gigascreen(void)
 
         puntero_one=rainbow_buffer_one;
         puntero_two=rainbow_buffer_two;
+
+
+		//Reducimos los dos bufferes si conviene-escalado 0.75
+        if (screen_reduce_075.v) {
+                screen_scale_075_gigascreen_function(ancho,alto);
+				puntero_one=new_scalled_rainbow_buffer_gigascren_one;
+				puntero_two=new_scalled_rainbow_buffer_gigascren_two;
+        }
+
+
 
         int dibujar;
 
@@ -3109,186 +3357,7 @@ scr_putpixel_zoom_timex_mode6_interlaced(x_hi+bit,y,col6);
 z80_int *new_scalled_rainbow_buffer=NULL;
 
 
-int scalled_rainbow_ancho=0;
-int scalled_rainbow_alto=0;
 
-
-void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
-{
-
-	int x,y;
-
-	int ancho_destino=(ancho*3)/4;
-	int alto_destino=(alto*3)/4;
-
-	int diferencia_ancho=ancho-ancho_destino;
-	int diferencia_alto=alto-alto_destino;
-
-	//Controlar offsets
-	if (screen_reduce_offset_x>diferencia_ancho) screen_reduce_offset_x=diferencia_ancho;
-	if (screen_reduce_offset_y>diferencia_alto) screen_reduce_offset_y=diferencia_alto-1;
-
-	if (screen_reduce_offset_x<0) screen_reduce_offset_x=0;
-	if (screen_reduce_offset_y<0) screen_reduce_offset_y=0;	
-
-	dest +=screen_reduce_offset_x;
-	dest +=screen_reduce_offset_y*ancho;
-
-	for (y=0;y<alto;y++) {
-		
-
-		for (x=0;x<ancho;x+=4) {
-			*dest=*orig;
-			dest++;
-			orig++;
-			
-			*dest=*orig;
-			dest++;
-			orig++;
-			
-			*dest=*orig;
-			dest++;
-			orig++;
-			
-			//Saltar el cuarto
-			orig++;
-			
-		}
-		
-		dest+=diferencia_ancho;
-
-
-		if ( (y%4)==3) {
-			//Saltar la cuarta linea
-			orig+=ancho;
-			y++;
-		}
-	}
-
-}
-
-
-//Meter pixel en un buffer rainbow de color indexado 16 bits. Usado en watermark
-void screen_generic_putpixel_indexcolour(z80_int *destino,int x,int y,int ancho,int color)
-{
-	int offset=y*ancho+x;
-
-	destino[offset]=color;
-}
-
-
-//Mete la marca de agua en un bitmap generico
-void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) )
-{
-	int fila,columna;
-
-	for (fila=0;fila<ZESARUX_ASCII_LOGO_ALTO;fila++) {
-		char *texto=zesarux_ascii_logo[fila];
-		for (columna=0;columna<ZESARUX_ASCII_LOGO_ANCHO;columna++) {
-			char caracter=texto[columna];
-
-			if (caracter!=' ') putpixel(destino,x+columna,y+fila,ancho,return_color_zesarux_ascii(caracter));
-		}
-	}
-}
-
-
-void screen_get_offsets_watermark_position(int position,int ancho, int alto, int *x, int *y)
-{
-
-	int watermark_x=*x;
-	int watermark_y=*y;
-
-	int rango_extremo=4;
-
-		switch (position) {
-			case 0:
-				watermark_x=rango_extremo;
-				watermark_y=rango_extremo;
-			break;
-
-			case 1:
-				watermark_x=ancho-ZESARUX_ASCII_LOGO_ANCHO-rango_extremo;
-				watermark_y=rango_extremo;
-			break;
-
-			case 2:
-				watermark_x=rango_extremo;
-				watermark_y=alto-ZESARUX_ASCII_LOGO_ALTO-rango_extremo;
-			break;				
-
-			case 3:
-			default:
-				watermark_x=ancho-ZESARUX_ASCII_LOGO_ANCHO-rango_extremo;
-				watermark_y=alto-ZESARUX_ASCII_LOGO_ALTO-rango_extremo;
-			break;			
-
-		}
-
-		*x=watermark_x;
-		*y=watermark_y;
-}
-
-void screen_scale_075_and_watermark_function(z80_int *origen,z80_int *destino,int ancho,int alto)
-{
-			//int ancho_destino=ancho; // (ancho*3)/4;
-		//int alto_destino=alto; //(alto*3)/4;
-
-		//solo asignar buffer la primera vez o si ha cambiado el tamanyo
-		//int asignar=0;
-		
-		//Si ha cambiado el tamanyo
-		/*if (scalled_rainbow_ancho!=ancho || scalled_rainbow_alto!=alto) {
-			//Liberar si existia
-			if (scalled_rainbow_buffer!=NULL) {
-				debug_printf(VERBOSE_DEBUG,"Freeing previous scaled rainbow buffer");
-				free (scalled_rainbow_buffer);
-				scalled_rainbow_buffer=NULL;
-
-
-			}
-
-			asignar=1;
-		}
-
-		//O si no hay buffer asignado
-		if (scalled_rainbow_buffer==NULL) asignar=1;
-
-		if (asignar) {
-			debug_printf(VERBOSE_DEBUG,"Allocating scaled rainbow buffer");
-			scalled_rainbow_buffer=malloc(ancho*alto*2); // *2 por que son valores de 16 bits
-			if (scalled_rainbow_buffer==NULL) cpu_panic("Can not allocate scalled rainbow buffer");
-
-			//Llenarlo de cero
-			int i;
-			for (i=0;i<ancho*alto;i++) scalled_rainbow_buffer[i]=0;
-
-			scalled_rainbow_ancho=ancho;
-			scalled_rainbow_alto=alto;
-		}
-		*/
-
-		screen_scale_rainbow_43(origen,ancho,alto,destino);
-
-		//Forzamos meter watermark
-
-		int watermark_x;
-		int watermark_y;
-
-		//Misma variable que watermark general
-		screen_get_offsets_watermark_position(screen_watermark_position,((ancho*3)/4),((alto*3)/4),&watermark_x,&watermark_y);
-
-		watermark_x +=screen_reduce_offset_x;
-		watermark_y +=screen_reduce_offset_y;
-
-		
-		screen_put_watermark_generic(destino,watermark_x,watermark_y,scalled_rainbow_ancho,screen_generic_putpixel_indexcolour);
-
-		//Y decimos que el puntero de dibujado ahora lo pilla de la pantalla escalada
-		//return scalled_rainbow_buffer;	
-
-
-}
 
 
 void screen_scale_075_function(int ancho,int alto)
