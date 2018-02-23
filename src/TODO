@@ -27,6 +27,17 @@ porque no habilita el nested_function de divmmc. Sera tan facil como guardar el 
 activar ese nested (por defecto tenerlo desactivado). En caso de zxuno, divmmc en zsf no debe guardar/grabar su memoria ram ya que es 
 la propia memoria de zxuno quien lo tiene, lo mismo para tbblue, y prism
 
+probar como hacer transparencia en menu:
+-un layer de color indexado 16 bits para pantalla de spectrum
+-otro layer de color indexado 16 bits solo para menu
+
+al dibujar en pantalla, cada driver de video, debe leer los dos layers, sacar valores rgb de los dos colores,
+y hacer la media de los dos colores.
+Color 65535 consideraremos transparente 
+
+Para ello, las rutinas que escriben texto en menu, deben usar otro destino destino: esto es complicado, pues hay rutinas de dibujar sprite en pantalla
+que son comunes para zx8081 (y modo simulado zx81 de spectrum) y menu
+->drivers de texto usaran texto sobre pantalla como hasta ahora
 
 Notas: para ver las descargas de github:
 https://api.github.com/repos/chernandezba/zesarux/releases
