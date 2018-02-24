@@ -427,7 +427,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 					source_mask=0x3FFFFF; //4 mb
 
-					destination_mask=0x1FF; //4 mb
+					destination_mask=0x1FF; //512 bytes
 		
 				}
 			break;
@@ -446,7 +446,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 					source_mask=0x3FFFFF; //4 mb
 
-					destination_mask=0x1FF; //4 mb					
+					destination_mask=0x1FF; //512 bytes			
 				}
 
 			break;
@@ -484,6 +484,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			else {
 				destination_pointer[destination]=source_pointer[source];	
 			}
+
 
 			destination++;
 

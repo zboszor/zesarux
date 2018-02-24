@@ -5971,10 +5971,9 @@ if (MACHINE_IS_SPECTRUM_128_P2)
 
 
 	if (MACHINE_IS_TSCONF) {
-		//temp tsconf
-		//Lo lee: alteregobeta, xnx. parece tener que ver con teclado
-		//Aunque luego veo que el 1f es del betadisk.... :OOO
-		//Otro: POS     - power of sound turbo-AY (bit 0 of port #1F)
+		//Los juegos: alteregobeta, xnx, y todos los de los mojon twins, leen el joystick kempston
+		//Si retorno el valor del bus idle, esos juegos se saltan los menus , como si hubiese tecla pulsada
+		//Retorno 0, por si no se ha seleccionado joystick kempston en el menu de ZEsarUX
 		
 		if (puerto==0x1f) return 0;
 		//printf ("In Port %x unknown asked, PC after=0x%x\n",puerto_l+256*puerto_h,reg_pc);
