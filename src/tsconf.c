@@ -1650,12 +1650,23 @@ void tsconf_store_scanline_putsprite(int ancho, int tnum_x GCC_UNUSED, int tnum_
 }
 
 
+int tsconf_return_spritesgraphicspage(void)
+{
+	int direccion=tsconf_af_ports[0x19]>>3;
+    direccion=direccion & 31;
+    direccion=direccion << 17;
+
+	return direccion;
+}
+
 void tsconf_store_scanline_sprites_putsprite(int y_offset,int ancho, int tnum_x, int tnum_y,z80_byte spal,z80_int *layer)
 {
 
-                int direccion=tsconf_af_ports[0x19]>>3;
+                /*int direccion=tsconf_af_ports[0x19]>>3;
                 direccion=direccion & 31;
-                direccion=direccion << 17;
+                direccion=direccion << 17;*/
+
+				int direccion=tsconf_return_spritesgraphicspage();
 
                 z80_byte *sprite_origen;
 
@@ -1768,6 +1779,14 @@ int tsconf_return_tilegraphicspage(z80_byte layer)
 	return direccion_graficos;
 }
 
+int tsconf_return_tilemappage(void)
+{
+	int direccion_tile=tsconf_af_ports[0x16];
+    direccion_tile=direccion_tile<< 14;
+
+	return direccion_tile;
+}
+
 void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 {
 
@@ -1789,8 +1808,10 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	int direccion_graficos=tsconf_return_tilegraphicspage(layer);
 
 
-	int direccion_tile=tsconf_af_ports[0x16];
-    direccion_tile=direccion_tile<< 14;
+	/*int direccion_tile=tsconf_af_ports[0x16];
+    direccion_tile=direccion_tile<< 14;*/
+
+	int direccion_tile=tsconf_return_tilemappage();
 
 		//printf ("direccion_tile: %06XH\n",direccion_tile);
 

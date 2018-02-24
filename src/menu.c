@@ -8043,8 +8043,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 					case 'f':
-						view_sprites_offset_palette +=16;
-						if (view_sprites_offset_palette==256) view_sprites_offset_palette=0;
+						view_sprites_offset_palette++;
+						if (view_sprites_offset_palette>=256) view_sprites_offset_palette=0;
 					break;
 
 
@@ -22603,12 +22603,18 @@ void menu_debug_tsconf_videoregisters(MENU_ITEM_PARAMETERS)
                 sprintf (texto_buffer,"Video addr: %06XH",vpage_addr);
                 menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
+				sprintf (texto_buffer,"Tile Map Page: %06XH",tsconf_return_tilemappage() );
+				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
 				sprintf (texto_buffer,"Tile 0 Graphics addr: %06XH",tsconf_return_tilegraphicspage(0) );
 				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
 				sprintf (texto_buffer,"Tile 1 Graphics addr: %06XH",tsconf_return_tilegraphicspage(1) );
 				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
+
+				sprintf (texto_buffer,"Sprite Graphics addr: %06XH",tsconf_return_spritesgraphicspage() );
+				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
 
 
