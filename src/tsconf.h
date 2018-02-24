@@ -114,5 +114,7 @@ extern int tsconf_if_ula_enabled(void);
 extern int tsconf_if_sprites_enabled(void);
 extern int tsconf_if_tiles_zero_enabled(void);
 extern int tsconf_if_tiles_one_enabled(void);
+extern void tsconf_get_current_video_mode(char *s);
+extern int tsconf_return_tilegraphicspage(z80_byte layer);
 
 #endif

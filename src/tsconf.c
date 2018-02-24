@@ -32,6 +32,9 @@
 #include "ula.h"
 #include "operaciones.h"
 
+//temporal para printf debug que mira contador_segundo
+#include "timer.h"
+
 
 z80_byte tsconf_last_port_eff7;
 z80_byte tsconf_last_port_dff7;
@@ -224,13 +227,24 @@ void tsconf_set_sizes_display(void)
 }
 
 
+void tsconf_get_current_video_mode(char *s)
+{
+	  sprintf (s,"%s, %s",
+		tsconf_video_sizes_array[tsconf_get_video_size_display()],
+		tsconf_video_modes_array[tsconf_get_video_mode_display()]
+	  );
+}
 
 void tsconf_splash_video_size_mode_change(void)
 {
   char buffer_mensaje[64];
+  char buffer_mensaje2[64];
 
-  sprintf (buffer_mensaje,"Setting video mode %s, size %s",
-    tsconf_video_modes_array[tsconf_get_video_mode_display()],tsconf_video_sizes_array[tsconf_get_video_size_display()]);
+
+  /*sprintf (buffer_mensaje,"Setting video mode %s, size %s",
+    tsconf_video_modes_array[tsconf_get_video_mode_display()],tsconf_video_sizes_array[tsconf_get_video_size_display()]);*/
+  tsconf_get_current_video_mode(buffer_mensaje2);
+  sprintf (buffer_mensaje,"Setting video mode %s",buffer_mensaje2);
 
   screen_print_splash_text(10,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
 }
@@ -1744,7 +1758,15 @@ void tsconf_tile_return_column_values(z80_byte *start_line,int x,z80_byte *valor
 
 
 
+int tsconf_return_tilegraphicspage(z80_byte layer)
+{
+	int direccion_graficos=tsconf_af_ports[0x17+layer]>>3;
+	
+	direccion_graficos=direccion_graficos & 31;
+    direccion_graficos=direccion_graficos<<17;
 
+	return direccion_graficos;
+}
 
 void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 {
@@ -1758,10 +1780,13 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	//TODO: tener en cuenta zona invisible border ??
 	if (scanline_copia<0) return;
   
-	int direccion_graficos=tsconf_af_ports[0x17+layer]>>3;
+
+	/*int direccion_graficos=tsconf_af_ports[0x17+layer]>>3;
 	
 	direccion_graficos=direccion_graficos & 31;
-    direccion_graficos=direccion_graficos<<17;
+    direccion_graficos=direccion_graficos<<17;*/
+
+	int direccion_graficos=tsconf_return_tilegraphicspage(layer);
 
 
 	int direccion_tile=tsconf_af_ports[0x16];
@@ -1842,6 +1867,24 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 				z80_int tnum=valor1+256*(valor2&15);
 
 				z80_byte tpal=(valor2>>4)&3;
+				//Tile Palette Selector, bits 0-1. Bits 2-3 are taken from PalSel register bits 6-7 or 4-5, dependently on tiles layer 1 or 0.
+				z80_byte palsel=tsconf_af_ports[7];
+
+				z80_byte tpal_23;
+
+				if (layer==0) {
+					tpal_23=(palsel>>2)&(4+8); //bits 4-5 los muevo a 2-3
+				}
+
+				else {
+					tpal_23=(palsel>>4)&(4+8); //bits 6-7 los muevo a 2-3
+				}
+
+				//if (tpal_23 && (contador_segundo%1000)==0) printf ("tpal_23: %d\n",tpal_23);
+
+				tpal |=tpal_23;
+
+
 
 				int tnum_x=tnum&63;
 				int tnum_y=(tnum>>6)&63;
@@ -1928,26 +1971,7 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
   }
 
   //Dibujamos las capas
-
-        //if (tsconf_af_ports[0]&32) {
-                //Si no hay graficos normales, poner a negro
-		
-                /*int size=get_total_ancho_rainbow()*get_total_alto_rainbow();
-                if (size) {
-                        z80_int *p;
-                        p=rainbow_buffer;
-                        for (;size;size--,p++) *p=0;
-                }*/
-
-		//no meter capa de ula. demo zenloops hace esto. Ponerla en negro
-
-		//for (i=0;i<TSCONF_MAX_WIDTH_LAYER;i++) tsconf_layer_ula[i]=0;
-
-
-        //}
-
-	//else if (tsconf_force_disable_layer_ula.v==0) tsconf_store_scanline_ula();
-
+	//Capa ULA
 	if (tsconf_if_ula_enabled() && tsconf_force_disable_layer_ula.v==0) tsconf_store_scanline_ula();
 
 

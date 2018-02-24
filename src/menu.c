@@ -606,6 +606,8 @@ int menu_tape_settings_cond(void);
 
 void menu_zxuno_spi_flash(MENU_ITEM_PARAMETERS);
 
+void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS);
+
 int menu_inicio_opcion_seleccionada=0;
 int machine_selection_opcion_seleccionada=0;
 int machine_selection_por_fabricante_opcion_seleccionada=0;
@@ -685,6 +687,7 @@ int window_settings_opcion_seleccionada=0;
 int osd_settings_opcion_seleccionada=0;
 int textdrivers_settings_opcion_seleccionada=0;
 int debug_tsconf_dma_opcion_seleccionada=0;
+int debug_tsconf_opcion_seleccionada;
 
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
 z80_bit menu_splash_text_active;
@@ -7219,6 +7222,8 @@ int view_sprites_palette=0;
 //Sprite esta organizado como memoria de pantalla spectrum
 int view_sprites_scr_sprite=0;
 
+int view_sprites_offset_palette=0;
+
 
 //Retorna total de colores de una paleta mapeada
 int menu_debug_sprites_total_colors_mapped_palette(int paleta)
@@ -7523,27 +7528,27 @@ void menu_debug_sprites_get_palette_name(int paleta, char *s)
 		break;
 
 		case 7:
-			strcpy(s,"TBBlue ULA 1st");
+			strcpy(s,"TBBlue ULA 1");
 		break;
 
 		case 8:
-			strcpy(s,"TBBlue ULA 2nd");
+			strcpy(s,"TBBlue ULA 2");
 		break;	
 
 		case 9:
-			strcpy(s,"TBBlue Layer2 1st");
+			strcpy(s,"TBBlue Layer2 1");
 		break;
 
 		case 10:
-			strcpy(s,"TBBlue Layer2 2nd");
+			strcpy(s,"TBBlue Layer2 2");
 		break;	
 
 		case 11:
-			strcpy(s,"TBBlue Sprites 1st");
+			strcpy(s,"TBBlue Sprites 1");
 		break;
 
 		case 12:
-			strcpy(s,"TBBlue Sprites 2nd");
+			strcpy(s,"TBBlue Sprites 2");
 		break;			
 
 		case 13:
@@ -7697,6 +7702,8 @@ void menu_debug_draw_sprites(void)
 				else {
 					color=menu_debug_sprites_return_color_palette(view_sprites_palette,color);
 				}
+
+				color +=view_sprites_offset_palette;
 
               		//dibujamos valor actual
 		            //scr_putpixel_zoom(xorigen+x*view_sprites_ppb+incx,yorigen+y,color);
@@ -7854,6 +7861,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
         int salir=0;
 
 
+
+
         //Cambiamos funcion overlay de texto de menu
         //Se establece a la de funcion de ver sprites
         set_menu_overlay_function(menu_debug_draw_sprites);
@@ -7863,7 +7872,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
         do {
 
 					int linea=0;
-					char buffer_texto[33];
+					char buffer_texto[64];
 
 					int bytes_por_linea;
 					int bytes_por_ventana;
@@ -7918,7 +7927,7 @@ menu_writing_inverse_color.v=1;
 	char nombre_paleta[33];
 	menu_debug_sprites_get_palette_name(view_sprites_palette,nombre_paleta);
 
-	sprintf(buffer_tercera_linea,"Pa~~lette: %s",nombre_paleta);
+	sprintf(buffer_tercera_linea,"Pa~~l.: %s. O~~ff:%d",nombre_paleta,view_sprites_offset_palette);
 
 
 		if (MACHINE_IS_TBBLUE) {
@@ -8031,6 +8040,11 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					case 'b':
 						menu_debug_sprites_change_bpp();
+					break;
+
+					case 'f':
+						view_sprites_offset_palette +=16;
+						if (view_sprites_offset_palette==256) view_sprites_offset_palette=0;
 					break;
 
 
@@ -22470,33 +22484,7 @@ void menu_debug_tsconf_dma_overlay(void)
 	
 
 
-    //esto hara ejecutar esto 2 veces por segundo
-    /*if ( ((contador_segundo%500) == 0 && menu_tsconf_dma_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-
-        menu_tsconf_dma_valor_contador_segundo_anterior=contador_segundo;
-        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-       
-    
-			char textoplayer[40];
-
-     
-
-				int valor_contador_segundo_anterior;
-
-				valor_contador_segundo_anterior=contador_segundo;
-
-int mostrar_player;
-
-int mostrar_antes_player=-1;
-
-	mostrar_player=menu_debug_tsconf_dma_si_mostrar();
-
-
-			mostrar_antes_player=mostrar_player;
-         
-
-
-	}*/
+  
 }
 
 
@@ -22569,6 +22557,119 @@ void menu_debug_tsconf_dma(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_debug_tsconf_videoregisters(MENU_ITEM_PARAMETERS)
+{
+
+    char textostats[32];
+
+    menu_espera_no_tecla();
+    menu_dibuja_ventana(0,1,32,18,"Video Registers");
+
+    z80_byte acumulado;
+
+	char texto_buffer[33];
+
+	char texto_buffer2[33];
+
+	//Empezar con espacio
+    texto_buffer[0]=' ';
+
+	int valor_contador_segundo_anterior;
+
+	valor_contador_segundo_anterior=contador_segundo;
+
+
+    	do {
+
+
+        	//esto hara ejecutar esto 2 veces por segundo
+            //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+			if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+											valor_contador_segundo_anterior=contador_segundo;
+                        //contador_segundo_anterior=contador_segundo;
+												//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+				int linea=0;
+				int opcode;
+				int sumatotal;
+
+
+				int vpage_addr=tsconf_get_vram_page()*16384;
+
+				tsconf_get_current_video_mode(texto_buffer2);
+				sprintf (texto_buffer,"Video mode: %s",texto_buffer2);
+				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+				
+                sprintf (texto_buffer,"Video addr: %06XH",vpage_addr);
+                menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+				sprintf (texto_buffer,"Tile 0 Graphics addr: %06XH",tsconf_return_tilegraphicspage(0) );
+				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+				sprintf (texto_buffer,"Tile 1 Graphics addr: %06XH",tsconf_return_tilegraphicspage(1) );
+				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+
+
+
+                        if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+
+                }
+
+                menu_cpu_core_loop();
+                acumulado=menu_da_todas_teclas();
+
+                //si no hay multitarea, esperar tecla y salir
+                if (menu_multitarea==0) {
+                        menu_espera_tecla();
+
+                        acumulado=0;
+                }
+
+        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
+
+        cls_menu_overlay();
+
+}
+
+void menu_debug_tsconf(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_debug_tsconf;
+        menu_item item_seleccionado;
+	int retorno_menu;
+        do {
+
+		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_debug_tsconf_dma,NULL,"~~DMA");
+		menu_add_item_menu_shortcut(array_menu_debug_tsconf,'d');
+
+		menu_add_item_menu_format(array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_debug_tsconf_videoregisters,NULL,"Video ~~Registers");
+		menu_add_item_menu_shortcut(array_menu_debug_tsconf,'r');
+
+		menu_add_item_menu_format(array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"Video ~~Layers");
+		menu_add_item_menu_shortcut(array_menu_debug_tsconf,'l');
+
+
+                menu_add_item_menu(array_menu_debug_tsconf,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_debug_tsconf,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_debug_tsconf);
+
+                retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf,"Debug" );
+
+                cls_menu_overlay();
+
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+				cls_menu_overlay();
+                        }
+                }
+
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
 
 
 //menu debug settings
@@ -22631,7 +22732,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 
 		if (MACHINE_IS_TSCONF) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_dma,NULL,"Debug TSConf DMA");
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf,NULL,"TSConf");
 		}
 
 		menu_add_item_menu(array_menu_debug_settings,"View He~~xdump",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);
@@ -28239,7 +28340,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 				"realistic: doesn't do scanline render but full frame render");
 					
 
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"TSConf Layers");
+
                 }
 
 

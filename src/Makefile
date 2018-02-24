@@ -1,6 +1,6 @@
 EMULATOR_VERSION=6.1
 CFLAGS= -Wall -Wextra -fsigned-char
-LDFLAGS= -lncurses -lX11 -L/usr/X11R6/lib -L/opt/X11/lib -lXext -lXxf86vm -lpthread -framework CoreAudio -framework AudioUnit -framework CoreServices -framework Foundation -framework AppKit -framework OpenGL
+LDFLAGS= -lncurses -laa -lX11 -L/usr/X11R6/lib -L/opt/X11/lib -lXext -lXxf86vm -lpthread -framework CoreAudio -framework AudioUnit -framework CoreServices -framework Foundation -framework AppKit -framework OpenGL -lsndfile
 CC=gcc
 INSTALLPREFIX=/usr/local
 
@@ -8,8 +8,8 @@ INSTALLPREFIX=/usr/local
 all: zesarux
 
 
-zesarux: charset.o scrstdout.o scrsimpletext.o scrcurses.o   scrxwindows.o   autoselectoptions.o chardetect.o textspeech.o scrnull.o    audiocoreaudio.o audionull.o ay38912.o cpu.o codsinpr.o codprddfd.o codpred.o operaciones.o debug.o tape.o tape_tap.o tape_tzx.o tape_smp.o audio.o screen.o mem128.o chloe.o prism.o tbblue.o timex.o zx8081.o jupiterace.o z88.o cpc.o sam.o atomlite.o zxuno.o snap.o snap_zsf.o snap_z81.o snap_zx8081.o snap_rzx.o snap_spg.o spg_depack.o menu.o core_spectrum.o core_zx8081.o core_z88.o core_cpc.o core_ace.o core_sam.o core_ql.o core_mk14.o mk14.o scmp.o timer.o contend.o disassemble.o utils.o playtzx.o mdvtool.o joystick.o ula.o mmc.o ide.o pd765.o divmmc.o divide.o diviface.o zxpand.o superupgrade.o dandanator.o betadisk.o codetests.o kartusho.o spritefinder.o multiface.o spectra.o spritechip.o printers.o realjoystick.o ulaplus.o if1.o ds1307.o ql.o m68kcpu.o m68kdasm.o m68kops.o  m68kopac.o m68kopdm.o m68kopnz.o chrome.o tsconf.o remote.o esxdos_handler.o scrcocoa.o 
-	$(CC) $(CFLAGS) cpu.o scrcocoa.o charset.o scrstdout.o scrsimpletext.o scrcurses.o   scrxwindows.o   autoselectoptions.o chardetect.o textspeech.o scrnull.o screen.o mem128.o chloe.o prism.o tbblue.o timex.o    audiocoreaudio.o audionull.o ay38912.o codsinpr.o codprddfd.o codpred.o operaciones.o debug.o tape.o tape_tap.o tape_tzx.o tape_smp.o audio.o zx8081.o jupiterace.o z88.o cpc.o sam.o atomlite.o zxuno.o snap.o snap_zsf.o snap_z81.o snap_spg.o spg_depack.o snap_zx8081.o snap_rzx.o menu.o core_spectrum.o core_zx8081.o core_z88.o core_cpc.o core_ace.o core_sam.o core_ql.o core_mk14.o mk14.o scmp.o timer.o contend.o disassemble.o utils.o playtzx.o mdvtool.o joystick.o ula.o mmc.o ide.o pd765.o divmmc.o divide.o diviface.o zxpand.o superupgrade.o dandanator.o betadisk.o codetests.o kartusho.o spritefinder.o multiface.o spectra.o spritechip.o printers.o realjoystick.o ulaplus.o ds1307.o if1.o ql.o m68kcpu.o m68kdasm.o m68kops.o  m68kopac.o m68kopdm.o m68kopnz.o chrome.o tsconf.o remote.o esxdos_handler.o -o zesarux $(LDFLAGS)
+zesarux: charset.o scrstdout.o scrsimpletext.o scrcurses.o scraa.o  scrxwindows.o   autoselectoptions.o chardetect.o textspeech.o scrnull.o    audiocoreaudio.o audionull.o ay38912.o cpu.o codsinpr.o codprddfd.o codpred.o operaciones.o debug.o tape.o tape_tap.o tape_tzx.o tape_smp.o audio.o screen.o mem128.o chloe.o prism.o tbblue.o timex.o zx8081.o jupiterace.o z88.o cpc.o sam.o atomlite.o zxuno.o snap.o snap_zsf.o snap_z81.o snap_zx8081.o snap_rzx.o snap_spg.o spg_depack.o menu.o core_spectrum.o core_zx8081.o core_z88.o core_cpc.o core_ace.o core_sam.o core_ql.o core_mk14.o mk14.o scmp.o timer.o contend.o disassemble.o utils.o playtzx.o mdvtool.o joystick.o ula.o mmc.o ide.o pd765.o divmmc.o divide.o diviface.o zxpand.o superupgrade.o dandanator.o betadisk.o codetests.o kartusho.o spritefinder.o multiface.o spectra.o spritechip.o printers.o realjoystick.o ulaplus.o if1.o ds1307.o ql.o m68kcpu.o m68kdasm.o m68kops.o  m68kopac.o m68kopdm.o m68kopnz.o chrome.o tsconf.o remote.o esxdos_handler.o scrcocoa.o 
+	$(CC) $(CFLAGS) cpu.o scrcocoa.o charset.o scrstdout.o scrsimpletext.o scrcurses.o scraa.o  scrxwindows.o   autoselectoptions.o chardetect.o textspeech.o scrnull.o screen.o mem128.o chloe.o prism.o tbblue.o timex.o    audiocoreaudio.o audionull.o ay38912.o codsinpr.o codprddfd.o codpred.o operaciones.o debug.o tape.o tape_tap.o tape_tzx.o tape_smp.o audio.o zx8081.o jupiterace.o z88.o cpc.o sam.o atomlite.o zxuno.o snap.o snap_zsf.o snap_z81.o snap_spg.o spg_depack.o snap_zx8081.o snap_rzx.o menu.o core_spectrum.o core_zx8081.o core_z88.o core_cpc.o core_ace.o core_sam.o core_ql.o core_mk14.o mk14.o scmp.o timer.o contend.o disassemble.o utils.o playtzx.o mdvtool.o joystick.o ula.o mmc.o ide.o pd765.o divmmc.o divide.o diviface.o zxpand.o superupgrade.o dandanator.o betadisk.o codetests.o kartusho.o spritefinder.o multiface.o spectra.o spritechip.o printers.o realjoystick.o ulaplus.o ds1307.o if1.o ql.o m68kcpu.o m68kdasm.o m68kops.o  m68kopac.o m68kopdm.o m68kopnz.o chrome.o tsconf.o remote.o esxdos_handler.o -o zesarux $(LDFLAGS)
 	@echo
 	@echo "Compilation finished"
 	@echo
@@ -434,6 +434,9 @@ scrsimpletext.o: scrsimpletext.c scrsimpletext.h debug.h screen.h mem128.h zx808
 
 scrcurses.o: scrcurses.c cpu.h scrcurses.h operaciones.h mem128.h charset.c debug.h zx8081.h screen.h audio.h menu.h utils.h joystick.h ula.h z88.h sam.h charset.h
 	$(CC) $(CFLAGS) -c scrcurses.c
+
+scraa.o: scraa.c cpu.h scraa.h operaciones.h mem128.h charset.c debug.h zx8081.h audio.h menu.h screen.h utils.h joystick.h ula.h z88.h textspeech.h
+	$(CC) $(CFLAGS) -c scraa.c
 
 scrxwindows.o: scrxwindows.c cpu.h scrxwindows.h debug.h screen.h mem128.h compileoptions.h zx8081.h audio.h charset.h menu.h timer.h utils.h joystick.h cpc.h prism.h z88.h sam.h ql.h
 	$(CC) $(CFLAGS) -I/usr/X11R6/include -I/opt/X11/include -c scrxwindows.c
