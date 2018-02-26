@@ -1608,8 +1608,65 @@ void tsconf_store_scanline_putsprite_putpixel(z80_int *puntero,z80_int color,z80
 }
 */
 
-//Comun para tiles y sprites
-void tsconf_store_scanline_putsprite(int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
+//Solo tiles
+void tsconf_store_scanline_puttiles(int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
+{
+
+               
+
+	  z80_int *destino;
+
+		//destino	
+		destino=layer;
+
+		z80_byte byte_sprite;
+		z80_int color_final;
+
+			for (;ancho;ancho-=2) { //-=2 porque son a 4bpp
+				byte_sprite=*sprite_origen;
+				z80_int color_izq=(byte_sprite>>4)&15;
+				if (color_izq) { //0 es transparente
+
+					//Lo hacemos asi para que sea mas rapido
+					color_final=tsconf_return_cram_color(color_izq+16*spal);
+					*destino=color_final;
+					destino++;
+					*destino=color_final;
+					destino++;
+				}
+
+				else {
+					destino+=2;
+				}
+
+
+				z80_int color_der=byte_sprite&15;
+				if (color_der) { //0 es transparente
+					//tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_der,spal);         
+
+                                        //Lo hacemos asi para que sea mas rapido
+                                        color_final=tsconf_return_cram_color(color_der+16*spal);
+                                        *destino=color_final;
+                                        destino++;
+                                        *destino=color_final;
+                                        destino++;
+				}
+
+
+				else {
+					destino+=2;
+				}
+
+				sprite_origen++;
+			}
+		
+		
+
+}
+
+
+//Solo sprites
+void tsconf_store_scanline_putsprite(int x_orig,int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
 {
 
                
@@ -1619,7 +1676,9 @@ void tsconf_store_scanline_putsprite(int ancho, int tnum_x GCC_UNUSED, int tnum_
 
 			//puntero_buf_sprite=&tsconf_layer_sprites[ x*2 ];
       //puntero_buf_sprite=&layer[ x*2 ];
-			puntero_buf_sprite=layer;
+
+		//destino	
+		puntero_buf_sprite=&layer[x_orig*2];
 
 		z80_byte byte_sprite;
 		z80_int color_final;
@@ -1642,7 +1701,11 @@ void tsconf_store_scanline_putsprite(int ancho, int tnum_x GCC_UNUSED, int tnum_
 					puntero_buf_sprite+=2;
 				}
 
-
+				/*x_orig++;
+				if (x_orig>=512) {
+					x_orig=0;
+					puntero_buf_sprite=layer;
+				}*/
 
 				z80_int color_der=byte_sprite&15;
 				if (color_der) { //0 es transparente
@@ -1661,6 +1724,11 @@ void tsconf_store_scanline_putsprite(int ancho, int tnum_x GCC_UNUSED, int tnum_
 					puntero_buf_sprite+=2;
 				}
 
+				/*x_orig++;
+				if (x_orig>=512) {
+					x_orig=0;
+					puntero_buf_sprite=layer;
+				}*/
 
 				sprite_origen++;
 			}
@@ -1679,7 +1747,7 @@ int tsconf_return_spritesgraphicspage(void)
 	return direccion;
 }
 
-void tsconf_store_scanline_sprites_putsprite(int y_offset,int ancho, int tnum_x, int tnum_y,z80_byte spal,z80_int *layer)
+void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int tnum_x, int tnum_y,z80_byte spal,z80_int *layer)
 {
 
                 /*int direccion=tsconf_af_ports[0x19]>>3;
@@ -1708,7 +1776,7 @@ void tsconf_store_scanline_sprites_putsprite(int y_offset,int ancho, int tnum_x,
                 sprite_origen +=y_offset*(ancho_linea);
                 //printf ("sprite_origen: %d\n",sprite_origen);
 
-		            tsconf_store_scanline_putsprite(ancho, tnum_x, tnum_y,spal,sprite_origen,layer);
+		            tsconf_store_scanline_putsprite(x,ancho, tnum_x, tnum_y,spal,sprite_origen,layer);
 }
 
 
@@ -1779,10 +1847,11 @@ void tsconf_store_scanline_sprites(int capa_mostrar)
           			//temp_sprite_xy_putsprite(x,y,xsize,ysize,tnum_x,tnum_y,spal);
 
 			
-					int final_layer_x_offset=x*2;  //*2 porque la resolucion de pixeles es de 360 maximo mientras que el scanline entero es de 720,
+					//int final_layer_x_offset=x*2;  //*2 porque la resolucion de pixeles es de 360 maximo mientras que el scanline entero es de 720,
 					//y solo se pueden usar 720 con el modo texto
 
-          			tsconf_store_scanline_sprites_putsprite(y_offset,xsize,tnum_x,tnum_y,spal,&layer[final_layer_x_offset]);
+          			//tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal,&layer[final_layer_x_offset]);
+					tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal,layer);
         		}
 				
 			}
@@ -1963,12 +2032,12 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 				//printf ("tile x %d sprite_origen %p\n",x,sprite_origen);
 
-				tsconf_store_scanline_putsprite(8, 0,0,tpal,sprite_origen,layer_final);
+				tsconf_store_scanline_puttiles(8, 0,0,tpal,sprite_origen,layer_final);
 
 					
 				layer_final+=16;
        
-	   			offset_x+=8;
+	   			//offset_x+=8;
 
 			
 	}
