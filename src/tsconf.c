@@ -1776,7 +1776,7 @@ void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int t
                 sprite_origen +=y_offset*(ancho_linea);
                 //printf ("sprite_origen: %d\n",sprite_origen);
 
-		            tsconf_store_scanline_putsprite(x,ancho, tnum_x, tnum_y,spal,sprite_origen,layer);
+		        tsconf_store_scanline_putsprite(x,ancho, tnum_x, tnum_y,spal,sprite_origen,layer);
 }
 
 
@@ -1846,6 +1846,10 @@ void tsconf_store_scanline_sprites(int capa_mostrar)
           			//printf ("\nscanline: %d yoff: %d sprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",scanline_copia,y_offset,i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
           			//temp_sprite_xy_putsprite(x,y,xsize,ysize,tnum_x,tnum_y,spal);
 
+					//Si hay mirror vertical
+					if (sprite_r0h&128) {
+						y_offset=ysize-1-y_offset;
+					}
 			
 					//int final_layer_x_offset=x*2;  //*2 porque la resolucion de pixeles es de 360 maximo mientras que el scanline entero es de 720,
 					//y solo se pueden usar 720 con el modo texto
