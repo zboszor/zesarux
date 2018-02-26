@@ -1701,11 +1701,11 @@ void tsconf_store_scanline_putsprite(int x_orig,int ancho, int tnum_x GCC_UNUSED
 					puntero_buf_sprite+=2;
 				}
 
-				/*x_orig++;
+				x_orig++;
 				if (x_orig>=512) {
 					x_orig=0;
 					puntero_buf_sprite=layer;
-				}*/
+				}
 
 				z80_int color_der=byte_sprite&15;
 				if (color_der) { //0 es transparente
@@ -1724,11 +1724,11 @@ void tsconf_store_scanline_putsprite(int x_orig,int ancho, int tnum_x GCC_UNUSED
 					puntero_buf_sprite+=2;
 				}
 
-				/*x_orig++;
+				x_orig++;
 				if (x_orig>=512) {
 					x_orig=0;
 					puntero_buf_sprite=layer;
-				}*/
+				}
 
 				sprite_origen++;
 			}
