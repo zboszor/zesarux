@@ -22560,7 +22560,7 @@ void menu_debug_tsconf_dma(MENU_ITEM_PARAMETERS)
 void menu_debug_tsconf_videoregisters(MENU_ITEM_PARAMETERS)
 {
 
-    char textostats[32];
+    //char textostats[32];
 
     menu_espera_no_tecla();
     menu_dibuja_ventana(0,1,32,18,"Video Registers");
@@ -22590,8 +22590,8 @@ void menu_debug_tsconf_videoregisters(MENU_ITEM_PARAMETERS)
 												//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
 				int linea=0;
-				int opcode;
-				int sumatotal;
+				//int opcode;
+				//int sumatotal;
 
 
 				int vpage_addr=tsconf_get_vram_page()*16384;
@@ -22643,7 +22643,7 @@ void menu_debug_tsconf_videoregisters(MENU_ITEM_PARAMETERS)
 #define TSCONF_SPRITENAV_WINDOW_Y 0
 #define TSCONF_SPRITENAV_WINDOW_ANCHO 32
 #define TSCONF_SPRITENAV_WINDOW_ALTO 24
-#define TSCONF_SPRITENAV_COLORS_PER_WINDOW 8
+#define TSCONF_SPRITENAV_SPRITES_PER_WINDOW 10
 
 void menu_debug_tsconf_spritenav_ventana(void)
 {
@@ -22651,14 +22651,14 @@ void menu_debug_tsconf_spritenav_ventana(void)
 }
 
 
-int menu_debug_tsconf_spritenav_current_palette=0;
-int menu_debug_tsconf_spritenav_current_colour=0;
+//int menu_debug_tsconf_spritenav_current_palette=0;
+int menu_debug_tsconf_spritenav_current_sprite=0;
 
 
 
 
 //Muestra lista de colores o barras de colores, para una paleta total, o para la paleta mapeada
-int menu_debug_tsconf_spritenav_lista_colores(int zzzz,int si_barras)
+int menu_debug_tsconf_spritenav_lista_colores(void)
 {
 
 	char dumpmemoria[33];
@@ -22666,19 +22666,17 @@ int menu_debug_tsconf_spritenav_lista_colores(int zzzz,int si_barras)
 	int linea_color;
 	int limite;
 
-	int linea=1;
+	int linea=0;
 	limite=TSCONF_MAX_SPRITES; //85 sprites max
 
 	int current_sprite;
-	int indice_paleta;
-	int indice_color_final_rgb;
-	int color_final_rgb;
 
-		for (linea_color=0;linea_color<TSCONF_SPRITENAV_COLORS_PER_WINDOW &&
-				menu_debug_tsconf_spritenav_current_colour+linea_color<limite;
+
+		for (linea_color=0;linea_color<TSCONF_SPRITENAV_SPRITES_PER_WINDOW &&
+				menu_debug_tsconf_spritenav_current_sprite+linea_color<limite;
 				linea_color++) {
 
-			current_sprite=menu_debug_tsconf_spritenav_current_colour+linea_color;
+			current_sprite=menu_debug_tsconf_spritenav_current_sprite+linea_color;
 
 			int offset=current_sprite*6;
 			z80_byte sprite_r0h=tsconf_fmaps[0x200+offset+1];
@@ -22709,11 +22707,16 @@ int menu_debug_tsconf_spritenav_lista_colores(int zzzz,int si_barras)
 
 		    z80_byte spal=(sprite_r2h>>4)&15;
 
-			sprintf (dumpmemoria,"%2d X: %3d Y: %3d (%2dX%2d)",current_sprite,x,y,xsize,ysize);
+			z80_byte sprite_xf=sprite_r1h&128;
+			z80_byte sprite_yf=sprite_r0h&128;
+
+			sprintf (dumpmemoria,"%02d X: %3d Y: %3d (%2dX%2d)",current_sprite,x,y,xsize,ysize);
 			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 
-			sprintf (dumpmemoria,"Tile: %2d,%d %s %s PAL: %2d",tnum_x,tnum_y,
-				(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),spal );
+			sprintf (dumpmemoria,"Tile: %2d,%d %s %s %s %s P: %2d",tnum_x,tnum_y,
+				(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),
+				(sprite_xf ? "XF" : "  "),(sprite_yf ? "YF": "  "),
+				spal );
 			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 					
 		}
@@ -22729,10 +22732,10 @@ void menu_debug_tsconf_spritenav_draw_barras(void)
 				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 
-				//Mostrar lista colores
-				menu_debug_tsconf_spritenav_lista_colores(TSCONF_SPRITENAV_WINDOW_Y+3,0);
+				//Mostrar lista sprites
+				menu_debug_tsconf_spritenav_lista_colores();
 
-				//Esto tiene que estar despues de escribir la lista de colores, para que se refresque y se vea
+				//Esto tiene que estar despues de escribir la lista de sprites, para que se refresque y se vea
 				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
 				normal_overlay_texto_menu();
 
@@ -22740,8 +22743,8 @@ void menu_debug_tsconf_spritenav_draw_barras(void)
 
 void menu_debug_tsconf_spritenav_cursor_arriba(void)
 {
-	if (menu_debug_tsconf_spritenav_current_colour>0) {
-		menu_debug_tsconf_spritenav_current_colour--;
+	if (menu_debug_tsconf_spritenav_current_sprite>0) {
+		menu_debug_tsconf_spritenav_current_sprite--;
 	}
 }
 
@@ -22750,77 +22753,50 @@ void menu_debug_tsconf_spritenav_cursor_abajo(void)
 
 	int limite=TSCONF_MAX_SPRITES;
 
-	if (menu_debug_tsconf_spritenav_current_colour<limite-1) {
-		menu_debug_tsconf_spritenav_current_colour++;
+	if (menu_debug_tsconf_spritenav_current_sprite<limite-1) {
+		menu_debug_tsconf_spritenav_current_sprite++;
 	}
 
 }
 
 void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 {
-        menu_espera_no_tecla();
+	menu_espera_no_tecla();
 	menu_debug_tsconf_spritenav_ventana();
 
 	menu_reset_counters_tecla_repeticion();
 
-        z80_byte tecla=0;
+    z80_byte tecla=0;
 
 
 	int salir=0;
 
 
-		set_menu_overlay_function(menu_debug_tsconf_spritenav_draw_barras);
+	set_menu_overlay_function(menu_debug_tsconf_spritenav_draw_barras);
 
-        do {
-        	menu_speech_tecla_pulsada=0; //Que envie a speech
+    do {
+    	menu_speech_tecla_pulsada=0; //Que envie a speech
 
-							int linea=0;
-							//int linea_color;
+		int linea=TSCONF_SPRITENAV_WINDOW_Y+TSCONF_SPRITENAV_SPRITES_PER_WINDOW*2+1;
 
+			
+		char buffer_linea[40];
 
-		//char dumpmemoria[33];
+		sprintf (buffer_linea,"Move: Cursors, PgUp, PgDn");
 
-		//Hacer que texto ventana empiece pegado a la izquierda
-		//menu_escribe_linea_startx=0;
-
-
-
-				char textoshow[33];
-
-				char nombre_paleta[33];
-
-				//linea=menu_debug_tsconf_spritenav_lista_colores(linea,0);
-				//linea +=16;
+		menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
 
 
-//printf ("zone size: %x dir: %x\n",menu_display_memory_zone_size,menu_debug_tsconf_spritenav_direccion);
+		if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
 
-        		//menu_escribe_linea_opcion(linea++,-1,1,"");
+		menu_espera_tecla();
 
-				char buffer_linea[40];
+		tecla=menu_get_pressed_key();
 
-				linea=TSCONF_SPRITENAV_WINDOW_Y+TSCONF_SPRITENAV_COLORS_PER_WINDOW*2+4;
+		menu_espera_no_tecla_con_repeticion();
 
-															// 01234567890123456789012345678901
-					sprintf (buffer_linea,"Move: Cursors, PgUp, PgDn");
-
-				menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-
-
-
-
-
-				if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
-
-
-                menu_espera_tecla();
-
-                tecla=menu_get_pressed_key();
-
-                menu_espera_no_tecla_con_repeticion();
-
-				int aux_pgdnup;
-				int limite;
+		int aux_pgdnup;
+		//int limite;
 
 				switch (tecla) {
 
@@ -22844,7 +22820,7 @@ void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 
 					case 24:
 						//PgUp
-						for (aux_pgdnup=0;aux_pgdnup<TSCONF_SPRITENAV_COLORS_PER_WINDOW;aux_pgdnup++) {
+						for (aux_pgdnup=0;aux_pgdnup<TSCONF_SPRITENAV_SPRITES_PER_WINDOW;aux_pgdnup++) {
 							menu_debug_tsconf_spritenav_cursor_arriba();
 						}
 						menu_debug_tsconf_spritenav_ventana();
@@ -22855,7 +22831,7 @@ void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 
 					case 25:
 						//PgDn
-						for (aux_pgdnup=0;aux_pgdnup<TSCONF_SPRITENAV_COLORS_PER_WINDOW;aux_pgdnup++) {
+						for (aux_pgdnup=0;aux_pgdnup<TSCONF_SPRITENAV_SPRITES_PER_WINDOW;aux_pgdnup++) {
 							menu_debug_tsconf_spritenav_cursor_abajo();
 						}
 						menu_debug_tsconf_spritenav_ventana();
@@ -22870,11 +22846,11 @@ void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 
         } while (salir==0);
 
-				//restauramos modo normal de texto de menu
+		//restauramos modo normal de texto de menu
         set_menu_overlay_function(normal_overlay_texto_menu);
 
 
-cls_menu_overlay();
+	cls_menu_overlay();
 	//menu_escribe_linea_startx=1;
 
 }
