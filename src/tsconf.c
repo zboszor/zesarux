@@ -1609,7 +1609,7 @@ void tsconf_store_scanline_putsprite_putpixel(z80_int *puntero,z80_int color,z80
 */
 
 //Solo tiles
-void tsconf_store_scanline_puttiles(int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
+void tsconf_store_scanline_puttiles(int ancho, int incx,int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
 {
 
                
@@ -1624,7 +1624,19 @@ void tsconf_store_scanline_puttiles(int ancho, int tnum_x GCC_UNUSED, int tnum_y
 
 			for (;ancho;ancho-=2) { //-=2 porque son a 4bpp
 				byte_sprite=*sprite_origen;
-				z80_int color_izq=(byte_sprite>>4)&15;
+				z80_int color_izq,color_der;
+
+				if (incx==-1) {
+					color_der=(byte_sprite>>4)&15;
+					color_izq=byte_sprite&15;
+				}
+
+				else {
+					color_izq=(byte_sprite>>4)&15;
+					color_der=byte_sprite&15;
+				}
+
+
 				if (color_izq) { //0 es transparente
 
 					//Lo hacemos asi para que sea mas rapido
@@ -1640,7 +1652,7 @@ void tsconf_store_scanline_puttiles(int ancho, int tnum_x GCC_UNUSED, int tnum_y
 				}
 
 
-				z80_int color_der=byte_sprite&15;
+
 				if (color_der) { //0 es transparente
      
 
@@ -1657,7 +1669,7 @@ void tsconf_store_scanline_puttiles(int ancho, int tnum_x GCC_UNUSED, int tnum_y
 					destino+=2;
 				}
 
-				sprite_origen++;
+				sprite_origen+=incx;
 			}
 		
 		
@@ -2045,18 +2057,45 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 				int tnum_x=tnum&63;
 				int tnum_y=(tnum>>6)&63;
 
+				z80_byte tile_xf=puntero_layer[1] & 64;
+				z80_byte tile_yf=puntero_layer[1] & 128;
+
+		
+				
 			
 				z80_byte *sprite_origen;
 				
-				sprite_origen=puntero_graficos+(tnum_y*256*8) + tnum_x*8/2;
+				sprite_origen=puntero_graficos+(tnum_y*256*8);
+				
+				
+
+				int incx;
+
+				if (tile_xf) {
+					incx=-1;
+					sprite_origen +=tnum_x*8/2+3;
+					//printf ("x mirror\n");
+				}
+
+				else {
+					incx=+1;
+					sprite_origen +=tnum_x*8/2;
+				}
 
 				//printf ("desplazamiento scanline: %d\n",desplazamiento_scanline);
-        		sprite_origen +=desplazamiento_scanline;
+
+				if (tile_yf) {
+					//printf ("y mirror\n");
+					sprite_origen +=7*256-desplazamiento_scanline;
+				}
+				else {
+        			sprite_origen +=desplazamiento_scanline;
+				}
 
 
 				//printf ("tile x %d sprite_origen %p\n",x,sprite_origen);
 
-				tsconf_store_scanline_puttiles(8, 0,0,tpal,sprite_origen,layer_final);
+				tsconf_store_scanline_puttiles(8, incx, 0,0,tpal,sprite_origen,layer_final);
 
 					
 				layer_final+=16;

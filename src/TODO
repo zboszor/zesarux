@@ -18,7 +18,7 @@ HNY2k16_2TS.spg: no se ve la parte de abajo
 newschool: usa mirror xf, yf de sprites. uwol mirror xf
 con mirror_x en sprite, xorig debe decrementarse y detectar cuando xorig<0 tiene que hacerse xorig=511
 
-mirror x,y en tiles
+mirror x,y en tiles: hnk2015, merhaba_fixed usa los dos tipos de mirror
 
 probar capas de sprites tsconf: 200, , sirababol, mustang, alterego, fast, fishbone, uwol, soco
 
