@@ -1642,7 +1642,7 @@ void tsconf_store_scanline_puttiles(int ancho, int tnum_x GCC_UNUSED, int tnum_y
 
 				z80_int color_der=byte_sprite&15;
 				if (color_der) { //0 es transparente
-					//tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_der,spal);         
+     
 
                                         //Lo hacemos asi para que sea mas rapido
                                         color_final=tsconf_return_cram_color(color_der+16*spal);
@@ -1666,7 +1666,7 @@ void tsconf_store_scanline_puttiles(int ancho, int tnum_x GCC_UNUSED, int tnum_y
 
 
 //Solo sprites
-void tsconf_store_scanline_putsprite(int x_orig,int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
+void tsconf_store_scanline_putsprite(int x_orig,int incx,int ancho, int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
 {
 
                
@@ -1685,10 +1685,21 @@ void tsconf_store_scanline_putsprite(int x_orig,int ancho, int tnum_x GCC_UNUSED
 
 			for (;ancho;ancho-=2) { //-=2 porque son a 4bpp
 				byte_sprite=*sprite_origen;
-				z80_int color_izq=(byte_sprite>>4)&15;
-				if (color_izq) { //0 es transparente
-					//tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_izq,spal);
 
+				z80_int color_izq;
+				z80_int color_der;
+
+				//si mirror
+				if (incx==-1) {
+					color_der=(byte_sprite>>4)&15;
+					color_izq=byte_sprite&15;
+				}
+				else {
+					color_izq=(byte_sprite>>4)&15;
+					color_der=byte_sprite&15;
+				}
+
+				if (color_izq) { //0 es transparente
 					//Lo hacemos asi para que sea mas rapido
 					color_final=tsconf_return_cram_color(color_izq+16*spal);
 					*puntero_buf_sprite=color_final;
@@ -1707,9 +1718,9 @@ void tsconf_store_scanline_putsprite(int x_orig,int ancho, int tnum_x GCC_UNUSED
 					puntero_buf_sprite=layer;
 				}
 
-				z80_int color_der=byte_sprite&15;
+
 				if (color_der) { //0 es transparente
-					//tsconf_store_scanline_putsprite_putpixel(puntero_buf_sprite,color_der,spal);         
+      
 
                                         //Lo hacemos asi para que sea mas rapido
                                         color_final=tsconf_return_cram_color(color_der+16*spal);
@@ -1730,7 +1741,7 @@ void tsconf_store_scanline_putsprite(int x_orig,int ancho, int tnum_x GCC_UNUSED
 					puntero_buf_sprite=layer;
 				}
 
-				sprite_origen++;
+				sprite_origen+=incx;
 			}
 		
 		
@@ -1747,7 +1758,7 @@ int tsconf_return_spritesgraphicspage(void)
 	return direccion;
 }
 
-void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int tnum_x, int tnum_y,z80_byte spal,z80_int *layer)
+void tsconf_store_scanline_sprites_putsprite(int x,int incx,int y_offset,int ancho, int tnum_x, int tnum_y,z80_byte spal,z80_int *layer)
 {
 
                 /*int direccion=tsconf_af_ports[0x19]>>3;
@@ -1770,13 +1781,17 @@ void tsconf_store_scanline_sprites_putsprite(int x,int y_offset,int ancho, int t
                 //a 4bpp
                 tnum_x /=2;
 
+
+				if (incx==-1) tnum_x=tnum_x+ancho/2-1;
+
+
                 sprite_origen+=(tnum_y*ancho_linea)+tnum_x;
 
                 //Sumar a sprite_origen el y_offset
                 sprite_origen +=y_offset*(ancho_linea);
                 //printf ("sprite_origen: %d\n",sprite_origen);
 
-		        tsconf_store_scanline_putsprite(x,ancho, tnum_x, tnum_y,spal,sprite_origen,layer);
+		        tsconf_store_scanline_putsprite(x,incx,ancho, tnum_x, tnum_y,spal,sprite_origen,layer);
 }
 
 
@@ -1854,8 +1869,13 @@ void tsconf_store_scanline_sprites(int capa_mostrar)
 					//int final_layer_x_offset=x*2;  //*2 porque la resolucion de pixeles es de 360 maximo mientras que el scanline entero es de 720,
 					//y solo se pueden usar 720 con el modo texto
 
-          			//tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal,&layer[final_layer_x_offset]);
-					tsconf_store_scanline_sprites_putsprite(x,y_offset,xsize,tnum_x,tnum_y,spal,layer);
+					  int incx=+1;
+					//Si hay mirror horizontal
+					if (sprite_r1h&128) {
+						//tnum_x=tnum_x-xsize/2;
+						incx=-1;
+					}
+					tsconf_store_scanline_sprites_putsprite(x,incx,y_offset,xsize,tnum_x,tnum_y,spal,layer);
         		}
 				
 			}
