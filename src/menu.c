@@ -28233,32 +28233,38 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 
                 char texto_layer[33];
 
+				menu_escribe_linea_opcion(linea,-1,1,"Border: ");
+				linea +=3;
+
                 sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(tsconf_if_ula_enabled()));
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);
 				linea +=3;
 
                 sprintf (texto_layer,"Sprites 0: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
-				linea +=3;			
+				linea +=3;		
+
+				sprintf (texto_layer,"Tiles 0:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_zero_enabled()));
+                menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+				linea +=3;	
 
                 sprintf (texto_layer,"Sprites 1: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
 				linea +=3;	
 
+		    	sprintf (texto_layer,"Tiles 1:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_one_enabled()));
+                menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+				linea +=3;
+
                 sprintf (texto_layer,"Sprites 2: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
 				linea +=3;					
 
-                sprintf (texto_layer,"Tiles 0:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_zero_enabled()));
-                menu_escribe_linea_opcion(linea,-1,1,texto_layer);
-				linea +=3;
-         
-                sprintf (texto_layer,"Tiles 1:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_one_enabled()));
-                menu_escribe_linea_opcion(linea,-1,1,texto_layer);
-				linea +=3;
 
-				menu_escribe_linea_opcion(linea,-1,1,"Border: ");
-				linea +=3;
+         
+
+
+
 }
 
 void menu_tsconf_layer_overlay(void)
@@ -28339,7 +28345,11 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 
             int lin=2;
 
-			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_ula,NULL,"%s",(tsconf_force_disable_layer_ula.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_border,NULL,"%s",(tsconf_force_disable_layer_border.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;			
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_ula,NULL,"%s",(tsconf_force_disable_layer_ula.v ? "Disabled" : "Enabled"));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;
 
@@ -28347,15 +28357,11 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;
 
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_one,NULL,"%s",(tsconf_force_disable_layer_sprites_one.v ? "Disabled" : "Enabled"));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
-			lin+=3;
-
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_two,NULL,"%s",(tsconf_force_disable_layer_sprites_two.v ? "Disabled" : "Enabled"));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
-			lin+=3;
-
 			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_tiles_zero,NULL,"%s",(tsconf_force_disable_layer_tiles_zero.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_one,NULL,"%s",(tsconf_force_disable_layer_sprites_one.v ? "Disabled" : "Enabled"));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;
 
@@ -28363,9 +28369,11 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;
 
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_border,NULL,"%s",(tsconf_force_disable_layer_border.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_two,NULL,"%s",(tsconf_force_disable_layer_sprites_two.v ? "Disabled" : "Enabled"));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;
+
+
 				
 
             retorno_menu=menu_dibuja_menu(&tsconf_layer_settings_opcion_seleccionada,&item_seleccionado,array_menu_tsconf_layer_settings,"TSConf Layers" );
