@@ -1708,7 +1708,7 @@ void tsconf_store_scanline_sprites(void)
 	z80_int *layer=tsconf_layer_sprites;
 
     //Los 85 sprites
-		for (i=0;i<85 && !salir;i++,offset+=6) {
+		for (i=0;i<TSCONF_MAX_SPRITES && !salir;i++,offset+=6) {
 			z80_byte sprite_r0h=tsconf_fmaps[0x200+offset+1];
 			if (sprite_r0h&64) {
 				salir=1; //Bit Leap, ultimo sprite
