@@ -9,7 +9,7 @@ tsconf: driver texto curses, simpletext, stdout
 valores de espejo en sprites tsconf...
 TsConf: color border registro 0xf
 tsconf: con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos se alteran! :(
-visor de tiles de tsconf.
+
 para probar sprites: ny17, cfparallax, digger, fast, fishbone, 200, mustang, 3bm, alterego beta,
 girlsun, hny2k16, jptst, merhaba_fixed, mf11intro, robfgift, sirababol, soco, tcircles, uwol
 

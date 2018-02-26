@@ -76,6 +76,8 @@
 #include "diviface.h"
 #include "betadisk.h"
 
+#include "tsconf.h"
+
 
 struct timeval debug_timer_antes, debug_timer_ahora;
 
@@ -3280,6 +3282,19 @@ void debug_get_ioports(char *stats_buffer)
   								for (index_ioport=0;index_ioport<99;index_ioport++) {
   									//sprintf (buf_linea,"%02X : %02X \n",index_ioport,tbblue_registers[index_ioport]);
   									sprintf (buf_linea,"%02X : %02X \n",index_ioport,tbblue_get_value_port_register(index_ioport) );
+  									sprintf (&stats_buffer[index_buffer],"%s",buf_linea);
+  									index_buffer +=strlen(buf_linea);
+  								}
+  	}
+
+	if (MACHINE_IS_TSCONF) {
+
+  								sprintf (buf_linea,"TSConf Registers:\n");
+  								sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+  								int index_ioport;
+  								for (index_ioport=0;index_ioport<256;index_ioport++) {
+  									sprintf (buf_linea,"%02X : %02X \n",index_ioport,tsconf_af_ports[index_ioport] );
   									sprintf (&stats_buffer[index_buffer],"%s",buf_linea);
   									index_buffer +=strlen(buf_linea);
   								}

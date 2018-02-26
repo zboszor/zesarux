@@ -732,7 +732,7 @@ mis opciones:
       break;
 
 
-	  //temporal hasta que no vaya la dma
+	  //Decimos que la dma siempre ha finalizado operación
 	  case 0x27:
 	  	return tsconf_af_ports[index] & 0x7f; //Quitar bit 7
 	  break;
@@ -1311,13 +1311,8 @@ void tsconf_store_scanline_ula(void)
     //linea que se debe leer
     scanline_copia -=tsconf_current_border_height;
 
-	//zona borde superior
-	if (scanline_copia<0) return;
-
-	//Si zona border inferior
-	if (scanline_copia>tsconf_current_pixel_height) return;
-
-	//int total_ancho_rainbow=get_total_ancho_rainbow();
+		//zona borde superior
+	//if (scanline_copia<0) return;
 
 	int y_origen_pixeles=scanline_copia; 
 
@@ -1325,10 +1320,20 @@ void tsconf_store_scanline_ula(void)
 	int y_offset=tsconf_af_ports[4]+256*(tsconf_af_ports[5]&1);
 
 	
-	//controlar si sale de rango
+
 	y_origen_pixeles +=y_offset;
 
+	//controlar si sale de rango
 	y_origen_pixeles=y_origen_pixeles % 512;
+
+
+
+	//Si zona border inferior
+	//if (y_origen_pixeles>tsconf_current_pixel_height) return;
+
+	//int total_ancho_rainbow=get_total_ancho_rainbow();
+
+
       
 
     int x,bit;
@@ -1369,7 +1374,7 @@ void tsconf_store_scanline_ula(void)
 
 		//int ancho_linea_caracteres=256;
 		int x=0;
-		int y=scanline_copia;
+		int y=y_origen_pixeles;
 		puntero=fila*256;
 
 		z80_byte font_page=tsconf_get_text_font_page();
@@ -1464,10 +1469,6 @@ void tsconf_store_scanline_ula(void)
 						offset +=x_offset;
 						posicion_byte_inicial=x_offset;
 					}
-
-
-
-
 
 
 					//Ver cuantas paginas salta esto

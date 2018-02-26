@@ -29,6 +29,7 @@ Improved file viewer from file utilities:
 *specific file viewers for these kind of files: .tap, .zx, .zsf, .sp, .z80, .sna, .spg, .p, .o, .mmc/.ide (fat browser, plus3dos browser), .dsk, .trd, .tzx, .cdt, .flash (zxuno flash, z88 flash, superupgrade flash), .epr, .eprom
 *default hexadecimal file viewer for unknown files
 Improved TSConf rendering: now tiles and sprites are drawn per scanline. Border drawing. Handling of scroll registers
+Improved TSConf debugging: debug for DMA, Video registers, Video layers, Sprites, Tiles
 Improved text mode drivers (aalib, stdout, simpletext, curses): text settings are in different submenu, setting to set stdout/simpletext fps
 Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
 Improved menus, a new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
@@ -36,7 +37,7 @@ Improved menu: now character width can be reduced to 7,6 or 5 pixels width
 Improved smartload: now the cursor remembers last file loaded
 Improved sprite viewer: 
 *now can see sprites with speccy screen format
-*you can view sprites up to 256x192 
+*you can view sprites up to 512x192 
 Improved sound: Silence detector does not activate on pthreads versions
 Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
 Improved configuration parsing: if unknown setting found on configuration file, ZEsarUX will open but warns about the error, and the autosave feature is not enabled

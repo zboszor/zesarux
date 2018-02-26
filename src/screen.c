@@ -12935,10 +12935,6 @@ void tsconf_handle_raster_interrupts(void)
 	if (int_raster_y>319) return;
 
 
-	//temp. que de momento no hemos corregido los scanlines totales para que sean 320
-	//if (int_raster_y>310) int_raster_y=310;
-
-
 	//printf ("tsconf raster set to %d %d\n",int_raster_x,int_raster_y);
 	//Ver en que posicion de t-estados por linea estamos
 
@@ -12952,7 +12948,8 @@ void tsconf_handle_raster_interrupts(void)
 		if (estados_en_linea>=int_raster_x && estados_en_linea>=tsconf_handle_raster_interrupts_prev_horiz) {
 			//Generar interrupcion
 			tsconf_fire_line_interrupt();
-			debug_printf (VERBOSE_DEBUG,"Fired line interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d",int_raster_y,int_raster_x,t_scanline,estados_en_linea);
+			debug_printf (VERBOSE_DEBUG,"Fired line interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d. vint_inc: %X",
+				int_raster_y,int_raster_x,t_scanline,estados_en_linea,(tsconf_af_ports[0x24]>>4)&0xF);
 			//printf ("Reg VSINTH: %d\n",tsconf_af_ports[0x24]);
 
 			//tsconf_fired_frame_interrupt.v=1; //Est
