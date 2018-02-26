@@ -1745,7 +1745,7 @@ void tsconf_fast_tilesprite_render(void)
         if (tsconfig&128) {
                 //printf ("Sprite layers enable ");
                 //temp_dice_dir_graficos(0x19);
-                if (tsconf_force_disable_layer_sprites.v==0) temp_tsconf_render_sprites();
+                if (tsconf_force_disable_layer_sprites_zero.v==0) temp_tsconf_render_sprites(); 
         }
 
 

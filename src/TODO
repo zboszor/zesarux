@@ -13,6 +13,7 @@ visor de sprites y tiles de tsconf: para probar sprites: ny17, cfparallax, digge
 girlsun, hny2k16, jptst, merhaba_fixed, mf11intro, robfgift, sirababol, soco, tcircles, uwol
 
 TODO: offset sprites no lo hace bien??->uwol, sirababol
+probar capas de sprites tsconf: 200, uwol, sirababol, mustang, alterego, fast, fishbone
 
 tsconf: tratamiento bit leaf
 

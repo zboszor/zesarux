@@ -28208,7 +28208,7 @@ void menu_display_tsconf_fast_render(MENU_ITEM_PARAMETERS)
 
 void menu_tsconf_layer_dibuja_ventana(void)
 {
-        menu_dibuja_ventana(7,3,19,17,"TSConf Layers");
+        menu_dibuja_ventana(7,0,19,23,"TSConf Layers");
 }
 
 int menu_tsconf_layer_valor_contador_segundo_anterior;
@@ -28233,19 +28233,27 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 
                 char texto_layer[33];
 
-                sprintf (texto_layer,"ULA:     %s",menu_tsconf_layer_aux_usedunused(tsconf_if_ula_enabled()));
+                sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(tsconf_if_ula_enabled()));
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);
 				linea +=3;
 
-                sprintf (texto_layer,"Sprites: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
+                sprintf (texto_layer,"Sprites 0: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
 				linea +=3;			
 
-                sprintf (texto_layer,"Tiles 0: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_zero_enabled()));
+                sprintf (texto_layer,"Sprites 1: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
+                menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
+				linea +=3;	
+
+                sprintf (texto_layer,"Sprites 2: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
+                menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
+				linea +=3;					
+
+                sprintf (texto_layer,"Tiles 0:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_zero_enabled()));
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);
 				linea +=3;
          
-                sprintf (texto_layer,"Tiles 1: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_one_enabled()));
+                sprintf (texto_layer,"Tiles 1:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_one_enabled()));
                 menu_escribe_linea_opcion(linea,-1,1,texto_layer);
 				linea +=3;
 
@@ -28280,9 +28288,19 @@ void menu_tsconf_layer_settings_ula(MENU_ITEM_PARAMETERS)
 }
 
 
-void menu_tsconf_layer_settings_sprites(MENU_ITEM_PARAMETERS)
+void menu_tsconf_layer_settings_sprites_zero(MENU_ITEM_PARAMETERS)
 {
-	tsconf_force_disable_layer_sprites.v ^=1;
+	tsconf_force_disable_layer_sprites_zero.v ^=1;
+}
+
+void menu_tsconf_layer_settings_sprites_one(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_sprites_one.v ^=1;
+}
+
+void menu_tsconf_layer_settings_sprites_two(MENU_ITEM_PARAMETERS)
+{
+	tsconf_force_disable_layer_sprites_two.v ^=1;
 }
 
 void menu_tsconf_layer_settings_tiles_zero(MENU_ITEM_PARAMETERS)
@@ -28325,7 +28343,15 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;
 
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites,NULL,"%s",(tsconf_force_disable_layer_sprites.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_zero,NULL,"%s",(tsconf_force_disable_layer_sprites_zero.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_one,NULL,"%s",(tsconf_force_disable_layer_sprites_one.v ? "Disabled" : "Enabled"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_sprites_two,NULL,"%s",(tsconf_force_disable_layer_sprites_two.v ? "Disabled" : "Enabled"));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;
 

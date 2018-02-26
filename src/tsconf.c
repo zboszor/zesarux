@@ -133,13 +133,18 @@ char *tsconf_video_sizes_array[]={
 z80_int tsconf_layer_ula[TSCONF_MAX_WIDTH_LAYER];
 z80_int tsconf_layer_tiles_zero[TSCONF_MAX_WIDTH_LAYER];
 z80_int tsconf_layer_tiles_one[TSCONF_MAX_WIDTH_LAYER];
-z80_int tsconf_layer_sprites[TSCONF_MAX_WIDTH_LAYER];
+
+z80_int tsconf_layer_sprites_zero[TSCONF_MAX_WIDTH_LAYER];
+z80_int tsconf_layer_sprites_one[TSCONF_MAX_WIDTH_LAYER];
+z80_int tsconf_layer_sprites_two[TSCONF_MAX_WIDTH_LAYER];
 
 //Forzar desde menu a desactivar capas 
 z80_bit tsconf_force_disable_layer_ula={0};
 z80_bit tsconf_force_disable_layer_tiles_zero={0};
 z80_bit tsconf_force_disable_layer_tiles_one={0};
-z80_bit tsconf_force_disable_layer_sprites={0};
+z80_bit tsconf_force_disable_layer_sprites_zero={0};
+z80_bit tsconf_force_disable_layer_sprites_one={0};
+z80_bit tsconf_force_disable_layer_sprites_two={0};
 z80_bit tsconf_force_disable_layer_border={0};
 
 //Prueba ny17: Todo activado: 71-73 %
@@ -1692,7 +1697,7 @@ void tsconf_store_scanline_sprites_putsprite(int y_offset,int ancho, int tnum_x,
 }
 
 
-void tsconf_store_scanline_sprites(void)
+void tsconf_store_scanline_sprites(int capa_mostrar)
 {
 
    //linea que se debe leer
@@ -1705,18 +1710,26 @@ void tsconf_store_scanline_sprites(void)
 		int offset=0;
 		int salir=0;
 
-	z80_int *layer=tsconf_layer_sprites;
+	int capa_actual=0;
+
+	z80_int *layer;
+	
+	if (capa_mostrar==0) layer=tsconf_layer_sprites_zero;
+	if (capa_mostrar==1) layer=tsconf_layer_sprites_one;
+	if (capa_mostrar==2) layer=tsconf_layer_sprites_two;
 
     //Los 85 sprites
 		for (i=0;i<TSCONF_MAX_SPRITES && !salir;i++,offset+=6) {
 			z80_byte sprite_r0h=tsconf_fmaps[0x200+offset+1];
+
+			z80_byte sprite_leap=sprite_r0h&64;
 			if (sprite_r0h&64) {
 				//salir=1; //Bit Leap, ultimo sprite
 				//printf ("\nUltimo sprite");
 			}
 
-			//Si sprite activo
-			if (sprite_r0h&32) {
+			//Si sprite activo y es de esta capa
+			if (sprite_r0h&32 && capa_actual==capa_mostrar) {
         		int y=tsconf_fmaps[0x200+offset]+256*(sprite_r0h&1);
 	      		z80_byte ysize=8*(1+((sprite_r0h>>1)&7));
 	               
@@ -1756,6 +1769,9 @@ void tsconf_store_scanline_sprites(void)
         		}
 				
 			}
+
+			if (sprite_leap) capa_actual++;
+			if (capa_actual>2) salir=1;
 		}
 
 		//printf ("\n");
@@ -1994,7 +2010,7 @@ void screen_store_scanline_rainbow_solo_display_tsconf(void)
   //Inicializamos array de capas
   int i;
   for (i=0;i<TSCONF_MAX_WIDTH_LAYER;i++) {
-    tsconf_layer_ula[i]=tsconf_layer_tiles_zero[i]=tsconf_layer_tiles_one[i]=tsconf_layer_sprites[i]=TSCONF_SCANLINE_TRANSPARENT_COLOR;
+    tsconf_layer_ula[i]=tsconf_layer_tiles_zero[i]=tsconf_layer_tiles_one[i]=tsconf_layer_sprites_zero[i]=tsconf_layer_sprites_one[i]=tsconf_layer_sprites_two[i]=TSCONF_SCANLINE_TRANSPARENT_COLOR;
   }
 
   //Dibujamos las capas
@@ -2025,14 +2041,19 @@ int spritestiles=1;
 	  //if (tsconfig&128) {
 	  if (tsconf_if_sprites_enabled() ) {
         //printf ("Sprite layers enable ");
-        if (tsconf_force_disable_layer_sprites.v==0) tsconf_store_scanline_sprites();
+        if (tsconf_force_disable_layer_sprites_zero.v==0) tsconf_store_scanline_sprites(0);
+		if (tsconf_force_disable_layer_sprites_one.v==0) tsconf_store_scanline_sprites(1);
+		if (tsconf_force_disable_layer_sprites_two.v==0) tsconf_store_scanline_sprites(2);
 	  }
 
 	  //if (tsconfig&32) {
 	  if (tsconf_if_tiles_zero_enabled() ) {
 			//printf ("Tile layer 0 enable- ");
 		  if (tsconf_force_disable_layer_tiles_zero.v==0) tsconf_store_scanline_tiles(0,tsconf_layer_tiles_zero);
-		}
+	 }
+
+
+
 
 	  //if (tsconfig&64) {
 	  if (tsconf_if_tiles_one_enabled() ) {
@@ -2041,7 +2062,7 @@ int spritestiles=1;
 	  }
 
 
-  }
+  	}
   }
 
 
@@ -2073,13 +2094,17 @@ int spritestiles=1;
 		z80_int *layer_two;
 		z80_int *layer_three;
 		z80_int *layer_four;
+		z80_int *layer_five;
+		z80_int *layer_six;
 
 
             	//Sprites encima de tiles y encima de ula
-		layer_one=tsconf_layer_sprites;
+		layer_one=tsconf_layer_sprites_two;
 		layer_two=&tsconf_layer_tiles_one[8];     //Empieza en offset 8. Tenemos 8 pixeles de margen a la izquierda que no se ven
-		layer_three=&tsconf_layer_tiles_zero[8]; //Empieza en offset 8. Tenemos 8 pixeles de margen a la izquierda que no se ven
-		layer_four=tsconf_layer_ula;
+		layer_three=tsconf_layer_sprites_one;
+		layer_four=&tsconf_layer_tiles_zero[8]; //Empieza en offset 8. Tenemos 8 pixeles de margen a la izquierda que no se ven
+		layer_five=tsconf_layer_sprites_zero;
+		layer_six=tsconf_layer_ula;
 
 
 	for (x=0;x<tsconf_current_pixel_width*2;x++) {
@@ -2098,8 +2123,14 @@ int spritestiles=1;
 				color_final=*layer_three;
 				if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) {
 					color_final=*layer_four;
-					//Si transparente, color 0
-	                if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=0;
+					if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+						color_final=*layer_five;
+						if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) {
+							color_final=*layer_six;
+							//Si transparente, color 0
+	        		        if (color_final==TSCONF_SCANLINE_TRANSPARENT_COLOR) color_final=0;
+						}
+					}
 					
 				}	
 			}
@@ -2121,6 +2152,8 @@ int spritestiles=1;
 		layer_two++;
 		layer_three++;
 		layer_four++;
+		layer_five++;
+		layer_six++;
 	}
 }
 

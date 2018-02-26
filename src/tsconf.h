@@ -92,7 +92,9 @@ extern z80_bit tsconf_si_render_spritetile_rapido;
 extern z80_bit tsconf_force_disable_layer_ula;
 extern z80_bit tsconf_force_disable_layer_tiles_zero;
 extern z80_bit tsconf_force_disable_layer_tiles_one;
-extern z80_bit tsconf_force_disable_layer_sprites;
+extern z80_bit tsconf_force_disable_layer_sprites_zero;
+extern z80_bit tsconf_force_disable_layer_sprites_one;
+extern z80_bit tsconf_force_disable_layer_sprites_two;
 extern z80_bit tsconf_force_disable_layer_border;
 
 //extern z80_bit tsconf_fired_frame_interrupt;
