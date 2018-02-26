@@ -1175,7 +1175,7 @@ void scr_tsconf_putsprite_comun(z80_byte *puntero,int alto,int x,int y,z80_bit i
 
 int tsconf_get_current_visible_scanline(void)
 {
-	return t_scanline_draw-screen_invisible_borde_superior;;
+	return t_scanline_draw-screen_invisible_borde_superior;
 }
 
 int temp_conta_nogfx;
@@ -1701,10 +1701,12 @@ void tsconf_store_scanline_sprites(int capa_mostrar)
 {
 
    //linea que se debe leer
-        int scanline_copia=t_scanline_draw-tsconf_current_border_height;
+    //int scanline_copia=t_scanline_draw-tsconf_current_border_height;
 
-				//TODO: tener en cuenta zona invisible border
-				if (scanline_copia<0) return;
+	int scanline_copia=tsconf_get_current_visible_scanline();	
+	scanline_copia -=tsconf_current_border_height;
+
+	if (scanline_copia<0) return;
 
 		int i;
 		int offset=0;

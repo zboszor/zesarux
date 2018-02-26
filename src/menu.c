@@ -22424,7 +22424,7 @@ void menu_debug_spritefinder(MENU_ITEM_PARAMETERS)
 
 void menu_debug_tsconf_dma_dibuja_ventana(void)
 {
-	menu_dibuja_ventana(2,7,27,13,"TSConf DMA");
+	menu_dibuja_ventana(2,6,27,11,"TSConf DMA");
 }
 
 
@@ -22442,7 +22442,7 @@ void menu_debug_tsconf_dma_overlay(void)
     int linea;
 
 
-    linea=1;
+    linea=0;
 
     
     	//mostrarlos siempre a cada refresco
@@ -22518,7 +22518,7 @@ void menu_debug_tsconf_dma(MENU_ITEM_PARAMETERS)
 
 	
 
-			int lin=9;
+			int lin=8;
 
 		
 				menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_dma,MENU_OPCION_NORMAL,menu_debug_tsconf_dma_disable,NULL,"~~DMA: %s",
@@ -22563,7 +22563,7 @@ void menu_debug_tsconf_videoregisters(MENU_ITEM_PARAMETERS)
     //char textostats[32];
 
     menu_espera_no_tecla();
-    menu_dibuja_ventana(0,1,32,18,"Video Registers");
+    menu_dibuja_ventana(0,7,32,8,"Video Registers");
 
     z80_byte acumulado;
 
@@ -28208,7 +28208,7 @@ void menu_display_tsconf_fast_render(MENU_ITEM_PARAMETERS)
 
 void menu_tsconf_layer_dibuja_ventana(void)
 {
-        menu_dibuja_ventana(7,0,19,23,"TSConf Layers");
+        menu_dibuja_ventana(7,1,19,22,"TSConf Layers");
 }
 
 int menu_tsconf_layer_valor_contador_segundo_anterior;
@@ -28226,7 +28226,7 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 {
  int linea;
 
-    linea=1;
+    linea=0;
 
     
         //mostrarlos siempre a cada refresco
@@ -28343,7 +28343,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 			//que he definido en el overlay para que aparezca
 			menu_tsconf_layer_overlay_mostrar_texto();
 
-            int lin=2;
+            int lin=1;
 
 			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_tsconf_layer_settings_border,NULL,"%s",(tsconf_force_disable_layer_border.v ? "Disabled" : "Enabled"));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);

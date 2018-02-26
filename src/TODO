@@ -12,7 +12,6 @@ tsconf: con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos
 visor de sprites y tiles de tsconf: para probar sprites: ny17, cfparallax, digger, fast, fishbone, 200, mustang, 3bm, alterego beta,
 girlsun, hny2k16, jptst, merhaba_fixed, mf11intro, robfgift, sirababol, soco, tcircles, uwol
 
-TODO: offset sprites no lo hace bien??->uwol, sirababol
 probar capas de sprites tsconf: 200, , sirababol, mustang, alterego, fast, fishbone, uwol, soco
 
 Tsconf: escritura dma en fmaps
