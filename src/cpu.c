@@ -2763,8 +2763,8 @@ void set_machine_params(void)
 
 
 		
-							screen_invisible_borde_superior	=16; //para que sumen 320
-							screen_borde_superior=64;
+							screen_invisible_borde_superior	=32; //para que sumen 320
+							screen_borde_superior=48;
 
 							//temp
 							//screen_invisible_borde_superior	=8; //para que sumen 320
@@ -2772,18 +2772,32 @@ void set_machine_params(void)
 
 							screen_total_borde_inferior=48;
 
+							/* Tiempos de tsconf:
+							Line, pixels: 
+blank - left border - pixels - right border
+256x192: 88-52-256-52
+320x200,
+320x240: 88-20-320-20
+360x288: 88-0-360-0
+
+Frame, lines:
+blank - upper border - pixels - lower border
+256x192: 32-48-192-48
+320x200: 32-44-200-44
+320x240: 32-24-240-24
+360x288: 32-0-288-0
+
+You don't need timings for H/V sync =)
+
+							*/
+
 
                         	//los timings son realmente estos :
                         	screen_total_borde_izquierdo=64;
                         	screen_total_borde_derecho=64;
                         	screen_invisible_borde_derecho=64;
 
-                        	//estos son los falseados para pentagon para no tener que hacer un tamaño de pantalla mayor
-                        	/*
-							screen_total_borde_izquierdo=48;
-                        	screen_total_borde_derecho=48;
-                        	screen_invisible_borde_derecho=96;
-							*/
+                        
 
 							
 				}
