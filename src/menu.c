@@ -22713,7 +22713,7 @@ int menu_debug_tsconf_spritenav_lista_colores(void)
 			sprintf (dumpmemoria,"%02d X: %3d Y: %3d (%2dX%2d)",current_sprite,x,y,xsize,ysize);
 			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 
-			sprintf (dumpmemoria,"Tile: %2d,%d %s %s %s %s P: %2d",tnum_x,tnum_y,
+			sprintf (dumpmemoria,"Tile: %2d,%2d %s %s %s %s P:%2d",tnum_x,tnum_y,
 				(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),
 				(sprite_xf ? "XF" : "  "),(sprite_yf ? "YF": "  "),
 				spal );
