@@ -1311,15 +1311,11 @@ void tsconf_store_scanline_ula(void)
     //linea que se debe leer
     scanline_copia -=tsconf_current_border_height;
 
-		//zona borde superior
-	//if (scanline_copia<0) return;
-
 	int y_origen_pixeles=scanline_copia; 
 
 	//sumar offset
 	int y_offset=tsconf_af_ports[4]+256*(tsconf_af_ports[5]&1);
 
-	
 
 	y_origen_pixeles +=y_offset;
 
@@ -1327,14 +1323,6 @@ void tsconf_store_scanline_ula(void)
 	y_origen_pixeles=y_origen_pixeles % 512;
 
 
-
-	//Si zona border inferior
-	//if (y_origen_pixeles>tsconf_current_pixel_height) return;
-
-	//int total_ancho_rainbow=get_total_ancho_rainbow();
-
-
-      
 
     int x,bit;
     z80_int direccion;
@@ -1434,20 +1422,6 @@ void tsconf_store_scanline_ula(void)
 					//puntero a vram
 					//Indice a linea
 					int offset;
-
-					
-
-					/*if (videomode==1) { //16 colores
-						//offset=y_origen_pixeles*(tsconf_current_pixel_width/2);
-						offset=y_origen_pixeles*512;
-					}
-					
-					else {
-						//offset=y_origen_pixeles*(tsconf_current_pixel_width);
-						offset=y_origen_pixeles*512;
-					}*/
-
-
 
 					int x_offset=tsconf_af_ports[2]+256*(tsconf_af_ports[3]&1);
 					//edge grinder usa scroll x
