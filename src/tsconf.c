@@ -60,6 +60,25 @@ Offset  A[11:8] RAM	  Description
 #400    0100  REGS    TS-Conf Registers, 8 bit access, adressing is the same as by #nnAF port
 */
 
+
+void tsconf_write_fmaps(int tsconf_fmaps_offset,z80_byte valor) {
+				if (tsconf_fmaps_offset<0x200) {
+					//printf ("Zona tsconf cram\n");
+					tsconf_fmaps[tsconf_fmaps_offset]=valor;
+				}
+
+				if (tsconf_fmaps_offset>0x200 && tsconf_fmaps_offset<0x400) {
+					//printf ("Zona tsconf sprites\n");
+					tsconf_fmaps[tsconf_fmaps_offset]=valor;
+				}
+
+				if (tsconf_fmaps_offset>0x400 && tsconf_fmaps_offset<0x500) {
+					//printf ("Zona tsconf registers\n");
+					//Solo escribe en regustro tsconf. no en ram fmaps
+					tsconf_write_af_port(tsconf_fmaps_offset-0x400,valor);
+				}
+}
+
 //Retorna valor entre 0...32767, segun color de entrada entre 0..255
 z80_int tsconf_return_cram_color(z80_byte color)
 {
@@ -482,6 +501,11 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 	for (;burst_number>0;burst_number--){
 		int i;
+
+			//Si se escribe en fmaps
+		if ((tsconf_af_ports[0x15]&16)!=0) {
+			printf ("fmaps mapped on %06XH, destination dma: %06XH\n",tsconf_af_ports[0x15]&0xF<<12,destination);
+		}
 
 	orig_source=source;
 	orig_destination=destination;
@@ -1924,6 +1948,9 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 				else {
 					tpal_23=(palsel>>4)&(4+8); //bits 6-7 los muevo a 2-3
 				}
+
+				//temp
+				//tpal_23=0;
 
 				//if (tpal_23 && (contador_segundo%1000)==0) printf ("tpal_23: %d\n",tpal_23);
 

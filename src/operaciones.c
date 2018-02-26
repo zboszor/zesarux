@@ -2072,8 +2072,7 @@ void poke_byte_no_time_tsconf(z80_int dir,z80_byte valor)
 
 
 		//Si se escribe en fmaps
-
-		if ((tsconf_af_ports[0x15]&0xF0)!=0) {
+		if ((tsconf_af_ports[0x15]&16)!=0) {
 
 			z80_int tsconf_fmaps_start=tsconf_af_ports[0x15]&0xF;
 			tsconf_fmaps_start=tsconf_fmaps_start<<12;
@@ -2085,6 +2084,10 @@ void poke_byte_no_time_tsconf(z80_int dir,z80_byte valor)
 
 				z80_int tsconf_fmaps_offset=dir-tsconf_fmaps_start;
 				//printf ("Escribiendo fmaps dir: %04XH valor: %02XH offset: %d\n",dir,valor,tsconf_fmaps_offset);
+
+				tsconf_write_fmaps(tsconf_fmaps_offset,valor);
+
+				/*
 				if (tsconf_fmaps_offset<0x200) {
 					//printf ("Zona tsconf cram\n");
 					tsconf_fmaps[tsconf_fmaps_offset]=valor;
@@ -2100,6 +2103,7 @@ void poke_byte_no_time_tsconf(z80_int dir,z80_byte valor)
 					//Solo escribe en regustro tsconf. no en ram fmaps
 					tsconf_write_af_port(tsconf_fmaps_offset-0x400,valor);
 				}
+				*/
 
 
 			}

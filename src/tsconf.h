@@ -123,4 +123,6 @@ extern int tsconf_return_tilegraphicspage(z80_byte layer);
 extern int tsconf_return_spritesgraphicspage(void);
 extern int tsconf_return_tilemappage(void);
 
+extern void tsconf_write_fmaps(int tsconf_fmaps_offset,z80_byte valor);
+
 #endif

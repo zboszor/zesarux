@@ -2765,6 +2765,11 @@ void set_machine_params(void)
 		
 							screen_invisible_borde_superior	=16; //para que sumen 320
 							screen_borde_superior=64;
+
+							//temp
+							//screen_invisible_borde_superior	=8; //para que sumen 320
+							//screen_borde_superior=56;
+
 							screen_total_borde_inferior=48;
 
 
