@@ -489,6 +489,22 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 			break;
 
+
+			case 6:
+			//ldd.spg usa Unemulated dma type: rw: 0 ddev: 06H
+				if (dma_rw==0) {
+					//Pixels from RAM (Src) are blitted to RAM (Dst) with adder. De momento hacemos copia tal cual
+					source_pointer=tsconf_ram_mem_table[0];
+					destination_pointer=tsconf_ram_mem_table[0];
+
+					source_mask=destination_mask=0x3FFFFF; //4 mb
+				}
+				else {
+					debug_printf (VERBOSE_ERR,"Unemulated DMA FDD dump into RAM**");
+					return;
+				}
+			break;
+
 			default:
 				debug_printf (VERBOSE_ERR,"Unemulated dma type: rw: %d ddev: %02XH",dma_rw,dma_ddev);
 				return;
@@ -502,10 +518,10 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 	for (;burst_number>0;burst_number--){
 		int i;
 
-			//Si se escribe en fmaps
-		if ((tsconf_af_ports[0x15]&16)!=0) {
-			printf ("fmaps mapped on %06XH, destination dma: %06XH\n",tsconf_af_ports[0x15]&0xF<<12,destination);
-		}
+			//Si se escribe en fmaps. Creo que nadie lo usa. De momento no implementado
+		//if ((tsconf_af_ports[0x15]&16)!=0) {
+			//printf ("fmaps mapped on %06XH, destination dma: %06XH\n",tsconf_af_ports[0x15]&0xF<<12,destination);
+		//}
 
 	orig_source=source;
 	orig_destination=destination;

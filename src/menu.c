@@ -22657,8 +22657,8 @@ int menu_debug_tsconf_spritenav_current_sprite=0;
 
 
 
-//Muestra lista de colores o barras de colores, para una paleta total, o para la paleta mapeada
-int menu_debug_tsconf_spritenav_lista_colores(void)
+//Muestra lista de sprites
+int menu_debug_tsconf_spritenav_lista_sprites(void)
 {
 
 	char dumpmemoria[33];
@@ -22726,14 +22726,14 @@ int menu_debug_tsconf_spritenav_lista_colores(void)
 	return linea;
 }
 
-void menu_debug_tsconf_spritenav_draw_barras(void)
+void menu_debug_tsconf_spritenav_draw_sprites(void)
 {
 
 				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 
 				//Mostrar lista sprites
-				menu_debug_tsconf_spritenav_lista_colores();
+				menu_debug_tsconf_spritenav_lista_sprites();
 
 				//Esto tiene que estar despues de escribir la lista de sprites, para que se refresque y se vea
 				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
@@ -22772,7 +22772,7 @@ void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 	int salir=0;
 
 
-	set_menu_overlay_function(menu_debug_tsconf_spritenav_draw_barras);
+	set_menu_overlay_function(menu_debug_tsconf_spritenav_draw_sprites);
 
     do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
@@ -22856,6 +22856,227 @@ void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 }
 
 
+#define TSCONF_TILENAV_WINDOW_X 0
+#define TSCONF_TILENAV_WINDOW_Y 0
+#define TSCONF_TILENAV_WINDOW_ANCHO 32
+#define TSCONF_TILENAV_WINDOW_ALTO 24
+#define TSCONF_TILENAV_TILES_PER_WINDOW 10
+
+void menu_debug_tsconf_tilenav_ventana(void)
+{
+        menu_dibuja_ventana(TSCONF_TILENAV_WINDOW_X,TSCONF_TILENAV_WINDOW_Y,TSCONF_TILENAV_WINDOW_ANCHO,TSCONF_TILENAV_WINDOW_ALTO,"Tile navigator");
+}
+
+
+//int menu_debug_tsconf_tilenav_current_palette=0;
+int menu_debug_tsconf_tilenav_current_tile=0;
+
+int menu_debug_tsconf_tilenav_current_tilelayer=0;
+
+
+#define DEBUG_TSCONF_TILENAV_MAX_TILES (64*64)
+
+//Muestra lista de tiles
+int menu_debug_tsconf_tilenav_lista_tiles(void)
+{
+
+	char dumpmemoria[33];
+
+	int linea_color;
+	int limite;
+
+	int linea=0;
+	limite=DEBUG_TSCONF_TILENAV_MAX_TILES;
+
+	int current_tile;
+
+	z80_byte *puntero_tilemap;
+	puntero_tilemap=tsconf_ram_mem_table[0]+tsconf_return_tilemappage();
+
+
+		for (linea_color=0;linea_color<TSCONF_TILENAV_TILES_PER_WINDOW &&
+				menu_debug_tsconf_tilenav_current_tile+linea_color<limite;
+				linea_color++) {
+
+			current_tile=menu_debug_tsconf_tilenav_current_tile+linea_color;
+
+			int y=current_tile/64;
+			int x=current_tile%64; 
+
+			int offset=256*y+x*2;
+
+			offset+=menu_debug_tsconf_tilenav_current_tilelayer*128;
+
+			int tnum=puntero_tilemap[offset]+256*(puntero_tilemap[offset+1]&0xF);
+
+			z80_byte tnum_x=tnum&63;
+			z80_byte tnum_y=(tnum>>6)&63;
+
+		    z80_byte tpal=(puntero_tilemap[offset+1]>>4)&3;
+
+			z80_byte tile_xf=puntero_tilemap[offset+1]&64;
+			z80_byte tile_yf=puntero_tilemap[offset+1]&128;
+
+			sprintf (dumpmemoria,"X: %3d Y: %3d",x,y);
+			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+
+			sprintf (dumpmemoria,"Tile: %2d,%2d %s %s P:%2d",tnum_x,tnum_y,
+				(tile_xf ? "XF" : "  "),(tile_yf ? "YF": "  "),
+				tpal );
+			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+
+			puntero_tilemap+=2;
+					
+		}
+
+
+
+	return linea;
+}
+
+void menu_debug_tsconf_tilenav_draw_sprites(void)
+{
+
+				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+
+				//Mostrar lista tiles
+				menu_debug_tsconf_tilenav_lista_tiles();
+
+				//Esto tiene que estar despues de escribir la lista de tiles, para que se refresque y se vea
+				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
+				normal_overlay_texto_menu();
+
+}
+
+void menu_debug_tsconf_tilenav_cursor_arriba(void)
+{
+	if (menu_debug_tsconf_tilenav_current_tile>0) {
+		menu_debug_tsconf_tilenav_current_tile--;
+	}
+}
+
+void menu_debug_tsconf_tilenav_cursor_abajo(void)
+{
+
+	int limite=DEBUG_TSCONF_TILENAV_MAX_TILES;
+
+	if (menu_debug_tsconf_tilenav_current_tile<limite-1) {
+		menu_debug_tsconf_tilenav_current_tile++;
+	}
+
+}
+
+void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
+{
+	menu_espera_no_tecla();
+	menu_debug_tsconf_tilenav_ventana();
+
+	menu_reset_counters_tecla_repeticion();
+
+    z80_byte tecla=0;
+
+
+	int salir=0;
+
+
+	set_menu_overlay_function(menu_debug_tsconf_tilenav_draw_sprites);
+
+    do {
+    	menu_speech_tecla_pulsada=0; //Que envie a speech
+
+		int linea=TSCONF_TILENAV_WINDOW_Y+TSCONF_TILENAV_TILES_PER_WINDOW*2+1;
+
+			
+		char buffer_linea[40];
+
+		//Forzar a mostrar atajos
+		z80_bit antes_menu_writing_inverse_color;
+		antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+
+		menu_writing_inverse_color.v=1;
+
+		sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tilenav_current_tilelayer);
+
+		menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+
+		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+
+
+		if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+
+		menu_espera_tecla();
+
+		tecla=menu_get_pressed_key();
+
+		menu_espera_no_tecla_con_repeticion();
+
+		int aux_pgdnup;
+		//int limite;
+
+				switch (tecla) {
+
+					case 11:
+						//arriba
+						menu_debug_tsconf_tilenav_cursor_arriba();
+
+						menu_debug_tsconf_tilenav_ventana();
+						
+					break;
+
+					case 10:
+						//abajo
+						menu_debug_tsconf_tilenav_cursor_abajo();
+
+						menu_debug_tsconf_tilenav_ventana();
+
+
+					break;
+
+					case 24:
+						//PgUp
+						for (aux_pgdnup=0;aux_pgdnup<TSCONF_TILENAV_TILES_PER_WINDOW;aux_pgdnup++) {
+							menu_debug_tsconf_tilenav_cursor_arriba();
+						}
+						menu_debug_tsconf_tilenav_ventana();
+
+						//menu_debug_tsconf_tilenav_direccion -=bytes_por_ventana;
+						//menu_debug_tsconf_tilenav_direccion=menu_debug_tsconf_tilenav_adjusta_en_negativo(menu_debug_tsconf_tilenav_direccion,bytes_por_ventana);
+					break;
+
+					case 25:
+						//PgDn
+						for (aux_pgdnup=0;aux_pgdnup<TSCONF_TILENAV_TILES_PER_WINDOW;aux_pgdnup++) {
+							menu_debug_tsconf_tilenav_cursor_abajo();
+						}
+						menu_debug_tsconf_tilenav_ventana();
+					break;
+
+					case 'l':
+						menu_debug_tsconf_tilenav_current_tilelayer ^=1;
+					break;
+
+					//Salir con ESC
+					case 2:
+						salir=1;
+					break;
+				}
+
+
+        } while (salir==0);
+
+		//restauramos modo normal de texto de menu
+        set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+	cls_menu_overlay();
+	//menu_escribe_linea_startx=1;
+
+}
+
+
+
+
 void menu_debug_tsconf(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_debug_tsconf;
@@ -22875,6 +23096,8 @@ void menu_debug_tsconf(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_debug_tsconf_spritenav,NULL,"~~Sprite navigator");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf,'s');
 
+		menu_add_item_menu_format(array_menu_debug_tsconf,MENU_OPCION_NORMAL,menu_debug_tsconf_tilenav,NULL,"~~Tile navigator");
+		menu_add_item_menu_shortcut(array_menu_debug_tsconf,'t');
 
                 menu_add_item_menu(array_menu_debug_tsconf,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_debug_tsconf,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
@@ -22959,7 +23182,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 
 		if (MACHINE_IS_TSCONF) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf,NULL,"TSConf");
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf,NULL,"~~TSConf");
+			menu_add_item_menu_shortcut(array_menu_debug_settings,'t');
 		}
 
 		menu_add_item_menu(array_menu_debug_settings,"View He~~xdump",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);
@@ -22976,7 +23200,6 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 #ifdef EMULATE_CPU_STATS
 		if (CPU_IS_Z80) {
 		menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_cpu_stats,NULL,"View CPU S~~tatistics");
-		menu_add_item_menu_shortcut(array_menu_debug_settings,'t');
 		}
 
 #endif
