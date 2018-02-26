@@ -1709,45 +1709,51 @@ void tsconf_store_scanline_sprites(void)
 
     //Los 85 sprites
 		for (i=0;i<85 && !salir;i++,offset+=6) {
-			if (tsconf_fmaps[0x200+offset+1]&64) {
+			z80_byte sprite_r0h=tsconf_fmaps[0x200+offset+1];
+			if (sprite_r0h&64) {
 				salir=1; //Bit Leap, ultimo sprite
 				//printf ("\nUltimo sprite");
 			}
-			if (tsconf_fmaps[0x200+offset+1]&32) {
-        int y=tsconf_fmaps[0x200+offset]+256*(tsconf_fmaps[0x200+offset+1]&1);
-	      z80_byte ysize=8*(1+((tsconf_fmaps[0x200+offset+1]>>1)&7));
+
+			//Si sprite activo
+			if (sprite_r0h&32) {
+        		int y=tsconf_fmaps[0x200+offset]+256*(sprite_r0h&1);
+	      		z80_byte ysize=8*(1+((sprite_r0h>>1)&7));
 	               
 
-        //Ver si esta en rango y
-        if (scanline_copia>=y && scanline_copia<y+ysize) { 
+        		//Ver si esta en rango y
+        		if (scanline_copia>=y && scanline_copia<y+ysize) { 
 
-		      int x=tsconf_fmaps[0x200+offset+2]+256*(tsconf_fmaps[0x200+offset+3]&1);
-			    z80_byte xsize=8*(1+((tsconf_fmaps[0x200+offset+3]>>1)&7));
-			    z80_int tnum=(tsconf_fmaps[0x200+offset+4])+256*(tsconf_fmaps[0x200+offset+5]&15);
-			    //Tile Number for upper left corner. Bits 0-5 are X Position in Graphics Bitmap, bits 6-11 - Y Position.
-			    z80_int tnum_x=tnum & 63;
-    			z80_int tnum_y=(tnum>>6)&63;
+					z80_byte sprite_r1h=tsconf_fmaps[0x200+offset+3];
+		      		int x=tsconf_fmaps[0x200+offset+2]+256*(sprite_r1h&1);
+			    	z80_byte xsize=8*(1+((sprite_r1h>>1)&7));
 
-		    	z80_byte spal=(tsconf_fmaps[0x200+offset+5]>>4)&15;
+					z80_byte sprite_r2h=tsconf_fmaps[0x200+offset+5];
+			    	z80_int tnum=(tsconf_fmaps[0x200+offset+4])+256*(sprite_r2h&15);
+			    	//Tile Number for upper left corner. Bits 0-5 are X Position in Graphics Bitmap, bits 6-11 - Y Position.
+			    	z80_int tnum_x=tnum & 63;
+    				z80_int tnum_y=(tnum>>6)&63;
 
-			    /*
-			    En demo ny17, xsize=ysize=32. tnum_x va de 0,4,8, etc. Asumimos que para posicionar en el sprite adecuado,
-			    es un desplazamiento de tnum_x*8. Mismo para tnum_y
-			    Para pasar de cada coordenada y, hay que sumar 512 pixeles (son de 4bpp), por tanto, 256 direcciones
-			    */
+		    		z80_byte spal=(sprite_r2h>>4)&15;
 
-	        //if (x>320) printf ("\nsprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
-				  //temp_sprite_xy(x,y,1+8);
-          int y_offset=scanline_copia-y;
-          //printf ("\nscanline: %d yoff: %d sprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",scanline_copia,y_offset,i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
-          //temp_sprite_xy_putsprite(x,y,xsize,ysize,tnum_x,tnum_y,spal);
+			    	/*
+			    	En demo ny17, xsize=ysize=32. tnum_x va de 0,4,8, etc. Asumimos que para posicionar en el sprite adecuado,
+			    	es un desplazamiento de tnum_x*8. Mismo para tnum_y
+			    	Para pasar de cada coordenada y, hay que sumar 512 pixeles (son de 4bpp), por tanto, 256 direcciones
+			    	*/
+
+	        		//if (x>320) printf ("\nsprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
+				  	//temp_sprite_xy(x,y,1+8);
+          			int y_offset=scanline_copia-y;
+          			//printf ("\nscanline: %d yoff: %d sprite %d x: %d y: %d xs: %d ys: %d tnum_x: %d tnum_y: %d spal: %d",scanline_copia,y_offset,i,x,y,xsize,ysize,tnum_x,tnum_y,spal);
+          			//temp_sprite_xy_putsprite(x,y,xsize,ysize,tnum_x,tnum_y,spal);
 
 			
-	int final_layer_x_offset=x*2;  //*2 porque la resolucion de pixeles es de 360 maximo mientras que el scanline entero es de 720,
-	//y solo se pueden usar 720 con el modo texto
+					int final_layer_x_offset=x*2;  //*2 porque la resolucion de pixeles es de 360 maximo mientras que el scanline entero es de 720,
+					//y solo se pueden usar 720 con el modo texto
 
-          tsconf_store_scanline_sprites_putsprite(y_offset,xsize,tnum_x,tnum_y,spal,&layer[final_layer_x_offset]);
-        }
+          			tsconf_store_scanline_sprites_putsprite(y_offset,xsize,tnum_x,tnum_y,spal,&layer[final_layer_x_offset]);
+        		}
 				
 			}
 		}

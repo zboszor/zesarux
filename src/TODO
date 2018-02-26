@@ -8,7 +8,7 @@ TSConf: demo twist de fast.spg, deformacion se ve perfecta con fast render pero 
 tsconf: driver texto curses, simpletext, stdout
 valores de espejo en sprites tsconf...
 TsConf: color border registro 0xf
-Al pulsar teclas en el menu (cursores?) las demos se alteran! :(
+tsconf: con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos se alteran! :(
 visor de sprites y tiles de tsconf
 
 Tsconf: escritura dma en fmaps
