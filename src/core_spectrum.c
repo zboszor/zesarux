@@ -410,10 +410,9 @@ void cpu_core_loop_spectrum(void)
 
 			//final de linea
 
-
 			//copiamos contenido linea y border a buffer rainbow
 			if (rainbow_enabled.v==1) {
-				if (!screen_if_refresh() ) {
+				if (!screen_if_refresh()) {
 					//printf ("Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
 				}
 

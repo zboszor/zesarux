@@ -6671,7 +6671,7 @@ void screen_store_scanline_rainbow_solo_border(void)
 	if (MACHINE_IS_PRISM) ancho_pantalla=PRISM_DISPLAY_WIDTH;
 
 	if (MACHINE_IS_TSCONF) {
-		//TODO
+		//se gestiona todo desde el solo_display
 		return;
 	}
 
@@ -7873,7 +7873,9 @@ void cpu_loop_refresca_pantalla(void)
 				//Si no hay autoframeskip, el primer parentesis siempre se cumple
 				//Si hay autoframeskip, y se ha tardado mucho en llegar a final de frame (framescreen_saltar>0) , el primer parentesis no se cumple y por tanto no se redibuja pantalla
 
-                                if ( (framescreen_saltar==0 || autoframeskip.v==0) && frameskip_counter==0) {
+                                //if ( (framescreen_saltar==0 || autoframeskip.v==0) && frameskip_counter==0) {
+				if (screen_if_refresh() ) {
+					//printf ("refrescando\n");
                                         scr_refresca_pantalla();
                                         frameskip_counter=frameskip;
                                 }
@@ -7881,6 +7883,7 @@ void cpu_loop_refresca_pantalla(void)
 
 				//Si no se ha llegado a final de frame antes, o hay frameskip manual
                                 else {
+					//printf ("no refrescando\n");
                                         if (frameskip_counter) frameskip_counter--;
                                         else debug_printf(VERBOSE_DEBUG,"Framedrop %d",framedrop_total);
 
