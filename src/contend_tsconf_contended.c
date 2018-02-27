@@ -61,9 +61,9 @@ z80_byte contend_pages_chloe[]={  0,0,0,0,0,1,0,1 };
 z80_byte contend_pages_chrome[]={  0,0,1,0,0,1,0,0,0,0 };
 
 
-//Para tsconf, contend solo en 2,5
+//Para Chloe, contend solo en 2,5
 //				  0,1,2,3,4,5,6,7,8,9
-//z80_byte contend_pages_tsconf[]={  0,0,1,0,0,1,0,0,0,0 };
+z80_byte contend_pages_tsconf[]={  0,0,1,0,0,1,0,0,0,0 };
 
 
 //Indica si las paginas actuales mapeadas tienen contend o no (a 0 o a 1)
@@ -787,6 +787,16 @@ z80_int segmento;
 
 void contend_read_tsconf(z80_int direccion,int time)
 {
+
+#ifdef EMULATE_CONTEND
+
+		z80_int segmento;
+                segmento=direccion / 16384;
+		if (contend_pages_actual[segmento]) {
+			t_estados += contend_table[ t_estados ];
+		}
+#endif
+
         //Y sumamos estados normales
         t_estados += time;
 
@@ -794,6 +804,16 @@ void contend_read_tsconf(z80_int direccion,int time)
 
 void contend_read_no_mreq_tsconf(z80_int direccion,int time)
 {
+
+#ifdef EMULATE_CONTEND
+
+		z80_int segmento;
+                segmento=direccion / 16384;
+		if (contend_pages_actual[segmento]) {
+			t_estados += contend_table[ t_estados ];
+		}
+#endif
+
 
         //Y sumamos estados normales
         t_estados += time;
@@ -803,6 +823,18 @@ void contend_read_no_mreq_tsconf(z80_int direccion,int time)
 void contend_write_no_mreq_tsconf(z80_int direccion,int time)
 {
 
+#ifdef EMULATE_CONTEND
+
+		z80_int segmento;
+                segmento=direccion / 16384;
+
+		//printf ("direccion: %d segmento: %d contend: %d\n",direccion,segmento,contend_pages_actual[segmento]);
+		if (contend_pages_actual[segmento]) {
+			t_estados += contend_table[ t_estados ];
+		}
+#endif
+
+
         //Y sumamos estados normales
         t_estados += time;
 
@@ -811,17 +843,45 @@ void contend_write_no_mreq_tsconf(z80_int direccion,int time)
 
 void ula_contend_port_early_tsconf( z80_int port )
 {
- 
+#ifdef EMULATE_CONTEND
+z80_int segmento;
+                segmento=port / 16384;
+                if (contend_pages_actual[segmento]) {
+                	t_estados += contend_table_no_mreq[ t_estados ];
+
+
+	        }
+#endif
 
   t_estados++;
 }
 
 void ula_contend_port_late_tsconf( z80_int port )
 {
+#ifdef EMULATE_CONTEND
+  if( port_from_ula( port ) ) {
+    t_estados += contend_table_no_mreq[ t_estados ];
+    t_estados += 2;
+
+  }
+  else {
 
 
+z80_int segmento;
+     segmento=port / 16384;
+    if (contend_pages_actual[segmento]) {
+                t_estados += contend_table_no_mreq[ t_estados ]; t_estados++;
+                t_estados += contend_table_no_mreq[ t_estados ]; t_estados++;
+                t_estados += contend_table_no_mreq[ t_estados ];
+
+        }
+        else {
+              t_estados += 2;
+        }
+  }
+#else
         t_estados += 2;
-
+#endif
 
 }
 
@@ -1070,9 +1130,6 @@ void inicializa_tabla_contend(void)
 
 
   if (MACHINE_IS_TSCONF) {
-                //no tiene memoria contended
-                return;
-/*
     //128k
                 timings=contend_patron_65432100;
 
@@ -1080,7 +1137,7 @@ void inicializa_tabla_contend(void)
                 //offset_time=-1;
 
     offset_time=3; //6,5,4,3,2,1,0,0 pattern starts at 14361 segun http://www.worldofspectrum.org/faq/reference/128kreference.htm
-                offset_patron=-1;*/
+                offset_patron=-1;
 
 
   }

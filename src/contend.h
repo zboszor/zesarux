@@ -127,7 +127,7 @@ extern void contend_read_no_mreq_tsconf(z80_int direccion,int time);
 extern void contend_write_no_mreq_tsconf(z80_int direccion,int time);
 extern void ula_contend_port_early_tsconf( z80_int port );
 extern void ula_contend_port_late_tsconf( z80_int port );
-extern z80_byte contend_pages_tsconf[];
+//extern z80_byte contend_pages_tsconf[];
 
 extern void contend_read_mk14(z80_int direccion,int time);
 extern void contend_read_no_mreq_mk14(z80_int direccion,int time);

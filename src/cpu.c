@@ -2797,7 +2797,6 @@ You don't need timings for H/V sync =)
                         	screen_total_borde_derecho=64;
                         	screen_invisible_borde_derecho=64;
 
-                        
 
 							
 				}

@@ -779,10 +779,10 @@ void tsconf_init_memory_tables(void)
 	}
 
 	//Tablas contend
-	contend_pages_actual[0]=0;
+	/*contend_pages_actual[0]=0;
 	contend_pages_actual[1]=contend_pages_tsconf[5];
 	contend_pages_actual[2]=contend_pages_tsconf[2];
-	contend_pages_actual[3]=contend_pages_tsconf[0];
+	contend_pages_actual[3]=contend_pages_tsconf[0];*/
 
 
 }
