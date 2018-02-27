@@ -7832,7 +7832,16 @@ void scr_fadeout(void)
 
 
 
+//Retorna 1 si se tiene que refrescar pantalla. Aplica frameskip y autoframeskip
+int screen_if_refresh(void)
+{
+	if ( (framescreen_saltar==0 || autoframeskip.v==0) && frameskip_counter==0) {
+		return 1;
+	}
 
+	return 0;
+}
+	
 
 void cpu_loop_refresca_pantalla(void)
 {

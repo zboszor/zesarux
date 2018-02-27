@@ -2189,7 +2189,7 @@ int spritestiles=1;
   if (spritestiles) {
 
   if (tsconf_si_render_spritetile_rapido.v==0) {
-	  z80_byte tsconfig=tsconf_af_ports[6];
+	  //z80_byte tsconfig=tsconf_af_ports[6];
 	  //if (tsconfig&128) {
 	  if (tsconf_if_sprites_enabled() ) {
         //printf ("Sprite layers enable ");

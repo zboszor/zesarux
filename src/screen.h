@@ -714,4 +714,6 @@ extern int scrstdout_simpletext_refresh_factor;
 
 extern void scr_set_fps_stdout_simpletext(int fps);
 
+extern int screen_if_refresh(void);
+
 #endif
