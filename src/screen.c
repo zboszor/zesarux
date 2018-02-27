@@ -7883,8 +7883,8 @@ void cpu_loop_refresca_pantalla(void)
 
 				//Si no se ha llegado a final de frame antes, o hay frameskip manual
                                 else {
-					//printf ("no refrescando\n");
-                                        if (frameskip_counter) frameskip_counter--;
+					//printf ("-no refrescando\n");
+                                       if (frameskip_counter) frameskip_counter--;
                                         else debug_printf(VERBOSE_DEBUG,"Framedrop %d",framedrop_total);
 
 

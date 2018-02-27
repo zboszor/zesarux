@@ -405,7 +405,9 @@ void timer_check_interrupt(void)
 			//if (framedrop_total>30) printf ("--------------framedrop total %d\n",framedrop_total);
 
 			//if (esperando_tiempo_final_t_estados.v==0 && framedrop_total<40) {
-			if (esperando_tiempo_final_t_estados.v==0 && framedrop_total<40) {
+
+				//Antes el 48 era 40
+			if (esperando_tiempo_final_t_estados.v==0 && framedrop_total<48) {
 
 				//normal
 				//framescreen_saltar=1;
