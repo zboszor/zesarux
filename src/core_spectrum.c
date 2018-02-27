@@ -413,8 +413,15 @@ void cpu_core_loop_spectrum(void)
 
 			//copiamos contenido linea y border a buffer rainbow
 			if (rainbow_enabled.v==1) {
-				screen_store_scanline_rainbow_solo_border();
-				screen_store_scanline_rainbow_solo_display();
+				if (framescreen_saltar) {
+					//printf ("Not storing rainbow buffer as framescreen_saltar is %d\n",framescreen_saltar);
+				}
+
+				else {
+					//printf ("storing rainbow buffer\n");
+					screen_store_scanline_rainbow_solo_border();
+					screen_store_scanline_rainbow_solo_display();
+				}
 
 				//t_scanline_next_border();
 
