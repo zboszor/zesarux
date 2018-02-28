@@ -382,6 +382,11 @@ void scrsimpletext_repinta_pantalla(void)
 		if (rainbow_enabled.v) {
 			scr_refresca_pantalla_tsconf_text(scr_simpletext_common_fun_color,scr_simpletext_common_fun_caracter,scr_simpletext_common_fun_saltolinea,12);
 		}
+
+		//sin rainbow, como spectrum
+		else {
+			screen_text_repinta_pantalla_spectrum();
+		}
 	}	
 	
 	

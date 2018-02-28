@@ -5,7 +5,6 @@ nombre fichero en ventana menu?
 
 borrar registros tsconf en hard reset? scroll se queda activo a veces. quiza ahora con la dma ya no pasa. revisar. si que pasa
 TSConf: demo twist de fast.spg, deformacion se ve perfecta con fast render pero no con normal
-tsconf: driver texto curses, simpletext, stdout
 valores de espejo en sprites tsconf...
 TsConf: color border registro 0xf
 tsconf: con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos se alteran! :(

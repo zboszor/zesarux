@@ -986,6 +986,39 @@ void scrcurses_refresca_pantalla(void)
 		}
 	}
 
+	else if (MACHINE_IS_TSCONF) {
+                   //Si es modo texto, hacer este refresh:
+                                z80_byte modo_video=tsconf_get_video_mode_display();
+                                if (modo_video==3) {
+                                        scr_refresca_pantalla_tsconf_text_textmode(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);
+                                        return;
+                                }
+
+	                //con rainbow
+			if (rainbow_enabled.v) {
+	                        scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);  //720x576 -> 31x25
+			}
+
+			else {
+
+			//sin rainbow, refresh como spectrum
+                        if (border_enabled.v) {
+                                //ver si hay que refrescar border
+                                if (modificado_border.v)
+                                {
+                                        scrcurses_refresca_border();
+                                        modificado_border.v=0;
+                                }
+
+                        }
+
+                        scrcurses_refresca_pantalla_no_rainbow();
+
+			}
+
+
+	}
+
 
 	else if (MACHINE_IS_SPECTRUM) {
 
@@ -1010,24 +1043,11 @@ void scrcurses_refresca_pantalla(void)
 		}
 
 		else {
-        	   if (MACHINE_IS_TSCONF) {
-
-		                //Si es modo texto, hacer este refresh:
-        		        z80_byte modo_video=tsconf_get_video_mode_display();
-                		if (modo_video==3) {
-	                	        scr_refresca_pantalla_tsconf_text_textmode(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);
-	        	                return;
-        	        	}
 
 
 
-	                //con rainbow
 
-                        scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);  //720x576 -> 31x25
 
-        		}
-
-			else {
                         //modo rainbow - real video. De momento hacemos igual que sin realvideo
                         //scrcurses_refresca_pantalla_rainbow();
 
@@ -1047,10 +1067,9 @@ void scrcurses_refresca_pantalla(void)
 
 
 
-                }
+          }
 
 
-	}
 
 	else if (MACHINE_IS_Z88) {
 		//Si esta vofile activo, hay que dibujar dentro del buffer rainbow
