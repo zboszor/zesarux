@@ -28646,11 +28646,14 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
 
 		char buffer_string[50];
 
-		menu_add_item_menu_inicial(&array_menu_textdrivers_settings,"---",MENU_OPCION_NORMAL,NULL,NULL);
+
+		//Como no sabemos cual sera el item inicial, metemos este que no va a ningun sitio
+		//La manera de evitar esto seria poder inicializar un item de menu, con memoria asignada, pero vacio,
+		//de tal manera que se pudiese llamar a menu_add_item_menu_format y se metiese el primero
+		menu_add_item_menu_inicial(&array_menu_textdrivers_settings,"---Text Driver Settings--",MENU_OPCION_NORMAL,NULL,NULL);
 
 
                 //para stdout y simpletext
-//#ifdef COMPILE_STDOUT
                 if (menu_cond_stdout_simpletext() ) {
                         menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_stdout_simpletext_automatic_redraw,NULL,"Stdout automatic redraw: %s", (stdout_simpletext_automatic_redraw.v==1 ? "On" : "Off"));
                         menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"It enables automatic display redraw");
@@ -28665,10 +28668,7 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
 
                 }
 
-//#endif
-
-
-				if (menu_display_cursesstdout_cond() ) {
+		if (menu_display_cursesstdout_cond() ) {
                         //solo en caso de curses o stdout
                         menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_arttext,menu_display_cursesstdout_cond,"Text artistic emulation: %s", (texto_artistico.v==1 ? "On" : "Off"));
                         menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Write different artistic characters for unknown 4x4 rectangles, "

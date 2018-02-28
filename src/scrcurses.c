@@ -997,7 +997,7 @@ void scrcurses_refresca_pantalla(void)
 
 	                //con rainbow
 			if (rainbow_enabled.v) {
-	                        scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);  //720x576 -> 31x25
+	                        scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,19);  //23 seria 720x576 -> 31x25
 			}
 
 			else {
