@@ -521,6 +521,7 @@ void stdout_common_fun_color(z80_byte atributo GCC_UNUSED,int *brillo GCC_UNUSED
 
 void stdout_common_fun_caracter (int x GCC_UNUSED,int y GCC_UNUSED,int brillo GCC_UNUSED, unsigned char inv GCC_UNUSED,z80_byte caracter )
 {
+	//printf ("%d",caracter);
 	printf ("%c",caracter);
 }
 

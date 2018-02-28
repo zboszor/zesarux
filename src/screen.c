@@ -13335,6 +13335,7 @@ void scr_refresca_pantalla_tsconf_text(void (*fun_color) (z80_byte color,int *br
 				int brillo=0;
 				int parpadeo=0;
 
+				//de momento papel 7 tinta 0
 				fun_color(56,&brillo,&parpadeo);
 
 				int x,y;
@@ -13427,7 +13428,7 @@ void scr_refresca_pantalla_tsconf_text_textmode (void (*fun_color) (z80_byte col
 
 		z80_byte caracter_imprimir=caracter;
 
-		if (caracter_imprimir>127) {
+		if (caracter_imprimir>127 || caracter_imprimir<32) {
 
 			//caracteres decorativos de menu de tsconf
 			if (caracter_imprimir==205) caracter_imprimir='=';
