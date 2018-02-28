@@ -719,4 +719,6 @@ extern void scr_set_fps_stdout_simpletext(int fps);
 
 extern int screen_if_refresh(void);
 
+extern void screen_text_set_ansi_color_bg(z80_byte paper);
+
 #endif

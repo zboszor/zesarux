@@ -13411,8 +13411,6 @@ void scr_refresca_pantalla_tsconf_text_textmode (void (*fun_color) (z80_byte col
                 puntero++;
 
 
-
-
 		offset_caracter=caracter*8;
 
                 //No tengo ni idea de si se leen los atributos asi, pero parece similar al real
@@ -13426,12 +13424,24 @@ void scr_refresca_pantalla_tsconf_text_textmode (void (*fun_color) (z80_byte col
 
 
 
-//(void stdout_common_fun_color(z80_byte color GCC_UNUSED,int *brillo GCC_UNUSED, int *parpadeo GCC_UNUSED)
-//void stdout_common_fun_caracter (int x GCC_UNUSED,int y GCC_UNUSED,int brillo GCC_UNUSED, unsigned char inv GCC_UNUSED,z80_byte caracter )
+
+		z80_byte caracter_imprimir=caracter;
+
+		if (caracter_imprimir>127) {
+
+			//caracteres decorativos de menu de tsconf
+			if (caracter_imprimir==205) caracter_imprimir='=';
+			else if (caracter_imprimir==186) caracter_imprimir='I';
+			else if (caracter_imprimir==187) caracter_imprimir='\\';
+			else if (caracter_imprimir==188) caracter_imprimir='/';
+			else if (caracter_imprimir==200) caracter_imprimir='\\';
+			else if (caracter_imprimir==201) caracter_imprimir='/';
+			else caracter_imprimir='?';
+		}
 
 		fun_color(tinta + papel*8,&brillo,&parpadeo);
 
-		fun_caracter (columna,fila,brillo,0,caracter);
+		fun_caracter (columna,fila,brillo,0,caracter_imprimir);
 
                 //scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],8,x,y,inverse,tinta,papel,NULL);
 
