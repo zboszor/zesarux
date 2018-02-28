@@ -26,6 +26,10 @@ corregir descompresion rzx para que no use el comando "cat":
 sprintf (uncompress_command,"cat %s | %s -c  > \"%s\" ",origen,external_tool_gunzip,destino);
 
 Revisar "clicks" en versión Windows, tanto pthreads como no pthreads. Parece que la no pthreads, antes de la 6.1, no pasaba?
+Se oye incluso en la 5.0 sin pthreads
+
+->lo que pasa es que el detector de silencio saltaba y dejaba de oirse
+
 Recreated: que funcione en windows y linux
 QL: lectura de bloques basic no siempre funciona
 

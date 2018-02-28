@@ -1295,7 +1295,7 @@ printf (
 
 		"--noreset-audiobuffer-full Do not reset audio buffer when it's full. By default it does reset the buffer when full, it helps reducing latency\n"
 
-
+/*
 #ifdef USE_PTHREADS
 		"--enable-silencedetector   Enable silence detector. Silence detector is disabled by default as this is a pthreads version\n"
 		"--disable-silencedetector  Disable silence detector. Silence detector is disabled by default as this is a pthreads version\n"
@@ -1303,6 +1303,11 @@ printf (
 		"--enable-silencedetector   Enable silence detector. Silence detector is enabled by default as this is a no-pthreads version\n"
 		"--disable-silencedetector  Disable silence detector. Silence detector is enabled by default as this is a no-pthreads version\n"		
 #endif
+*/
+
+		"--enable-silencedetector   Enable silence detector. Silence detector is enabled by default\n"
+		"--disable-silencedetector  Disable silence detector. Silence detector is enabled by default\n"
+
 
 
 #ifdef COMPILE_ALSA
@@ -6227,12 +6232,15 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 	input_file_keyboard_inserted.v=0;
 	input_file_keyboard_send_pause.v=1;
 
-
+/*
 #ifdef USE_PTHREADS
 	silence_detector_setting.v=0;
 #else
 	silence_detector_setting.v=1;
 #endif
+*/
+	silence_detector_setting.v=1;
+
 
 
 	scr_z88_cpc_load_keymap=NULL;
