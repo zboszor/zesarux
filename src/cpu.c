@@ -574,20 +574,20 @@ int cpu_turbo_speed_antes=1;
 void cpu_set_turbo_speed(void)
 {
 
-	debug_printf (VERBOSE_INFO,"Setting turbo mode %dX",cpu_turbo_speed);
+	debug_printf (VERBOSE_INFO,"Changing turbo mode from %dX to %dX",cpu_turbo_speed_antes,cpu_turbo_speed);
 
-	//Ajustes previos de t_estados
-	printf ("Turbo was %d, setting turbo %d\n",cpu_turbo_speed_antes,cpu_turbo_speed);
+	//Ajustes previos de t_estados. En estos ajustes, solo las variables t_estados, antes_t_estados se usan. Las t_estados_en_linea, t_estados_percx son para debug
+	//printf ("Turbo was %d, setting turbo %d\n",cpu_turbo_speed_antes,cpu_turbo_speed);
 
 	int t_estados_en_linea=t_estados % screen_testados_linea;
 
 	int t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
 
-	printf ("Before changing turbo, t-scanline: %d, t-states: %d, t-states in line: %d, percentaje column: %d%%\n",t_scanline,t_estados,t_estados_en_linea,t_estados_percx);
+	//printf ("Before changing turbo, t-scanline: %d, t-states: %d, t-states in line: %d, percentaje column: %d%%\n",t_scanline,t_estados,t_estados_en_linea,t_estados_percx);
 
 	int antes_t_estados=t_estados / cpu_turbo_speed_antes;
 
-	printf ("Before changing turbo, t-states at turbo 1X: %d\n",antes_t_estados);
+	//printf ("Before changing turbo, t-states at turbo 1X: %d\n",antes_t_estados);
 
 
 	z80_bit antes_debug_breakpoints_enabled;
@@ -629,8 +629,8 @@ void cpu_set_turbo_speed(void)
 
 	t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
 
-	printf ("After changing turbo, t-states: %d, t-states in line: %d, percentaje column: %d%%\n",t_estados,t_estados_en_linea,t_estados_percx);
-	printf ("Calculated t-scanline according to t-states: %d\n",t_estados / screen_testados_linea);
+	//printf ("After changing turbo, t-states: %d, t-states in line: %d, percentaje column: %d%%\n",t_estados,t_estados_en_linea,t_estados_percx);
+	//printf ("Calculated t-scanline according to t-states: %d\n",t_estados / screen_testados_linea);
 
 
 
