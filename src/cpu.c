@@ -569,10 +569,26 @@ char last_version_string[255]="";
 
 z80_bit do_no_show_changelog_when_update={0};
 
+int cpu_turbo_speed_antes=1;
+
 void cpu_set_turbo_speed(void)
 {
 
 	debug_printf (VERBOSE_INFO,"Setting turbo mode %dX",cpu_turbo_speed);
+
+	//Ajustes previos de t_estados
+	printf ("Turbo was %d, setting turbo %d\n",cpu_turbo_speed_antes,cpu_turbo_speed);
+
+	int t_estados_en_linea=t_estados % screen_testados_linea;
+
+	int t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
+
+	printf ("Before changing turbo, t-scanline: %d, t-states: %d, t-states in line: %d, percentaje column: %d%%\n",t_scanline,t_estados,t_estados_en_linea,t_estados_percx);
+
+	int antes_t_estados=t_estados / cpu_turbo_speed_antes;
+
+	printf ("Before changing turbo, t-states at turbo 1X: %d\n",antes_t_estados);
+
 
 	z80_bit antes_debug_breakpoints_enabled;
 	antes_debug_breakpoints_enabled.v=debug_breakpoints_enabled.v;
@@ -602,6 +618,22 @@ void cpu_set_turbo_speed(void)
         recalcular_get_total_alto_rainbow();
 
 
+
+
+	//Ajustes posteriores de t_estados
+	//Ajustar t_estados para que se quede en mismo "sitio"
+	t_estados=antes_t_estados * cpu_turbo_speed;
+
+
+	t_estados_en_linea=t_estados % screen_testados_linea;
+
+	t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
+
+	printf ("After changing turbo, t-states: %d, t-states in line: %d, percentaje column: %d%%\n",t_estados,t_estados_en_linea,t_estados_percx);
+	printf ("Calculated t-scanline according to t-states: %d\n",t_estados / screen_testados_linea);
+
+
+
         init_rainbow();
         init_cache_putpixel();
 
@@ -613,6 +645,9 @@ void cpu_set_turbo_speed(void)
 		debug_breakpoints_enabled.v=1;
 		breakpoints_enable();
 	}
+
+	cpu_turbo_speed_antes=cpu_turbo_speed;
+
 }
 
 
