@@ -484,9 +484,39 @@ void scrstdout_establece_tablas_teclado(int c)
 	
 }
 
-void stdout_common_fun_color(z80_byte color GCC_UNUSED,int *brillo GCC_UNUSED, int *parpadeo GCC_UNUSED)
+void stdout_common_fun_color(z80_byte atributo GCC_UNUSED,int *brillo GCC_UNUSED, int *parpadeo GCC_UNUSED)
 {
-	//de momento nada
+
+        if (!screen_text_accept_ansi)  return;
+        int paper,ink;
+        int copia_paper;
+
+
+        ink = atributo & 7;
+        paper = ( atributo >> 3 ) & 7;
+
+
+        if (atributo & 128) {
+                //hay parpadeo
+                if (estado_parpadeo.v) {
+                        //estado de inversion de color
+                        copia_paper=paper;
+                        paper=ink;
+                        ink=copia_paper;
+                }
+        }
+
+        //printf ("\x1b[H");
+        if (atributo & 64) {
+                ink +=8;
+                paper +=8;
+        }
+
+        screen_text_set_ansi_color_fg(ink);
+        screen_text_set_ansi_color_bg(paper);
+
+
+
 }
 
 void stdout_common_fun_caracter (int x GCC_UNUSED,int y GCC_UNUSED,int brillo GCC_UNUSED, unsigned char inv GCC_UNUSED,z80_byte caracter )
