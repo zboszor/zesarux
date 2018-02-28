@@ -6239,6 +6239,11 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 	silence_detector_setting.v=1;
 #endif
 */
+	/*
+		Activado por defecto. La versión de windows, tanto pthreads, como sin threads, y validado en 5.0, 6.0 y 6,1.
+		hace un clic continuo a veces. Y activando el detector, como se apaga el audio, se deja de escuchar
+	*/
+
 	silence_detector_setting.v=1;
 
 
