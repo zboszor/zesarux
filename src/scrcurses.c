@@ -132,7 +132,7 @@ void scrcurses_putchar_menu(int x,int y, z80_byte caracter,z80_byte tinta,z80_by
 
 }
 
-#define CURSES_LINE_FOOTER (24+(CURSES_TOP_BORDER*2)*border_enabled.v+0)
+#define CURSES_LINE_FOOTER (24+(CURSES_TOP_BORDER*2)*border_enabled.v+0+ (MACHINE_IS_TSCONF ? 4 : 0) )
 
 #define CURSES_LINE_DEBUG_REGISTERS (24+(CURSES_TOP_BORDER*2)*border_enabled.v+3)
 #define CURSES_LINE_MESSAGES (24+(CURSES_TOP_BORDER*2)*border_enabled.v+4)
@@ -988,11 +988,12 @@ void scrcurses_refresca_pantalla(void)
 
 	else if (MACHINE_IS_TSCONF) {
                    //Si es modo texto, hacer este refresh:
-                                z80_byte modo_video=tsconf_get_video_mode_display();
-                                if (modo_video==3) {
+                    z80_byte modo_video=tsconf_get_video_mode_display();
+                    if (modo_video==3) {
                                         scr_refresca_pantalla_tsconf_text_textmode(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);
-                                        return;
-                                }
+                    }
+
+		    else {
 
 	                //con rainbow
 			if (rainbow_enabled.v) {
@@ -1015,12 +1016,13 @@ void scrcurses_refresca_pantalla(void)
                         scrcurses_refresca_pantalla_no_rainbow();
 
 			}
+		  }
 
 
 	}
 
 
-	else if (MACHINE_IS_SPECTRUM) {
+	else if (MACHINE_IS_SPECTRUM && !MACHINE_IS_TSCONF) { 
 
 	        if (rainbow_enabled.v==0) {
         		//modo clasico. sin rainbow
