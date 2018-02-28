@@ -2058,7 +2058,7 @@ struct s_machine_names machine_names[]={
 					    {"Spectrum 48k (Spanish)",		20},
 					    {"Pentagon",		21},
 							{"Chrome", MACHINE_ID_CHROME},
-							{"TSConf", MACHINE_ID_TSCONF},
+							{"ZX-Evolution TS-Conf", MACHINE_ID_TSCONF},
 
 
                                             {"Spectrum +3 (ROM v4.0)",		MACHINE_ID_SPECTRUM_P3_40},

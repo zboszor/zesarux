@@ -19103,7 +19103,7 @@ void menu_file_spg_browser_show(char *filename)
         //sprintf(buffer_texto,"PC Register: %04XH",spg_pc_reg);
  	//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
- 	sprintf(buffer_texto,"Machine: ZX Evolution TSConf");
+ 	sprintf(buffer_texto,"Machine: ZX-Evolution TS-Conf");
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
