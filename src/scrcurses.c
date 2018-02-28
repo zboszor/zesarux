@@ -1010,7 +1010,17 @@ void scrcurses_refresca_pantalla(void)
 		}
 
 		else {
-        		if (MACHINE_IS_TSCONF) {
+        	   if (MACHINE_IS_TSCONF) {
+
+		                //Si es modo texto, hacer este refresh:
+        		        z80_byte modo_video=tsconf_get_video_mode_display();
+                		if (modo_video==3) {
+	                	        scr_refresca_pantalla_tsconf_text_textmode(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);
+	        	                return;
+        	        	}
+
+
+
 	                //con rainbow
 
                         scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);  //720x576 -> 31x25

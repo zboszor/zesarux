@@ -13351,6 +13351,113 @@ void scr_refresca_pantalla_tsconf_text(void (*fun_color) (z80_byte color,int *br
 
 }
 
+void scr_refresca_pantalla_tsconf_text_textmode (void (*fun_color) (z80_byte color,int *brillo, int *parpadeo), void (*fun_caracter) (int x,int y,int brillo, unsigned char inv,z80_byte caracter ) , void (*fun_saltolinea) (void) , int factor_division)
+{
+
+	//Solo para modo de texto tsconf
+         z80_byte modo_video=tsconf_get_video_mode_display();
+
+
+                                        if (modo_video!=3) return;
+
+        int ancho_caracter=8;
+        int ancho_linea=tsconf_current_pixel_width*2;
+        int alto_pantalla=tsconf_current_pixel_height;
+
+        //z80_int puntero=0xc000;
+
+        z80_int puntero=0x0000;
+
+        z80_byte *screen;
+        screen=tsconf_ram_mem_table[tsconf_get_vram_page() ];
+
+        int ancho_linea_caracteres=256;
+        int x=0;
+        int y=0;
+
+	int columna=0;
+	int fila=0;
+
+        z80_byte font_page=tsconf_get_text_font_page();
+
+        z80_byte *puntero_fuente;
+        puntero_fuente=tsconf_ram_mem_table[font_page];
+
+        z80_int puntero_orig=puntero;
+
+        z80_byte caracter;
+        //z80_byte caracter_text;
+
+
+
+
+        z80_bit inverse;
+
+        inverse.v=0;
+
+        z80_int offset_caracter;
+
+        z80_byte tinta,papel;
+
+        z80_byte atributo;
+
+        for (;puntero<7680;) {
+
+                caracter=screen[puntero];
+                atributo=screen[puntero+128];
+
+                //printf ("%d ",atributo);
+
+                puntero++;
+
+
+
+
+		offset_caracter=caracter*8;
+
+                //No tengo ni idea de si se leen los atributos asi, pero parece similar al real
+                //tinta=atributo&15;
+                //papel=(atributo>>4)&15;
+                tinta=atributo&7;
+                papel=(atributo>>4)&7;
+
+		int brillo=(atributo>>7)&1; //Bit alto de valor de papel
+		int parpadeo=0;
+
+
+
+//(void stdout_common_fun_color(z80_byte color GCC_UNUSED,int *brillo GCC_UNUSED, int *parpadeo GCC_UNUSED)
+//void stdout_common_fun_caracter (int x GCC_UNUSED,int y GCC_UNUSED,int brillo GCC_UNUSED, unsigned char inv GCC_UNUSED,z80_byte caracter )
+
+		fun_color(tinta + papel*8,&brillo,&parpadeo);
+
+		fun_caracter (columna,fila,brillo,0,caracter);
+
+                //scr_tsconf_putsprite_comun(&puntero_fuente[offset_caracter],8,x,y,inverse,tinta,papel,NULL);
+
+
+                x+=ancho_caracter;
+		columna++;
+                if (x+ancho_caracter>ancho_linea) {
+                        //printf ("\n");
+                        x=0;
+			columna=0;
+                        y+=8;
+			fila++;
+                        if (y+8>alto_pantalla) {
+                                //provocar fin
+                                puntero=7680;
+                        }
+                        puntero=puntero_orig+ancho_linea_caracteres; //saltar atributos
+                        puntero_orig=puntero;
+
+			fun_saltolinea();
+                }
+        }
+}
+
+
+
 
 void scr_set_fps_stdout_simpletext(int fps)
 {

@@ -484,12 +484,12 @@ void scrstdout_establece_tablas_teclado(int c)
 	
 }
 
-void stdout_common_fun_color(z80_byte color,int *brillo, int *parpadeo)
+void stdout_common_fun_color(z80_byte color GCC_UNUSED,int *brillo GCC_UNUSED, int *parpadeo GCC_UNUSED)
 {
 	//de momento nada
 }
 
-void stdout_common_fun_caracter (int x,int y,int brillo, unsigned char inv,z80_byte caracter )
+void stdout_common_fun_caracter (int x GCC_UNUSED,int y GCC_UNUSED,int brillo GCC_UNUSED, unsigned char inv GCC_UNUSED,z80_byte caracter )
 {
 	printf ("%c",caracter);
 }
@@ -536,10 +536,19 @@ void scrstdout_repinta_pantalla(void)
         }
 
 	else if (MACHINE_IS_TSCONF) {
+		//Si es modo texto, hacer este refresh:
+		z80_byte modo_video=tsconf_get_video_mode_display();
+		if (modo_video==3) {
+			scr_refresca_pantalla_tsconf_text_textmode(stdout_common_fun_color,stdout_common_fun_caracter,stdout_common_fun_saltolinea,12);
+			return;
+		}
+
+
 		//con rainbow
 		if (rainbow_enabled.v) {
 			scr_refresca_pantalla_tsconf_text(stdout_common_fun_color,stdout_common_fun_caracter,stdout_common_fun_saltolinea,12);
 		}
+
 	}
 	
 	
