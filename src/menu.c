@@ -464,6 +464,11 @@ z80_byte ventana_x,ventana_y,ventana_ancho,ventana_alto;
 #define MENU_OPCION_ESC 2
 
 
+//item de menu con memoria asignada pero item vacio
+//si se va a agregar un item, se agrega en el primero con este tipo de opcion
+#define MENU_OPCION_UNASSIGNED 254
+
+
 
 //valores de retorno de seleccion de menu
 //#define MENU_SELECCION_ESC -1
@@ -5149,25 +5154,38 @@ void menu_add_item_menu_inicial(menu_item **p,char *texto,int tipo_opcion,t_menu
 //Parametros: puntero de menu_item inicial. texto
 void menu_add_item_menu(menu_item *m,char *texto,int tipo_opcion,t_menu_funcion menu_funcion,t_menu_funcion_activo menu_funcion_activo)
 {
-	//busca el ultimo item i le añade el indicado
+	//busca el ultimo item i le añade el indicado. O hasta que encuentre uno con MENU_OPCION_UNASSIGNED, que tendera a ser el ultimo
 
-	while (m->next!=NULL)
+	while (m->next!=NULL && m->tipo_opcion!=MENU_OPCION_UNASSIGNED)
 	{
 		m=m->next;
 	}
 
 	menu_item *next;
 
-	next=malloc(sizeof(menu_item));
-	//printf ("%d\n",sizeof(menu_item));
 
-	if (next==NULL) cpu_panic("Cannot allocate menu item");
 
-	m->next=next;
+
+	if (m->tipo_opcion==MENU_OPCION_UNASSIGNED) {
+		debug_printf (VERBOSE_DEBUG,"Overwrite last item menu because it was MENU_OPCION_UNASSIGNED");
+		next=m;
+	}
+
+	else {
+
+		next=malloc(sizeof(menu_item));
+		//printf ("%d\n",sizeof(menu_item));
+
+		if (next==NULL) cpu_panic("Cannot allocate menu item");
+
+		m->next=next;
+	}
+
 
 	//Si era menu tabulado. Heredamos la opcion. Aunque se debe establecer la x,y luego para cada item, lo mantenemos asi para que cada item,
 	//tengan ese parametro
-	int es_menu_tabulado=m->es_menu_tabulado;
+	int es_menu_tabulado;
+	es_menu_tabulado=m->es_menu_tabulado;
 
 	//comprobacion de maximo
 	if (strlen(texto)>MAX_TEXTO_OPCION) cpu_panic ("Text item greater than maximum");
@@ -28647,10 +28665,9 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
 		char buffer_string[50];
 
 
-		//Como no sabemos cual sera el item inicial, metemos este que no va a ningun sitio
-		//La manera de evitar esto seria poder inicializar un item de menu, con memoria asignada, pero vacio,
-		//de tal manera que se pudiese llamar a menu_add_item_menu_format y se metiese el primero
-		menu_add_item_menu_inicial(&array_menu_textdrivers_settings,"---Text Driver Settings--",MENU_OPCION_NORMAL,NULL,NULL);
+		//Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
+		//menu_add_item_menu_inicial(&array_menu_textdrivers_settings,"---Text Driver Settings--",MENU_OPCION_UNASSIGNED,NULL,NULL);
+		menu_add_item_menu_inicial(&array_menu_textdrivers_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
 
                 //para stdout y simpletext
