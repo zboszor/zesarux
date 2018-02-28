@@ -3,10 +3,10 @@
 nombre fichero en ventana menu?
 
 borrar registros tsconf en hard reset? scroll se queda activo a veces. quiza ahora con la dma ya no pasa. revisar. si que pasa
-TSConf: demo twist de fast.spg, deformacion se ve perfecta con fast render pero no con normal
+
 valores de espejo en sprites tsconf... ???
-TsConf: color border registro 0xf
-tsconf: con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos se alteran! :(
+
+
 factor compresion tsconf a texto en drivers curses, stdout, simpletext que sea configurable
 
 para probar sprites: ny17, cfparallax, digger, fast, fishbone, 200, mustang, 3bm, alterego beta,
@@ -18,7 +18,6 @@ newschool: usa mirror xf, yf de sprites. uwol mirror xf
 con mirror_x en sprite, xorig debe decrementarse y detectar cuando xorig<0 tiene que hacerse xorig=511
 
 mirror x,y en tiles: hnk2015, merhaba_fixed usa los dos tipos de mirror
-
 probar capas de sprites tsconf: 200, , sirababol, mustang, alterego, fast, fishbone, uwol, soco
 
 Tsconf: escritura dma en fmaps
@@ -617,8 +616,9 @@ Conversión de tap a wav en ace. Requiere rutina diferente que la de spectrum
 
 --- TSConf ---
 
-
-
+TSConf: demo twist de fast.spg, deformacion se ve perfecta con fast render pero no con normal
+TsConf: color border registro 0xf
+tsconf: con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos se alteran! :(
 -----------------------
 
 

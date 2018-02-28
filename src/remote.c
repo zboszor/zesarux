@@ -1508,14 +1508,20 @@ void remote_cpu_run_loop(int misocket,int verbose,int limite,int datos_vuelve)
 
 	char buf[30];
 
-#ifndef MINGW
+
 	//De momento no se como hacer esto en Windows
 	//Hacer el socket que no se quede bloqueado si no hay datos.
+
 	if (datos_vuelve) {
+	#ifdef MINGW
+	  int on = 1;
+    int error = ioctlsocket(server_socket, FIONBIO, &on);
+	#else
 		int flags = fcntl(sock_conectat, F_GETFL, 0);
 		fcntl(sock_conectat, F_SETFL, flags | O_NONBLOCK);
+	#endif
+
 	}
-#endif
 
 	int total_instrucciones=0;
 
@@ -1531,15 +1537,22 @@ void remote_cpu_run_loop(int misocket,int verbose,int limite,int datos_vuelve)
 		debug_run_until_return_interrupt();
 	  }
 
-#ifndef MINGW
+
 	//Si se vuelve cuando hay datos en el socket. Con esto, usa mucha mas cpu (46% respecto a un 19% si no se esta mirando el socket)
 	if (datos_vuelve) {
+	#ifdef MINGW
 		int leidos = read(sock_conectat, buf, 30);
 		if (leidos>0) {
 			salir=1;      	
 		}
+	#else
+		int leidos = read(sock_conectat, buf, 30);
+		if (leidos>0) {
+			salir=1;      	
+		}
+	#endif
 	}
-#endif
+
 
 	  total_instrucciones++;
 	  if (limite) {
@@ -1551,13 +1564,18 @@ void remote_cpu_run_loop(int misocket,int verbose,int limite,int datos_vuelve)
 	  if (menu_abierto) salir=1;
 	}
 
-#ifndef MINGW
+
 	//Dejar el socket tranquilito como estaba antes
 	if (datos_vuelve) {
+	#ifdef MINGW
+		int on = 0;
+    int error = ioctlsocket(server_socket, FIONBIO, &on);
+	#else
 		int flags = fcntl(sock_conectat, F_GETFL, 0);
 		fcntl(sock_conectat, F_SETFL, flags ^ O_NONBLOCK);
+	#endif
 	}
-#endif
+
 
 }
 
