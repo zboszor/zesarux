@@ -7609,6 +7609,9 @@ void menu_debug_sprites_change_bpp(void)
 }
 
 
+int view_sprites_bytes_por_linea=1;
+int view_sprites_bytes_por_ventana=1;
+
 void menu_debug_draw_sprites(void)
 {
 
@@ -7646,7 +7649,9 @@ void menu_debug_draw_sprites(void)
 
 	if (view_sprites_tbblue==0) {
 
-		int tamanyo_linea=view_sprites_ancho_sprite/view_sprites_ppb;
+		//int tamanyo_linea=view_sprites_ancho_sprite/view_sprites_ppb;
+
+		int tamanyo_linea=view_sprites_bytes_por_linea;
 
 		for (y=0;y<view_sprites_alto_sprite;y++) {
 			if (view_sprites_scr_sprite && y<192) {
@@ -7857,6 +7862,20 @@ void menu_debug_view_sprites_save(menu_z80_moto_int direccion,int ancho, int alt
 
 }
 
+
+
+void menu_debug_sprites_get_byteslineaventana(void)
+{
+		if (view_sprites_tbblue) {
+			view_sprites_bytes_por_linea=1;
+			view_sprites_bytes_por_ventana=view_sprites_alto_sprite/16;
+		}
+		else {
+			view_sprites_bytes_por_linea=view_sprites_ancho_sprite/view_sprites_ppb;
+			view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
+		}
+}
+
 void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 {
 
@@ -7892,8 +7911,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					int linea=0;
 					char buffer_texto[64];
 
-					int bytes_por_linea;
-					int bytes_por_ventana;
+
+					
 
 
 
@@ -7903,17 +7922,13 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					int restoancho=view_sprites_ancho_sprite % view_sprites_ppb;
 					if (view_sprites_ancho_sprite-restoancho>0) view_sprites_ancho_sprite-=restoancho;
 
+					menu_debug_sprites_get_byteslineaventana();
 
 		if (view_sprites_tbblue) {
-			bytes_por_linea=1;
-			bytes_por_ventana=view_sprites_alto_sprite/16;
 			sprintf (buffer_texto,"Pattern: %02d Size: 16X%d",view_sprites_direccion&63,view_sprites_alto_sprite);
 		}
+
 		else {
-			bytes_por_linea=view_sprites_ancho_sprite/view_sprites_ppb;
-			//bytes_por_ventana=view_sprites_ancho_sprite*view_sprites_alto_sprite;
-			bytes_por_ventana=bytes_por_linea*view_sprites_alto_sprite;
-			//view_sprites_direccion=adjust_address_space_cpu(view_sprites_direccion);
 			view_sprites_direccion=adjust_address_memory_size(view_sprites_direccion);
 
 			char buffer_direccion[MAX_LENGTH_ADDRESS_MEMORY_ZONE+1];
@@ -8033,22 +8048,22 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         case 11:
                                                 //arriba
-                                                view_sprites_direccion -=bytes_por_linea;
+                                                view_sprites_direccion -=view_sprites_bytes_por_linea;
                                         break;
 
                                         case 10:
                                                 //abajo
-                                                view_sprites_direccion +=bytes_por_linea;
+                                                view_sprites_direccion +=view_sprites_bytes_por_linea;
                                         break;
 
                                         case 24:
                                                 //PgUp
-                                                view_sprites_direccion -=bytes_por_ventana;
+                                                view_sprites_direccion -=view_sprites_bytes_por_ventana;
                                         break;
 
                                         case 25:
                                                 //PgDn
-                                                view_sprites_direccion +=bytes_por_ventana;
+                                                view_sprites_direccion +=view_sprites_bytes_por_ventana;
                                         break;
 
                                         case 'm':
