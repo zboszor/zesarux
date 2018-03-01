@@ -13161,9 +13161,9 @@ The luminosity method is a more sophisticated version of the average method. It 
 https://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/
 */
 
-	r=r*21/100;
-	g=g*72/100;
-	b=b*7/100;
+	r=(r*21)/100;
+	g=(g*72)/100;
+	b=(b*7)/100;
 
 	return r+g+b;
 
