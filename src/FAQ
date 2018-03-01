@@ -609,6 +609,41 @@ I recommend you to use hotkeys for faster selection, redefining some F-keys, and
 This could probably be the only one piece of ZEsarUX that I won't ever change. I like the GUI; you are using a retro-machines emulator, so.... you must use a retro-GUI ;)
 
 
+Q: How do I uninstall ZEsarUX
+A: It's very easy. ZEsarUX doesn't create more files when installed, it only saves the configuration file.
+Depending on the operating system:
+
+-Linux: 
+--if you compiled from sources and did a "make install", all your files were installed starting on the installation prefix, that can be changed with the "--prefix" setting to the configure folder, and by default it's /usr/local. Supose the instalation prefix it's called "INSTALLPREFIX", you need to remove:
+
+*executable emulator: INSTALLPREFIX/bin/zesarux
+*data files: folder INSTALLPREFIX/share/zesarux/
+
+--if you installed a binary version downloaded from the ZEsarUX web page, you need to remove:
+*executable emulator: /usr/bin/zesarux
+*data files: folder /usr/share/zesarux/
+
+--if you downloaded any other binary version, not from the ZEsarUX web page, please ask the package mantainer how to do that ;)
+
+
+-Mac:
+
+--if you compiled from sources and did a "make install", follow the same procedure as Linux
+--if you installed a binary version downloaded from the ZEsarUX web page, you only need to drag the ZEsarUX icon app to the Trash
+
+
+-Windows:
+--if you installed a binary version downloaded from the ZEsarUX web page, it's all contained on the extracted files from the .zip. Just remove the extracted folder
+
+
+Finally, if you want to remove also the configuration file:
+-Linux: located on $HOME/.zesaruxrc
+-Mac: located on $HOME/.zesaruxrc
+-Windows: located on your home folder, name ".zesaruxrc". Your home folder is something like "c:\users\myusername\"
+
+
+
+
 Q: I have a question not listed here. What can I do?
 A: Send a mail to chernandezba (at) hotmail.com and I will answer you.
 
