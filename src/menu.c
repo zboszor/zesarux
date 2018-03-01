@@ -7207,6 +7207,7 @@ z80_int view_sprites_ancho_sprite=8;
 z80_int view_sprites_alto_sprite=8*6;
 
 int view_sprites_tbblue=0;
+int view_sprites_tsconf=0;
 
 z80_bit view_sprites_inverse={0};
 
@@ -7611,6 +7612,7 @@ void menu_debug_sprites_change_bpp(void)
 
 int view_sprites_bytes_por_linea=1;
 int view_sprites_bytes_por_ventana=1;
+int view_sprites_increment_cursor_vertical=1;
 
 void menu_debug_draw_sprites(void)
 {
@@ -7870,11 +7872,44 @@ void menu_debug_sprites_get_byteslineaventana(void)
 			view_sprites_bytes_por_linea=1;
 			view_sprites_bytes_por_ventana=view_sprites_alto_sprite/16;
 		}
+
+		else if (view_sprites_tsconf) {
+			view_sprites_bytes_por_linea=256;
+			view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
+		}
 		else {
 			view_sprites_bytes_por_linea=view_sprites_ancho_sprite/view_sprites_ppb;
 			view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
 		}
 }
+
+
+void menu_debug_sprites_alter_anchoalto(void)
+{
+	//En caso de tsconf, obtener ancho y alto correspondientes
+	if (view_sprites_tsconf) {
+
+		//view_sprites_direccion-> numero sprite
+
+		view_sprites_ancho_sprite=32;
+		
+		view_sprites_alto_sprite=32;
+	}
+
+
+}
+
+
+void menu_debug_sprites_get_incrementcursors(void)
+{
+	if (view_sprites_tsconf) {
+		view_sprites_increment_cursor_vertical=view_sprites_ancho_sprite/2;
+	}
+	else {
+		view_sprites_increment_cursor_vertical=view_sprites_bytes_por_linea;
+	}
+}
+
 
 void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 {
@@ -7885,6 +7920,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 				//Si no es maquina tbblue, por defecto va a salir sprites normales
 				if (!MACHINE_IS_TBBLUE) view_sprites_tbblue=0;
+				if (!MACHINE_IS_TSCONF) view_sprites_tsconf=0;
 
         disable_interlace();
 
@@ -7923,6 +7959,10 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					if (view_sprites_ancho_sprite-restoancho>0) view_sprites_ancho_sprite-=restoancho;
 
 					menu_debug_sprites_get_byteslineaventana();
+
+					menu_debug_sprites_get_incrementcursors();
+
+					menu_debug_sprites_alter_anchoalto();
 
 		if (view_sprites_tbblue) {
 			sprintf (buffer_texto,"Pattern: %02d Size: 16X%d",view_sprites_direccion&63,view_sprites_alto_sprite);
@@ -8048,12 +8088,12 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
                                         case 11:
                                                 //arriba
-                                                view_sprites_direccion -=view_sprites_bytes_por_linea;
+                                                view_sprites_direccion -=view_sprites_increment_cursor_vertical;
                                         break;
 
                                         case 10:
                                                 //abajo
-                                                view_sprites_direccion +=view_sprites_bytes_por_linea;
+                                                view_sprites_direccion +=view_sprites_increment_cursor_vertical;
                                         break;
 
                                         case 24:
@@ -8087,6 +8127,15 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					case 'h':
 									if (MACHINE_IS_TBBLUE) view_sprites_tbblue ^=1;
+									if (MACHINE_IS_TSCONF) {
+										view_sprites_tsconf ^=1;
+										if (view_sprites_tsconf) {
+											view_sprites_bpp=4;
+
+											//Cambiar a zona memoria 15. TSConf sprites
+											while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone();
+										}
+									}
 					break;
 
 					case 'i':
@@ -23136,7 +23185,7 @@ void menu_debug_tsconf(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_debug_tsconf,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_debug_tsconf);
 
-                retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf,"Debug" );
+                retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf,"Debug TSConf" );
 
                 cls_menu_overlay();
 
