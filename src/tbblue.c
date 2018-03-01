@@ -291,7 +291,7 @@ z80_int tbblue_get_palette_active_ula(z80_byte index)
 /*
 In the palette each byte represents the colors in the RRRGGGBB format, and the pink color, defined by standard 1110011, is reserved for the transparent color.
 */
-z80_byte tbsprite_patterns[TBBLUE_MAX_PATTERNS][256];
+z80_byte tbsprite_patterns[TBBLUE_MAX_PATTERNS][TBBLUE_SPRITE_SIZE];
 //64 sprites
 /*
 [0] 1st: X position (bits 7-0).

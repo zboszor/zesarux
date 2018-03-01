@@ -9147,6 +9147,13 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     	}
     break;
 
+    //tbblue sprites
+    case 14:
+      if (MACHINE_IS_TBBLUE) {
+        size=TBBLUE_MAX_SPRITES*TBBLUE_SPRITE_SIZE;
+      }
+    break;    
+
   }
 
   return size;
@@ -9324,6 +9331,15 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
     break;
 
 
+    //tbblue sprites
+    case 14:
+      if (MACHINE_IS_TBBLUE) {
+        p=tbsprite_patterns;
+        p=p+address;
+      }
+    break;        
+
+
   }
 
   return p;
@@ -9449,7 +9465,14 @@ void machine_get_memory_zone_name(int zone, char *name)
     			   //123456789012345
 		strcpy(name,"Multiface ram");
         }
-    break;    
+    break;   
+
+    case 14:
+        if (MACHINE_IS_TBBLUE) {
+          		   //123456789012345
+		strcpy(name,"TBBlue sprites");          
+        }
+    break;
 
 
   }

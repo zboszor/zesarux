@@ -94,6 +94,8 @@ extern z80_byte tbblue_get_value_port_register(z80_byte registro);
 extern void tbsprite_do_overlay(void);
 
 #define TBBLUE_MAX_PATTERNS 64
+#define TBBLUE_SPRITE_SIZE 256
+
 #define TBBLUE_MAX_SPRITES 64
 //#define TBBLUE_TRANSPARENT_COLOR_INDEX 0xE3
 //#define TBBLUE_TRANSPARENT_COLOR 0x1C6
