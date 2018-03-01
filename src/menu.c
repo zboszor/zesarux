@@ -7198,7 +7198,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 #define SPRITES_ALTO 14
 #define SPRITES_ALTO_VENTANA (SPRITES_ALTO+10)
 
-menu_z80_moto_int view_sprites_direccion=0x3d00;
+menu_z80_moto_int view_sprites_direccion=0;
 
 //ancho en pixeles
 z80_int view_sprites_ancho_sprite=8;
@@ -7610,6 +7610,44 @@ void menu_debug_sprites_change_bpp(void)
 }
 
 
+menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
+{
+
+	menu_z80_moto_int puntero;
+
+	if (view_sprites_tsconf) {
+		//view_sprites_direccion-> numero sprite
+		struct s_tsconf_debug_sprite spriteinfo;
+		
+		tsconf_get_debug_sprite(view_sprites_direccion,&spriteinfo);
+
+        int ancho_linea=256; //512 pixeles a 4bpp
+		int tnum_x=spriteinfo.tnum_x;
+		int tnum_y=spriteinfo.tnum_y;
+
+                tnum_x *=8;
+                tnum_y *=8;
+
+                //a 4bpp
+                tnum_x /=2;
+
+
+				//if (incx==-1) tnum_x=tnum_x+ancho/2-1;
+
+
+                puntero=(tnum_y*ancho_linea)+tnum_x;
+
+
+	}
+
+	else {
+		puntero=direccion;
+	}
+
+	return puntero;
+
+}
+
 int view_sprites_bytes_por_linea=1;
 int view_sprites_bytes_por_ventana=1;
 int view_sprites_increment_cursor_vertical=1;
@@ -7640,7 +7678,14 @@ void menu_debug_draw_sprites(void)
         int x,y,bit;
 	z80_byte byte_leido;
 
-	menu_z80_moto_int puntero=view_sprites_direccion;
+	menu_z80_moto_int puntero;
+
+	//puntero=view_sprites_direccion;
+
+	//Ajustar valor puntero en caso de sprites tsconf por ejemplo
+	puntero=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+
+
 	int color;
 
 	int finalx;
@@ -7890,10 +7935,13 @@ void menu_debug_sprites_alter_anchoalto(void)
 	if (view_sprites_tsconf) {
 
 		//view_sprites_direccion-> numero sprite
-
-		view_sprites_ancho_sprite=32;
+		struct s_tsconf_debug_sprite spriteinfo;
 		
-		view_sprites_alto_sprite=32;
+		tsconf_get_debug_sprite(view_sprites_direccion,&spriteinfo);
+
+		view_sprites_ancho_sprite=spriteinfo.xs;
+		
+		view_sprites_alto_sprite=spriteinfo.ys;
 	}
 
 
@@ -8134,6 +8182,9 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 											//Cambiar a zona memoria 15. TSConf sprites
 											while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone();
+
+											//paleta 13 tsconf
+											view_sprites_palette=13;
 										}
 									}
 					break;

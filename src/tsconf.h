@@ -125,4 +125,31 @@ extern int tsconf_return_tilemappage(void);
 
 extern void tsconf_write_fmaps(int tsconf_fmaps_offset,z80_byte valor);
 
+
+struct s_tsconf_debug_sprite {
+
+		    int x;
+            int y;
+
+			z80_byte xs;
+            z80_byte ys;
+
+
+
+	  		z80_byte xf;
+			z80_byte yf;             
+
+            z80_byte act;
+
+            z80_byte leap;
+
+			z80_byte tnum_x;
+    		z80_byte tnum_y;
+
+		    z80_byte spal;
+
+};
+
+extern void tsconf_get_debug_sprite(int sprite,struct s_tsconf_debug_sprite *dest);
+
 #endif

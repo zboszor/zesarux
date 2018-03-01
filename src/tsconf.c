@@ -2761,3 +2761,44 @@ void screen_tsconf_refresca_pantalla(void)
 	}
 
 }
+
+
+
+
+
+void tsconf_get_debug_sprite(int sprite,struct s_tsconf_debug_sprite *dest)
+{
+
+//Para debug, retornar info de sprite X (0..84)
+			sprite=sprite%TSCONF_MAX_SPRITES;
+
+			int offset=sprite*6;
+			z80_byte sprite_r0h=tsconf_fmaps[0x200+offset+1];
+
+			dest->leap=sprite_r0h&64;
+			
+
+			dest->act=sprite_r0h&32;
+        	dest->y=tsconf_fmaps[0x200+offset]+256*(sprite_r0h&1);
+	      	dest->ys=8*(1+((sprite_r0h>>1)&7));
+	               
+
+        	z80_byte sprite_r1h=tsconf_fmaps[0x200+offset+3];
+		    dest->x=tsconf_fmaps[0x200+offset+2]+256*(sprite_r1h&1);
+			dest->xs=8*(1+((sprite_r1h>>1)&7));
+
+			z80_byte sprite_r2h=tsconf_fmaps[0x200+offset+5];
+			z80_int tnum=(tsconf_fmaps[0x200+offset+4])+256*(sprite_r2h&15);
+			    	//Tile Number for upper left corner. Bits 0-5 are X Position in Graphics Bitmap, bits 6-11 - Y Position.
+			dest->tnum_x=tnum & 63;
+    		dest->tnum_y=(tnum>>6)&63;
+
+		    dest->spal=(sprite_r2h>>4)&15;
+
+			dest->xf=sprite_r1h&128;
+			dest->yf=sprite_r0h&128;
+
+
+					
+		
+}
