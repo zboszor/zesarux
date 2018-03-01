@@ -9154,6 +9154,13 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       }
     break;    
 
+    //tsconf sprites
+    case 15:
+      if (MACHINE_IS_TSCONF) {
+        size=4*1024*1024; //Puede ser toda la ram
+      }
+    break;        
+
   }
 
   return size;
@@ -9334,10 +9341,24 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
     //tbblue sprites
     case 14:
       if (MACHINE_IS_TBBLUE) {
-        p=tbsprite_patterns;
+        p=(z80_byte *)tbsprite_patterns;
         p=p+address;
       }
-    break;        
+    break;    
+
+
+    //tsconf sprites
+    case 15:
+      if (MACHINE_IS_TSCONF) {
+        p=tsconf_ram_mem_table[0];
+        int offset=tsconf_return_spritesgraphicspage();
+        offset+=address;
+
+        //limitar a 4 mb
+        offset &=0x3FFFFF;
+        p +=offset;
+      }
+    break;           
 
 
   }
@@ -9473,6 +9494,14 @@ void machine_get_memory_zone_name(int zone, char *name)
 		strcpy(name,"TBBlue sprites");          
         }
     break;
+
+    //tsconf sprites
+    case 15:
+      if (MACHINE_IS_TSCONF) {
+          		   //123456789012345
+		strcpy(name,"TSConf sprites");   
+      }
+        break;                   
 
 
   }
