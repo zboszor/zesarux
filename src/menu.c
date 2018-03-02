@@ -7206,8 +7206,8 @@ z80_int view_sprites_ancho_sprite=8;
 //alto en pixeles
 z80_int view_sprites_alto_sprite=8*6;
 
-int view_sprites_tbblue=0;
-int view_sprites_tsconf=0;
+//int view_sprites_tbblue=0;
+//int view_sprites_tsconf=0;
 
 
 int view_sprites_hardware=0;
@@ -7700,7 +7700,7 @@ void menu_debug_draw_sprites(void)
 
 	int maximo_visible_x=32*menu_char_width;
 
-	if (view_sprites_tbblue==0) {
+	//if (view_sprites_tbblue==0) {
 
 		//int tamanyo_linea=view_sprites_ancho_sprite/view_sprites_ppb;
 
@@ -7792,9 +7792,9 @@ void menu_debug_draw_sprites(void)
 			puntero +=tamanyo_linea;
 //			printf ("puntero en la siguiente linea: %d\n",puntero);
 		}
-	}
+	//}
 
-	else {
+	/*else {
 		//Ancho 16 de sprites
 		int sprite_ancho=16;
 		int sprite_alto=16;
@@ -7810,7 +7810,7 @@ void menu_debug_draw_sprites(void)
 				menu_scr_putpixel(xorigen+x,yorigen+y,RGB9_INDEX_FIRST_COLOR+color);
 			}
 		}
-	}
+	}*/
 
 
 
@@ -7830,9 +7830,9 @@ menu_z80_moto_int menu_debug_view_sprites_change_pointer(menu_z80_moto_int p)
 
         //menu_ventana_scanf("Address? (in hex)",string_address,6);
 
-				if (view_sprites_tbblue) {
+				if (view_sprites_hardware) {
 					sprintf(string_address,"%d",p&63);
-					menu_ventana_scanf("Pattern?",string_address,3);
+					menu_ventana_scanf("Sprite?",string_address,3);
 				}
 				else {
 					util_sprintf_address_hex(p,string_address);
@@ -7918,7 +7918,7 @@ void menu_debug_view_sprites_save(menu_z80_moto_int direccion,int ancho, int alt
 
 
 
-void menu_debug_sprites_get_byteslineaventana(void)
+/*void menu_debug_sprites_get_byteslineaventana(void)
 {
 		if (view_sprites_tbblue) {
 			view_sprites_bytes_por_linea=1;
@@ -7933,10 +7933,10 @@ void menu_debug_sprites_get_byteslineaventana(void)
 			view_sprites_bytes_por_linea=view_sprites_ancho_sprite/view_sprites_ppb;
 			view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
 		}
-}
+}*/
 
 
-void menu_debug_sprites_alter_anchoalto(void)
+/*void menu_debug_sprites_alter_anchoalto(void)
 {
 	//En caso de tsconf, obtener ancho y alto correspondientes
 	if (view_sprites_tsconf) {
@@ -7952,10 +7952,10 @@ void menu_debug_sprites_alter_anchoalto(void)
 	}
 
 
-}
+}*/
 
 
-void menu_debug_sprites_get_incrementcursors(void)
+/*void menu_debug_sprites_get_incrementcursors(void)
 {
 	if (view_sprites_tsconf) {
 		view_sprites_increment_cursor_vertical=view_sprites_ancho_sprite/2;
@@ -7963,7 +7963,7 @@ void menu_debug_sprites_get_incrementcursors(void)
 	else {
 		view_sprites_increment_cursor_vertical=view_sprites_bytes_por_linea;
 	}
-}
+}*/
 
 
 void menu_debug_sprites_get_parameters_hardware(void)
@@ -7997,6 +7997,10 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 
 			view_sprites_bpp=4;
+			view_sprites_ppb=2;
+
+
+
 
 			//Cambiar a zona memoria 15. TSConf sprites
 			while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone();
@@ -8095,14 +8099,14 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		}
 
 
-		if (view_sprites_tbblue) {
+		/*if (view_sprites_tbblue) {
 			sprintf (buffer_texto,"Pattern: %02d Size: 16X%d",view_sprites_direccion&63,view_sprites_alto_sprite);
-		}
+		}*/
 
 		//if (view_sprites_hardware( {
 			
 
-		else {
+		//else {
 			//view_sprites_direccion=adjust_address_memory_size(view_sprites_direccion);
 
 			//char buffer_direccion[MAX_LENGTH_ADDRESS_MEMORY_ZONE+1];
@@ -8111,7 +8115,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 			if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"%s Size:%dX%d %dBPP",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
 			else sprintf (buffer_texto,"%s Size:%dX%d %dBPP",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
-		}
+		//}
 
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_texto);
 
@@ -8139,20 +8143,6 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 
 
-		/*if (MACHINE_IS_TBBLUE) {
-			if (view_sprites_tbblue) {
-				strcpy(buffer_primera_linea, "~~Memptr ~~Q~~A:Size");
-				strcpy(buffer_segunda_linea, "~~Inverse ~~Hardware");
-				//Y linea paleta borrarla (30 espacios)
-				sprintf(buffer_tercera_linea,"                              ");
-			}
-			else {
-				sprintf(buffer_primera_linea,"~~Memptr In~~c+%d %s ~~O~~P~~Q~~A:Size ~~BPP",view_sprite_incremento,(view_sprites_scr_sprite ? "SC~~R" : "sc~~r") );
-				sprintf(buffer_segunda_linea, "~~Inverse %s ~~Hardware",(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~Save" : "") );
-			}
-		}
-		*/
-
 		char mensaje_texto_hardware[33];
 
 		//por defecto
@@ -8162,10 +8152,10 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 			sprintf(mensaje_texto_hardware,"~~Hardware: %s",(view_sprites_hardware ? "Yes" : "No") );
 		}
 
-		//else {
-			  sprintf(buffer_primera_linea,"~~Memptr In~~c+%d %s ~~O~~P~~Q~~A:Size ~~BPP",view_sprite_incremento,(view_sprites_scr_sprite ? "SC~~R" : "sc~~r") );
-			  sprintf(buffer_segunda_linea, "~~Inverse %s %s",(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~Save" : ""),mensaje_texto_hardware);
-		//}
+		
+		sprintf(buffer_primera_linea,"~~Memptr In~~c+%d %s ~~O~~P~~Q~~A:Size ~~BPP",view_sprite_incremento,(view_sprites_scr_sprite ? "SC~~R" : "sc~~r") );
+		sprintf(buffer_segunda_linea, "~~Inverse %s %s",(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~Save" : ""),mensaje_texto_hardware);
+		
 
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_primera_linea);
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_segunda_linea);
@@ -8175,7 +8165,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 
 		//Mostrar zona memoria
-		if (!view_sprites_tbblue) {
+		//if (!view_sprites_tbblue) {
 			char textoshow[33];
 
 			char memory_zone_text[64]; //espacio temporal mas grande por si acaso
@@ -8198,13 +8188,13 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 			sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
 			menu_escribe_linea_opcion(linea++,-1,1,textoshow);
-		}
+		//}
 
-		else {
+		/*else {
 			//Borrar las dos lineas estas de mem zone en caso de sprites tbblue (30 espacios)
 			menu_escribe_linea_opcion(linea++,-1,1,"                              ");
 			menu_escribe_linea_opcion(linea++,-1,1,"                              ");
-		}
+		}*/
 
 
 
@@ -8302,7 +8292,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					case 's':
 
 
-						if (MACHINE_IS_TBBLUE && view_sprites_tbblue) {
+						if (view_sprites_hardware) {
 
 						}
 
