@@ -7618,34 +7618,37 @@ menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
 
 	menu_z80_moto_int puntero;
 
-	if (view_sprites_tsconf) {
-		//view_sprites_direccion-> numero sprite
-		struct s_tsconf_debug_sprite spriteinfo;
+	puntero=direccion; //por defecto
+
+	if (view_sprites_hardware) {
+
+		if (MACHINE_IS_TSCONF) {
+			//view_sprites_direccion-> numero sprite
+			struct s_tsconf_debug_sprite spriteinfo;
 		
-		tsconf_get_debug_sprite(view_sprites_direccion,&spriteinfo);
+			tsconf_get_debug_sprite(view_sprites_direccion,&spriteinfo);
 
-        int ancho_linea=256; //512 pixeles a 4bpp
-		int tnum_x=spriteinfo.tnum_x;
-		int tnum_y=spriteinfo.tnum_y;
+		        int ancho_linea=256; //512 pixeles a 4bpp
+			int tnum_x=spriteinfo.tnum_x;
+			int tnum_y=spriteinfo.tnum_y;
 
-                tnum_x *=8;
-                tnum_y *=8;
+	                tnum_x *=8;
+        	        tnum_y *=8;
 
-                //a 4bpp
-                tnum_x /=2;
-
-
-				//if (incx==-1) tnum_x=tnum_x+ancho/2-1;
+                	//a 4bpp
+	                tnum_x /=2;
 
 
-                puntero=(tnum_y*ancho_linea)+tnum_x;
+			//if (incx==-1) tnum_x=tnum_x+ancho/2-1;
+
+
+        	        puntero=(tnum_y*ancho_linea)+tnum_x;
+	
+		}
 
 
 	}
 
-	else {
-		puntero=direccion;
-	}
 
 	return puntero;
 
@@ -7969,6 +7972,8 @@ void menu_debug_sprites_get_parameters_hardware(void)
 		}
 
 		if (MACHINE_IS_TSCONF) {
+
+			//Parametros que alteramos segun sprite activo
 	                struct s_tsconf_debug_sprite spriteinfo;
 
         	        tsconf_get_debug_sprite(view_sprites_direccion,&spriteinfo);
@@ -7976,6 +7981,9 @@ void menu_debug_sprites_get_parameters_hardware(void)
                 	view_sprites_ancho_sprite=spriteinfo.xs;
 
 	                view_sprites_alto_sprite=spriteinfo.ys;
+
+			//offset paleta
+			view_sprites_offset_palette=spriteinfo.spal*16;
 
 			view_sprites_increment_cursor_vertical=view_sprites_ancho_sprite/2; //porque es 4 bpp
 
@@ -7991,6 +7999,8 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 			//paleta 13 tsconf
 			view_sprites_palette=13;
+
+
 
 
 		}
@@ -8049,6 +8059,9 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					int restoancho=view_sprites_ancho_sprite % view_sprites_ppb;
 					if (view_sprites_ancho_sprite-restoancho>0) view_sprites_ancho_sprite-=restoancho;
 
+		//esto antes que menu_debug_sprites_get_parameters_hardware
+		view_sprites_direccion=adjust_address_memory_size(view_sprites_direccion);
+
 		menu_debug_sprites_get_parameters_hardware();
 
 			/*
@@ -8059,6 +8072,16 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					menu_debug_sprites_alter_anchoalto();
 			*/
 
+		char texto_memptr[20];
+		//por defecto
+
+		strcpy(texto_memptr,"Memptr");
+
+		if (view_sprites_hardware) {
+			strcpy(texto_memptr,"Sprite");
+		}
+
+
 		if (view_sprites_tbblue) {
 			sprintf (buffer_texto,"Pattern: %02d Size: 16X%d",view_sprites_direccion&63,view_sprites_alto_sprite);
 		}
@@ -8067,14 +8090,14 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 			
 
 		else {
-			view_sprites_direccion=adjust_address_memory_size(view_sprites_direccion);
+			//view_sprites_direccion=adjust_address_memory_size(view_sprites_direccion);
 
 			char buffer_direccion[MAX_LENGTH_ADDRESS_MEMORY_ZONE+1];
 			menu_debug_print_address_memory_zone(buffer_direccion,view_sprites_direccion);
 
 
-			if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"Memptr:%s Size:%dX%d %dBPP",buffer_direccion,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
-			else sprintf (buffer_texto,"Memptr:%s Size:%dX%d %dBPP",buffer_direccion,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
+			if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"%s:%s Size:%dX%d %dBPP",texto_memptr,buffer_direccion,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
+			else sprintf (buffer_texto,"%s:%s Size:%dX%d %dBPP",texto_memptr,buffer_direccion,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
 		}
 
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_texto);
@@ -8090,15 +8113,15 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 		char buffer_tercera_linea[64];
 
-//Forzar a mostrar atajos
-z80_bit antes_menu_writing_inverse_color;
-antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-menu_writing_inverse_color.v=1;
+		//Forzar a mostrar atajos
+		z80_bit antes_menu_writing_inverse_color;
+		antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+		menu_writing_inverse_color.v=1;
 
-	char nombre_paleta[33];
-	menu_debug_sprites_get_palette_name(view_sprites_palette,nombre_paleta);
+		char nombre_paleta[33];
+		menu_debug_sprites_get_palette_name(view_sprites_palette,nombre_paleta);
 
-	sprintf(buffer_tercera_linea,"Pa~~l.: %s. O~~ff:%d",nombre_paleta,view_sprites_offset_palette);
+		sprintf(buffer_tercera_linea,"Pa~~l.: %s. O~~ff:%d",nombre_paleta,view_sprites_offset_palette);
 
 
 
