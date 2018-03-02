@@ -39,6 +39,7 @@ Improved smartload: now the cursor remembers last file loaded
 Improved sprite viewer: 
 *now can see sprites with speccy screen format
 *you can view sprites up to 512x192 
+*you can see tsconf sprites
 Improved sound: Silence detector does not activate on pthreads versions
 Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
 Improved configuration parsing: if unknown setting found on configuration file, ZEsarUX will open but warns about the error, and the autosave feature is not enabled
