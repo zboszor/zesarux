@@ -8009,6 +8009,12 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 		}
 	}
+
+	else {
+		view_sprites_bytes_por_linea=view_sprites_ancho_sprite/view_sprites_ppb;
+		view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
+		view_sprites_increment_cursor_vertical=view_sprites_bytes_por_linea;
+	}
 }
 
 
