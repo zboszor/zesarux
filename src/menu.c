@@ -8073,13 +8073,16 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					menu_debug_sprites_alter_anchoalto();
 			*/
 
-		char texto_memptr[20];
-		//por defecto
-
-		strcpy(texto_memptr,"Memptr");
+		char texto_memptr[33];
 
 		if (view_sprites_hardware) {
-			strcpy(texto_memptr,"Sprite");
+			sprintf(texto_memptr,"Sprite: %2d",view_sprites_direccion%TSCONF_MAX_SPRITES); //dos digitos, tsconf hace 85 y tbblue hace 64. suficiente
+		}
+
+		else {
+                        char buffer_direccion[MAX_LENGTH_ADDRESS_MEMORY_ZONE+1];
+                        menu_debug_print_address_memory_zone(buffer_direccion,view_sprites_direccion);
+			sprintf(texto_memptr,"Memptr:%s",buffer_direccion);
 		}
 
 
@@ -8093,12 +8096,12 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		else {
 			//view_sprites_direccion=adjust_address_memory_size(view_sprites_direccion);
 
-			char buffer_direccion[MAX_LENGTH_ADDRESS_MEMORY_ZONE+1];
-			menu_debug_print_address_memory_zone(buffer_direccion,view_sprites_direccion);
+			//char buffer_direccion[MAX_LENGTH_ADDRESS_MEMORY_ZONE+1];
+			//menu_debug_print_address_memory_zone(buffer_direccion,view_sprites_direccion);
 
 
-			if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"%s:%s Size:%dX%d %dBPP",texto_memptr,buffer_direccion,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
-			else sprintf (buffer_texto,"%s:%s Size:%dX%d %dBPP",texto_memptr,buffer_direccion,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
+			if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"%s Size:%dX%d %dBPP",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
+			else sprintf (buffer_texto,"%s Size:%dX%d %dBPP",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
 		}
 
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_texto);
