@@ -7776,10 +7776,11 @@ void menu_debug_draw_sprites(void)
                                         else color=ESTILO_GUI_TINTA_NORMAL;
 				}
 				else {
-					color=menu_debug_sprites_return_color_palette(view_sprites_palette,color);
+					//color=menu_debug_sprites_return_color_palette(view_sprites_palette,color);
+					color=menu_debug_sprites_return_color_palette(view_sprites_palette,color+view_sprites_offset_palette);
 				}
 
-				color +=view_sprites_offset_palette;
+				//color +=view_sprites_offset_palette;
 
               		//dibujamos valor actual
 		            //scr_putpixel_zoom(xorigen+x*view_sprites_ppb+incx,yorigen+y,color);
