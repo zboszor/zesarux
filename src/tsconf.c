@@ -2142,8 +2142,6 @@ int tsconf_if_tiles_one_enabled(void)
 void screen_store_scanline_rainbow_solo_display_tsconf(void)
 {
 
-	//TEMPORAL NO MOSTRAR NADA DE TSCONF
-	return;
 
 	int linea_render_visible=tsconf_get_current_visible_scanline();
 
