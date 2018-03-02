@@ -7626,7 +7626,7 @@ menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
 			//view_sprites_direccion-> numero sprite
 			struct s_tsconf_debug_sprite spriteinfo;
 		
-			tsconf_get_debug_sprite(view_sprites_direccion%TSCONF_MAX_SPRITES,&spriteinfo);
+			tsconf_get_debug_sprite(view_sprites_direccion,&spriteinfo);
 
 		        int ancho_linea=256; //512 pixeles a 4bpp
 			int tnum_x=spriteinfo.tnum_x;
@@ -7647,12 +7647,7 @@ menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
 		}
 
 		if (MACHINE_IS_TBBLUE) {
-			int offset=(view_sprites_direccion%TBBLUE_MAX_PATTERNS)*TBBLUE_SPRITE_SIZE;
-			//printf ("offset: %d\n",offset);
-
-			z80_byte *p=tbsprite_new_patterns;
-			p+=offset;
-			puntero=(menu_z80_moto_int)p;
+			puntero=view_sprites_direccion*TBBLUE_SPRITE_SIZE;
 		}
 
 
