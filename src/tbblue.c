@@ -291,7 +291,24 @@ z80_int tbblue_get_palette_active_ula(z80_byte index)
 /*
 In the palette each byte represents the colors in the RRRGGGBB format, and the pink color, defined by standard 1110011, is reserved for the transparent color.
 */
-z80_byte tbsprite_patterns[TBBLUE_MAX_PATTERNS][TBBLUE_SPRITE_SIZE];
+//z80_byte tbsprite_patterns[TBBLUE_MAX_PATTERNS][TBBLUE_SPRITE_SIZE];
+z80_byte tbsprite_new_patterns[TBBLUE_MAX_PATTERNS*TBBLUE_SPRITE_SIZE];
+
+int tbsprite_pattern_get_offset_index(z80_byte sprite,z80_byte index_in_sprite)
+{
+	return sprite*TBBLUE_SPRITE_SIZE+index_in_sprite;
+}
+
+z80_byte tbsprite_pattern_get_value_index(z80_byte sprite,z80_byte index_in_sprite)
+{
+	return tbsprite_new_patterns[tbsprite_pattern_get_offset_index(sprite,index_in_sprite)];
+}
+
+void tbsprite_pattern_put_value_index(z80_byte sprite,z80_byte index_in_sprite,z80_byte value)
+{
+	tbsprite_new_patterns[tbsprite_pattern_get_offset_index(sprite,index_in_sprite)]=value;
+}
+
 //64 sprites
 /*
 [0] 1st: X position (bits 7-0).
@@ -447,7 +464,8 @@ void tbblue_reset_sprites(void)
 	for (i=0;i<TBBLUE_MAX_PATTERNS;i++) {
 		int j;
 		for (j=0;j<256;j++) {
-			tbsprite_patterns[i][j]=TBBLUE_DEFAULT_TRANSPARENT;
+			//tbsprite_patterns[i][j]=TBBLUE_DEFAULT_TRANSPARENT;
+			tbsprite_pattern_put_value_index(i,j,TBBLUE_DEFAULT_TRANSPARENT);
 		}
 	}
 
@@ -729,14 +747,12 @@ void tbblue_out_sprite_pattern(z80_byte value)
 {
 
 
-	//z80_byte tbsprite_index_pattern,tbsprite_index_pattern_subindex;
-	//z80_byte tbsprite_patterns[TBBLUE_MAX_PATTERNS][256];
 
 
-	tbsprite_patterns[tbsprite_index_pattern][tbsprite_index_pattern_subindex]=value;
+	tbsprite_pattern_put_value_index(tbsprite_index_pattern,tbsprite_index_pattern_subindex,value);
+	//tbsprite_patterns[tbsprite_index_pattern][tbsprite_index_pattern_subindex]=value;
 
-//printf ("Out tbblue_out_sprite_pattern. Index: %d subindex: %d %02XH\n",tbsprite_index_pattern,tbsprite_index_pattern_subindex,
-//tbsprite_patterns[tbsprite_index_pattern][tbsprite_index_pattern_subindex]);
+
 
 	if (tbsprite_index_pattern_subindex==255) {
 		tbsprite_index_pattern_subindex=0;
@@ -838,7 +854,8 @@ void tbsprite_put_color_line(int x,z80_byte color,int rangoxmin,int rangoxmax)
 z80_byte tbsprite_do_overlay_get_pattern_xy(z80_byte index_pattern,z80_byte sx,z80_byte sy)
 {
 
-	return tbsprite_patterns[index_pattern][sy*TBBLUE_SPRITE_WIDTH+sx];
+	//return tbsprite_patterns[index_pattern][sy*TBBLUE_SPRITE_WIDTH+sx];
+	return tbsprite_pattern_get_value_index(index_pattern,sy*TBBLUE_SPRITE_WIDTH+sx);
 }
 
 z80_int tbsprite_return_color_index(z80_byte index)
@@ -1097,7 +1114,6 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 
 							for (i=0;i<TBBLUE_SPRITE_WIDTH;i++) {
-								//z80_byte index_color=tbsprite_patterns[index_pattern][offset_pattern];
 								z80_byte index_color=tbsprite_do_overlay_get_pattern_xy(index_pattern,sx,sy);
 
 								//Sumar palette offset. Logicamente si es >256 el resultado, dará la vuelta el contador

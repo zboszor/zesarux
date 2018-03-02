@@ -7626,7 +7626,7 @@ menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
 			//view_sprites_direccion-> numero sprite
 			struct s_tsconf_debug_sprite spriteinfo;
 		
-			tsconf_get_debug_sprite(view_sprites_direccion,&spriteinfo);
+			tsconf_get_debug_sprite(view_sprites_direccion%TSCONF_MAX_SPRITES,&spriteinfo);
 
 		        int ancho_linea=256; //512 pixeles a 4bpp
 			int tnum_x=spriteinfo.tnum_x;
@@ -7644,6 +7644,15 @@ menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
 
         	        puntero=(tnum_y*ancho_linea)+tnum_x;
 	
+		}
+
+		if (MACHINE_IS_TBBLUE) {
+			int offset=(view_sprites_direccion%TBBLUE_MAX_PATTERNS)*TBBLUE_SPRITE_SIZE;
+			//printf ("offset: %d\n",offset);
+
+			z80_byte *p=tbsprite_new_patterns;
+			p+=offset;
+			puntero=(menu_z80_moto_int)p;
 		}
 
 
@@ -7970,6 +7979,42 @@ void menu_debug_sprites_get_parameters_hardware(void)
 {
 	if (view_sprites_hardware) {
 		if (MACHINE_IS_TBBLUE) {
+			//Parametros que alteramos segun sprite activo
+	                //struct s_tsconf_debug_sprite spriteinfo;
+
+        	        //tsconf_get_debug_sprite(view_sprites_direccion,&spriteinfo);
+
+                	view_sprites_ancho_sprite=16;
+
+	                view_sprites_alto_sprite=16;
+
+
+
+			//offset paleta
+			view_sprites_offset_palette=0;
+
+			view_sprites_increment_cursor_vertical=1; //saltar de 1 en 1
+
+                        view_sprites_bytes_por_linea=16;
+
+			view_sprites_bytes_por_ventana=8; //saltar de 8 en 8 con pgdn/up
+                        //view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
+
+
+
+			view_sprites_bpp=8;
+			view_sprites_ppb=1;
+
+
+
+
+			//Cambiar a zona memoria 14. TBBlue sprites
+			while (menu_debug_memory_zone!=14) menu_debug_change_memory_zone();
+
+			//paleta 11 tbblue
+			view_sprites_palette=11;
+
+
 		}
 
 		if (MACHINE_IS_TSCONF) {
@@ -8089,7 +8134,10 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		char texto_memptr[33];
 
 		if (view_sprites_hardware) {
-			sprintf(texto_memptr,"Sprite: %2d",view_sprites_direccion%TSCONF_MAX_SPRITES); //dos digitos, tsconf hace 85 y tbblue hace 64. suficiente
+			int max_sprites;
+			if (MACHINE_IS_TSCONF) max_sprites=TSCONF_MAX_SPRITES;
+			if (MACHINE_IS_TBBLUE) max_sprites=TBBLUE_MAX_PATTERNS;
+			sprintf(texto_memptr,"Sprite: %2d",view_sprites_direccion%max_sprites); //dos digitos, tsconf hace 85 y tbblue hace 64. suficiente
 		}
 
 		else {

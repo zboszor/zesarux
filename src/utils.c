@@ -9341,7 +9341,7 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
     //tbblue sprites
     case 14:
       if (MACHINE_IS_TBBLUE) {
-        p=(z80_byte *)tbsprite_patterns;
+        p=tbsprite_new_patterns;
         p=p+address;
       }
     break;    
