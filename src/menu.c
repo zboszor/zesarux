@@ -7209,6 +7209,9 @@ z80_int view_sprites_alto_sprite=8*6;
 int view_sprites_tbblue=0;
 int view_sprites_tsconf=0;
 
+
+int view_sprites_hardware=0;
+
 z80_bit view_sprites_inverse={0};
 
 //Incremento al moverse al siguiente byte
@@ -7959,6 +7962,44 @@ void menu_debug_sprites_get_incrementcursors(void)
 }
 
 
+void menu_debug_sprites_get_parameters_hardware(void)
+{
+	if (view_sprites_hardware) {
+		if (MACHINE_IS_TBBLUE) {
+		}
+
+		if (MACHINE_IS_TSCONF) {
+	                struct s_tsconf_debug_sprite spriteinfo;
+
+        	        tsconf_get_debug_sprite(view_sprites_direccion,&spriteinfo);
+
+                	view_sprites_ancho_sprite=spriteinfo.xs;
+
+	                view_sprites_alto_sprite=spriteinfo.ys;
+
+			view_sprites_increment_cursor_vertical=view_sprites_ancho_sprite/2; //porque es 4 bpp
+
+                        view_sprites_bytes_por_linea=256;
+                        view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
+
+
+
+			view_sprites_bpp=4;
+
+			//Cambiar a zona memoria 15. TSConf sprites
+			while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone();
+
+			//paleta 13 tsconf
+			view_sprites_palette=13;
+
+
+		}
+	}
+}
+
+
+
+
 void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 {
 
@@ -7967,8 +8008,10 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
         copia_video_interlaced_mode.v=video_interlaced_mode.v;
 
 				//Si no es maquina tbblue, por defecto va a salir sprites normales
-				if (!MACHINE_IS_TBBLUE) view_sprites_tbblue=0;
-				if (!MACHINE_IS_TSCONF) view_sprites_tsconf=0;
+				//if (!MACHINE_IS_TBBLUE) view_sprites_tbblue=0;
+				//if (!MACHINE_IS_TSCONF) view_sprites_tsconf=0;
+
+	if (!MACHINE_IS_TBBLUE & !MACHINE_IS_TSCONF) view_sprites_hardware=0;
 
         disable_interlace();
 
@@ -8006,15 +8049,22 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					int restoancho=view_sprites_ancho_sprite % view_sprites_ppb;
 					if (view_sprites_ancho_sprite-restoancho>0) view_sprites_ancho_sprite-=restoancho;
 
+		menu_debug_sprites_get_parameters_hardware();
+
+			/*
 					menu_debug_sprites_get_byteslineaventana();
 
 					menu_debug_sprites_get_incrementcursors();
 
 					menu_debug_sprites_alter_anchoalto();
+			*/
 
 		if (view_sprites_tbblue) {
 			sprintf (buffer_texto,"Pattern: %02d Size: 16X%d",view_sprites_direccion&63,view_sprites_alto_sprite);
 		}
+
+		//if (view_sprites_hardware( {
+			
 
 		else {
 			view_sprites_direccion=adjust_address_memory_size(view_sprites_direccion);
@@ -8049,6 +8099,8 @@ menu_writing_inverse_color.v=1;
 	menu_debug_sprites_get_palette_name(view_sprites_palette,nombre_paleta);
 
 	sprintf(buffer_tercera_linea,"Pa~~l.: %s. O~~ff:%d",nombre_paleta,view_sprites_offset_palette);
+
+
 
 
 		if (MACHINE_IS_TBBLUE) {
@@ -8174,7 +8226,8 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 					case 'h':
-									if (MACHINE_IS_TBBLUE) view_sprites_tbblue ^=1;
+									if (MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF) view_sprites_hardware ^=1;
+									/*
 									if (MACHINE_IS_TSCONF) {
 										view_sprites_tsconf ^=1;
 										if (view_sprites_tsconf) {
@@ -8187,6 +8240,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 											view_sprites_palette=13;
 										}
 									}
+									*/
 					break;
 
 					case 'i':
