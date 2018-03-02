@@ -7206,9 +7206,6 @@ z80_int view_sprites_ancho_sprite=8;
 //alto en pixeles
 z80_int view_sprites_alto_sprite=8*6;
 
-//int view_sprites_tbblue=0;
-//int view_sprites_tsconf=0;
-
 
 int view_sprites_hardware=0;
 
@@ -7639,8 +7636,6 @@ menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
 	                tnum_x /=2;
 
 
-			//if (incx==-1) tnum_x=tnum_x+ancho/2-1;
-
 
         	        puntero=(tnum_y*ancho_linea)+tnum_x;
 	
@@ -7667,8 +7662,7 @@ void menu_debug_draw_sprites(void)
 
 	normal_overlay_texto_menu();
 
-        //int ancho=(SPRITES_ANCHO-2)*8;
-        //int alto=(SPRITES_ALTO-4)*8;
+
 	int sx=SPRITES_X+1;
 	int sy=SPRITES_Y+3;
 	
@@ -7704,9 +7698,7 @@ void menu_debug_draw_sprites(void)
 
 	int maximo_visible_x=32*menu_char_width;
 
-	//if (view_sprites_tbblue==0) {
 
-		//int tamanyo_linea=view_sprites_ancho_sprite/view_sprites_ppb;
 
 		int tamanyo_linea=view_sprites_bytes_por_linea;
 
@@ -7734,11 +7726,7 @@ void menu_debug_draw_sprites(void)
 				for (bit=0;bit<8;bit+=view_sprites_bpp,incx++,finalx++,x++) {
 
 
-					/*if ( (byte_leido & 128)==0 ) color=ESTILO_GUI_PAPEL_NORMAL;
-					else color=ESTILO_GUI_TINTA_NORMAL;
-
-					byte_leido <<=1;
-					*/
+				
 
 					int dis=(8-(incx+1)*view_sprites_bpp);
 
@@ -7777,45 +7765,19 @@ void menu_debug_draw_sprites(void)
                                         else color=ESTILO_GUI_TINTA_NORMAL;
 				}
 				else {
-					//color=menu_debug_sprites_return_color_palette(view_sprites_palette,color);
-					//printf ("color: %d offset: %d\n",color,view_sprites_offset_palette);
-
 					color=menu_debug_sprites_return_color_palette(view_sprites_palette,color+view_sprites_offset_palette);
-					//printf ("color: %d\n",color);
+
 				}
 
-				//color +=view_sprites_offset_palette;
-
-              		//dibujamos valor actual
-		            //scr_putpixel_zoom(xorigen+x*view_sprites_ppb+incx,yorigen+y,color);
-		            menu_scr_putpixel(finalx,yorigen+y,color);
+	            menu_scr_putpixel(finalx,yorigen+y,color);
 			   }
 			}
 
 			puntero=puntero_inicio_linea;
 			puntero +=tamanyo_linea;
-//			printf ("puntero en la siguiente linea: %d\n",puntero);
-		}
-	//}
 
-	/*else {
-		//Ancho 16 de sprites
-		int sprite_ancho=16;
-		int sprite_alto=16;
-		z80_byte index_color;
-		for (y=0;y<view_sprites_alto_sprite;y++) {
-			int numero_pattern=(puntero+(y/sprite_alto))&63;
-			for (x=0;x<sprite_ancho;x++) {
-				int offset_sprite=(y%16)*16+x;
-				index_color=tbsprite_patterns[numero_pattern][offset_sprite];
-				//color=tbsprite_palette[index_color];
-				color=tbblue_palette_sprite_first[index_color]; //color de la paleta primera
-				if (view_sprites_inverse.v) color ^=511;
-				menu_scr_putpixel(xorigen+x,yorigen+y,RGB9_INDEX_FIRST_COLOR+color);
-			}
 		}
-	}*/
-
+	
 
 
 }
@@ -7832,8 +7794,6 @@ menu_z80_moto_int menu_debug_view_sprites_change_pointer(menu_z80_moto_int p)
 
 
 
-        //menu_ventana_scanf("Address? (in hex)",string_address,6);
-
 				if (view_sprites_hardware) {
 					sprintf(string_address,"%d",p&63);
 					menu_ventana_scanf("Sprite?",string_address,3);
@@ -7843,7 +7803,7 @@ menu_z80_moto_int menu_debug_view_sprites_change_pointer(menu_z80_moto_int p)
         	menu_ventana_scanf("Address?",string_address,10);
 				}
 
-        //p=strtol(string_address, NULL, 16);
+
 
         p=parse_string_to_number(string_address);
 
@@ -7922,52 +7882,11 @@ void menu_debug_view_sprites_save(menu_z80_moto_int direccion,int ancho, int alt
 
 
 
-/*void menu_debug_sprites_get_byteslineaventana(void)
-{
-		if (view_sprites_tbblue) {
-			view_sprites_bytes_por_linea=1;
-			view_sprites_bytes_por_ventana=view_sprites_alto_sprite/16;
-		}
-
-		else if (view_sprites_tsconf) {
-			view_sprites_bytes_por_linea=256;
-			view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
-		}
-		else {
-			view_sprites_bytes_por_linea=view_sprites_ancho_sprite/view_sprites_ppb;
-			view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
-		}
-}*/
 
 
-/*void menu_debug_sprites_alter_anchoalto(void)
-{
-	//En caso de tsconf, obtener ancho y alto correspondientes
-	if (view_sprites_tsconf) {
-
-		//view_sprites_direccion-> numero sprite
-		struct s_tsconf_debug_sprite spriteinfo;
-		
-		tsconf_get_debug_sprite(view_sprites_direccion,&spriteinfo);
-
-		view_sprites_ancho_sprite=spriteinfo.xs;
-		
-		view_sprites_alto_sprite=spriteinfo.ys;
-	}
 
 
-}*/
 
-
-/*void menu_debug_sprites_get_incrementcursors(void)
-{
-	if (view_sprites_tsconf) {
-		view_sprites_increment_cursor_vertical=view_sprites_ancho_sprite/2;
-	}
-	else {
-		view_sprites_increment_cursor_vertical=view_sprites_bytes_por_linea;
-	}
-}*/
 
 
 void menu_debug_sprites_get_parameters_hardware(void)
@@ -7975,9 +7894,7 @@ void menu_debug_sprites_get_parameters_hardware(void)
 	if (view_sprites_hardware) {
 		if (MACHINE_IS_TBBLUE) {
 			//Parametros que alteramos segun sprite activo
-	                //struct s_tsconf_debug_sprite spriteinfo;
 
-        	        //tsconf_get_debug_sprite(view_sprites_direccion,&spriteinfo);
 
                 	view_sprites_ancho_sprite=16;
 
@@ -7993,7 +7910,6 @@ void menu_debug_sprites_get_parameters_hardware(void)
                         view_sprites_bytes_por_linea=16;
 
 			view_sprites_bytes_por_ventana=8; //saltar de 8 en 8 con pgdn/up
-                        //view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
 
 
 
@@ -8026,14 +7942,12 @@ void menu_debug_sprites_get_parameters_hardware(void)
 			//offset paleta
 			view_sprites_offset_palette=spriteinfo.spal*16;
 
-			//view_sprites_increment_cursor_vertical=view_sprites_ancho_sprite/2; //porque es 4 bpp
+
 			view_sprites_increment_cursor_vertical=1; //saltar de 1 en 1
 
                         view_sprites_bytes_por_linea=256;
 
 			view_sprites_bytes_por_ventana=8; //saltar de 8 en 8 con pgdn/up
-                        //view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
-
 
 
 			view_sprites_bpp=4;
@@ -8071,9 +7985,6 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
         z80_bit copia_video_interlaced_mode;
         copia_video_interlaced_mode.v=video_interlaced_mode.v;
 
-				//Si no es maquina tbblue, por defecto va a salir sprites normales
-				//if (!MACHINE_IS_TBBLUE) view_sprites_tbblue=0;
-				//if (!MACHINE_IS_TSCONF) view_sprites_tsconf=0;
 
 	if (!MACHINE_IS_TBBLUE & !MACHINE_IS_TSCONF) view_sprites_hardware=0;
 
@@ -8118,13 +8029,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 		menu_debug_sprites_get_parameters_hardware();
 
-			/*
-					menu_debug_sprites_get_byteslineaventana();
 
-					menu_debug_sprites_get_incrementcursors();
-
-					menu_debug_sprites_alter_anchoalto();
-			*/
 
 		char texto_memptr[33];
 
@@ -8142,23 +8047,12 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		}
 
 
-		/*if (view_sprites_tbblue) {
-			sprintf (buffer_texto,"Pattern: %02d Size: 16X%d",view_sprites_direccion&63,view_sprites_alto_sprite);
-		}*/
-
-		//if (view_sprites_hardware( {
-			
-
-		//else {
-			//view_sprites_direccion=adjust_address_memory_size(view_sprites_direccion);
-
-			//char buffer_direccion[MAX_LENGTH_ADDRESS_MEMORY_ZONE+1];
-			//menu_debug_print_address_memory_zone(buffer_direccion,view_sprites_direccion);
+	
 
 
 			if (CPU_IS_MOTOROLA) sprintf (buffer_texto,"%s Size:%dX%d %dBPP",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
 			else sprintf (buffer_texto,"%s Size:%dX%d %dBPP",texto_memptr,view_sprites_ancho_sprite,view_sprites_alto_sprite,view_sprites_bpp);
-		//}
+
 
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_texto);
 
@@ -8208,7 +8102,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 
 		//Mostrar zona memoria
-		//if (!view_sprites_tbblue) {
+
 			char textoshow[33];
 
 			char memory_zone_text[64]; //espacio temporal mas grande por si acaso
@@ -8231,13 +8125,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 			sprintf (textoshow,"   Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
 			menu_escribe_linea_opcion(linea++,-1,1,textoshow);
-		//}
-
-		/*else {
-			//Borrar las dos lineas estas de mem zone en caso de sprites tbblue (30 espacios)
-			menu_escribe_linea_opcion(linea++,-1,1,"                              ");
-			menu_escribe_linea_opcion(linea++,-1,1,"                              ");
-		}*/
+	
 
 
 
@@ -8307,20 +8195,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 					case 'h':
 									if (MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF) view_sprites_hardware ^=1;
-									/*
-									if (MACHINE_IS_TSCONF) {
-										view_sprites_tsconf ^=1;
-										if (view_sprites_tsconf) {
-											view_sprites_bpp=4;
-
-											//Cambiar a zona memoria 15. TSConf sprites
-											while (menu_debug_memory_zone!=15) menu_debug_change_memory_zone();
-
-											//paleta 13 tsconf
-											view_sprites_palette=13;
-										}
-									}
-									*/
+									
 					break;
 
 					case 'i':
@@ -8364,7 +8239,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 					case 'p':
-						//if (view_sprites_ancho_sprite<SPRITES_ANCHO*8) view_sprites_ancho_sprite +=view_sprites_ppb;
+
 						if (view_sprites_ancho_sprite<512) view_sprites_ancho_sprite +=view_sprites_ppb;
 					break;
 
@@ -8373,7 +8248,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
                                         break;
 
                                         case 'a':
-                                                //if (view_sprites_alto_sprite<(SPRITES_ALTO)*8)  view_sprites_alto_sprite++;
+
                                         	if (view_sprites_alto_sprite<192)  view_sprites_alto_sprite++;
                                         break;
 
@@ -8388,9 +8263,7 @@ menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 					break;
 
 
-                /*default:
-                        salir=1;
-                break;*/
+
 
 					//Salir con ESC
 
