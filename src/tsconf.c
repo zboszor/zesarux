@@ -2007,6 +2007,8 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	//Luego a layer final, restarle entre 0 y 7 segun offset
 	layer_final -=(offset_x%8);
 
+	//printf ("off: %d\n",offset_x%8);
+
 	for (total_tiles=0;total_tiles<64;total_tiles++,tile_x++) {
 			
 

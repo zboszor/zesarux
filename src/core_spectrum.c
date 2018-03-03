@@ -411,7 +411,7 @@ void cpu_core_loop_spectrum(void)
 					tsconf_handle_line_interrupts();
 
 					//y reseteo de esto, que es para interrupciones frame
-					tsconf_handle_frame_interrupts_prev_horiz=9999;
+					tsconf_handle_frame_interrupts_prev_horiz=9999; 
 				}
 
 			}
