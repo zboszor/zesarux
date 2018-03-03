@@ -392,7 +392,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 	debug_tsconf_dma_ddev=dma_ddev;
 	debug_tsconf_dma_rw=dma_rw;
 
-		debug_printf (VERBOSE_DEBUG,"DMA operaton type: %s",tsconf_dma_types[dma_ddev*2+dma_rw]);
+		debug_printf (VERBOSE_DEBUG,"DMA operation type: %s",tsconf_dma_types[dma_ddev*2+dma_rw]);
 
 		switch (dma_ddev) {
 
