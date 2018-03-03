@@ -154,4 +154,6 @@ extern void tsconf_get_debug_sprite(int sprite,struct s_tsconf_debug_sprite *des
 
 extern int tsconf_last_frame_y;
 
+extern z80_byte tsconf_vector_fired_interrupt;
+
 #endif

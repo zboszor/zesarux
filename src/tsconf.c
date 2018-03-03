@@ -2776,73 +2776,23 @@ void tsconf_get_debug_sprite(int sprite,struct s_tsconf_debug_sprite *dest)
 		
 }
 
+z80_byte tsconf_vector_fired_interrupt=0xFF;
 
 void tsconf_generate_im1_im2(z80_byte vector)
 {
 
-
-	z80_byte reg_pc_h,reg_pc_l;
-    
-	reg_pc_h=value_16_to_8h(reg_pc);
-    reg_pc_l=value_16_to_8l(reg_pc);
-
-    poke_byte(--reg_sp,reg_pc_h);
-	poke_byte(--reg_sp,reg_pc_l);
-
-	reg_r++;
-
-
-
-	//desactivar interrupciones al generar una
-	iff1.v=0;
-
-
-	if (im_mode==0 || im_mode==1) {
-
-		reg_pc=56;
-		t_estados += 7;
-
-		debug_printf (VERBOSE_DEBUG,"Calling im1/im2 handler at %04XH",reg_pc);
-	}
+	tsconf_vector_fired_interrupt=vector;
+	interrupcion_maskable_generada.v=1;
 	
-	else {
-
-		z80_int temp_i;
-        z80_byte dir_l,dir_h;
-        temp_i=reg_i*256+vector;  
-        dir_l=peek_byte(temp_i++);
-        dir_h=peek_byte(temp_i);
-        reg_pc=value_8_to_16(dir_h,dir_l);
-         t_estados += 7;
-
-		debug_printf (VERBOSE_DEBUG,"Calling interrupt vector %02XH handler at %04XH",vector,reg_pc);
-
-	}
 
 }
 
 void tsconf_fire_line_interrupt(void)
 {
 	tsconf_generate_im1_im2(253);
-							
-						
-                                        
-						
-
-						        z80_int temp_i;
-								z80_byte dir_l,dir_h;
-                                                       
-
-	//Solo sacar el handler para im2 a modo de debug
-	
-                                                        temp_i=reg_i*256+255;  
-                                                         dir_l=peek_byte(temp_i++);
-                                                        dir_h=peek_byte(temp_i);
-                                                        z80_int debug_im2=value_8_to_16(dir_h,dir_l);
-                                                        
-	debug_printf (VERBOSE_DEBUG,"(IM2 handler is at %04XH)",debug_im2);
-
 }
+
+
 
 void tsconf_fire_frame_interrupt(void)
 {

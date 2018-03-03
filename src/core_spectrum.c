@@ -586,7 +586,6 @@ void cpu_core_loop_spectrum(void)
 
 			//if (interrupcion_non_maskable_generada.v) printf ("generada nmi\n");
 
-                        //if (interrupts.v==1) {   //esto ya no se mira. si se ha producido interrupcion es porque estaba en ei o es una NMI
                         //ver si esta en HALT
                         if (z80_ejecutando_halt.v) {
                                         z80_ejecutando_halt.v=0;
@@ -705,7 +704,10 @@ void cpu_core_loop_spectrum(void)
 
 						        z80_int temp_i;
                                                         z80_byte dir_l,dir_h;
-                                                        temp_i=reg_i*256+255;
+
+							if (MACHINE_IS_TSCONF) temp_i=reg_i*256+tsconf_vector_fired_interrupt;
+
+                            else temp_i=reg_i*256+255;
                                                         dir_l=peek_byte(temp_i++);
                                                         dir_h=peek_byte(temp_i);
                                                         reg_pc=value_8_to_16(dir_h,dir_l);
