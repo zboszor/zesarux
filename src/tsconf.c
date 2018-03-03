@@ -2803,3 +2803,154 @@ void tsconf_get_debug_sprite(int sprite,struct s_tsconf_debug_sprite *dest)
 					
 		
 }
+
+
+void tsconf_generate_im1_im2(z80_byte vector)
+{
+
+
+	z80_byte reg_pc_h,reg_pc_l;
+    
+	reg_pc_h=value_16_to_8h(reg_pc);
+    reg_pc_l=value_16_to_8l(reg_pc);
+
+    poke_byte(--reg_sp,reg_pc_h);
+	poke_byte(--reg_sp,reg_pc_l);
+
+	reg_r++;
+
+
+
+	//desactivar interrupciones al generar una
+	iff1.v=0;
+
+
+	if (im_mode==0 || im_mode==1) {
+
+		reg_pc=56;
+		t_estados += 7;
+	}
+	
+	else {
+
+		z80_int temp_i;
+        z80_byte dir_l,dir_h;
+        temp_i=reg_i*256+vector;  
+        dir_l=peek_byte(temp_i++);
+        dir_h=peek_byte(temp_i);
+        reg_pc=value_8_to_16(dir_h,dir_l);
+         t_estados += 7;
+
+		debug_printf (VERBOSE_DEBUG,"Calling interrupt vector %02XH handler at %04XH",vector,reg_pc);
+
+	}
+
+}
+
+void tsconf_fire_line_interrupt(void)
+{
+	tsconf_generate_im1_im2(253);
+							
+						
+                                        
+						
+
+						        z80_int temp_i;
+								z80_byte dir_l,dir_h;
+                                                       
+
+	//Solo sacar el handler para im2 a modo de debug
+	
+                                                        temp_i=reg_i*256+255;  
+                                                         dir_l=peek_byte(temp_i++);
+                                                        dir_h=peek_byte(temp_i);
+                                                        z80_int debug_im2=value_8_to_16(dir_h,dir_l);
+                                                        
+	debug_printf (VERBOSE_DEBUG,"(IM2 handler is at %04XH)",debug_im2);
+
+}
+
+void tsconf_fire_frame_interrupt(void)
+{
+	tsconf_generate_im1_im2(255);
+}
+
+int tsconf_handle_frame_interrupts_prev_horiz=0;
+
+void tsconf_handle_frame_interrupts(void)
+{
+
+	//Depende de DI???
+	if (iff1.v==0) return;
+
+	//registro intmask 2aH bit 2
+	if ((tsconf_af_ports[0x2a]&1)==0) return;
+
+	//printf ("tsconf raster line mask");
+	z80_byte int_raster_x=(tsconf_af_ports[0x22]);
+	//Si > 223, desactivado
+	if (int_raster_x>223) return;
+
+	int int_raster_y=(tsconf_af_ports[0x23])+256*(tsconf_af_ports[0x24]&1);
+
+	//Si >319, desactivado
+	if (int_raster_y>319) return;
+
+	//temp. Si <2, desactivado
+	//if (int_raster_y<2) return;
+
+
+	//printf ("tsconf raster set to %d %d\n",int_raster_x,int_raster_y);
+	//Ver en que posicion de t-estados por linea estamos
+
+	int estados_en_linea=t_estados & screen_testados_linea;
+
+	//primero comparar scanline
+	if (t_scanline==int_raster_y) {
+		//printf ("t: %d ",t_estados);
+		//printf ("disparada raster y: %d\n",int_raster_y);
+		//Y ahora ver si nos "hemos" pasado de la posicion estados_en_linea anterior
+		if (estados_en_linea>=int_raster_x && estados_en_linea>=tsconf_handle_frame_interrupts_prev_horiz) {
+			//Generar interrupcion
+			tsconf_fire_frame_interrupt();
+			debug_printf (VERBOSE_DEBUG,"Fired frame interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d. vint_inc: %X",
+				int_raster_y,int_raster_x,t_scanline,estados_en_linea,(tsconf_af_ports[0x24]>>4)&0xF);
+			//printf ("Reg VSINTH: %d\n",tsconf_af_ports[0x24]);
+
+				printf ("tsconf raster set to line %d x %d\n",int_raster_y,int_raster_x);
+				printf ("Fired frame interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d. vint_inc: %X\n",
+				int_raster_y,int_raster_x,t_scanline,estados_en_linea,(tsconf_af_ports[0x24]>>4)&0xF);
+
+		}
+
+		tsconf_handle_frame_interrupts_prev_horiz=estados_en_linea;
+	}
+
+}
+
+
+
+void tsconf_handle_line_interrupts(void)
+{
+
+	//Depende de DI???
+	if (iff1.v==0) return;
+
+	//registro intmask 2aH bit 1
+	if ((tsconf_af_ports[0x2a]&2)==0) return;
+
+	
+
+	//printf ("tsconf raster line mask");
+	z80_byte int_raster_x=(tsconf_af_ports[0x22]);
+
+	int int_raster_y=(tsconf_af_ports[0x23])+256*(tsconf_af_ports[0x24]&1);
+
+	printf ("line interrupt set at fired at line %d x %d\n",int_raster_y,int_raster_x);
+
+	tsconf_fire_line_interrupt();
+
+
+	
+}
+

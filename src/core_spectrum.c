@@ -404,6 +404,8 @@ void cpu_core_loop_spectrum(void)
 
 				ay_chip_siguiente_ciclo();
 
+				if (MACHINE_IS_TSCONF) tsconf_handle_line_interrupts();
+
 			}
 
 
@@ -495,6 +497,8 @@ void cpu_core_loop_spectrum(void)
                         	                }
                                 	}
 
+					//TSConf lo gestiona mediante interrupciones de frame
+					if (MACHINE_IS_TSCONF) interrupcion_maskable_generada.v=0;
 				 	
 
 
@@ -642,6 +646,8 @@ void cpu_core_loop_spectrum(void)
 
 					if (1==1) {
 					//else {
+
+				
 
 
 					//justo despues de EI no debe generar interrupcion
