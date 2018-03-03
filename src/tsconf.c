@@ -2799,7 +2799,7 @@ void tsconf_fire_frame_interrupt(void)
 	tsconf_generate_im1_im2(255);
 }
 
-int tsconf_handle_frame_interrupts_prev_horiz=0;
+int tsconf_handle_frame_interrupts_prev_horiz=-1;
 
 //Para no disparar interrupcion dos interrupcion frame en misma linea . temporal
 int tsconf_last_frame_y=-1;
@@ -2838,7 +2838,7 @@ void tsconf_handle_frame_interrupts(void)
 		//printf ("disparada raster y: %d\n",int_raster_y);
 		//Y ahora ver si nos "hemos" pasado de la posicion estados_en_linea anterior
 		
-		//if (estados_en_linea>=int_raster_x && estados_en_linea>=tsconf_handle_frame_interrupts_prev_horiz) {
+		//if (estados_en_linea>int_raster_x && estados_en_linea>=tsconf_handle_frame_interrupts_prev_horiz) {
 			//temp
 			if (t_scanline>tsconf_last_frame_y) {
 
@@ -2854,7 +2854,7 @@ void tsconf_handle_frame_interrupts(void)
 
 		}
 
-		tsconf_handle_frame_interrupts_prev_horiz=int_raster_x;
+		tsconf_handle_frame_interrupts_prev_horiz=estados_en_linea-1;
 
 		tsconf_last_frame_y=t_scanline;
 	}

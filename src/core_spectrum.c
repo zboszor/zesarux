@@ -658,7 +658,7 @@ void cpu_core_loop_spectrum(void)
 					//e interrupcion nmi tiene prioridad
 						if (interrupcion_maskable_generada.v && byte_leido_core_spectrum!=251) {
 
-						printf ("Lanzada interrupcion spectrum normal\n");
+						//printf ("Lanzada interrupcion spectrum normal\n");
 
 						debug_anota_retorno_step_maskable();
 						//Tratar interrupciones maskable
