@@ -152,4 +152,6 @@ struct s_tsconf_debug_sprite {
 
 extern void tsconf_get_debug_sprite(int sprite,struct s_tsconf_debug_sprite *dest);
 
+extern int tsconf_last_frame_y;
+
 #endif

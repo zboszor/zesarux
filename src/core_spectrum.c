@@ -288,6 +288,9 @@ void cpu_core_loop_spectrum(void)
 
 #endif
 
+				if (MACHINE_IS_TSCONF) tsconf_handle_frame_interrupts();
+		
+
 
 				//Modo normal
 				if (diviface_enabled.v==0) {
@@ -334,7 +337,7 @@ void cpu_core_loop_spectrum(void)
 
 
 				//Soporte interrupciones raster zxuno
-				if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF) zxuno_tbblue_handle_raster_interrupts();
+				if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE) zxuno_tbblue_handle_raster_interrupts();
 
 
 
@@ -433,7 +436,9 @@ void cpu_core_loop_spectrum(void)
 			//se supone que hemos ejecutado todas las instrucciones posibles de toda la pantalla. refrescar pantalla y
 			//esperar para ver si se ha generado una interrupcion 1/50
 
-                        if (t_estados>=screen_testados_total) {
+            if (t_estados>=screen_testados_total) {
+
+				tsconf_last_frame_y=-1;
 
 				if (rainbow_enabled.v==1) t_scanline_next_fullborder();
 
@@ -653,6 +658,9 @@ void cpu_core_loop_spectrum(void)
 					//justo despues de EI no debe generar interrupcion
 					//e interrupcion nmi tiene prioridad
 						if (interrupcion_maskable_generada.v && byte_leido_core_spectrum!=251) {
+
+						printf ("Lanzada interrupcion spectrum normal\n");
+
 						debug_anota_retorno_step_maskable();
 						//Tratar interrupciones maskable
 						interrupcion_maskable_generada.v=0;

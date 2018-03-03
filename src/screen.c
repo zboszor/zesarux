@@ -12886,10 +12886,7 @@ z80_byte get_zxuno_tbblue_rasterline(void)
 
 void zxuno_tbblue_handle_raster_interrupts()
 {
-	if (MACHINE_IS_TSCONF) {
-		tsconf_handle_frame_interrupts();
-		return;
-	}
+
 
 /*
 TBBUE y ZXUNO gestionan la interrupcion raster de la misma manera

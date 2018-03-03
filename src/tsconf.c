@@ -36,6 +36,8 @@
 #include "timer.h"
 
 
+void tsconf_generate_im1_im2(z80_byte vector);
+
 z80_byte tsconf_last_port_eff7;
 z80_byte tsconf_last_port_dff7;
 z80_byte tsconf_nvram[256];
@@ -304,42 +306,12 @@ void tsconf_fire_dma_interrupt(void)
 	if (iff1.v==0) return;
 
 	//registro intmask 2aH bit 2
-	if ((tsconf_af_ports[0x2a]&4)==0) return;				
+	if ((tsconf_af_ports[0x2a]&4)==0) return;	
+
+
+	tsconf_generate_im1_im2(0xFB);		
 						
-						z80_byte reg_pc_h,reg_pc_l;
-                                                reg_pc_h=value_16_to_8h(reg_pc);
-                                                reg_pc_l=value_16_to_8l(reg_pc);
-
-                                                poke_byte(--reg_sp,reg_pc_h);
-                                                poke_byte(--reg_sp,reg_pc_l);
-
-						reg_r++;
-
-						
-
-
-						//desactivar interrupciones al generar una
-						iff1.v=0;
-						
-
-						        z80_int temp_i;
-                                                        z80_byte dir_l,dir_h;
-                                                        temp_i=reg_i*256+0xFB;  //interrupciones de dma el vector es XXFB
-                                                         dir_l=peek_byte(temp_i++);
-                                                        dir_h=peek_byte(temp_i);
-                                                        reg_pc=value_8_to_16(dir_h,dir_l);
-                                                        t_estados += 7;
-
-	debug_printf (VERBOSE_DEBUG,"Calling interrupt dma handler at %04XH",reg_pc);
-
-	//Solo sacar el handler para im2 a modo de debug
-	
-                                                        temp_i=reg_i*256+255;  
-                                                         dir_l=peek_byte(temp_i++);
-                                                        dir_h=peek_byte(temp_i);
-                                                        z80_int debug_im2=value_8_to_16(dir_h,dir_l);
-                                                        
-	debug_printf (VERBOSE_DEBUG,"(IM2 handler is at %04XH)",debug_im2);
+		
 
 }
 
@@ -2829,6 +2801,8 @@ void tsconf_generate_im1_im2(z80_byte vector)
 
 		reg_pc=56;
 		t_estados += 7;
+
+		debug_printf (VERBOSE_DEBUG,"Calling im1/im2 handler at %04XH",reg_pc);
 	}
 	
 	else {
@@ -2877,13 +2851,16 @@ void tsconf_fire_frame_interrupt(void)
 
 int tsconf_handle_frame_interrupts_prev_horiz=0;
 
+//Para no disparar interrupcion dos interrupcion frame en misma linea . temporal
+int tsconf_last_frame_y=-1;
+
 void tsconf_handle_frame_interrupts(void)
 {
 
 	//Depende de DI???
 	if (iff1.v==0) return;
 
-	//registro intmask 2aH bit 2
+	//registro intmask 2aH bit 1
 	if ((tsconf_af_ports[0x2a]&1)==0) return;
 
 	//printf ("tsconf raster line mask");
@@ -2910,7 +2887,11 @@ void tsconf_handle_frame_interrupts(void)
 		//printf ("t: %d ",t_estados);
 		//printf ("disparada raster y: %d\n",int_raster_y);
 		//Y ahora ver si nos "hemos" pasado de la posicion estados_en_linea anterior
-		if (estados_en_linea>=int_raster_x && estados_en_linea>=tsconf_handle_frame_interrupts_prev_horiz) {
+		
+		//if (estados_en_linea>=int_raster_x && estados_en_linea>=tsconf_handle_frame_interrupts_prev_horiz) {
+			//temp
+			if (t_scanline>tsconf_last_frame_y) {
+
 			//Generar interrupcion
 			tsconf_fire_frame_interrupt();
 			debug_printf (VERBOSE_DEBUG,"Fired frame interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d. vint_inc: %X",
@@ -2923,7 +2904,9 @@ void tsconf_handle_frame_interrupts(void)
 
 		}
 
-		tsconf_handle_frame_interrupts_prev_horiz=estados_en_linea;
+		tsconf_handle_frame_interrupts_prev_horiz=int_raster_x;
+
+		tsconf_last_frame_y=t_scanline;
 	}
 
 }
@@ -2939,14 +2922,8 @@ void tsconf_handle_line_interrupts(void)
 	//registro intmask 2aH bit 1
 	if ((tsconf_af_ports[0x2a]&2)==0) return;
 
-	
 
-	//printf ("tsconf raster line mask");
-	z80_byte int_raster_x=(tsconf_af_ports[0x22]);
-
-	int int_raster_y=(tsconf_af_ports[0x23])+256*(tsconf_af_ports[0x24]&1);
-
-	printf ("line interrupt set at fired at line %d x %d\n",int_raster_y,int_raster_x);
+	printf ("line interrupt set and fired at line %d\n",t_scanline);
 
 	tsconf_fire_line_interrupt();
 
