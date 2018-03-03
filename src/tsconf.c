@@ -2799,7 +2799,7 @@ void tsconf_fire_frame_interrupt(void)
 	tsconf_generate_im1_im2(255);
 }
 
-int tsconf_handle_frame_interrupts_prev_horiz=-1;
+int tsconf_handle_frame_interrupts_prev_horiz=9999;
 
 //Para no disparar interrupcion dos interrupcion frame en misma linea . temporal
 int tsconf_last_frame_y=-1;
@@ -2832,15 +2832,18 @@ void tsconf_handle_frame_interrupts(void)
 
 	int estados_en_linea=t_estados & screen_testados_linea;
 
+	//Dividir por turbo
+	//estados_en_linea /=cpu_turbo_speed;
+
 	//primero comparar scanline
 	if (t_scanline==int_raster_y) {
-		//printf ("t: %d ",t_estados);
-		//printf ("disparada raster y: %d\n",int_raster_y);
+		//printf ("t: %d estados_en_linea: %d raster_x: %d last_interrupt: %d",t_estados,estados_en_linea,int_raster_x,tsconf_handle_frame_interrupts_prev_horiz);
+		//printf ("disparada raster y: %d  \n",int_raster_y);
 		//Y ahora ver si nos "hemos" pasado de la posicion estados_en_linea anterior
 		
-		//if (estados_en_linea>int_raster_x && estados_en_linea>=tsconf_handle_frame_interrupts_prev_horiz) {
-			//temp
-			if (t_scanline>tsconf_last_frame_y) {
+		if (estados_en_linea>=int_raster_x && estados_en_linea<tsconf_handle_frame_interrupts_prev_horiz) {
+			//temp saltar sin tener en cuenta posicion X
+			//if (t_scanline>tsconf_last_frame_y) {
 
 			//Generar interrupcion
 			tsconf_fire_frame_interrupt();
@@ -2852,11 +2855,13 @@ void tsconf_handle_frame_interrupts(void)
 				printf ("Fired frame interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d. vint_inc: %X\n",
 				int_raster_y,int_raster_x,t_scanline,estados_en_linea,(tsconf_af_ports[0x24]>>4)&0xF);
 
+
+			tsconf_handle_frame_interrupts_prev_horiz=estados_en_linea;
+			tsconf_last_frame_y=t_scanline;
+
 		}
 
-		tsconf_handle_frame_interrupts_prev_horiz=estados_en_linea-1;
 
-		tsconf_last_frame_y=t_scanline;
 	}
 
 }
@@ -2873,7 +2878,7 @@ void tsconf_handle_line_interrupts(void)
 	if ((tsconf_af_ports[0x2a]&2)==0) return;
 
 
-	printf ("line interrupt set and fired at line %d\n",t_scanline);
+	//printf ("line interrupt set and fired at line %d\n",t_scanline);
 
 	tsconf_fire_line_interrupt();
 

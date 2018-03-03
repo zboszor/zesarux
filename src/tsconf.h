@@ -156,4 +156,6 @@ extern int tsconf_last_frame_y;
 
 extern z80_byte tsconf_vector_fired_interrupt;
 
+extern int tsconf_handle_frame_interrupts_prev_horiz;
+
 #endif

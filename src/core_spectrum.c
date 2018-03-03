@@ -407,7 +407,12 @@ void cpu_core_loop_spectrum(void)
 
 				ay_chip_siguiente_ciclo();
 
-				if (MACHINE_IS_TSCONF) tsconf_handle_line_interrupts();
+				if (MACHINE_IS_TSCONF) {
+					tsconf_handle_line_interrupts();
+
+					//y reseteo de esto, que es para interrupciones frame
+					tsconf_handle_frame_interrupts_prev_horiz=9999;
+				}
 
 			}
 
