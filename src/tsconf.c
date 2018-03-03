@@ -706,7 +706,10 @@ mis opciones:
 
 	  //Decimos que la dma siempre ha finalizado operación
 	  case 0x27:
-	  	return tsconf_af_ports[index] & 0x7f; //Quitar bit 7
+	  	//return tsconf_af_ports[index] & 0x7f; //Quitar bit 7
+
+		  //Solo se usa bit 7, quitarlos todos
+		  return 0;
 	  break;
 
   }
