@@ -647,8 +647,16 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 		int dmadest=tsconf_return_dma_address(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
 		debug_printf (VERBOSE_DEBUG,"Writing DMA DMA source: %XH dest: %XH DMALen: %02XH DMACtrl: %02XH DMANum: %02XH",
 			dmasource,dmadest,tsconf_af_ports[0x26],tsconf_af_ports[0x27],tsconf_af_ports[0x28]);
-		int dma_burst_length=(tsconf_af_ports[0x26]+1)*2;
-		int dma_num=tsconf_af_ports[0x28]+1;
+
+		//int dma_burst_length=(tsconf_af_ports[0x26]+1)*2;
+		int dma_burst_length=tsconf_af_ports[0x26];
+		dma_burst_length++;
+		dma_burst_length*=2;
+
+		
+		//int dma_num=tsconf_af_ports[0x28]+1;
+		int dma_num=tsconf_af_ports[0x28];
+		dma_num++;
 		//int dma_length=dma_burst_length*dma_num;
 		//printf ("DMA length: %d x %d = %d\n",dma_burst_length,dma_num,dma_length);
 
@@ -2854,9 +2862,9 @@ void tsconf_handle_frame_interrupts(void)
 				int_raster_y,int_raster_x,t_scanline,estados_en_linea,(tsconf_af_ports[0x24]>>4)&0xF);
 			//printf ("Reg VSINTH: %d\n",tsconf_af_ports[0x24]);
 
-				printf ("tsconf raster set to line %d x %d\n",int_raster_y,int_raster_x);
-				printf ("Fired frame interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d. vint_inc: %X\n",
-				int_raster_y,int_raster_x,t_scanline,estados_en_linea,(tsconf_af_ports[0x24]>>4)&0xF);
+				//printf ("tsconf raster set to line %d x %d\n",int_raster_y,int_raster_x);
+				//printf ("Fired frame interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d. vint_inc: %X\n",
+				//int_raster_y,int_raster_x,t_scanline,estados_en_linea,(tsconf_af_ports[0x24]>>4)&0xF);
 
 
 			tsconf_handle_frame_interrupts_prev_horiz=estados_en_linea;
