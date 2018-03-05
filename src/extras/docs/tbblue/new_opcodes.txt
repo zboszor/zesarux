@@ -9,7 +9,7 @@ New Z80 opcodes on the NEXT (more to come)
 -   ld  hl,sp         ED 25          4+4 transfer SP to HL
 -   mirror de         ED 26          4+4 mirror the bits in DE     
 -   test N            ED 27           4+4+3 And A with $XX and set all flags. A is not affected.
--   mul               ED 30          4+4  multiply HL*DE = HLDE (no flags set)
+-   mul  d,e          ED 30          4+4  D*E = DE
 -   add  hl,a         ED 31          4+4  Add A to HL (no flags set)
 -   add  de,a         ED 32          4+4 Add A to DE (no flags set)
 -   add  bc,a         ED 33          4+4 Add A to BC (no flags set)

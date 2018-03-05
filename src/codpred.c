@@ -330,11 +330,11 @@ void instruccion_ed_47 ()
 void instruccion_ed_48 ()
 {
         if (MACHINE_IS_TBBLUE) {
-                //mul               ED 30          4+4  multiply HL*DE = HLDE (no flags set)
-                int resultado=HL*DE;
-
-                HL=(resultado>>16) & 0xFFFF;
-                DE=resultado & 0xFFFF;
+		//mul  d,e          ED 30          4+4  D*E = DE
+                z80_int resultado=reg_d*reg_e;
+	
+		reg_d=value_16_to_8h(resultado);
+		reg_e=value_16_to_8l(resultado);
         }
 
         else invalid_opcode_ed("ED48");
