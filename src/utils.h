@@ -613,4 +613,6 @@ extern int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,i
 
 extern char emulator_tmpdir_set_by_user[];
 
+extern void util_spectrumscreen_get_xy(z80_int dir,int *xdest,int *ydest);
+
 #endif

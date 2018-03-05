@@ -3,6 +3,9 @@
 
 nombre fichero en ventana menu?
 
+tbblue extended opcodes
+https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
+
 splash para auto enable realvideo en todos los casos
 
 al grabar snapshot rapido con tecla F que diga donde lo graba
@@ -10,16 +13,8 @@ al grabar snapshot rapido con tecla F que diga donde lo graba
 
 borrar registros tsconf en hard reset? scroll se queda activo a veces. quiza ahora con la dma ya no pasa. revisar. si que pasa
 
-valores de espejo en sprites tsconf... ???
-
-sir ababol a veces se ven bien los colores
-
--ideas por que tsconf va lento algunas demos: porque basicamente usan modo turbo X4
-hay rutinas, como gestion de sprites y tiles, que se podrian mejorar ligeramente, cacheando algunas cosas.... pero aun asi, aunque desactive los sprites o tiles del todo, el uso de cpu no baja significativamente, apenas 1 o 2 % en un uso total de 75%..... la solución seria que el core de Z80 usase menos cpu fisica, asi el modo turbo x4 funcionaria mas ligero
-
 revisar timings tsconf
 consultar tipos dma tsconf
-Valores de dma tsconf se incrementan después de hacer una trasferencia? Preguntar 
 
 tbblue cambio color border por paleta
 I just ran into a strange difference between ZEsarUX and the ZX Spectrum Next. When modifying the layer 2 palette, ZEsarUX does not modify the border color (as expected from reading the docs), but on an actual ZX Next the border color changes.
@@ -41,7 +36,7 @@ Opcion desactivar colores que solo va en realvideo off:
 -Quitar atributos que se pueda aunque esté modo rainbow 
 -Quizá simplemente una paleta grayscale y cuando haga render final, que convierta valores rgb a gris
 
-Opcion forzar siempre snap grabar zsf de 48k
+Opcion para forzar siempre snap grabar zsf de 48k
 
 revisar todos menus que usan put pixel que se ajusten a tamaño ancho caracter
 
@@ -50,7 +45,6 @@ http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROM
 
 Cambiar nombre de macro P2A por P2AP3
 Definir otra solo para P2A, con nombre nuevo para evitar errores de código. En teoría no estará usado de momento
-
 
 Gestor de menús que permita agregar función para cambio overlay texto 
 
@@ -648,11 +642,15 @@ Conversión de tap a wav en ace. Requiere rutina diferente que la de spectrum
 
 --- TSConf ---
 
-TSConf: demo twist de fast.spg, deformacion se ve perfecta con fast render pero no con normal
-TsConf: color border registro 0xf
-tsconf: con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos se alteran! :(
-tsconf: gestion interrupciones (dma, linea, frame) a la vez. cosa poco probable?
-tsconf: truco para que las demos vayan mas fluidas: poner turbo x1, en algunas no se ralentiza el cambio de turbo y van perfectas a 50 fps
+demo twist de fast.spg, deformacion se ve perfecta con fast render pero no con normal
+color border registro 0xf
+con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos se alteran! :(
+gestion interrupciones (dma, linea, frame) a la vez. cosa poco probable?
+truco para que las demos vayan mas fluidas: poner turbo x1, en algunas no se ralentiza el cambio de turbo y van perfectas a 50 fps
+sir ababol a veces se ven bien los colores
+
+-ideas por que tsconf va lento algunas demos: porque basicamente usan modo turbo X4
+hay rutinas, como gestion de sprites y tiles, que se podrian mejorar ligeramente, cacheando algunas cosas.... pero aun asi, aunque desactive los sprites o tiles del todo, el uso de cpu no baja significativamente, apenas 1 o 2 % en un uso total de 75%..... la solución seria que el core de Z80 usase menos cpu fisica, asi el modo turbo x4 funcionaria mas ligero
 -----------------------
 
 

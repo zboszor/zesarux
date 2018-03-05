@@ -80,6 +80,9 @@ De momento puede servir simplemente para saber desde qué rutina se está escrib
 //y entre 0..191
 void spritefinder_get_xy(z80_int dir,int *xdest,int *ydest)
 {
+	util_spectrumscreen_get_xy(dir,xdest,ydest);
+	return;
+
 	//De momento para ir rapido, buscamos direccion en array de scanline
 	//screen_addr_table
 

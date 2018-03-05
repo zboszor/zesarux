@@ -9978,3 +9978,32 @@ int util_uncompress_data_repetitions(z80_byte *origen,z80_byte *destino,int long
 
 	return longitud_destino;
 }
+
+
+
+//Obtener coordenada x,y de una direccion de pantalla dada
+//x entre 0..255 (aunque sera multiple de 8)
+//y entre 0..191
+void util_spectrumscreen_get_xy(z80_int dir,int *xdest,int *ydest)
+{
+        //De momento para ir rapido, buscamos direccion en array de scanline
+        //screen_addr_table
+
+        dir -=16384;
+
+        int indice=0;
+        int x,y;
+        for (y=0;y<192;y++) {
+                for (x=0;x<32;x++) {
+
+                        if (dir==screen_addr_table[indice]) {
+                                *xdest=x*8;
+                                *ydest=y;
+                                return;
+                        }
+
+                        indice++;
+                }
+        }
+
+}

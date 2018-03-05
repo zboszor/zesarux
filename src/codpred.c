@@ -26,6 +26,7 @@
 #include "contend.h"
 #include "zxuno.h"
 #include "tbblue.h"
+#include "screen.h"
 
 void invalid_opcode_ed(char *s)
 {
@@ -1388,12 +1389,41 @@ void instruccion_ed_146 ()
 
 void instruccion_ed_147 ()
 {
-        invalid_opcode_ed("ED147");
+        if (MACHINE_IS_TBBLUE) {
+		//pixeldn ED 93	Moves HL down one line in the ULA screen
+		printf ("pixeldn. hl=%d\n",reg_hl);
+		int x,y;
+		x=y=0;
+		util_spectrumscreen_get_xy(reg_hl,&x,&y);
+		printf ("x: %d y: %d\n",x,y);
+
+		y=y+1;
+		if (y>191) y=0;
+
+                z80_int resultado=16384+screen_addr_table[y*32+x];
+
+                reg_h=value_16_to_8h(resultado);
+                reg_l=value_16_to_8l(resultado);	
+		printf ("pixeldn after. hl=%d\n",reg_hl);
+
+        }
+        else invalid_opcode_ed("ED147");
 }
 
 void instruccion_ed_148 ()
 {
-        invalid_opcode_ed("ED148");
+	if (MACHINE_IS_TBBLUE) {
+        	//pixelad ED 94	Using D as Y, and E as X, work out address of ULA screen address and store in HL 
+		//screen_addr_table
+		printf ("pixelad\n");
+		int x=reg_e;
+		int y=reg_d;
+		z80_int resultado=16384+screen_addr_table[y*32+x];
+
+		reg_h=value_16_to_8h(resultado);
+		reg_l=value_16_to_8l(resultado);
+        }
+        else invalid_opcode_ed("ED148");
 }
 
 void instruccion_ed_149 ()
