@@ -11065,78 +11065,11 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_audio_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-/*		menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_beeper_real,NULL,"Real ~~Beeper: %s",(beeper_real_enabled==1 ? "On" : "Off"));
-		menu_add_item_menu_shortcut(array_menu_audio_settings,'b');
-		menu_add_item_menu_tooltip(array_menu_audio_settings,"Enable or disable Real Beeper sound");
-		menu_add_item_menu_ayuda(array_menu_audio_settings,"Real beeper produces beeper sound more realistic but uses a bit more cpu");
-
-
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_beep_filter_on_rom_save,NULL,"Audio filter on ROM SAVE: %s",(output_beep_filter_on_rom_save.v ? "Yes" : "No"));
-			menu_add_item_menu_tooltip(array_menu_audio_settings,"Apply filter on ROM save routines");
-			menu_add_item_menu_ayuda(array_menu_audio_settings,"It detects when on ROM save routines and alter audio output to use only "
-					"the MIC bit of the FEH port");
-
-//extern z80_bit output_beep_filter_alter_volume;
-//extern char output_beep_filter_volume;
-
-			if (output_beep_filter_on_rom_save.v) {
-				menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_beep_alter_volume,NULL,"Alter beeper volume: %s",
-				(output_beep_filter_alter_volume.v ? "Yes" : "No") );
-
-				menu_add_item_menu_tooltip(array_menu_audio_settings,"Alter output beeper volume");
-				menu_add_item_menu_ayuda(array_menu_audio_settings,"Alter output beeper volume. You can set to a maximum to "
-							"send the audio to a real spectrum to load it");
-
-
-				if (output_beep_filter_alter_volume.v) {
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_beep_volume,NULL,"Volume: %d",output_beep_filter_volume);
-				}
-			}
-
-		}
-		*/
-
-
-		//if (si_complete_video_driver() ) {
-
-		//}
-
-/*
-		if (MACHINE_IS_ZX8081) {
-			//sound on zx80/81
-
-			menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_zx8081_detect_vsync_sound,menu_cond_zx8081,"Detect VSYNC Sound: %s",(zx8081_detect_vsync_sound.v ? "Yes" : "No"));
-			menu_add_item_menu_tooltip(array_menu_audio_settings,"Tries to detect when vsync sound is played. This feature is experimental");
-			menu_add_item_menu_ayuda(array_menu_audio_settings,"Tries to detect when vsync sound is played. This feature is experimental");
-
-
-			menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_sound_zx8081,menu_cond_zx8081,"VSYNC Sound on zx80/81: %s", (zx8081_vsync_sound.v==1 ? "On" : "Off"));
-			menu_add_item_menu_tooltip(array_menu_audio_settings,"Enables or disables VSYNC sound on ZX80 and ZX81");
-			menu_add_item_menu_ayuda(array_menu_audio_settings,"This method uses the VSYNC signal on the TV to make sound");
-
-
-                	menu_add_item_menu(array_menu_audio_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-		}
-
-
-		char string_aofile_shown[10];
-		menu_tape_settings_trunc_name(aofilename,string_aofile_shown,10);
-		menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_aofile,NULL,"Audio ~~out to file: %s",string_aofile_shown);
-		menu_add_item_menu_shortcut(array_menu_audio_settings,'o');
-		menu_add_item_menu_tooltip(array_menu_audio_settings,"Saves the generated sound to a file");
-		menu_add_item_menu_ayuda(array_menu_audio_settings,"You can save .raw format and if compiled with sndfile, to .wav format. "
-					"You can see the file parameters on the console enabling verbose debug level to 2 minimum");
 
 
 
-		menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_aofile_insert,menu_aofile_cond,"Audio file ~~inserted: %s",(aofile_inserted.v ? "Yes" : "No" ));
-		menu_add_item_menu_shortcut(array_menu_audio_settings,'i');
 
 
-                menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_change_audio_driver,NULL,"Change Audio Driver");
-
-*/
                 menu_add_item_menu(array_menu_audio_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 

@@ -9,9 +9,6 @@ tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 revisar los que hayan cambiado.
 
-visualmem que siga memory zone
-
-splash para auto enable realvideo en todos los casos
 
 al grabar snapshot rapido con tecla F que diga donde lo graba
 
@@ -1692,6 +1689,8 @@ opcion tambien para bajar bit 7 final
 -Buscar bytes (mas de uno)
 
 -visualmem podria tener en cuenta toda la ram de una maquina: 128kb en +2, Z88 etc.... aunque dificil para +2 y Z88.... y necesario?
+
+-visualmem que siga memory zone
 
 -lectura de nombre de archivo en fileselector para stdout no admite espacios
 

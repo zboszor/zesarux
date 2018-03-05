@@ -6289,6 +6289,7 @@ void set_value_beeper (int v)
   //rutina beep: 995
   if (reg_pc>1200 && reg_pc<1350 && output_beep_filter_on_rom_save.v) {
 	//Estamos en save.
+	//printf ("valor beeper: %d\n",v);
 	value_beeper=( v ? AMPLITUD_TAPE*2 : -AMPLITUD_TAPE*2);
 
 	//Si activamos modo alteracion beeper. Ideal para que se escuche mas alto y poder enviar a inves
@@ -6303,6 +6304,8 @@ void set_value_beeper (int v)
 		//value_beeper=( v ? 122 : -122);
 		value_beeper=( v ? output_beep_filter_volume : -output_beep_filter_volume);
 	}
+
+	
 
   }
 
@@ -6319,6 +6322,7 @@ void set_value_beeper (int v)
 	//if (pp<50 || pp>50) printf ("%d\n",pp);
 
   }
+
 
   //temp prueba para que sonido en grabacion no sea negativo
   //value_beeper = beeper_ampl[v]*2;
@@ -6384,6 +6388,8 @@ z80_byte color_border;
 
 void out_port_spectrum_border(z80_int puerto,z80_byte value)
 {
+
+	//printf ("out port 254 desde reg_pc=%d. puerto: %04XH value: %02XH\n",reg_pc,puerto,value);
 
 	//Guardamos temporalmente el valor anterior para compararlo con el actual
 	//en el metodo de autodeteccion de border real video

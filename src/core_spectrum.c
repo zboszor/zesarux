@@ -372,6 +372,8 @@ void cpu_core_loop_spectrum(void)
 						audio_valor_enviar_sonido += get_value_beeper_sum_array();
 						beeper_new_line();
 					}
+
+					//printf ("audio_valor_enviar_sonido: audio_buffer_indice: %d %d %d\n",audio_buffer_indice,value_beeper,audio_valor_enviar_sonido);
 				}
 
 				if (audiodac_enabled.v) {

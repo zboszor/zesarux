@@ -34,6 +34,7 @@
 #include "utils.h"
 #include "operaciones.h"
 #include "ula.h"
+#include "audio.h"
 
 
 z80_bit dandanator_enabled={0};
@@ -159,9 +160,11 @@ void dandanator_run_command(void)
 	if (dandanator_state==Commands_Locked) {
 		if (dandanator_received_command==46) {
 			/*
-Comando especial 46: Bloquear, desbloquear, deshabilitar. – Este comando bloquea, desbloquea o deshabilita futuros comandos. Es el único comando reconocido si los comandos están bloqueados.
+Comando especial 46: Bloquear, desbloquear, deshabilitar. – Este comando bloquea, desbloquea o deshabilita futuros comandos. 
+Es el único comando reconocido si los comandos están bloqueados.
 Parámetros:
-- Data 1: 1 para bloquear, 16 para desbloquear y habilitar comandos, 31 para deshabilitar comandos hasta un reboot frío. - Data 2: Debe ser igual a Data1 o el comando será ignorado.
+- Data 1: 1 para bloquear, 16 para desbloquear y habilitar comandos, 
+31 para deshabilitar comandos hasta un reboot frío. - Data 2: Debe ser igual a Data1 o el comando será ignorado.
 			*/
 			debug_printf (VERBOSE_DEBUG,"Dandanator: was in blocked mode. Received command 46 with data1 %d data2 %d",
 		                dandanator_received_data1,dandanator_received_data2);
@@ -210,7 +213,10 @@ Parámetros:
 		switch (dandanator_received_command) {
 			case 40:
 /*
-Comando especial 40: Cambio Rápido – Este comando cambia a un banco determinado y ejecuta una acción en el momento de recibir el pulso de confirmación. Normalmente se usa para devolver el control a un software cambiando rápidamente de banco sin esperar los 5ms de la ventana de cambio normal. Pruebas empíricas determinan el cambio de banco en el rango de los 12us.
+Comando especial 40: Cambio Rápido – Este comando cambia a un banco determinado y 
+ejecuta una acción en el momento de recibir el pulso de confirmación. Normalmente se usa para devolver el control a un 
+software cambiando rápidamente de banco sin esperar los 5ms de la ventana de cambio normal. 
+Pruebas empíricas determinan el cambio de banco en el rango de los 12us.
 Parámetros:
 - Data 1: Número de banco para ejecutar el cambio.
 - Data 2: Acción a ejecutar tras el cambio de banco (mascara de bits)
@@ -437,17 +443,7 @@ z80_byte dandanator_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 void dandanator_set_peek_poke_functions(void)
 {
                 debug_printf (VERBOSE_DEBUG,"Setting dandanator poke / peek functions");
-                //Guardar anteriores
-                //dandanator_original_poke_byte=poke_byte;
-                //dandanator_original_poke_byte_no_time=poke_byte_no_time;
-                //dandanator_original_peek_byte=peek_byte;
-                //dandanator_original_peek_byte_no_time=peek_byte_no_time;
-
-                //Modificar y poner las de dandanator
-                //poke_byte=dandanator_poke_byte;
-                //poke_byte_no_time=dandanator_poke_byte_no_time;
-                //peek_byte=dandanator_peek_byte;
-                //peek_byte_no_time=dandanator_peek_byte_no_time;
+               
 
 
 	//Asignar mediante nuevas funciones de core anidados
@@ -474,25 +470,7 @@ void dandanator_restore_peek_poke_functions(void)
 	debug_nested_peek_byte_no_time_del(dandanator_nested_id_peek_byte_no_time);
 }
 
-/*
-void old_cpu_core_loop_dandanator(void)
-{
 
-     cpu_core_loop_no_dandanator();
-
-
-        if (dandanator_state==Pending_Executing_Command) {
-                if (debug_t_estados_parcial>dandanator_needed_t_states_command) {
-                        debug_printf (VERBOSE_DEBUG,"Dandanator: Run command after needed %d t-states",dandanator_needed_t_states_command);
-                        dandanator_run_command();
-                        //Volver a standby normalmente.
-			if (dandanator_state==Pending_Executing_Command) dandanator_state=Wait_Normal;
-                }
-        }
-
-
-}
-*/
 
 
 z80_byte cpu_core_loop_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
@@ -514,17 +492,7 @@ z80_byte cpu_core_loop_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC_UNU
 
 }
 
-/*
-void old_dandanator_set_core_function(void)
-{
-                debug_printf (VERBOSE_DEBUG,"Setting dandanator Core loop");
-                //Guardar anterior
-                cpu_core_loop_no_dandanator=cpu_core_loop;
 
-                //Modificar
-                cpu_core_loop=cpu_core_loop_dandanator;
-}
-*/
 
 
 void dandanator_set_core_function(void)
@@ -535,13 +503,7 @@ void dandanator_set_core_function(void)
 }
 
 
-/*
-void old_dandanator_restore_core_function(void)
-{
-        debug_printf (VERBOSE_DEBUG,"Restoring original dandanator core");
-        cpu_core_loop=cpu_core_loop_no_dandanator;
-}
-*/
+
 
 void dandanator_restore_core_function(void)
 {
@@ -624,6 +586,22 @@ void dandanator_enable(void)
 	//dandanator_accepting_commands.v=0;
 	dandanator_state=Commands_Disabled;
 	dandanator_active_bank=0;
+
+
+	/*Quitar audiofilter rom save porque interfiere con efecto colores menu:
+	Esto intercepta las llamadas a rom save direcciones entre if (reg_pc>1200 && reg_pc<1350
+	Pero precisamente dandanator hace cambio de colores de border en las direcciones:
+	1122, 1143, 1154, 1165, 1191, 1201, 1211.
+	O sea, hay dos direcciones que entran dentro de la condición y el resto no,
+	provocando que se haga sonido de una manera en dos direcciones, y de otra en las otras direcciones
+	Resultado: genera un sonido desagradable de 50 hz
+
+	*/
+
+	debug_printf(VERBOSE_DEBUG,"Disabling audio filter on rom save setting because it interfieres with Dandanator border effect");
+
+	output_beep_filter_on_rom_save.v=0;
+
 
 	dandanator_enabled.v=1;
 
