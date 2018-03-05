@@ -1400,6 +1400,9 @@ void instruccion_ed_147 ()
 		y=y+1;
 		if (y>191) y=0;
 
+		//x sale en coordenadas de pixel
+		x /=8;
+
                 z80_int resultado=16384+screen_addr_table[y*32+x];
 
                 reg_h=value_16_to_8h(resultado);
@@ -1415,13 +1418,18 @@ void instruccion_ed_148 ()
 	if (MACHINE_IS_TBBLUE) {
         	//pixelad ED 94	Using D as Y, and E as X, work out address of ULA screen address and store in HL 
 		//screen_addr_table
-		printf ("pixelad\n");
 		int x=reg_e;
 		int y=reg_d;
+		printf ("pixelad x: %d y: %d\n",x,y);
+
+		//x esta en coordenadas de pixel
+		x /=8;
+
 		z80_int resultado=16384+screen_addr_table[y*32+x];
 
 		reg_h=value_16_to_8h(resultado);
 		reg_l=value_16_to_8l(resultado);
+		printf ("pixelad after: hl=%d\n",reg_hl);
         }
         else invalid_opcode_ed("ED148");
 }
