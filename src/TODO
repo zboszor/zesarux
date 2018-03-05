@@ -3,6 +3,14 @@
 
 nombre fichero en ventana menu?
 
+splash para auto enable realvideo en todos los casos
+
+al grabar snapshot rapido con tecla F que diga donde lo graba
+
+tsconf: gestion interrupciones (dma, linea, frame) a la vez. cosa poco probable?
+
+tsconf: truco para que las demos vayan mas fluidas: poner turbo x1, en algunas no se ralentiza el cambio de turbo y van perfectas a 50 fps
+
 borrar registros tsconf en hard reset? scroll se queda activo a veces. quiza ahora con la dma ya no pasa. revisar. si que pasa
 
 valores de espejo en sprites tsconf... ???
