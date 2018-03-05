@@ -26,8 +26,8 @@ New Z80 opcodes on the NEXT (more to come)
    outinb            ED 90           out (c),(hl), hl++
 -   nextreg reg,val   ED 91 reg,val  4+4+3+3 Set a NEXT register (like doing out($243b),reg then out($253b),val )
 -   nextreg reg,a     ED 92 reg      4+4+3   Set a NEXT register using A (like doing out($243b),reg then out($253b),A )
-   pixeldn           ED 93           Move down a line on the ULA screen
-   pixelad           ED 94           using D,E (as Y,X) calculate the ULA screen address and store in HL
+-   pixeldn           ED 93           Move down a line on the ULA screen
+-   pixelad           ED 94           using D,E (as Y,X) calculate the ULA screen address and store in HL
    setae             ED 95           Using the lower 3 bits of E (X coordinate), set the correct bit value in A
    ldix              ED A4           As LDI,  but if byte==A does not copy
    ldirx             ED B4           As LDIR, but if byte==A does not copy
@@ -36,7 +36,7 @@ New Z80 opcodes on the NEXT (more to come)
    ldirscale         ED B6           As LDIRX,  if(hl)!=A then (de)=(hl); HL_E'+=BC'; DE+=DE'; dec BC; Loop.
    ldpirx            ED B7           (de) = ( (hl&$fff8)+(E&7) ) when != A
    fillde            ED B5           Using A fill from DE for BC bytes
--   push NN        ED 8A LO HI   4+4+3+3+3+3 (3+3 for read, 3+3 for write)  push 16bit immediate value
+-   push NN        ED 8A HI LO   4+4+3+3+3+3 (3+3 for read, 3+3 for write)  push 16bit immediate value. ATTENTION: big endian!
 -   popx              ED 8B         4+4  pop value and disguard
 
 
