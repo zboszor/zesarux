@@ -51,6 +51,7 @@
 #include "timer.h"
 #include "chardetect.h"
 #include "textspeech.h"
+#include "tsconf.h"
 
 void scrstdout_establece_tablas_teclado(int c);
 void scrstdout_reset_teclas(void);

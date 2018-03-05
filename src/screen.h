@@ -721,4 +721,6 @@ extern int screen_if_refresh(void);
 
 extern void screen_text_set_ansi_color_bg(z80_byte paper);
 
+extern void screen_text_set_ansi_color_fg(z80_byte ink);
+
 #endif

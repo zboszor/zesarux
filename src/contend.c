@@ -785,22 +785,14 @@ z80_int segmento;
 
 //tsconf
 
-void contend_read_tsconf(z80_int direccion,int time)
+void contend_read_tsconf(z80_int direccion GCC_UNUSED,int time)
 {
         //Y sumamos estados normales
         t_estados += time;
 
 }
 
-void contend_read_no_mreq_tsconf(z80_int direccion,int time)
-{
-
-        //Y sumamos estados normales
-        t_estados += time;
-
-}
-
-void contend_write_no_mreq_tsconf(z80_int direccion,int time)
+void contend_read_no_mreq_tsconf(z80_int direccion GCC_UNUSED,int time)
 {
 
         //Y sumamos estados normales
@@ -808,15 +800,23 @@ void contend_write_no_mreq_tsconf(z80_int direccion,int time)
 
 }
 
+void contend_write_no_mreq_tsconf(z80_int direccion GCC_UNUSED,int time)
+{
 
-void ula_contend_port_early_tsconf( z80_int port )
+        //Y sumamos estados normales
+        t_estados += time;
+
+}
+
+
+void ula_contend_port_early_tsconf( z80_int port GCC_UNUSED)
 {
  
 
   t_estados++;
 }
 
-void ula_contend_port_late_tsconf( z80_int port )
+void ula_contend_port_late_tsconf( z80_int port GCC_UNUSED)
 {
 
 

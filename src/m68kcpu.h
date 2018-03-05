@@ -131,6 +131,18 @@
 
 
 
+//Para evitar warnings
+#ifndef GCC_UNUSED
+
+#ifdef __GNUC__
+#  define GCC_UNUSED __attribute__((unused))
+#else
+#  define GCC_UNUSED
+#endif
+
+#endif
+
+
 
 /* ======================================================================== */
 /* ============================ GENERAL DEFINES =========================== */
@@ -1057,36 +1069,36 @@ INLINE uint m68ki_read_imm_32(void)
  * These functions will also check for address error and set the function
  * code if they are enabled in m68kconf.h.
  */
-INLINE uint m68ki_read_8_fc(uint address, uint fc)
+INLINE uint m68ki_read_8_fc(uint address, uint fc GCC_UNUSED)
 {
 	m68ki_set_fc(fc); /* auto-disable (see m68kcpu.h) */
 	return m68k_read_memory_8(ADDRESS_68K(address));
 }
-INLINE uint m68ki_read_16_fc(uint address, uint fc)
+INLINE uint m68ki_read_16_fc(uint address, uint fc GCC_UNUSED)
 {
 	m68ki_set_fc(fc); /* auto-disable (see m68kcpu.h) */
 	m68ki_check_address_error(address, MODE_READ, fc); /* auto-disable (see m68kcpu.h) */
 	return m68k_read_memory_16(ADDRESS_68K(address));
 }
-INLINE uint m68ki_read_32_fc(uint address, uint fc)
+INLINE uint m68ki_read_32_fc(uint address, uint fc GCC_UNUSED)
 {
 	m68ki_set_fc(fc); /* auto-disable (see m68kcpu.h) */
 	m68ki_check_address_error(address, MODE_READ, fc); /* auto-disable (see m68kcpu.h) */
 	return m68k_read_memory_32(ADDRESS_68K(address));
 }
 
-INLINE void m68ki_write_8_fc(uint address, uint fc, uint value)
+INLINE void m68ki_write_8_fc(uint address, uint fc GCC_UNUSED, uint value)
 {
 	m68ki_set_fc(fc); /* auto-disable (see m68kcpu.h) */
 	m68k_write_memory_8(ADDRESS_68K(address), value);
 }
-INLINE void m68ki_write_16_fc(uint address, uint fc, uint value)
+INLINE void m68ki_write_16_fc(uint address, uint fc GCC_UNUSED, uint value)
 {
 	m68ki_set_fc(fc); /* auto-disable (see m68kcpu.h) */
 	m68ki_check_address_error(address, MODE_WRITE, fc); /* auto-disable (see m68kcpu.h) */
 	m68k_write_memory_16(ADDRESS_68K(address), value);
 }
-INLINE void m68ki_write_32_fc(uint address, uint fc, uint value)
+INLINE void m68ki_write_32_fc(uint address, uint fc GCC_UNUSED, uint value)
 {
 	m68ki_set_fc(fc); /* auto-disable (see m68kcpu.h) */
 	m68ki_check_address_error(address, MODE_WRITE, fc); /* auto-disable (see m68kcpu.h) */

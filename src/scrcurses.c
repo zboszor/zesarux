@@ -41,6 +41,7 @@
 #include "z88.h"
 #include "sam.h"
 #include "charset.h"
+#include "tsconf.h"
 
 
 #define CURSES_IZQ_BORDER 4

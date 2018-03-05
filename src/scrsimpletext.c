@@ -37,6 +37,7 @@
 #include "z88.h"
 #include "timer.h"
 #include "chardetect.h"
+#include "tsconf.h"
 
 void scrsimpletext_repinta_pantalla(void);
 

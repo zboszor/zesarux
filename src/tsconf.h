@@ -158,4 +158,8 @@ extern z80_byte tsconf_vector_fired_interrupt;
 
 extern int tsconf_handle_frame_interrupts_prev_horiz;
 
+extern void tsconf_handle_frame_interrupts(void);
+
+extern void tsconf_handle_line_interrupts(void);
+
 #endif
