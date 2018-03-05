@@ -31,6 +31,7 @@
 void invalid_opcode_ed(char *s)
 {
 	//debug_printf(VERBOSE_ERR,"Invalid opcode %s. Final PC: %X",s,reg_pc);
+	//printf ("Invalid opcode %s. Final PC: %X\n",s,reg_pc);
 
 
         //Para que no se queje el compilador
@@ -1391,11 +1392,11 @@ void instruccion_ed_147 ()
 {
         if (MACHINE_IS_TBBLUE) {
 		//pixeldn ED 93	Moves HL down one line in the ULA screen
-		printf ("pixeldn. hl=%d\n",reg_hl);
+		//printf ("pixeldn. hl=%d\n",reg_hl);
 		int x,y;
 		x=y=0;
 		util_spectrumscreen_get_xy(reg_hl,&x,&y);
-		printf ("x: %d y: %d\n",x,y);
+		//printf ("x: %d y: %d\n",x,y);
 
 		y=y+1;
 		if (y>191) y=0;
@@ -1407,7 +1408,7 @@ void instruccion_ed_147 ()
 
                 reg_h=value_16_to_8h(resultado);
                 reg_l=value_16_to_8l(resultado);	
-		printf ("pixeldn after. hl=%d\n",reg_hl);
+		//printf ("pixeldn after. hl=%d\n",reg_hl);
 
         }
         else invalid_opcode_ed("ED147");
@@ -1420,7 +1421,7 @@ void instruccion_ed_148 ()
 		//screen_addr_table
 		int x=reg_e;
 		int y=reg_d;
-		printf ("pixelad x: %d y: %d\n",x,y);
+		//printf ("pixelad x: %d y: %d\n",x,y);
 
 		//x esta en coordenadas de pixel
 		x /=8;
@@ -1429,7 +1430,7 @@ void instruccion_ed_148 ()
 
 		reg_h=value_16_to_8h(resultado);
 		reg_l=value_16_to_8l(resultado);
-		printf ("pixelad after: hl=%d\n",reg_hl);
+		//printf ("pixelad after: hl=%d\n",reg_hl);
         }
         else invalid_opcode_ed("ED148");
 }
