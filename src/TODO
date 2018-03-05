@@ -7,9 +7,6 @@ splash para auto enable realvideo en todos los casos
 
 al grabar snapshot rapido con tecla F que diga donde lo graba
 
-tsconf: gestion interrupciones (dma, linea, frame) a la vez. cosa poco probable?
-
-tsconf: truco para que las demos vayan mas fluidas: poner turbo x1, en algunas no se ralentiza el cambio de turbo y van perfectas a 50 fps
 
 borrar registros tsconf en hard reset? scroll se queda activo a veces. quiza ahora con la dma ya no pasa. revisar. si que pasa
 
@@ -24,12 +21,8 @@ revisar timings tsconf
 consultar tipos dma tsconf
 Valores de dma tsconf se incrementan después de hacer una trasferencia? Preguntar 
 
-tsconf Gestión interrupciones normales de frame. En tsconf tienen que ir vinculadas a bit de frame enable
-
 tbblue cambio color border por paleta
 I just ran into a strange difference between ZEsarUX and the ZX Spectrum Next. When modifying the layer 2 palette, ZEsarUX does not modify the border color (as expected from reading the docs), but on an actual ZX Next the border color changes.
-
-nmi tsconf la gestiona alguien?
 
 que al hacer video out to file fuerce siempre a mostrar watermark
 
@@ -41,6 +34,7 @@ Ocr también de tsconf
 
 Validar todos menus con speech 
 
+Dandanator update con nuevos timings y nueva rom
 Probar dandanator rom menu y sonido que se genera molesto y va al border
 
 Opcion desactivar colores que solo va en realvideo off:
@@ -57,11 +51,10 @@ http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROM
 Cambiar nombre de macro P2A por P2AP3
 Definir otra solo para P2A, con nombre nuevo para evitar errores de código. En teoría no estará usado de momento
 
-Dandanator update con nuevos timings y nueva rom
 
 Gestor de menús que permita agregar función para cambio overlay texto 
 
-Instrucciones 32 bits de Next extendido se han quitado 
+Instrucciones 32 bits de Next extendido se han quitado. e implementar nextreg y funciones de scanline
 
 Implementar cp/m mediante emulación 
 
@@ -80,8 +73,6 @@ ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo
 porque no habilita el nested_function de divmmc. Sera tan facil como guardar el setting de diviface-paged-enabled y si es asi, 
 activar ese nested (por defecto tenerlo desactivado). En caso de zxuno, divmmc en zsf no debe guardar/grabar su memoria ram ya que es 
 la propia memoria de zxuno quien lo tiene, lo mismo para tbblue, y prism
-
-
 
 
 
@@ -660,6 +651,8 @@ Conversión de tap a wav en ace. Requiere rutina diferente que la de spectrum
 TSConf: demo twist de fast.spg, deformacion se ve perfecta con fast render pero no con normal
 TsConf: color border registro 0xf
 tsconf: con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos se alteran! :(
+tsconf: gestion interrupciones (dma, linea, frame) a la vez. cosa poco probable?
+tsconf: truco para que las demos vayan mas fluidas: poner turbo x1, en algunas no se ralentiza el cambio de turbo y van perfectas a 50 fps
 -----------------------
 
 
