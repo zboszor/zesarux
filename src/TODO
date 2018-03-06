@@ -9,21 +9,19 @@ tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 revisar los que hayan cambiado.
 
-
-
 borrar registros tsconf en hard reset? scroll se queda activo a veces. quiza ahora con la dma ya no pasa. revisar. si que pasa
 
 revisar timings tsconf
 consultar tipos dma tsconf
 
-tbblue cambio color border por paleta
-I just ran into a strange difference between ZEsarUX and the ZX Spectrum Next. When modifying the layer 2 palette, ZEsarUX does not modify the border color (as expected from reading the docs), but on an actual ZX Next the border color changes.
+ok tbblue cambio color border por paleta
+I just ran into a strange difference between ZEsarUX and the ZX Spectrum Next. 
+When modifying the layer 2 palette, ZEsarUX does not modify the border color (as expected from reading the docs), 
+but on an actual ZX Next the border color changes.
 
 que al hacer video out to file fuerce siempre a mostrar watermark
 
 factor compresion tsconf a texto en drivers curses, stdout, simpletext que sea configurable
-
-Browser completo de dsk que permita extraer archivos 
 
 Ocr también de tsconf
 
@@ -147,6 +145,8 @@ Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En men�
 
 -spectrum .basic browser ? pero la mayoría están dentro de taps
 
+-Browser completo de dsk que permita extraer archivos 
+
 
 -Recreated Keyboard en Linux con fbdev
 
@@ -249,7 +249,6 @@ O quizá setting configurable
 *eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
 *y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
 *Desactivar puertos viejos de establecer paleta sprites get/set
-*Color border tbblue debe venir de paper , supongo que en modo extendido
 *como se leen valores paleta? leyendo 40h y 44h? como se lee bit bajo y luego los 8 bits altos?
 *next opcodes. acesos memoria (para parametros) son 3 o 4 t estados. revisar y actualizar doc
 

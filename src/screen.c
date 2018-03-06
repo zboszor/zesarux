@@ -956,7 +956,7 @@ z80_byte compare_char_step(z80_byte *origen,z80_byte *inverse,int step)
 		return caracter;
 	}
 
-	if (MACHINE_IS_SPECTRUM_128_P2_P2A || MACHINE_IS_ZXUNO_BOOTM_DISABLED || MACHINE_IS_CHLOE || MACHINE_IS_TIMEX_TS2068) {
+	if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3 || MACHINE_IS_ZXUNO_BOOTM_DISABLED || MACHINE_IS_CHLOE || MACHINE_IS_TIMEX_TS2068) {
 		z80_byte *offset_ram_5;
 
 		//Si zxuno sin bootm
@@ -1020,7 +1020,7 @@ z80_byte compare_char_step(z80_byte *origen,z80_byte *inverse,int step)
 			}
 
 			//modelos +2a
-			//else if (MACHINE_IS_SPECTRUM_P2A) {
+			//else if (MACHINE_IS_SPECTRUM_P2A_P3) {
 			else {
 				//ROM 3
 				puntero=&memoria_spectrum[49152]+dir;
@@ -4398,7 +4398,8 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 	}
 
 	if (MACHINE_IS_TBBLUE) {
-		color_border=tbblue_get_palette_active_ula(color_border)+RGB9_INDEX_FIRST_COLOR;
+		//En tbblue, color border empieza en 128
+		color_border=tbblue_get_palette_active_ula(color_border+128)+RGB9_INDEX_FIRST_COLOR;
 	}	
 
 
@@ -4541,7 +4542,7 @@ int si_toca_snow_effect(int x)
 
 
 	//Maquinas +2A, +3 no tienen efecto snow
-	if (MACHINE_IS_SPECTRUM_P2A) return 0;
+	if (MACHINE_IS_SPECTRUM_P2A_P3) return 0;
 
 
 
@@ -4807,7 +4808,7 @@ z80_int spectra_get_which_ram_display(void)
         //if (spectra_display_mode_register&32) indice=16384;
         //indice=spectra_get_which_ram_display();
 
-	if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+	if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
                        //128k display selected
                        z80_byte display_128_selected=(puerto_32765&8 ? 1 : 0);
 
@@ -11554,7 +11555,7 @@ void screen_text_printchar_next(z80_byte caracter, void (*puntero_printchar_cara
 
 
 
-                if (MACHINE_IS_SPECTRUM_P2A) {
+                if (MACHINE_IS_SPECTRUM_P2A_P3) {
 			if (reg_pc!=16) puntero_printchar_caracter(caracter);
 
 			else {

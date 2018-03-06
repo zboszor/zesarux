@@ -2626,7 +2626,7 @@ void get_pixel_color_tbblue(z80_byte attribute,z80_int *tinta_orig, z80_int *pap
 	if (!flash_disabled) {
 
                         ink=attribute &7; 
-                        paper=((attribute>>3) &7)+128; 
+                        paper=((attribute>>3) &7)+128; //colores papel empiezan en 128
                         bright=(attribute)&64; 
                         flash=(attribute)&128; 
                         if (flash) { 
