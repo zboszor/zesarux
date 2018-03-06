@@ -9019,7 +9019,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         size=32768;
       }
 
-      if (MACHINE_IS_SPECTRUM_P2A) {
+      if (MACHINE_IS_SPECTRUM_P2A_P3) {
         size=65536;
       }
 
@@ -9188,7 +9188,7 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
         p=&memoria_spectrum[address+32768];
       }
 
-      if (MACHINE_IS_SPECTRUM_P2A) {
+      if (MACHINE_IS_SPECTRUM_P2A_P3) {
         //Saltar los 64kb de rom
         p=&memoria_spectrum[address+65536];
       }

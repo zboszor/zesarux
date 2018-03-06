@@ -269,7 +269,7 @@ Byte Fields:
 		mem_page_rom_128k();
 	}
 
-	if (MACHINE_IS_SPECTRUM_P2A) {
+	if (MACHINE_IS_SPECTRUM_P2A_P3) {
 		mem_page_ram_p2a();
 
 		if (puerto_8189&1) mem_page_ram_rom();

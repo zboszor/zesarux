@@ -1428,7 +1428,7 @@ Track1
 void traps_plus3dos(void)
 {
 
-	if (!MACHINE_IS_SPECTRUM_P2A) return;
+	if (!MACHINE_IS_SPECTRUM_P2A_P3) return;
 
 	
 		z80_byte rom_entra=((puerto_32765>>4)&1) + ((puerto_8189>>1)&2);

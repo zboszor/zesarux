@@ -1827,7 +1827,7 @@ void load_zx_snapshot(char *archivo)
 			//que la paginacion este deshabilitada (bit 5 de 32765 a 1) y entonces el envio de 8189 no tendria ningun efecto
 
                         //+2A
-			if  (MACHINE_IS_SPECTRUM_P2A) {
+			if  (MACHINE_IS_SPECTRUM_P2A_P3) {
 				z80_byte valor_8189=zx_header[49];
 				debug_printf (VERBOSE_DEBUG,"Port 8189 value: %d",valor_8189);
 				out_port_spectrum_no_time(8189,valor_8189);
@@ -3158,7 +3158,7 @@ if (long_cabecera_adicional>25) {
 
 
 				if (long_cabecera_adicional==55) {
-					if (MACHINE_IS_SPECTRUM_P2A)
+					if (MACHINE_IS_SPECTRUM_P2A_P3)
 						out_port_spectrum_no_time(8189,z80_header_adicional[56]);
 				}
 			}
@@ -3448,7 +3448,7 @@ void save_zx_snapshot_header_pages(z80_byte *header)
 	}
 
 	//si modelo +2a
-	if (MACHINE_IS_SPECTRUM_P2A)  {
+	if (MACHINE_IS_SPECTRUM_P2A_P3)  {
 		//ver si estamos ram en rom
 		if ( (puerto_8189&1)==1) {
 			//ram en rom

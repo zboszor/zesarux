@@ -3259,7 +3259,7 @@ void debug_get_ioports(char *stats_buffer)
   		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
           }
 
-  	if (MACHINE_IS_SPECTRUM_P2A || MACHINE_IS_ZXUNO_BOOTM_DISABLED || MACHINE_IS_PRISM || superupgrade_enabled.v || MACHINE_IS_CHROME || TBBLUE_MACHINE_P2A) {
+  	if (MACHINE_IS_SPECTRUM_P2A_P3 || MACHINE_IS_ZXUNO_BOOTM_DISABLED || MACHINE_IS_PRISM || superupgrade_enabled.v || MACHINE_IS_CHROME || TBBLUE_MACHINE_P2A) {
   		sprintf (buf_linea,"Spectrum 1FFD port: %02X\n",puerto_8189);
   		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
   	}

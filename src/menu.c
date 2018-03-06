@@ -15571,7 +15571,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		if (MACHINE_IS_SPECTRUM_P2A) {
+		if (MACHINE_IS_SPECTRUM_P2A_P3) {
 			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_plusthreedisk,NULL,"+3 ~~Disk");
 			menu_add_item_menu_shortcut(array_menu_storage_settings,'d');
 			menu_add_item_menu_tooltip(array_menu_storage_settings,"+3 Disk emulation");
@@ -20737,7 +20737,7 @@ void menu_debug_draw_visualmem(void)
 
 
 	//En modos de RAM en ROM de +2a en puntero apuntara a direccion 0
-	if (MACHINE_IS_SPECTRUM_P2A) {
+	if (MACHINE_IS_SPECTRUM_P2A_P3) {
 		if ( (puerto_32765 & 32) == 0 ) {
 			//paginacion habilitada
 
@@ -26056,7 +26056,7 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 			}
 
 			//maquinas p2a
-			if (MACHINE_IS_SPECTRUM_P2A) {
+			if (MACHINE_IS_SPECTRUM_P2A_P3) {
 				hotswap_machine_opcion_seleccionada=current_machine_type-11;
 	                        menu_add_item_menu_inicial(&array_menu_machine_selection,"Spectrum +2A (ROM v4.0)",MENU_OPCION_NORMAL,NULL,NULL);
         	                menu_add_item_menu(array_menu_machine_selection,"Spectrum +2A (ROM v4.1)",MENU_OPCION_NORMAL,NULL,NULL);
@@ -26236,7 +26236,7 @@ void menu_hotswap_machine(MENU_ITEM_PARAMETERS)
 					return; //Para evitar saltar a otro if
                                 }
 
-				if (MACHINE_IS_SPECTRUM_P2A) {
+				if (MACHINE_IS_SPECTRUM_P2A_P3) {
                                         if (hotswap_machine_opcion_seleccionada==4) {
                                                 hotswap_any_machine_to_spec48();
                                         }

@@ -4950,7 +4950,7 @@ always read 255; when it is not, we will have the byte that the ULA reads
 1111000000000011b=61443
 
 	*/
-	if (MACHINE_IS_SPECTRUM_P2A) {
+	if (MACHINE_IS_SPECTRUM_P2A_P3) {
 		//Paginacion deshabilitada
 		if ( (puerto_32765&32) == 32) return 255;
 
@@ -6635,7 +6635,7 @@ Port: 10-- ---- ---- --0-
                 }
 	}
 
-	if (MACHINE_IS_SPECTRUM_P2A)
+	if (MACHINE_IS_SPECTRUM_P2A_P3)
 	{
 		//Para +2A
 

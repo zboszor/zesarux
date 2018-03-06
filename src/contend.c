@@ -1122,7 +1122,7 @@ void inicializa_tabla_contend(void)
 
 
 
-	if (MACHINE_IS_SPECTRUM_P2A) {
+	if (MACHINE_IS_SPECTRUM_P2A_P3) {
 		//+2A
                 timings=contend_patron_76543210;
                 offset_time=-1;
@@ -1243,7 +1243,7 @@ void inicializa_tabla_contend(void)
 
 		contend_table[i]=contend_value;
 
-		if (MACHINE_IS_SPECTRUM_P2A) {
+		if (MACHINE_IS_SPECTRUM_P2A_P3) {
 			//en +2A contend_delay_no_mreq -> no hay contend
 			contend_table_no_mreq[i]=0;
 		}

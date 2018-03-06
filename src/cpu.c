@@ -849,7 +849,7 @@ void reset_cpu(void)
 		mem_set_normal_pages_128k();
 	}
 
-	if (MACHINE_IS_SPECTRUM_P2A) {
+	if (MACHINE_IS_SPECTRUM_P2A_P3) {
 		mem_set_normal_pages_p2a();
 	}
 
@@ -2278,7 +2278,7 @@ void malloc_mem_machine(void) {
 
         }
 
-	 else if (MACHINE_IS_SPECTRUM_P2A) {
+	 else if (MACHINE_IS_SPECTRUM_P2A_P3) {
 
                 //64 kb rom, 128-512 ram
                 malloc_machine((64+512)*1024);
@@ -2676,7 +2676,7 @@ void set_machine_params(void)
 
 			contend_pages_128k_p2a=contend_pages_128k;
 
-		        if (MACHINE_IS_SPECTRUM_P2A) {
+		        if (MACHINE_IS_SPECTRUM_P2A_P3) {
                 		port_from_ula=port_from_ula_p2a;
 				contend_pages_128k_p2a=contend_pages_p2a;
 			}
@@ -3763,7 +3763,7 @@ void rom_load(char *romfilename)
 
 		}
 
-		else if (MACHINE_IS_SPECTRUM_P2A) {
+		else if (MACHINE_IS_SPECTRUM_P2A_P3) {
 
 			//Spectrum 64k rom
 

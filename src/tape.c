@@ -1031,7 +1031,7 @@ int tap_load_detect(void)
 			return 1;
 		}
 
-                if (MACHINE_IS_SPECTRUM_P2A) {
+                if (MACHINE_IS_SPECTRUM_P2A_P3) {
                                 //maquina +2A
                                 if ((puerto_32765 & 16) ==16   && ((puerto_8189&4) ==4  ))
                                 return 1;
@@ -1204,7 +1204,7 @@ int tap_save_detect(void)
 
 
 
-                if (MACHINE_IS_SPECTRUM_P2A) {
+                if (MACHINE_IS_SPECTRUM_P2A_P3) {
                                 //maquina +2A
                                 if ((puerto_32765 & 16) ==16   && ((puerto_8189&4) ==4  ))
                                 return 1;
