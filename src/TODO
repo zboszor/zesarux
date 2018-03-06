@@ -1,6 +1,17 @@
 -Prioridades para la 6.1 
 
 nombre fichero en ventana menu?
+parece que scroll tsconf en horizontal va de 8 en 8. porque???
+tendra que ver con esto:
+	int total_tiles;
+	int tile_x=offset_x/8;
+
+	//printf ("offset x: %d\n",offset_x);
+
+	//Luego a layer final, restarle entre 0 y 7 segun offset
+	layer_final -=(offset_x%8);
+
+        y el tema que son 4 bpp y cada pixel ocupa medio byte. o no???
 
 tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
 
