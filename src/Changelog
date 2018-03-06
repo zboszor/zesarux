@@ -45,6 +45,7 @@ Improved default configuration: when the configuration file doesn't exist, the n
 Improved configuration parsing: if unknown setting found on configuration file, ZEsarUX will open but warns about the error, and the autosave feature is not enabled
 Improved TBBlue emulation: Added clip window registers
 Improved rendering on text mode drivers: now realvideo mode can render directly to black&white text. Try TSConf with --vo stdout --realvideo --autoredrawstdout
+Improved Linux library dependencies: libssl is not enabled by default on compilation
 Fixed TBBlue MMU when using segment 0000-3FFFH
 Fixed ZX-Uno emulation: 128kb timings are the same as a Spectrum 128k. When port 1ffd enabled, port FF return FF
 Fixed window footer when running Pentagon

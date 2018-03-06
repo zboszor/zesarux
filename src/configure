@@ -49,7 +49,6 @@ show_help()
 	echo "--disable-sndfile            Disable sndfile functions"
         echo "--disable-pthreads           Disable using posix threads"
 	echo "--disable-realtime           Disable realtime priority"
-	echo "--disable-ssl                Disable ssl functions"
 	echo "--disable-cocoa              Disable Cocoa Mac OS X native GUI"
 	echo "--disable-linuxrealjoystick  Disable linux real joystick support"
 	echo "--enable-memptr              Enable MEMPTR emulation"
@@ -58,6 +57,7 @@ show_help()
 	echo "--enable-raspberry           Enable Raspberry extensions"
 	echo "--enable-sdl2                Enable SDL2 libraries. Experimental"
 	echo "--enable-cocoa-opengl        Enable OpenGL rendering on Mac OS X cocoa driver"
+	echo "--enable-ssl                 Enable ssl functions"
 	echo "--disable-contend            Disable Contended Memory emulation"
 	echo "--disable-putpixel-cache     Disable putpixel cache. Test feature"
 	echo
@@ -108,7 +108,9 @@ OPTIONOBJDSP="audiodsp.o"
 OPTIONOBJALSA="audioalsa.o"
 OPTIONOBJPULSE="audiopulse.o"
 OPTIONOBJCOREAUDIO="audiocoreaudio.o"
-OPTIONOBJSSL="enabled"
+
+#OPTIONOBJSSL="enabled"
+OPTIONOBJSSL=""
 OPTIONPTHREADS="enabled"
 OPTIONLINUXREALJOYSTICK="enabled"
 OPTIONSNDFILE="enabled"
@@ -248,8 +250,8 @@ while [ $# -gt 0 ]; do
 	OPTIONXVIDMODE=""
 	;;
 
-	--disable-ssl)
-	OPTIONOBJSSL=""
+	--enable-ssl)
+	OPTIONOBJSSL="enabled"
 	;;
 
 	--disable-cocoa)

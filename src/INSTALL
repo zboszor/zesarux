@@ -27,18 +27,16 @@ The minimum features I recommend:
 On Linux:
 
 * x11
-* libssl
 * libpthreads
 * alsa 
 * pulse 
 
 On Mac OS X:
 
-* gcc, which can be installed with XCode. libssl and libpthreads are also included with XCode
+* gcc, which can be installed with XCode. libpthreads is also included with XCode
 * video support is provided by Cocoa driver, but you can also try to compile using X11 or another video driver
 
 On Raspberry:
-* libssl
 * libpthreads
 * alsa
 * video support is provided by Framebuffer driver (fbdev), but you can also try to compile using X11, SDL or another video driver
@@ -77,7 +75,7 @@ The rest is optional. Complete list of features:
 
 *pthreads: pthread includes. Usually included on all Unix systems
 *realtime: sched includes. Usually included on Linux systems
-*autodetect snapshots and tape files: libssl
+*autodetect snapshots and tape files by its contents: libssl
 
 
 -------------
