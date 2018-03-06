@@ -15,10 +15,6 @@ consultar tipos dma tsconf
 
 que al hacer video out to file fuerce siempre a mostrar watermark
 
-factor compresion tsconf a texto en drivers curses, stdout, simpletext que sea configurable
-
-Ocr también de tsconf
-
 Validar todos menus con speech 
 
 Opcion desactivar colores que solo va en realvideo off:
@@ -27,7 +23,7 @@ Opcion desactivar colores que solo va en realvideo off:
 
 Opcion para forzar siempre snap grabar zsf de 48k
 
-revisar todos menus que usan put pixel que se ajusten a tamaño ancho caracter
+revisar todos menus que usan put pixel que se ajusten a tamaño ancho caracter: para cuando se reduce tamaño caracter de 8 a menos
 
 Agregar todas desensamblado roms en txt 
 http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROMDisassembly4.htm
@@ -40,7 +36,6 @@ Mas utilidades de visor archivos: convertir?
 Formato zsf: completar para mas maquinas
 Mirar porque fallan muchos dsk
 TBBLue: al hacer hard reset, los colores del boot se cambian :S quiza algun bit de la paleta que no esta bien en reset?
-opcion para frames por segundo en stdout..? o no.
 
 ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo y desactivo setting de divmmc paging, ya aparece:
 porque no habilita el nested_function de divmmc. Sera tan facil como guardar el setting de diviface-paged-enabled y si es asi, 
@@ -97,20 +92,21 @@ Igual deberia desactivar tambien setting divmmc_enabled y divide_enabled.v, porq
 pueden quedarse activos. Esto en load snapshot zsf de zxuno lo hace aparte
 
 
-IMPORTANTE: ruido al iniciar emulador, no siempre, debido al agregar rutina de autoresize audio puntero
+IMPORTANTE: ruido al iniciar emulador en mac, no siempre, debido al agregar rutina de autoresize audio puntero
 Quiza solo permitir cuando hayan pasado unos segundos desde el inicio del emulador
+->ya no lo hace??
 
 -problema de reseteo de buffer audio al iniciar el emulador, hace un sonido estridente a veces al arrancar. Detectado con coreaudio
 probado lo siguiente:
 * resetear a 0 cada driver al iniciar: ningun cambio
 * poner a 0 tambien fifo_read_position al hacer empty buffer: ningun cambio
 ->Quiza solucion es que haga reseteo solo cuando se haya llenado 1 vez el buffer al menos
+->ya no lo hace??
+
 
 -enter le envia siempre speech pending. normal?
 
 -eventos joystick para simular pgup, pgdn
-
--quiza compilar sin soporte libsssl en linux
 
 -menu char size afecta a dibujado de pantalla en zx8081 sin realvideo
 
@@ -124,15 +120,8 @@ Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En men�
 
 -Funcion genérico leer archivo y asignar memoria para browsers
 
--spectrum .basic browser ? pero la mayoría están dentro de taps
-
--Browser completo de dsk que permita extraer archivos 
-
-
 -Recreated Keyboard en Linux con fbdev
 
-
--Posible ocr con traducción de cirílico?
 
 -cargar scl:
 http://www.zx-modules.de/fileformats/sclformat.html
@@ -184,9 +173,11 @@ TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, qu
 
 -betadisk: nmi no parece guardar el snapshot, aunque lo intenta
 
--It would be interesting if an emulator could provide FIFOs or shared memory that the host operating system could read/write to that were made available to the emulated machine.
+-It would be interesting if an emulator could provide FIFOs or shared memory that the host operating system could
+ read/write to that were made available to the emulated machine.
 
--si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5. luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
+-si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5. 
+luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
 
 -en mac, con driver cocoagl o no cocoagl, hace una especie de parpadeo abajo en el footer a veces. quiza solo es en el no-opengl?
 
@@ -196,9 +187,7 @@ TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, qu
 
 -tsconf con fbdev y real video hace parpadeo el menu
 
--mk14 en fbdev hace parpadeo el 
-
-
+-mk14 en fbdev hace parpadeo
 
 -sdl2 en linux no deja redimensionar ventana con raton
 
@@ -232,10 +221,7 @@ O quizá setting configurable
 *eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
 *y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
 *Desactivar puertos viejos de establecer paleta sprites get/set
-*como se leen valores paleta? leyendo 40h y 44h? como se lee bit bajo y luego los 8 bits altos?
 *next opcodes. acesos memoria (para parametros) son 3 o 4 t estados. revisar y actualizar doc
-
-
 
 
 -Comando genérico para alterar algunos settings desde ZRCP hacia settings de menú
@@ -629,6 +615,10 @@ sir ababol a veces se ven bien los colores
 
 -ideas por que tsconf va lento algunas demos: porque basicamente usan modo turbo X4
 hay rutinas, como gestion de sprites y tiles, que se podrian mejorar ligeramente, cacheando algunas cosas.... pero aun asi, aunque desactive los sprites o tiles del todo, el uso de cpu no baja significativamente, apenas 1 o 2 % en un uso total de 75%..... la solución seria que el core de Z80 usase menos cpu fisica, asi el modo turbo x4 funcionaria mas ligero
+
+-factor compresion tsconf a texto en drivers curses, stdout, simpletext que sea configurable
+
+Ocr también de tsconf
 -----------------------
 
 
@@ -1687,6 +1677,10 @@ no-thread no funcionara tampoco
 
 -Browser cintas que permita alterar la posición de la cinta
 
+-spectrum .basic browser ? pero la mayoría están dentro de taps
+
+-Browser completo de dsk que permita extraer archivos 
+
 -incluir pantallas de teclado spectrum, zx80,zx81, z88, etc
 
 -quickload debe dejar bajar a subcarpetas pero no ir mas arriba de ruta inicial (--quickloadpath) ?
@@ -1984,7 +1978,7 @@ como descubrir rutinas de pintado de sprites
 
 -Joystick en Mac,Win
 -quiza redibujar archivo logo tal cual con el boot logo
--Logo más visible. En la raíz? Ahora está en carpeta Mac 
+-Posible ocr con traducción de cirílico?
 
 ***********
 
