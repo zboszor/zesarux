@@ -8388,7 +8388,7 @@ int util_poke(z80_byte banco,z80_int direccion,z80_byte valor)
 
 
 	//si maquina 128k
-	else if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+	else if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 		//ram_mem_table
 		//Si banco >7, hacer poke normal
 		if (banco>7) {
@@ -8966,7 +8966,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       //como fallback, por defecto en spectrum 48kb ram
       size=49152;
 
-      if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+      if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
         size=131072*mem128_multiplicador;
       }
 

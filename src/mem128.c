@@ -184,7 +184,7 @@ z80_byte *get_base_mem_pantalla_continue(void)
 
 	if (MACHINE_IS_SPECTRUM_16_48) return &memoria_spectrum[16384];
 
-	if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+	if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 
 		if (puerto_32765 & 8) {
 			return ram_mem_table[7];

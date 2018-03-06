@@ -80,7 +80,7 @@ int betadisk_check_if_rom_area(z80_int dir)
 	if (betadisk_active.v==0) return 0;
 
 	//Si maquina 128k y es rom 0, volver
-	if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+	if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 		if (!(puerto_32765&16)) return 0;
 	}
 

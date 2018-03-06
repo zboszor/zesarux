@@ -2661,7 +2661,7 @@ void set_machine_params(void)
 			}
 		}
 
-		else if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+		else if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
                         contend_read=contend_read_128k;
                         contend_read_no_mreq=contend_read_no_mreq_128k;
                         contend_write_no_mreq=contend_write_no_mreq_128k;

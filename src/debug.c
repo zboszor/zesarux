@@ -870,7 +870,7 @@ unsigned int cpu_core_loop_debug_registro(char *registro,int *si_cond_opcode)
 	}
 
 	//ram mapeada en 49152-65535 de Spectrum
-	if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+	if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 		if (!strcasecmp(registro,"ram")) return debug_paginas_memoria_mapeadas[3];
 
 		//rom mapeada en Spectrum
@@ -3254,7 +3254,7 @@ void debug_get_ioports(char *stats_buffer)
                   sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
           }
 
-  	if (MACHINE_IS_SPECTRUM_128_P2_P2A || MACHINE_IS_ZXUNO_BOOTM_DISABLED || MACHINE_IS_PRISM || MACHINE_IS_CHLOE || superupgrade_enabled.v || MACHINE_IS_CHROME || TBBLUE_MACHINE_128_P2 || TBBLUE_MACHINE_P2A) {
+  	if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3 || MACHINE_IS_ZXUNO_BOOTM_DISABLED || MACHINE_IS_PRISM || MACHINE_IS_CHLOE || superupgrade_enabled.v || MACHINE_IS_CHROME || TBBLUE_MACHINE_128_P2 || TBBLUE_MACHINE_P2A) {
                   sprintf (buf_linea,"Spectrum 7FFD port: %02X\n",puerto_32765);
   		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
           }
@@ -3767,7 +3767,7 @@ typedef struct s_debug_memory_segment debug_memory_segment;
 
 
    //Paginas memoria
-      if (MACHINE_IS_SPECTRUM_128_P2_P2A ||  superupgrade_enabled.v || MACHINE_IS_CHROME || MACHINE_IS_TSCONF) {
+      if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3 ||  superupgrade_enabled.v || MACHINE_IS_CHROME || MACHINE_IS_TSCONF) {
 		segmentos_totales=4;
                                   int pagina;
 

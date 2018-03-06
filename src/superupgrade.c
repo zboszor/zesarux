@@ -613,7 +613,7 @@ z80_byte superupgrade_get_ram_bank(void)
 	z80_byte banco;
 
 	//Maquinas de 128k solo soporta 128kb de RAM
-	if (MACHINE_IS_SPECTRUM_128_P2_P2A) banco=(puerto_32765&7);
+	if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) banco=(puerto_32765&7);
 
 	else banco=(puerto_32765&7)+((puerto_32765>>3)&24);
 
@@ -654,7 +654,7 @@ void superupgrade_hard_reset(void)
 int superupgrade_supported_machine(void)
 {
 	if (
-		(    (MACHINE_IS_SPECTRUM_16_48 || MACHINE_IS_SPECTRUM_128_P2 || MACHINE_IS_SPECTRUM_128_P2_P2A) && !(MACHINE_IS_INVES)     )
+		(    (MACHINE_IS_SPECTRUM_16_48 || MACHINE_IS_SPECTRUM_128_P2 || MACHINE_IS_SPECTRUM_128_P2_P2A_P3) && !(MACHINE_IS_INVES)     )
 	) return 1;
 
 	return 0;

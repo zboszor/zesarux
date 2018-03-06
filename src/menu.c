@@ -8845,7 +8845,7 @@ void menu_poke(MENU_ITEM_PARAMETERS)
 					"You can also poke on read-only memory, depending on the current memory zone");
 
 		//No tiene sentido pues se puede usar las memory zones para esto
-		/*if (MACHINE_IS_SPECTRUM_128_P2_P2A || MACHINE_IS_ZXUNO_BOOTM_DISABLED) {
+		/*if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3 || MACHINE_IS_ZXUNO_BOOTM_DISABLED) {
 			menu_add_item_menu(array_menu_poke,"Poke 128~~k mode",MENU_OPCION_NORMAL,menu_debug_poke_128k,NULL);
 			menu_add_item_menu_shortcut(array_menu_poke,'k');
 			menu_add_item_menu_tooltip(array_menu_poke,"Poke bank & address");
@@ -15780,7 +15780,7 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+		if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_disable_rom_paging,NULL,"ROM Paging: %s",(ula_disabled_rom_paging.v==0 ? "Yes" : "No"));
 			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_disable_ram_paging,NULL,"RAM Paging: %s",(ula_disabled_ram_paging.v==0 ? "Yes" : "No"));
 		}
@@ -16931,7 +16931,7 @@ void menu_hardware_memory_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_hardware_memory_settings,"Allow write in ROM");
 		menu_add_item_menu_ayuda(array_menu_hardware_memory_settings,"Allow write in ROM. Only allowed on Spectrum 48k/16k models, ZX80, ZX81, Sam Coupe and Jupiter Ace (and not on Inves)");
 
-		if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+		if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 			menu_add_item_menu_format(array_menu_hardware_memory_settings,MENU_OPCION_NORMAL,menu_hardware_memory_128k_multiplier,NULL,"RAM size: %d KB",128*mem128_multiplicador);
 			menu_add_item_menu_tooltip(array_menu_hardware_memory_settings,"Allows setting more than 128k RAM on a 128k type machine");
 			menu_add_item_menu_ayuda(array_menu_hardware_memory_settings,"Allows setting more than 128k RAM on a 128k type machine");

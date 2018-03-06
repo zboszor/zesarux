@@ -59,7 +59,7 @@ void spectra_poke_shadow_ram(z80_int dir,z80_byte valor)
 {
 
 	//Mode 128k
-	if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+	if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 		z80_byte ram_write=0;
 
 		z80_int offset;

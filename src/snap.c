@@ -1835,7 +1835,7 @@ void load_zx_snapshot(char *archivo)
 
 
 			//128k, +2a
-                        if  (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+                        if  (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 				z80_byte valor_32765=zx_header[48];
 				debug_printf (VERBOSE_DEBUG,"Port 32765 value: %d",valor_32765);
                                 out_port_spectrum_no_time(32765,valor_32765);
@@ -2561,7 +2561,7 @@ void save_z80_snapshot(char *filename)
 
 
 		}
-	else if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+	else if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 		//Escritura de 128k. 8 bloques de 16kb cada uno
 		int i;
 		for (i=0;i<8;i++) {
@@ -3153,7 +3153,7 @@ if (long_cabecera_adicional>25) {
 			} while (leidos>0);
 
 			//si modo 128k, dejar bien la paginacion
-			if  (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+			if  (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 				out_port_spectrum_no_time(32765,z80_header_adicional[5]);
 
 
@@ -3868,7 +3868,7 @@ void save_zx_snapshot(char *filename)
 	        z80_byte bits_estado0=0;
         	//bit4 A 1 indica que el programa a cargar es de 128k (versión 2+)
 	        //bits_estado0: 47
-        	if (MACHINE_IS_SPECTRUM_128_P2_P2A) bits_estado0=bits_estado0 | 16;
+        	if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) bits_estado0=bits_estado0 | 16;
 
 	        //disparador activo
 	        if (joystick_autofire_frequency!=0) bits_estado0=bits_estado0 | 64;
@@ -4372,7 +4372,7 @@ void save_zx_snapshot(char *filename)
 
 
 
-	else if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+	else if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 		//Escritura de 128k
 		debug_printf (VERBOSE_INFO,"Saving 64kb block for RAMS 0-3");
 		save_zx_snapshot_bytes_48k_128k(ptr_zxfile,0,1,0);

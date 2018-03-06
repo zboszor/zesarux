@@ -1226,7 +1226,7 @@ void inicializa_tabla_contend(void)
 	if (ula_late_timings.v) {
 		offset_time--;
 		//temporal prueba para demo Scroll 2017
-		if (MACHINE_IS_SPECTRUM_128_P2_P2A) {
+		if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3) {
 
 			//Con esto, la ula128 se ve perfecta y la scroll2017 muy mal
 			//offset_time--;
