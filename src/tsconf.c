@@ -2000,16 +2000,22 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	z80_byte valor1, valor2;
 
 	int total_tiles;
-	int tile_x=offset_x/8;
+	int tile_x;
+	tile_x=offset_x/8;
+	tile_x=0;
+
+	int posx=0;
+	posx=-offset_x;
 
 	//printf ("offset x: %d\n",offset_x);
 
 	//Luego a layer final, restarle entre 0 y 7 segun offset
-	layer_final -=(offset_x%8);
+	//layer_final -=(offset_x%8);
+	layer_final-=offset_x*2;
 
 	//printf ("off: %d\n",offset_x%8);
 
-	for (total_tiles=0;total_tiles<64;total_tiles++,tile_x++) {
+	for (total_tiles=0;total_tiles<64;total_tiles++,tile_x++,posx+=8) {
 			
 
 				tsconf_tile_return_column_values(puntero_layer,tile_x,&valor1,&valor2);
@@ -2080,7 +2086,10 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 				//printf ("tile x %d sprite_origen %p\n",x,sprite_origen);
 
-				tsconf_store_scanline_puttiles(8, incx, 0,0,tpal,sprite_origen,layer_final);
+				//Deberia empezar en array posicion 16, no 8
+				//y la condicion a -8 quiza
+				//TODO: valores negativos tienen que salir "por la derecha" mejorar tsconf_store_scanline_puttiles con posicion x
+				if (posx>-4 && posx<512) tsconf_store_scanline_puttiles(8, incx, 0,0,tpal,sprite_origen,layer_final);
 
 					
 				layer_final+=16;
