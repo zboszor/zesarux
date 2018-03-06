@@ -10,8 +10,6 @@ https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9
 revisar los que hayan cambiado.
 
 
-al grabar snapshot rapido con tecla F que diga donde lo graba
-
 
 borrar registros tsconf en hard reset? scroll se queda activo a veces. quiza ahora con la dma ya no pasa. revisar. si que pasa
 
@@ -43,8 +41,6 @@ revisar todos menus que usan put pixel que se ajusten a tamaño ancho caracter
 Agregar todas desensamblado roms en txt 
 http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROMDisassembly4.htm
 
-Cambiar nombre de macro P2A por P2AP3
-Definir otra solo para P2A, con nombre nuevo para evitar errores de código. En teoría no estará usado de momento
 
 Gestor de menús que permita agregar función para cambio overlay texto 
 

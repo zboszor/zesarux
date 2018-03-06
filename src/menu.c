@@ -30076,6 +30076,7 @@ void menu_process_f_functions(void)
 
 	//printf ("Menu process Tecla: F%d Accion: %s\n",indice+1,defined_f_functions_array[accion].texto_funcion);
 
+	char final_name[PATH_MAX];
 
 	switch (accion)
 	{
@@ -30110,7 +30111,13 @@ void menu_process_f_functions(void)
 		break;
 
 		case F_FUNCION_QUICKSAVE:
-			snapshot_quick_save(NULL);
+
+			snapshot_quick_save(final_name);
+
+
+			menu_generic_message_format("Quicksave","OK. Snapshot name: %s",final_name);
+
+			//snapshot_quick_save(NULL);
 		break;
 
 		case F_FUNCION_LOADBINARY:
