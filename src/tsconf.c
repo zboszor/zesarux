@@ -731,6 +731,7 @@ void tsconf_reset_cpu(void)
 
   //Bit 4 de 32765 es bit 0 de #21AF. Por tanto poner ese bit 0 a 0
     tsconf_af_ports[0x21] &=(255-1);
+	//puerto_32765 &=(255-16);
 
     //TODO. Que otros puertos de tsconf se ponen a 0 en el reset?
 
@@ -861,8 +862,10 @@ bit1/0
         else {
           z80_byte banco;
           //Modo map
+		  //printf ("paginacion modo map\n");
           z80_byte page0=tsconf_af_ports[0x10];
-          page0 = page0 << 2;  //In "map" mode Page0 selects ROM page bits 4..2
+
+		  page0=page0&(4+8+16); //In "map" mode Page0 selects ROM page bits 4..2
 
           //TODO. No entiendo bien cuando entra aqui: 00 - after reset, only in "no map" mode, System ROM, suponemos que solo al encender la maquina,
           //cosa que no es cierta
@@ -871,8 +874,12 @@ bit1/0
 
           else {
             if (tsconf_dos_signal.v) banco=1;
-            else banco=((puerto_32765>>4)&1) | 2;
+            else {
+				//printf ("32765 %d memconfig %d\n",puerto_32765&16,tsconf_af_ports[0x21] &1);
+				banco=((puerto_32765>>4)&1) | 2;
+			}
           }
+			//printf ("page0 %d banco %d\n",page0,banco);
 
           return page0 | banco;
 
