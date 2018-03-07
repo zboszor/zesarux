@@ -1053,6 +1053,17 @@ void tsconf_hard_reset(void)
 
   tsconf_af_ports[0x2B] &=(255-1-2-4-8);
 
+	//Los registros de scroll, del 40h al 47h, en la documentacion dice que no se toca, 
+	//pero yo lo cambio porque sino , hay demos que se ven mal pues conservan valores anteriores
+  tsconf_af_ports[0x40]=0;
+  tsconf_af_ports[0x41]=0;
+  tsconf_af_ports[0x42]=0;
+  tsconf_af_ports[0x43]=0;
+  tsconf_af_ports[0x44]=0;
+  tsconf_af_ports[0x45]=0;
+  tsconf_af_ports[0x46]=0;
+  tsconf_af_ports[0x47]=0;
+
   tsconf_set_memory_pages();
   tsconf_set_sizes_display();
   tsconf_set_emulator_setting_turbo();

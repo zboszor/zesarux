@@ -953,13 +953,17 @@ int tap_load_detect(void)
 			if (reg_pc!=1378) return 0;
 		}
 
+		else if (MACHINE_IS_TSCONF) {
+			if (reg_pc!=1378) return 0;
+		}                
+
 		else if (MACHINE_IS_TBBLUE) {
                         if (reg_pc!=1378) return 0;
-    }
+                }
 
-    else if (MACHINE_IS_CHROME) {
+                else if (MACHINE_IS_CHROME) {
                         if (reg_pc!=1378) return 0;
-    }
+                }
 
 
 		//Para Timex
@@ -1048,6 +1052,18 @@ int tap_load_detect(void)
 				return 1;
 
 		}
+
+		//Para TSCONF, detectar como zxuno. Por PC y por instrucciones
+		//no mirar rom porque no sabemos que rom estamos leyendo (si la rom 3 de carga en un +2a, si la rom 1 en un 128k, etc)
+                //Detectar por PC y por instrucciones
+		if (MACHINE_IS_TSCONF) {
+				//Ver que instruccion sea IN A,FEH, en caso de rutina normal de la ROM
+                                if (peek_byte_no_time(reg_pc)!=0xDB) return 0;
+                                if (peek_byte_no_time(reg_pc+1)!=0xFE) return 0;
+
+				return 1;
+
+		}                
 
 		//Para TBBlue, detectar como zxuno. Por PC y por instrucciones
                 //no mirar rom porque no sabemos que rom estamos leyendo (si la rom 3 de carga en un +2a, si la rom 1 en un 128k, etc)
@@ -1211,6 +1227,18 @@ int tap_save_detect(void)
                 }
 
 		if (MACHINE_IS_PRISM) {
+			//Como maquina +2A
+			//Ver que instruccion sea ld hl,1f80
+                                if (peek_byte_no_time(reg_pc)!=0x21) return 0;
+                                if (peek_byte_no_time(reg_pc+1)!=0x80) return 0;
+                                if (peek_byte_no_time(reg_pc+2)!=0x1f) return 0;
+
+
+                                //Sea cual sea la rom, si reg_pc coincide e instruccion es la indicada antes
+                                return 1;
+		}
+	
+                if (MACHINE_IS_TSCONF) {
 			//Como maquina +2A
 			//Ver que instruccion sea ld hl,1f80
                                 if (peek_byte_no_time(reg_pc)!=0x21) return 0;
@@ -1557,7 +1585,7 @@ void gestionar_autoload_spectrum(void)
                                         //Para 48k
                                         else gestionar_autoload_spectrum_48kmode();
 
-                                break;
+                        break;
 
 			case 19:
 				//Para TBBlue. Pasa como Prism
@@ -1587,7 +1615,28 @@ void gestionar_autoload_spectrum(void)
 
           break;
 
+			case 23:
+                                //Para TSConf. Pasa como zxuno
+                                //dado que no sabemos exactamente que maquina ha ejecutado prism y por ejemplo,
+                                //un spectrum 48k se carga en rom0 (y lo ideal seria que se cargase en rom3)
+                                        //Para 128k, +2, +2a enviar enter
+                                        if (
+                                          reg_pc==0x3683 ||
+                                          reg_pc==0x36a9 ||
+                                          reg_pc==0x36be ||
+                                          reg_pc==0x36bb ||
+                                          reg_pc==0x1875 ||
+                                          reg_pc==0x187a ||
+                                          reg_pc==0x1891
+                                        ) gestionar_autoload_spectrum_start_enter();
 
+                                        //para spanish 128k
+                                        else if (reg_pc==0x25a0) gestionar_autoload_spectrum_start_loadpp();
+
+                                        //Para 48k
+                                        else gestionar_autoload_spectrum_48kmode();
+
+                        break;
 
 		}
 
