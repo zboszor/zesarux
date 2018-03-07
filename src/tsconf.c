@@ -1591,8 +1591,76 @@ void tsconf_store_scanline_putsprite_putpixel(z80_int *puntero,z80_int color,z80
 }
 */
 
+int tsconf_current_tile_written_index=0;
+z80_int *tsconf_current_tile_written_pointer;
+
+void tsconf_put_tile_pixel(z80_int color,z80_byte spal)
+{
+	if (color) {
+		color=tsconf_return_cram_color(color+16*spal);
+						*tsconf_current_tile_written_pointer=color;
+					tsconf_current_tile_written_pointer++;
+					*tsconf_current_tile_written_pointer=color;
+					tsconf_current_tile_written_pointer++;
+	}
+
+	else {
+		tsconf_current_tile_written_pointer+=2;
+	}
+
+	tsconf_current_tile_written_index+=2;
+	if (tsconf_current_tile_written_index==1024) {
+		tsconf_current_tile_written_index=0;
+		tsconf_current_tile_written_pointer-=1024;
+	}
+}
+
 //Solo tiles
-void tsconf_store_scanline_puttiles(int ancho, int incx,int tnum_x GCC_UNUSED, int tnum_y GCC_UNUSED,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
+void tsconf_store_scanline_puttiles(int ancho, int incx,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
+{
+
+               
+
+	  z80_int *destino;
+
+		//destino	
+		destino=layer;
+
+		z80_byte byte_sprite;
+		z80_int color_final;
+
+			for (;ancho;ancho-=2) { //-=2 porque son a 4bpp
+				byte_sprite=*sprite_origen;
+				z80_int color_izq,color_der;
+
+				if (incx==-1) {
+					color_der=(byte_sprite>>4)&15;
+					color_izq=byte_sprite&15;
+				}
+
+				else {
+					color_izq=(byte_sprite>>4)&15;
+					color_der=byte_sprite&15;
+				}
+
+
+
+					tsconf_put_tile_pixel(color_izq,spal);
+				
+                                       tsconf_put_tile_pixel(color_der,spal);
+			
+
+
+				sprite_origen+=incx;
+			}
+		
+		
+
+}
+
+
+//Solo tiles
+void old_tsconf_store_scanline_puttiles(int ancho, int incx,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
 {
 
                
@@ -2011,9 +2079,20 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 	//Luego a layer final, restarle entre 0 y 7 segun offset
 	//layer_final -=(offset_x%8);
-	layer_final-=offset_x*2;
+	//layer_final-=offset_x*2;
 
 	//printf ("off: %d\n",offset_x%8);
+
+
+	tsconf_current_tile_written_index=-offset_x*2;
+
+	if (tsconf_current_tile_written_index<0) {
+		tsconf_current_tile_written_index +=1024;
+	}
+
+	tsconf_current_tile_written_pointer=&layer_tiles[tsconf_current_tile_written_index];
+
+	///printf ("index: %d\n",tsconf_current_tile_written_index);
 
 	for (total_tiles=0;total_tiles<64;total_tiles++,tile_x++,posx+=8) {
 			
@@ -2036,10 +2115,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 					tpal_23=(palsel>>4)&(4+8); //bits 6-7 los muevo a 2-3
 				}
 
-				//temp
-				//tpal_23=0;
-
-				//if (tpal_23 && (contador_segundo%1000)==0) printf ("tpal_23: %d\n",tpal_23);
+	
 
 				tpal |=tpal_23;
 
@@ -2051,8 +2127,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 				z80_byte tile_xf=puntero_layer[1] & 64;
 				z80_byte tile_yf=puntero_layer[1] & 128;
 
-		
-				
+					
 			
 				z80_byte *sprite_origen;
 				
@@ -2088,8 +2163,8 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 				//Deberia empezar en array posicion 16, no 8
 				//y la condicion a -8 quiza
-				//TODO: valores negativos tienen que salir "por la derecha" mejorar tsconf_store_scanline_puttiles con posicion x
-				if (posx>-4 && posx<512) tsconf_store_scanline_puttiles(8, incx, 0,0,tpal,sprite_origen,layer_final);
+
+				tsconf_store_scanline_puttiles(8, incx, tpal,sprite_origen,layer_final);
 
 					
 				layer_final+=16;
@@ -2247,9 +2322,9 @@ int spritestiles=1;
 
             	//Sprites encima de tiles y encima de ula
 		layer_one=tsconf_layer_sprites_two;
-		layer_two=&tsconf_layer_tiles_one[8];     //Empieza en offset 8. Tenemos 8 pixeles de margen a la izquierda que no se ven
+		layer_two=&tsconf_layer_tiles_one[0];     //Empieza en offset 8. Tenemos 8 pixeles de margen a la izquierda que no se ven
 		layer_three=tsconf_layer_sprites_one;
-		layer_four=&tsconf_layer_tiles_zero[8]; //Empieza en offset 8. Tenemos 8 pixeles de margen a la izquierda que no se ven
+		layer_four=&tsconf_layer_tiles_zero[0]; //Empieza en offset 8. Tenemos 8 pixeles de margen a la izquierda que no se ven
 		layer_five=tsconf_layer_sprites_zero;
 		layer_six=tsconf_layer_ula;
 
