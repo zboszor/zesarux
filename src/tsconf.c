@@ -1221,6 +1221,11 @@ int tsconf_get_current_visible_scanline(void)
 
 int temp_conta_nogfx;
 
+z80_byte tsconf_get_border_colour(void)
+{
+	return tsconf_af_ports[0xF];
+}
+
 //tipo: 0 arriba, abajo. 1 izquierda derecha
 void tsconf_store_scanline_border_supinf_izqder(int tipo)
 {
@@ -1246,7 +1251,7 @@ void tsconf_store_scanline_border_supinf_izqder(int tipo)
 
 	int color; //TODO. solo pillamos un color por scanline
 
-	color=out_254 & 7;
+	color=tsconf_get_border_colour();
 
 	color=TSCONF_INDEX_FIRST_COLOR+tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color);
 
@@ -1645,7 +1650,7 @@ void tsconf_store_scanline_puttiles(int ancho, int incx,z80_byte spal,z80_byte *
 		destino=layer;
 
 		z80_byte byte_sprite;
-		z80_int color_final;
+		//z80_int color_final;
 
 			for (;ancho;ancho-=2) { //-=2 porque son a 4bpp
 				byte_sprite=*sprite_origen;
@@ -2493,7 +2498,7 @@ void scr_refresca_border_tsconf_cont(void)
 {
 	int color;
 
-	color=out_254 & 7;
+	color=tsconf_get_border_colour();
 
 
 	if (scr_refresca_sin_colores.v) color=7;
@@ -2725,8 +2730,7 @@ void scr_tsconf_refresca_pantalla_zxmode_no_rainbow(void)
 	if (border_enabled.v) {
 		//ver si hay que refrescar border
 		if (modificado_border.v) {
-			//int color;
-			//color=out_254 & 7;
+
 
 			//screen_prism_refresca_no_rainbow_border(color);
 			scr_refresca_border_tsconf_cont();

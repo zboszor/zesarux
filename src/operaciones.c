@@ -6436,6 +6436,8 @@ void out_port_spectrum_border(z80_int puerto,z80_byte value)
                 else {
                         out_254=value;
 
+			if (MACHINE_IS_TSCONF) tsconf_af_ports[0xF]=value&7;
+
 			/*
                         if ( (value & 24) != (ultimo_altavoz & 24) ) {
                                 //valor diferente. conmutar altavoz
