@@ -467,6 +467,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			//ldd.spg usa Unemulated dma type: rw: 0 ddev: 06H
 				if (dma_rw==0) {
 					//Pixels from RAM (Src) are blitted to RAM (Dst) with adder. De momento hacemos copia tal cual
+					//printf ("Pixels from RAM (Src) are blitted to RAM (Dst) with adder\n");
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_ram_mem_table[0];
 
@@ -1437,20 +1438,21 @@ void tsconf_store_scanline_ula(void)
 					
 					int posicion_byte_inicial;
 
+					//Posicion y inicial
 					//16 colores
 					if (videomode==1) {
 						offset=y_origen_pixeles*256;
 
-						offset +=x_offset/2;
-						posicion_byte_inicial=x_offset/2;
+						//offset +=x_offset/2;
+						//posicion_byte_inicial=x_offset/2;
 					}
 
 					//256 colores
 					else {
 						offset=y_origen_pixeles*512;
 
-						offset +=x_offset;
-						posicion_byte_inicial=x_offset;
+						//offset +=x_offset;
+						//posicion_byte_inicial=x_offset;
 					}
 
 
