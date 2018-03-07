@@ -370,6 +370,7 @@ z80_byte debug_tsconf_dma_rw=0;
 
 z80_bit tsconf_dma_disabled={0};
 
+//burst_length esta en words
 void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,z80_byte s_align,z80_byte d_align,z80_byte addr_align_size,z80_byte dma_ddev,z80_byte dma_rw)
 {
 	int orig_source;
@@ -510,33 +511,33 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 				//TODO de momento suponer 256 colores. 
 				if (source_pointer[source]) destination_pointer[destination]=source_pointer[source];
+				if (source_pointer[source+1]) destination_pointer[destination+1]=source_pointer[source+1];
 			}
 
 			else {
-				destination_pointer[destination]=source_pointer[source];	
+				destination_pointer[destination]=source_pointer[source];
+				destination_pointer[destination+1]=source_pointer[source+1];	
 			}
 
 
 			destination++;
+			destination++;
 
-			//Si es fill. en que se diferencia de copia normal de byte??
+
+			//Si es fill. 
 			if (dma_ddev==4 && dma_rw==0) {
-				source++;
-
-				destination &=destination_mask;
-				source &=source_mask;
-
-				destination_pointer[destination]=source_pointer[source];
-				destination++;
-
-				source--;
-
-				i++; //esto es asi??? realmente copia la misma cantidad de bytes, solo que de dos en dos?
+				
 			}
 			
 			else {
 				source++;
+				source++;
 			}
+
+
+			//if (dma_ddev==4 && dma_rw==0) {
+			//printf ("source: %06XH destination: %06XH\n",source,destination);
+			//}
 		}
 
 		if (d_align) {
@@ -546,6 +547,8 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 		if (s_align) {
 			source=tsconf_align_address(orig_source,source,addr_align_size);
 		}
+
+
 
 	}
 }
@@ -651,7 +654,7 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 		//int dma_burst_length=(tsconf_af_ports[0x26]+1)*2;
 		int dma_burst_length=tsconf_af_ports[0x26];
 		dma_burst_length++;
-		dma_burst_length*=2;
+		//dma_burst_length*=2; funciona con words
 
 		
 		//int dma_num=tsconf_af_ports[0x28]+1;
@@ -1639,15 +1642,15 @@ void tsconf_put_tile_pixel(z80_int color,z80_byte spal)
 }
 
 //Solo tiles
-void tsconf_store_scanline_puttiles(int ancho, int incx,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
+void tsconf_store_scanline_puttiles(int ancho, int incx,z80_byte spal,z80_byte *sprite_origen)
 {
 
                
 
-	  z80_int *destino;
+	  /*z80_int *destino;
 
 		//destino	
-		destino=layer;
+		destino=layer;*/
 
 		z80_byte byte_sprite;
 		//z80_int color_final;
@@ -1667,17 +1670,15 @@ void tsconf_store_scanline_puttiles(int ancho, int incx,z80_byte spal,z80_byte *
 				}
 
 
-
-					tsconf_put_tile_pixel(color_izq,spal);
+				tsconf_put_tile_pixel(color_izq,spal);
 				
-                                       tsconf_put_tile_pixel(color_der,spal);
+            	tsconf_put_tile_pixel(color_der,spal);
 			
-
 
 				sprite_origen+=incx;
 			}
 		
-		
+	
 
 }
 
@@ -2077,7 +2078,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
   //printf ("scanline: %d tile y: %d\n",scanline_copia,y);
 
-	z80_int *layer_final=&layer_tiles[8]; //Empezamos en posicion 8 para tener 8 pixeles de margen por la izquierda
+	//z80_int *layer_final=&layer_tiles[8]; //Empezamos en posicion 8 para tener 8 pixeles de margen por la izquierda
 	//layer_final -=offset_x;
 
 	puntero_layer +=128*layer;
@@ -2187,10 +2188,10 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 				//Deberia empezar en array posicion 16, no 8
 				//y la condicion a -8 quiza
 
-				tsconf_store_scanline_puttiles(8, incx, tpal,sprite_origen,layer_final);
+				tsconf_store_scanline_puttiles(8, incx, tpal,sprite_origen);
 
 					
-				layer_final+=16;
+				//layer_final+=16;
        
 	   			//offset_x+=8;
 
