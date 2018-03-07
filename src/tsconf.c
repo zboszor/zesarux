@@ -1434,7 +1434,8 @@ void tsconf_store_scanline_ula(void)
 					int offset;
 
 					int x_offset=tsconf_af_ports[2]+256*(tsconf_af_ports[3]&1);
-					//edge grinder usa scroll x
+					if (x_offset) printf ("x_offset: %d\n",x_offset);
+					//edge grinder y 200.spg y lirus y ppal y tcircles y twist0 y unhinged y wavering usan scroll x
 					
 					int posicion_byte_inicial;
 
