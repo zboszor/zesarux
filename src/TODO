@@ -1,15 +1,12 @@
 -Prioridades para la 6.1 
 
 nombre fichero en ventana menu?
-quitar variables de scroll tiles horizontal que no se usan
 
 tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
 
 tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 revisar los que hayan cambiado.
-
-
 
 revisar timings tsconf
 consultar tipos dma tsconf

@@ -1650,17 +1650,11 @@ void tsconf_store_scanline_puttiles(int ancho, int incx,z80_byte spal,z80_byte *
 
                
 
-	  /*z80_int *destino;
-
-		//destino	
-		destino=layer;*/
-
 		z80_byte byte_sprite;
-		//z80_int color_final;
+		z80_int color_izq,color_der;
 
 			for (;ancho;ancho-=2) { //-=2 porque son a 4bpp
 				byte_sprite=*sprite_origen;
-				z80_int color_izq,color_der;
 
 				if (incx==-1) {
 					color_der=(byte_sprite>>4)&15;
@@ -1685,74 +1679,6 @@ void tsconf_store_scanline_puttiles(int ancho, int incx,z80_byte spal,z80_byte *
 
 }
 
-
-//Solo tiles
-void old_tsconf_store_scanline_puttiles(int ancho, int incx,z80_byte spal,z80_byte *sprite_origen,z80_int *layer)
-{
-
-               
-
-	  z80_int *destino;
-
-		//destino	
-		destino=layer;
-
-		z80_byte byte_sprite;
-		z80_int color_final;
-
-			for (;ancho;ancho-=2) { //-=2 porque son a 4bpp
-				byte_sprite=*sprite_origen;
-				z80_int color_izq,color_der;
-
-				if (incx==-1) {
-					color_der=(byte_sprite>>4)&15;
-					color_izq=byte_sprite&15;
-				}
-
-				else {
-					color_izq=(byte_sprite>>4)&15;
-					color_der=byte_sprite&15;
-				}
-
-
-				if (color_izq) { //0 es transparente
-
-					//Lo hacemos asi para que sea mas rapido
-					color_final=tsconf_return_cram_color(color_izq+16*spal);
-					*destino=color_final;
-					destino++;
-					*destino=color_final;
-					destino++;
-				}
-
-				else {
-					destino+=2;
-				}
-
-
-
-				if (color_der) { //0 es transparente
-     
-
-                                        //Lo hacemos asi para que sea mas rapido
-                                        color_final=tsconf_return_cram_color(color_der+16*spal);
-                                        *destino=color_final;
-                                        destino++;
-                                        *destino=color_final;
-                                        destino++;
-				}
-
-
-				else {
-					destino+=2;
-				}
-
-				sprite_origen+=incx;
-			}
-		
-		
-
-}
 
 
 //Solo sprites
@@ -2022,16 +1948,8 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	if (scanline_copia<0) return;
   
 
-	/*int direccion_graficos=tsconf_af_ports[0x17+layer]>>3;
-	
-	direccion_graficos=direccion_graficos & 31;
-    direccion_graficos=direccion_graficos<<17;*/
-
 	int direccion_graficos=tsconf_return_tilegraphicspage(layer);
 
-
-	/*int direccion_tile=tsconf_af_ports[0x16];
-    direccion_tile=direccion_tile<< 14;*/
 
 	int direccion_tile=tsconf_return_tilemappage();
 
@@ -2054,7 +1972,6 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	int offset_y=tsconf_af_ports[puntero_offset_scroll+2]+256*(tsconf_af_ports[puntero_offset_scroll+3]&1);
 
   //aplicar offset_y
-  //esto esta bien asi??
   scanline_copia +=offset_y;
   //if (offset_y<0) return;
   
@@ -2081,8 +1998,6 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
   //printf ("scanline: %d tile y: %d\n",scanline_copia,y);
 
-	//z80_int *layer_final=&layer_tiles[8]; //Empezamos en posicion 8 para tener 8 pixeles de margen por la izquierda
-	//layer_final -=offset_x;
 
 	puntero_layer +=128*layer;
 
@@ -2099,18 +2014,6 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 	tile_x=offset_x/8;
 	tile_x=0;
 
-	int posx=0;
-	posx=-offset_x;
-
-	//printf ("offset x: %d\n",offset_x);
-
-	//Luego a layer final, restarle entre 0 y 7 segun offset
-	//layer_final -=(offset_x%8);
-	//layer_final-=offset_x*2;
-
-	//printf ("off: %d\n",offset_x%8);
-
-
 	tsconf_current_tile_written_index=-offset_x*2;
 
 	if (tsconf_current_tile_written_index<0) {
@@ -2121,7 +2024,9 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 	///printf ("index: %d\n",tsconf_current_tile_written_index);
 
-	for (total_tiles=0;total_tiles<64;total_tiles++,tile_x++,posx+=8) {
+	z80_byte *sprite_origen;
+
+	for (total_tiles=0;total_tiles<64;total_tiles++,tile_x++) {
 			
 
 				tsconf_tile_return_column_values(puntero_layer,tile_x,&valor1,&valor2);
@@ -2143,10 +2048,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 				}
 
 	
-
 				tpal |=tpal_23;
-
-
 
 				int tnum_x=tnum&63;
 				int tnum_y=(tnum>>6)&63;
@@ -2154,12 +2056,9 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 				z80_byte tile_xf=puntero_layer[1] & 64;
 				z80_byte tile_yf=puntero_layer[1] & 128;
 
-					
 			
-				z80_byte *sprite_origen;
 				
 				sprite_origen=puntero_graficos+(tnum_y*256*8);
-				
 				
 
 				int incx;
@@ -2182,22 +2081,11 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 					sprite_origen +=7*256-desplazamiento_scanline;
 				}
 				else {
-        			sprite_origen +=desplazamiento_scanline;
+        				sprite_origen +=desplazamiento_scanline;
 				}
 
 
-				//printf ("tile x %d sprite_origen %p\n",x,sprite_origen);
-
-				//Deberia empezar en array posicion 16, no 8
-				//y la condicion a -8 quiza
-
 				tsconf_store_scanline_puttiles(8, incx, tpal,sprite_origen);
-
-					
-				//layer_final+=16;
-       
-	   			//offset_x+=8;
-
 			
 	}
 
