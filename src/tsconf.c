@@ -461,11 +461,14 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 		debug_printf (VERBOSE_DEBUG,"DMA operation type: %s",tsconf_dma_types[dma_operation]);
 
+
+
+
 		//switch (dma_ddev) {
 		switch (dma_operation) {
 
 			case 2:
-					printf ("RAM (Src) is copied to RAM (Dst)\n");
+					//printf ("RAM (Src) is copied to RAM (Dst)\n");
 
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_ram_mem_table[0];
@@ -475,7 +478,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			break;
 
 			case 3:
-					printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero. addr_align_size: %d\n",addr_align_size);
+					//printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero. addr_align_size: %d\n",addr_align_size);
 
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_ram_mem_table[0];
@@ -486,7 +489,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 			case 8:
 
-					printf ("RAM (Dst) is filled with word from RAM (Src)\n");
+					//printf ("RAM (Dst) is filled with word from RAM (Src)\n");
 
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_ram_mem_table[0];
@@ -496,7 +499,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			break;
 
 			case 9:
-					printf ("RAM (Src) is copied to CRAM (Dst)\n");
+					//printf ("RAM (Src) is copied to CRAM (Dst)\n");
 
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_fmaps;
@@ -509,7 +512,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 
 			case 11:
-					printf ("RAM (Src) is copied to SFILE (Dst)\n"); //Digger usa esto
+					//printf ("RAM (Src) is copied to SFILE (Dst)\n"); //Digger usa esto
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=&tsconf_fmaps[0x200];
 
@@ -523,7 +526,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			case 12:
 			//ldd.spg usa Unemulated dma type: rw: 0 ddev: 06H
 					//Pixels from RAM (Src) are blitted to RAM (Dst) with adder. De momento hacemos copia tal cual
-					printf ("Pixels from RAM (Src) are blitted to RAM (Dst) with adder\n");
+					//printf ("Pixels from RAM (Src) are blitted to RAM (Dst) with adder\n");
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_ram_mem_table[0];
 
@@ -541,14 +544,16 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 	//Si desactivada la dma, volver
 	if (tsconf_dma_disabled.v) return;
 
+	//Esto creo que no tiene ningún tipo de sentido. El mapeo de fmaps es solo cuando se accede a memoria normalmente entre zona de 64kb
+	/*if ((tsconf_af_ports[0x15]&16)!=0) {
+			printf ("----------Posible operacion dma con fmaps activo\n");
+			//ashot, hny2k16  usan esto
+	}*/
+
 
 	for (;burst_number>0;burst_number--){
 		int i;
 
-			//Si se escribe en fmaps. Creo que nadie lo usa. De momento no implementado
-		//if ((tsconf_af_ports[0x15]&16)!=0) {
-			//printf ("fmaps mapped on %06XH, destination dma: %06XH\n",tsconf_af_ports[0x15]&0xF<<12,destination);
-		//}
 
 	orig_source=source;
 	orig_destination=destination;

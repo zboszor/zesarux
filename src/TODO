@@ -4,12 +4,13 @@ nombre fichero en ventana menu?
 
 tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
 
+Tsconf: escritura dma en fmaps
+
 tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 revisar los que hayan cambiado.
 
 revisar timings tsconf
-consultar tipos dma tsconf
 
 que al hacer video out to file fuerce siempre a mostrar watermark
 
@@ -285,7 +286,7 @@ con mirror_x en sprite, xorig debe decrementarse y detectar cuando xorig<0 tiene
 mirror x,y en tiles: hnk2015, merhaba_fixed usa los dos tipos de mirror
 probar capas de sprites tsconf: 200, , sirababol, mustang, alterego, fast, fishbone, uwol, soco
 
-Tsconf: escritura dma en fmaps
+
 
 
 -Comandos ZRCP obtener datos sprites tsconf

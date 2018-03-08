@@ -2087,23 +2087,7 @@ void poke_byte_no_time_tsconf(z80_int dir,z80_byte valor)
 
 				tsconf_write_fmaps(tsconf_fmaps_offset,valor);
 
-				/*
-				if (tsconf_fmaps_offset<0x200) {
-					//printf ("Zona tsconf cram\n");
-					tsconf_fmaps[tsconf_fmaps_offset]=valor;
-				}
-
-				if (tsconf_fmaps_offset>0x200 && tsconf_fmaps_offset<0x400) {
-					//printf ("Zona tsconf sprites\n");
-					tsconf_fmaps[tsconf_fmaps_offset]=valor;
-				}
-
-				if (tsconf_fmaps_offset>0x400 && tsconf_fmaps_offset<0x500) {
-					//printf ("Zona tsconf registers\n");
-					//Solo escribe en regustro tsconf. no en ram fmaps
-					tsconf_write_af_port(tsconf_fmaps_offset-0x400,valor);
-				}
-				*/
+				
 
 
 			}
