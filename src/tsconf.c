@@ -1163,6 +1163,14 @@ void tsconf_hard_reset(void)
   tsconf_af_ports[0x46]=0;
   tsconf_af_ports[0x47]=0;
 
+  //idem, dice no tocar pero lo cambio a 0
+  tsconf_af_ports[0x1A]=0;
+  tsconf_af_ports[0x1B]=0;
+  tsconf_af_ports[0x1C]=0;
+  tsconf_af_ports[0x1D]=0;
+  tsconf_af_ports[0x1E]=0;
+  tsconf_af_ports[0x1F]=0;
+
   tsconf_set_memory_pages();
   tsconf_set_sizes_display();
   tsconf_set_emulator_setting_turbo();
