@@ -370,8 +370,72 @@ z80_byte debug_tsconf_dma_rw=0;
 
 z80_bit tsconf_dma_disabled={0};
 
+void tsconf_dma_put_pixel_blit2(z80_byte *destination, z80_byte byte_source, z80_byte addr_align_size,z80_byte dma_opt)
+{
+	//addr_align_size: 0 4bpp. 1 8bb
+	z80_byte byte_destino=*destination;
+
+	
+	if (addr_align_size) {
+		//8 bpp
+          //blit.b0 = (((d0.b0 + d1.b0) > 0xFF) && sat) ? 0xFF : (d0.b0 + d1.b0);
+        byte_destino=(((byte_destino + byte_source) > 0xFF) && dma_opt) ? 0xFF : (byte_destino + byte_source);
+	}
+
+	else {
+		//4 bpp
+		z80_byte nibble_destino_alto,nibble_destino_bajo;
+		z80_byte nibble_source_alto,nibble_source_bajo;
+
+		nibble_destino_alto=(byte_destino>>4)&0xF;
+		nibble_destino_bajo=(byte_destino)&0xF;
+
+		nibble_source_alto=(byte_source>>4)&0xF;
+		nibble_source_bajo=(byte_source)&0xF;
+
+		nibble_destino_alto = (((nibble_destino_alto + nibble_source_alto) > 0xF) && dma_opt) ? 0xF : (nibble_destino_alto + nibble_source_alto);
+		nibble_destino_bajo = (((nibble_destino_bajo + nibble_source_bajo) > 0xF) && dma_opt) ? 0xF : (nibble_destino_bajo + nibble_source_bajo);
+        
+		byte_destino=(nibble_destino_alto<<4)|nibble_destino_bajo;
+
+
+	}
+
+	*destination=byte_destino;
+}
+
+
+void tsconf_dma_put_pixel_ifnotzero(z80_byte *destination, z80_byte source, z80_byte addr_align_size)
+{
+	//addr_align_size: 0 4bpp. 1 8bb
+
+	//8 bpp
+	if (addr_align_size) {
+		if (source) *destination=source;
+	}
+
+	else {
+		z80_byte byte_destino=*destination;
+		//4 bpp
+		z80_byte nibble=source & 0xF0;
+		if (nibble) {
+			byte_destino &=0x0F;
+			byte_destino |=nibble;
+		}
+		
+		nibble=source & 0x0F;
+		if (nibble) {
+			byte_destino &=0xF0;
+			byte_destino |=nibble;
+		}
+
+		*destination=byte_destino;
+
+	}
+}
+
 //burst_length esta en words
-void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,z80_byte s_align,z80_byte d_align,z80_byte addr_align_size,z80_byte dma_ddev,z80_byte dma_rw)
+void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,z80_byte s_align,z80_byte d_align,z80_byte addr_align_size,z80_byte dma_ddev,z80_byte dma_rw,z80_byte dma_opt)
 {
 	int orig_source;
 	int orig_destination;
@@ -393,45 +457,46 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 	debug_tsconf_dma_ddev=dma_ddev;
 	debug_tsconf_dma_rw=dma_rw;
 
-		debug_printf (VERBOSE_DEBUG,"DMA operation type: %s",tsconf_dma_types[dma_ddev*2+dma_rw]);
+	z80_byte dma_operation=dma_ddev*2+dma_rw;
 
-		switch (dma_ddev) {
+		debug_printf (VERBOSE_DEBUG,"DMA operation type: %s",tsconf_dma_types[dma_operation]);
 
-			case 1:
-				if (dma_rw==0) {
-					//printf ("RAM (Src) is copied to RAM (Dst)\n");
+		//switch (dma_ddev) {
+		switch (dma_operation) {
 
-					source_pointer=tsconf_ram_mem_table[0];
-					destination_pointer=tsconf_ram_mem_table[0];
-
-					source_mask=destination_mask=0x3FFFFF; //4 mb
-
-				}
-				else {
-					//printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero\n");
+			case 2:
+					printf ("RAM (Src) is copied to RAM (Dst)\n");
 
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_ram_mem_table[0];
 
 					source_mask=destination_mask=0x3FFFFF; //4 mb
-
-				}
 
 			break;
 
-			case 4:
+			case 3:
+					printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero. addr_align_size: %d\n",addr_align_size);
 
-				if (dma_rw==0) {
-					//printf ("RAM (Dst) is filled with word from RAM (Src)\n");
+					source_pointer=tsconf_ram_mem_table[0];
+					destination_pointer=tsconf_ram_mem_table[0];
+
+					source_mask=destination_mask=0x3FFFFF; //4 mb
+
+			break;
+
+			case 8:
+
+					printf ("RAM (Dst) is filled with word from RAM (Src)\n");
 
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_ram_mem_table[0];
 
 					source_mask=destination_mask=0x3FFFFF; //4 mb
 			
-				}
-				else {
-					//printf ("RAM (Src) is copied to CRAM (Dst)\n");
+			break;
+
+			case 9:
+					printf ("RAM (Src) is copied to CRAM (Dst)\n");
 
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_fmaps;
@@ -440,43 +505,30 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 					destination_mask=0x1FF; //512 bytes
 		
-				}
 			break;
 
 
-			case 5:
-				if (dma_rw==0) {
-					debug_printf (VERBOSE_ERR,"Unemulated DMA FDD dump into RAM**");
-					return;
-				}
-
-				else {
-					//printf ("RAM (Src) is copied to SFILE (Dst)\n"); //Digger usa esto
+			case 11:
+					printf ("RAM (Src) is copied to SFILE (Dst)\n"); //Digger usa esto
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=&tsconf_fmaps[0x200];
 
 					source_mask=0x3FFFFF; //4 mb
 
 					destination_mask=0x1FF; //512 bytes			
-				}
 
 			break;
 
 
-			case 6:
+			case 12:
 			//ldd.spg usa Unemulated dma type: rw: 0 ddev: 06H
-				if (dma_rw==0) {
 					//Pixels from RAM (Src) are blitted to RAM (Dst) with adder. De momento hacemos copia tal cual
-					//printf ("Pixels from RAM (Src) are blitted to RAM (Dst) with adder\n");
+					printf ("Pixels from RAM (Src) are blitted to RAM (Dst) with adder\n");
 					source_pointer=tsconf_ram_mem_table[0];
 					destination_pointer=tsconf_ram_mem_table[0];
 
 					source_mask=destination_mask=0x3FFFFF; //4 mb
-				}
-				else {
-					debug_printf (VERBOSE_ERR,"Unemulated DMA FDD dump into RAM**");
-					return;
-				}
+
 			break;
 
 			default:
@@ -488,6 +540,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 	//Si desactivada la dma, volver
 	if (tsconf_dma_disabled.v) return;
+
 
 	for (;burst_number>0;burst_number--){
 		int i;
@@ -505,40 +558,71 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			destination &=destination_mask;
 			source &=source_mask;
 
-			if (dma_ddev==1 && dma_rw==1) { 
 
-				//printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero\n");
-				//edge_grinder usa esto
+		switch (dma_operation) {
 
-				//TODO de momento suponer 256 colores. 
-				if (source_pointer[source]) destination_pointer[destination]=source_pointer[source];
-				if (source_pointer[source+1]) destination_pointer[destination+1]=source_pointer[source+1];
-			}
+			case 2:
+					//printf ("RAM (Src) is copied to RAM (Dst)\n");
+					destination_pointer[destination]=source_pointer[source];
+					destination_pointer[destination+1]=source_pointer[source+1];	
+					destination +=2;
+					source +=2;
+			break;
 
-			else {
-				destination_pointer[destination]=source_pointer[source];
-				destination_pointer[destination+1]=source_pointer[source+1];	
-			}
+			case 3:
+					//printf ("Pixels from RAM (Src) are copied to RAM (Dst) if they non zero. addr_align_size: %d\n",addr_align_size);
+					//edge_grinder usa esto
+					tsconf_dma_put_pixel_ifnotzero(&destination_pointer[destination],source_pointer[source],addr_align_size);
+					tsconf_dma_put_pixel_ifnotzero(&destination_pointer[destination+1],source_pointer[source+1],addr_align_size);
+					destination +=2;
+					source +=2;
+
+			break;
+
+			case 8:
+					//printf ("RAM (Dst) is filled with word from RAM (Src)\n");
+					destination_pointer[destination]=source_pointer[source];
+					destination_pointer[destination+1]=source_pointer[source+1];	
+					destination +=2;
+
+			break;
+
+			case 9:
+					//printf ("RAM (Src) is copied to CRAM (Dst)\n");
+					destination_pointer[destination]=source_pointer[source];
+					destination_pointer[destination+1]=source_pointer[source+1];	
+					destination +=2;
+					source +=2;					
+	
+			break;
 
 
-			destination++;
-			destination++;
+			case 11:
+					//printf ("RAM (Src) is copied to SFILE (Dst)\n"); //Digger usa esto
+					destination_pointer[destination]=source_pointer[source];
+					destination_pointer[destination+1]=source_pointer[source+1];	
+					destination +=2;
+					source +=2;					
+	
+			break;
 
 
-			//Si es fill. 
-			if (dma_ddev==4 && dma_rw==0) {
-				
-			}
+			case 12:
+			//ldd.spg usa Unemulated dma type: rw: 0 ddev: 06H
+					//Pixels from RAM (Src) are blitted to RAM (Dst) with adder. De momento hacemos copia tal cual
+					//printf ("Pixels from RAM (Src) are blitted to RAM (Dst) with adder\n");
+					tsconf_dma_put_pixel_blit2(&destination_pointer[destination],source_pointer[source],addr_align_size,dma_opt);
+					tsconf_dma_put_pixel_blit2(&destination_pointer[destination+1],source_pointer[source+1],addr_align_size,dma_opt);
+					destination +=2;
+					source +=2;
+
+			break;
+
+
+		}
+
+
 			
-			else {
-				source++;
-				source++;
-			}
-
-
-			//if (dma_ddev==4 && dma_rw==0) {
-			//printf ("source: %06XH destination: %06XH\n",source,destination);
-			//}
 		}
 
 		if (d_align) {
@@ -671,9 +755,13 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 		z80_byte dma_d_algn=((tsconf_af_ports[0x27])>>4)&1;
 		z80_byte dma_s_algn=((tsconf_af_ports[0x27])>>5)&1;
 
+		z80_byte dma_opt=((tsconf_af_ports[0x27])>>6)&1;
+
 		//printf ("DMA movement type: ");
 
-		tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw);
+		tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw,dma_opt);
+
+		//void tsconf_dma_operation(int source,int destination,int burst_length,int burst_number,z80_byte s_align,z80_byte d_align,z80_byte addr_align_size,z80_byte dma_ddev,z80_byte dma_rw)
 
 		if (tsconf_dma_disabled.v==0) tsconf_fire_dma_interrupt();
 
