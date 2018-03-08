@@ -1626,7 +1626,8 @@ z80_int *tsconf_current_tile_written_pointer;
 void tsconf_put_tile_pixel(z80_int color,z80_byte spal)
 {
 	if (color) {
-		color=tsconf_return_cram_color(color+16*spal);
+		//color=tsconf_return_cram_color(color+16*spal);
+		color=tsconf_return_cram_color(color|spal);
 						*tsconf_current_tile_written_pointer=color;
 					tsconf_current_tile_written_pointer++;
 					*tsconf_current_tile_written_pointer=color;
@@ -2033,19 +2034,28 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 						
 				z80_int tnum=valor1+256*(valor2&15);
 
-				z80_byte tpal=(valor2>>4)&3;
+				//z80_byte tpal=(valor2>>4)&3;
+				z80_byte tpal=(valor2)&(32+16);
 				//Tile Palette Selector, bits 0-1. Bits 2-3 are taken from PalSel register bits 6-7 or 4-5, dependently on tiles layer 1 or 0.
 				z80_byte palsel=tsconf_af_ports[7];
 
 				z80_byte tpal_23;
 
-				if (layer==0) {
+				/*if (layer==0) {
 					tpal_23=(palsel>>2)&(4+8); //bits 4-5 los muevo a 2-3
 				}
 
 				else {
 					tpal_23=(palsel>>4)&(4+8); //bits 6-7 los muevo a 2-3
-				}
+				}*/
+
+                                if (layer==0) {
+                                        tpal_23=(palsel<<2)&(64+128); //bits 4-5 los muevo a 6-7
+                                }
+
+                                else {
+                                        tpal_23=(palsel)&(64+128); //bits 6-7 los dejo en 6-7
+                                }
 
 	
 				tpal |=tpal_23;
