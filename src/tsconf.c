@@ -733,6 +733,8 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
     tsconf_set_emulator_setting_turbo();
   }
 
+  if (puerto_h>=0x1A && puerto_h<=0x1F) debug_printf (VERBOSE_DEBUG,"Writing DMA source/dest register %02XH",puerto_h);
+
   if (puerto_h==0x27) {
 	  //Dmactrl
 	  //printf ("Writing DMA CTRL. value: %02XH\n",tsconf_af_ports[0x27]);
@@ -754,13 +756,13 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 		//printf ("DMA length: %d x %d = %d\n",dma_burst_length,dma_num,dma_length);
 
 		z80_byte dma_ddev=tsconf_af_ports[0x27]&7;
-		z80_byte dma_rw=((tsconf_af_ports[0x27])>>7)&1;
+		
 
 		z80_byte dma_a_sz=((tsconf_af_ports[0x27])>>3)&1;
 		z80_byte dma_d_algn=((tsconf_af_ports[0x27])>>4)&1;
 		z80_byte dma_s_algn=((tsconf_af_ports[0x27])>>5)&1;
-
 		z80_byte dma_opt=((tsconf_af_ports[0x27])>>6)&1;
+		z80_byte dma_rw=((tsconf_af_ports[0x27])>>7)&1;
 
 		//printf ("DMA movement type: ");
 
@@ -2181,7 +2183,9 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 
 				if (tile_yf) {
 					//printf ("y mirror\n");
-					sprite_origen +=7*256-desplazamiento_scanline;
+					//sprite_origen +=7*256-desplazamiento_scanline;
+					sprite_origen=sprite_origen+(7*256)-desplazamiento_scanline;
+
 				}
 				else {
         				sprite_origen +=desplazamiento_scanline;
