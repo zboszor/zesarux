@@ -14,7 +14,7 @@ The way of the exploding fist (no sound)
 ATV (1 channel)
 Lemmings (menu) (1 channel)
 Renegade: no sound on game (kicks, jumps, etc) but music does work
-
+Batman (the caped crusader) (menu) (no music at all)
 
 * Games not working due to not having floating bus port
 Arkanoid, Short Circuit 1,2, Cobra

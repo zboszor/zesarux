@@ -472,7 +472,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 	z80_byte dma_operation=dma_ddev*2+dma_rw;
 
-		debug_printf (VERBOSE_DEBUG,"DMA operation type: %s",tsconf_dma_types[dma_operation]);
+		//debug_printf (VERBOSE_DEBUG,"DMA operation type: %s",tsconf_dma_types[dma_operation]);
 
 
 
@@ -606,7 +606,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			break;
 
 			case 9:
-					printf ("RAM (Src) is copied to CRAM (Dst) source %06XH dest %06XH\n",source,destination);
+					//printf ("RAM (Src) is copied to CRAM (Dst) source %06XH dest %06XH\n",source,destination);
 					destination_pointer[destination]=source_pointer[source];
 					destination_pointer[destination+1]=source_pointer[source+1];	
 					destination +=2;
@@ -656,7 +656,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 	}
 
 	//Guardar los registros resultantes source, destination 
-	debug_printf (VERBOSE_DEBUG,"DMA pointers after DMA operation: source: %06XH destination: %06XH",source,destination);
+	//debug_printf (VERBOSE_DEBUG,"DMA pointers after DMA operation: source: %06XH destination: %06XH",source,destination);
 
 	tsconf_return_dma_addr_linear_to_reg(source,&tsconf_af_ports[0x1a],&tsconf_af_ports[0x1b],&tsconf_af_ports[0x1c]);
 	tsconf_return_dma_addr_linear_to_reg(destination,&tsconf_af_ports[0x1d],&tsconf_af_ports[0x1e],&tsconf_af_ports[0x1f]);
@@ -665,10 +665,10 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
           //printf ("Writing DMA CTRL. value: %02XH\n",tsconf_af_ports[0x27]);
 
-                int finaldmasource=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1a],tsconf_af_ports[0x1b],tsconf_af_ports[0x1c]);
-                int finaldmadest=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
+                //int finaldmasource=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1a],tsconf_af_ports[0x1b],tsconf_af_ports[0x1c]);
+                //int finaldmadest=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
 
-	debug_printf (VERBOSE_DEBUG,"DMA pointers after DMA operation and read from registers: source: %06XH destination: %06XH",finaldmasource,finaldmadest);
+	//debug_printf (VERBOSE_DEBUG,"DMA pointers after DMA operation and read from registers: source: %06XH destination: %06XH",finaldmasource,finaldmadest);
 
 }
 
@@ -762,7 +762,7 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
     tsconf_set_emulator_setting_turbo();
   }
 
-  if (puerto_h>=0x1A && puerto_h<=0x1F) debug_printf (VERBOSE_DEBUG,"Writing DMA source/dest register %02XH",puerto_h);
+  //if (puerto_h>=0x1A && puerto_h<=0x1F) debug_printf (VERBOSE_DEBUG,"Writing DMA source/dest register %02XH",puerto_h);
 
   if (puerto_h==0x27) {
 	  //Dmactrl
@@ -792,8 +792,8 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 		z80_byte dma_rw=((tsconf_af_ports[0x27])>>7)&1;
 
 		//printf ("DMA movement type: ");
-		debug_printf (VERBOSE_DEBUG,"Writing DMA DMA source: %06XH dest: %06XH DMALen: %02XH A_SZ: %d D_ALGN: %d S_ALGN: %d DMACtrl: %02XH DMANum: %02XH",
-			dmasource,dmadest,tsconf_af_ports[0x26],dma_a_sz,dma_d_algn,dma_s_algn,tsconf_af_ports[0x27],tsconf_af_ports[0x28]);
+		//debug_printf (VERBOSE_DEBUG,"Writing DMA DMA source: %06XH dest: %06XH DMALen: %02XH A_SZ: %d D_ALGN: %d S_ALGN: %d DMACtrl: %02XH DMANum: %02XH",
+		//	dmasource,dmadest,tsconf_af_ports[0x26],dma_a_sz,dma_d_algn,dma_s_algn,tsconf_af_ports[0x27],tsconf_af_ports[0x28]);
 
 		tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw,dma_opt);
 
@@ -3002,8 +3002,10 @@ void tsconf_handle_frame_interrupts(void)
 
 			//Generar interrupcion
 			tsconf_fire_frame_interrupt();
-			debug_printf (VERBOSE_DEBUG,"Fired frame interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d. vint_inc: %X",
-				int_raster_y,int_raster_x,t_scanline,estados_en_linea,(tsconf_af_ports[0x24]>>4)&0xF);
+
+			//debug_printf (VERBOSE_DEBUG,"Fired frame interrupt. VSINT: %d , HSINT: %d . scanline: %d , states in line: %d. vint_inc: %X",
+			//	int_raster_y,int_raster_x,t_scanline,estados_en_linea,(tsconf_af_ports[0x24]>>4)&0xF);
+
 			//printf ("Reg VSINTH: %d\n",tsconf_af_ports[0x24]);
 
 				//printf ("tsconf raster set to line %d x %d\n",int_raster_y,int_raster_x);
