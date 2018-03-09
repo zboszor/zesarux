@@ -767,7 +767,7 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 	  //printf ("Writing DMA CTRL. value: %02XH\n",tsconf_af_ports[0x27]);
 		int dmasource=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1a],tsconf_af_ports[0x1b],tsconf_af_ports[0x1c]);
 		int dmadest=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
-		debug_printf (VERBOSE_DEBUG,"Writing DMA DMA source: %XH dest: %XH DMALen: %02XH DMACtrl: %02XH DMANum: %02XH",
+		debug_printf (VERBOSE_DEBUG,"Writing DMA DMA source: %06XH dest: %06XH DMALen: %02XH DMACtrl: %02XH DMANum: %02XH",
 			dmasource,dmadest,tsconf_af_ports[0x26],tsconf_af_ports[0x27],tsconf_af_ports[0x28]);
 
 		//int dma_burst_length=(tsconf_af_ports[0x26]+1)*2;
