@@ -315,7 +315,8 @@ void tsconf_fire_dma_interrupt(void)
 
 }
 
-int tsconf_return_dma_address(z80_byte bajo,z80_byte medio,z80_byte alto)
+//Retorna direccion lineal dma en base a los 3 registros por separado
+int tsconf_return_dma_addr_reg_to_linear(z80_byte bajo,z80_byte medio,z80_byte alto)
 {
 
 //printf ("%d %d %d\n",bajo,medio,alto);
@@ -332,6 +333,18 @@ int tsconf_return_dma_address(z80_byte bajo,z80_byte medio,z80_byte alto)
 	//printf ("%d\n",final);
 
 	return final;
+}
+
+//Funcion contraria a la anterior, para una direccion lineal dma dada, retorna los 3 registros por separado
+void tsconf_return_dma_addr_linear_to_reg(int addr,z80_byte *bajo,z80_byte *medio,z80_byte *alto)
+{
+	*bajo=addr &1;
+	
+	addr >>=8;
+	*medio=addr & 63;
+
+	addr >>=6;
+	*alto=addr;
 }
 
 int tsconf_align_address(int orig_destination,int destination,int addr_align_size)
@@ -641,6 +654,20 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 
 
 	}
+
+	//Guardar los registros resultantes source, destination 
+	tsconf_return_dma_addr_linear_to_reg(source,&tsconf_af_ports[0x1a],&tsconf_af_ports[0x1b],&tsconf_af_ports[0x1c]);
+	tsconf_return_dma_addr_linear_to_reg(destination,&tsconf_af_ports[0x1d],&tsconf_af_ports[0x1e],&tsconf_af_ports[0x1f]);
+
+	//Sacar valores solo para debug
+
+          //printf ("Writing DMA CTRL. value: %02XH\n",tsconf_af_ports[0x27]);
+
+                int finaldmasource=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1a],tsconf_af_ports[0x1b],tsconf_af_ports[0x1c]);
+                int finaldmadest=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
+
+	debug_printf (VERBOSE_DEBUG,"DMA pointers after DMA operation: source: %06XH destination: %06XH",finaldmasource,finaldmadest);
+
 }
 
 
@@ -738,8 +765,8 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
   if (puerto_h==0x27) {
 	  //Dmactrl
 	  //printf ("Writing DMA CTRL. value: %02XH\n",tsconf_af_ports[0x27]);
-		int dmasource=tsconf_return_dma_address(tsconf_af_ports[0x1a],tsconf_af_ports[0x1b],tsconf_af_ports[0x1c]);
-		int dmadest=tsconf_return_dma_address(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
+		int dmasource=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1a],tsconf_af_ports[0x1b],tsconf_af_ports[0x1c]);
+		int dmadest=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
 		debug_printf (VERBOSE_DEBUG,"Writing DMA DMA source: %XH dest: %XH DMALen: %02XH DMACtrl: %02XH DMANum: %02XH",
 			dmasource,dmadest,tsconf_af_ports[0x26],tsconf_af_ports[0x27],tsconf_af_ports[0x28]);
 
