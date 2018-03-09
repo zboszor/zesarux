@@ -5,6 +5,7 @@ nombre fichero en ventana menu?
 tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
 
 Tsconf: escritura dma en fmaps
+tsconf: si se cambia a mismo valor turbo no hacer nada. No aplicable a todos los cores: puede ser que en inicializacion interese poner turbo x1 aunque ya este en turbo x1
 
 tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
