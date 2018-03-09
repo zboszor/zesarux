@@ -338,7 +338,7 @@ int tsconf_return_dma_addr_reg_to_linear(z80_byte bajo,z80_byte medio,z80_byte a
 //Funcion contraria a la anterior, para una direccion lineal dma dada, retorna los 3 registros por separado
 void tsconf_return_dma_addr_linear_to_reg(int addr,z80_byte *bajo,z80_byte *medio,z80_byte *alto)
 {
-	*bajo=addr &1;
+	*bajo=addr & 254;
 	
 	addr >>=8;
 	*medio=addr & 63;
