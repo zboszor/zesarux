@@ -606,7 +606,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			break;
 
 			case 9:
-					//printf ("RAM (Src) is copied to CRAM (Dst)\n");
+					printf ("RAM (Src) is copied to CRAM (Dst) source %06XH dest %06XH\n",source,destination);
 					destination_pointer[destination]=source_pointer[source];
 					destination_pointer[destination+1]=source_pointer[source+1];	
 					destination +=2;
@@ -656,6 +656,8 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 	}
 
 	//Guardar los registros resultantes source, destination 
+	debug_printf (VERBOSE_DEBUG,"DMA pointers after DMA operation: source: %06XH destination: %06XH",source,destination);
+
 	tsconf_return_dma_addr_linear_to_reg(source,&tsconf_af_ports[0x1a],&tsconf_af_ports[0x1b],&tsconf_af_ports[0x1c]);
 	tsconf_return_dma_addr_linear_to_reg(destination,&tsconf_af_ports[0x1d],&tsconf_af_ports[0x1e],&tsconf_af_ports[0x1f]);
 
@@ -666,7 +668,7 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
                 int finaldmasource=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1a],tsconf_af_ports[0x1b],tsconf_af_ports[0x1c]);
                 int finaldmadest=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
 
-	debug_printf (VERBOSE_DEBUG,"DMA pointers after DMA operation: source: %06XH destination: %06XH",finaldmasource,finaldmadest);
+	debug_printf (VERBOSE_DEBUG,"DMA pointers after DMA operation and read from registers: source: %06XH destination: %06XH",finaldmasource,finaldmadest);
 
 }
 
@@ -767,8 +769,6 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 	  //printf ("Writing DMA CTRL. value: %02XH\n",tsconf_af_ports[0x27]);
 		int dmasource=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1a],tsconf_af_ports[0x1b],tsconf_af_ports[0x1c]);
 		int dmadest=tsconf_return_dma_addr_reg_to_linear(tsconf_af_ports[0x1d],tsconf_af_ports[0x1e],tsconf_af_ports[0x1f]);
-		debug_printf (VERBOSE_DEBUG,"Writing DMA DMA source: %06XH dest: %06XH DMALen: %02XH DMACtrl: %02XH DMANum: %02XH",
-			dmasource,dmadest,tsconf_af_ports[0x26],tsconf_af_ports[0x27],tsconf_af_ports[0x28]);
 
 		//int dma_burst_length=(tsconf_af_ports[0x26]+1)*2;
 		int dma_burst_length=tsconf_af_ports[0x26];
@@ -792,6 +792,8 @@ ZXPAL      dw  #0000,#0010,#4000,#4010,#0200,#0210,#4200,#4210
 		z80_byte dma_rw=((tsconf_af_ports[0x27])>>7)&1;
 
 		//printf ("DMA movement type: ");
+		debug_printf (VERBOSE_DEBUG,"Writing DMA DMA source: %06XH dest: %06XH DMALen: %02XH A_SZ: %d D_ALGN: %d S_ALGN: %d DMACtrl: %02XH DMANum: %02XH",
+			dmasource,dmadest,tsconf_af_ports[0x26],dma_a_sz,dma_d_algn,dma_s_algn,tsconf_af_ports[0x27],tsconf_af_ports[0x28]);
 
 		tsconf_dma_operation(dmasource,dmadest,dma_burst_length,dma_num,dma_s_algn,dma_d_algn,dma_a_sz,dma_ddev,dma_rw,dma_opt);
 
