@@ -571,6 +571,9 @@ z80_bit do_no_show_changelog_when_update={0};
 
 int cpu_turbo_speed_antes=1;
 
+
+z80_bit set_machine_empties_audio_buffer={1};
+
 void cpu_set_turbo_speed(void)
 {
 
@@ -605,6 +608,7 @@ void cpu_set_turbo_speed(void)
 	//Variable turbo se sobreescribe al llamar a set_machine_params. Guardar y restaurar luego
 	int speed=cpu_turbo_speed;
 
+	set_machine_empties_audio_buffer.v=0; //para que no vacie buffer de sonido y asi sonido no se oye extraño
 	set_machine_params();
 
 	cpu_turbo_speed=speed;
@@ -2442,6 +2446,7 @@ void malloc_mem_machine(void) {
 }
 
 
+
 void set_machine_params(void)
 {
 
@@ -2629,7 +2634,10 @@ void set_machine_params(void)
 
 		screen_set_parameters_slow_machines();
 
-		audio_empty_buffer();
+		//Cuando se viene aqui desde cambio modo turbo, no interesa vaciar buffer, si no, se oye fatal. Ejemplo: uwol en tsconf
+		if (set_machine_empties_audio_buffer.v) audio_empty_buffer();
+
+		set_machine_empties_audio_buffer.v=1;
 
 		if (MACHINE_IS_CHLOE) chloe_keyboard.v=1;
 
