@@ -11,15 +11,9 @@ tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 revisar los que hayan cambiado.
 
-revisar timings tsconf
-
 que al hacer video out to file fuerce siempre a mostrar watermark
 
 Validar todos menus con speech 
-
-Opcion desactivar colores que solo va en realvideo off:
--Quitar atributos que se pueda aunque esté modo rainbow 
--Quizá simplemente una paleta grayscale y cuando haga render final, que convierta valores rgb a gris
 
 Opcion para forzar siempre snap grabar zsf de 48k
 
@@ -27,7 +21,6 @@ revisar todos menus que usan put pixel que se ajusten a tamaño ancho caracter: 
 
 Agregar todas desensamblado roms en txt 
 http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROMDisassembly4.htm
-
 
 Recreated: que funcione en windows y linux
 QL: lectura de bloques basic no siempre funciona
@@ -103,7 +96,6 @@ probado lo siguiente:
 ->Quiza solucion es que haga reseteo solo cuando se haya llenado 1 vez el buffer al menos
 ->ya no lo hace??
 
-
 -enter le envia siempre speech pending. normal?
 
 -eventos joystick para simular pgup, pgdn
@@ -117,17 +109,14 @@ probado lo siguiente:
 -agregar un handler especial para esas teclas. Pero entonces como se mueve uno por los ítems? Con tecla tab?
 Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En menú tabular, el tab sale?
 
-
 -Funcion genérico leer archivo y asignar memoria para browsers
 
 -Recreated Keyboard en Linux con fbdev
-
 
 -cargar scl:
 http://www.zx-modules.de/fileformats/sclformat.html
 
 -Config sinclair1/2 interface 2 joystick está bien? Ver página wos joystick
-
 
 -+3: funcionan :
 
@@ -158,17 +147,11 @@ deberia verse bien, pues se usan funciones de putchar igual que en menu. si real
 
 -autoload en +3 de cinta no va, seguramente porque al tener un dsk insertado, la rutina salta diferente (o le envia el enter antes)
 
--Menú utilidades archivos
-Convertir archivo
-
 
 -menus tabulados:
 TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, que permita:
-*quiza se pueda usar misma estructura de acciones de menu, pero simplemente mostrarlo diferente:
-**sin tooltip (o si?)
-**sin ayuda (o si?)
+
 **mover con cursor abajo/arriba e izquierda/derecha. TAB o ESC permite salir
-**hotkeys son importantes
 **en file utils, por su parte, tambien permito acciones directas como ahora con shift+tecla. o no?
 
 -betadisk: nmi no parece guardar el snapshot, aunque lo intenta
@@ -1423,6 +1406,11 @@ eliminar warnings de funciones sin definir como extern
 
 *** Video ***
 
+Opcion desactivar colores que solo va en realvideo off:
+-Quitar atributos que se pueda aunque esté modo rainbow 
+-Quizá simplemente una paleta grayscale y cuando haga render final, que convierta valores rgb a gris
+
+
 -interlaced con frameskip impar no dibuja bien el menu (se ve entrelazado el menu)
 
 -sdl2 peta con easter-egg en linux
@@ -1575,6 +1563,9 @@ Etc...
 
 *** Menu  ***
 
+-Menú utilidades archivos
+Convertir archivo
+
 -probar como hacer transparencia en menu:
 -un layer de color indexado 16 bits para pantalla de spectrum
 -otro layer de color indexado 16 bits solo para menu
@@ -1587,7 +1578,7 @@ Para ello, las rutinas que escriben texto en menu, deben usar otro destino desti
 que son comunes para zx8081 (y modo simulado zx81 de spectrum) y menu
 ->drivers de texto usaran texto sobre pantalla como hasta ahora
 
-
+-visor sprites: quizá mejorarlo para que se pueda elegir el incremento de salto para cada scanline... Por ejemplo, sprites de tsconf saltan de 256 en 256
 
 -unificar funciones de debug y visores de archivo, etc. Para diferentes fuentes de datos (archivo, memoria emulada) que se pueda ver sprites, ver hexa, ver pantalla, etc....
 

@@ -8091,7 +8091,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 		
 		sprintf(buffer_primera_linea,"~~Memptr In~~c+%d %s ~~O~~P~~Q~~A:Size ~~BPP",view_sprite_incremento,(view_sprites_scr_sprite ? "SC~~R" : "sc~~r") );
-		sprintf(buffer_segunda_linea, "~~Inverse %s %s",(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~Save" : ""),mensaje_texto_hardware);
+		sprintf(buffer_segunda_linea, "~~Inverse %s%s",(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~Save " : ""),mensaje_texto_hardware);
 		
 
 		menu_escribe_linea_opcion(linea++,-1,1,buffer_primera_linea);

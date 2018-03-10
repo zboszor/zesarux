@@ -2806,10 +2806,6 @@ void set_machine_params(void)
 							screen_invisible_borde_superior	=32; //para que sumen 320
 							screen_borde_superior=48;
 
-							//temp
-							//screen_invisible_borde_superior	=8; //para que sumen 320
-							//screen_borde_superior=56;
-
 							screen_total_borde_inferior=48;
 
 							/* Tiempos de tsconf:

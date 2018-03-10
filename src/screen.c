@@ -291,6 +291,7 @@ void screen_set_spectrum_palette_offset(void)
 	spectrum_palette_offset=0;
 }
 
+
 //Tabla con los colores reales del Z88. Formato RGB
 const int z88_colortable_original[4]={
 0x461B7D, //Enabled pixel
