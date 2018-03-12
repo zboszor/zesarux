@@ -717,7 +717,7 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
                 case SDL_SCANCODE_SPACE:
                         util_set_reset_key(UTIL_KEY_SPACE,pressrelease);
                 break;
-                
+
                 case SDL_SCANCODE_LEFT:
                         util_set_reset_key(UTIL_KEY_LEFT,pressrelease);
                 break;
@@ -812,7 +812,9 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
                                 util_set_reset_key(UTIL_KEY_F15,pressrelease);
                         break;
 
-                
+                        case SDL_SCANCODE_BACKSPACE:
+                                util_set_reset_key(UTIL_KEY_BACKSPACE,pressrelease);
+                        break;                
                 
 
 	}

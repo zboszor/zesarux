@@ -47,6 +47,7 @@ extern void scrsdl_messages_debug(char *s);
 #define ZESARUX_SDL_SCANCODE_9 18
 #define ZESARUX_SDL_SCANCODE_0 19
 
+#define ZESARUX_SDL_SCANCODE_BACKSPACE 22
 
 #define ZESARUX_SDL_SCANCODE_Q 24
 #define ZESARUX_SDL_SCANCODE_W 25
