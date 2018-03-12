@@ -2,6 +2,12 @@
 
 nombre fichero en ventana menu?
 
+lectura raw en sdl:
+-sdl2 de mac y linux generan mismos valores numeros para scancode. tampoco seria un problema pues todos scancodes tienen valores enum definidos
+-que sucede con scancodes de sdl1 en mac, linux  y windows ? son iguales? si no, quiza tener tres tablas, una para conversion de linux y otra de mac y otra de windows?
+
+al instalar de nuevo ZEsarUX, siempre dice: you have updated.... Ver que solo salga esto si habia archivo de configuracion antes y existia parametro --last-version
+
 tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
 
 Tsconf: escritura dma en fmaps
