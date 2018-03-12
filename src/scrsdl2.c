@@ -693,10 +693,13 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
                         util_set_reset_key('m',pressrelease);
                 break;
 
+                case SDL_SCANCODE_COMMA:
+			util_set_reset_key(',',pressrelease);
+                break;                
+
 		case SDL_SCANCODE_PERIOD:
 			util_set_reset_key('.',pressrelease);
                 break;
-
 
 		case SDL_SCANCODE_LSHIFT:
 			util_set_reset_key(UTIL_KEY_SHIFT_L,pressrelease);
