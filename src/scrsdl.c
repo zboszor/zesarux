@@ -972,7 +972,7 @@ void scrsdl_actualiza_tablas_teclado(void)
 				else if (keysym.scancode==48) tecla=SDLK_COMPOSE_APOSTROPHE;
 			}
 
-			//printf ("tecla: %d scancode: %d\n",tecla,scancode);
+			printf ("tecla: %d scancode: %d\n",tecla,scancode);
 
 			if (pressrelease) notificar_tecla_interrupcion_si_z88();
 
