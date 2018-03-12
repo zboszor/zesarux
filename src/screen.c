@@ -272,6 +272,7 @@ int spectrum_colortable_1648_real[16] =
 int *screen_return_spectrum_palette(void)
 {
 	//Retorna la tabla de colores basicos de spectrum 0-16 segun si paleta real activa y segun si maquina tiene paleta diferente o no
+	//Paleta real segun info de Richard Atkinson
 
         if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
                 if (spectrum_1648_use_real_palette.v) {
@@ -283,13 +284,6 @@ int *screen_return_spectrum_palette(void)
 }
 
 
-//Offset a paleta de colores spectrum. Se cambia en el caso de Spectrum 16/48/+, para usar nueva paleta real de Richard Atkinson
-//Se asigna al seleccionar maquina y tambien al cambiar setting desde menu
-//Si maquina es:
-//#define MACHINE_ID_SPECTRUM_16                  0
-//#define MACHINE_ID_SPECTRUM_48                  1
-//Y setting de color real esta activo
-int spectrum_palette_offset=0;
 
 z80_bit spectrum_1648_use_real_palette={0};
 
@@ -1179,7 +1173,7 @@ void scr_refresca_border_comun_spectrumzx8081(unsigned int color)
 	int topborder=TOP_BORDER;
 	if (MACHINE_IS_ZX8081ACE) topborder=ZX8081ACE_TOP_BORDER;
 
-	color +=spectrum_palette_offset;
+	//color +=spectrum_palette_offset;
 
 
         //parte superior
@@ -3628,7 +3622,7 @@ void scr_refresca_pantalla_comun(void)
 
                         	for (bit=0;bit<8;bit++) {
 
-					color= spectrum_palette_offset + ( byte_leido & 128 ? ink : paper );
+					color= ( byte_leido & 128 ? ink : paper );
 					scr_putpixel_zoom(x_hi+bit,y,color);
 
 	                                byte_leido=byte_leido<<1;
@@ -4361,7 +4355,7 @@ unsigned int screen_store_scanline_border_si_incremento_real(unsigned int color_
 {
 	//if (ulaplus_presente.v==0 && spectra_enabled.v==0) color_border +=spectrum_palette_offset;
 
-	color_border +=spectrum_palette_offset;
+	//color_border +=spectrum_palette_offset;
 
 	return color_border;
 }

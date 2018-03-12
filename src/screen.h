@@ -641,8 +641,8 @@ agregando duplicidad de funciones sin verdadera necesidad...
                 GET_PIXEL_ULAPLUS_COLOR \
             } \
             else { \
-                        ink=spectrum_palette_offset+(attribute &7); \
-                        paper=spectrum_palette_offset+((attribute>>3) &7); \
+                        ink=attribute &7; \
+                        paper=(attribute>>3) &7; \
                         bright=(attribute)&64; \
                         flash=(attribute)&128; \
                         if (flash) { \
@@ -686,7 +686,6 @@ agregando duplicidad de funciones sin verdadera necesidad...
 //#define store_value_rainbow(p,x) store_value_rainbow_debug(&p,x);            
 
 
-extern int spectrum_palette_offset;
 extern z80_bit spectrum_1648_use_real_palette;
 
 extern void screen_set_spectrum_palette_offset(void);
