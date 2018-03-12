@@ -35,6 +35,7 @@ extern void scrsdl_debug_registers(void);
 extern void scrsdl_messages_debug(char *s);
 
 
+#define ZESARUX_SDL_SCANCODE_ESCAPE 9
 #define ZESARUX_SDL_SCANCODE_1 10
 #define ZESARUX_SDL_SCANCODE_2 11
 #define ZESARUX_SDL_SCANCODE_3 12
@@ -58,6 +59,9 @@ extern void scrsdl_messages_debug(char *s);
 #define ZESARUX_SDL_SCANCODE_O 32
 #define ZESARUX_SDL_SCANCODE_P 33
 
+#define ZESARUX_SDL_SCANCODE_RETURN 36
+#define ZESARUX_SDL_SCANCODE_LCTRL 37
+
 #define ZESARUX_SDL_SCANCODE_A 38
 #define ZESARUX_SDL_SCANCODE_S 39
 #define ZESARUX_SDL_SCANCODE_D 40
@@ -80,5 +84,10 @@ extern void scrsdl_messages_debug(char *s);
 
 #define ZESARUX_SDL_SCANCODE_PERIOD 60
 
+
+#define ZESARUX_SDL_SCANCODE_LEFT 113
+#define ZESARUX_SDL_SCANCODE_RIGHT 114
+#define ZESARUX_SDL_SCANCODE_DOWN 116
+#define ZESARUX_SDL_SCANCODE_UP 111
 
 #endif

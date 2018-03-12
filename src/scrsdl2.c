@@ -701,7 +701,36 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
 		case SDL_SCANCODE_LSHIFT:
 			util_set_reset_key(UTIL_KEY_SHIFT_L,pressrelease);
 		break;
-			
+
+                case SDL_SCANCODE_LCTRL:
+			util_set_reset_key(UTIL_KEY_CONTROL_L,pressrelease);
+		break;
+
+                case SDL_SCANCODE_ESCAPE:
+                        util_set_reset_key(UTIL_KEY_ESC,pressrelease);
+                break;
+
+                case SDL_SCANCODE_RETURN:
+                        util_set_reset_key(UTIL_KEY_ENTER,pressrelease);
+                break;
+
+
+                case SDL_SCANCODE_LEFT:
+                        util_set_reset_key(UTIL_KEY_LEFT,pressrelease);
+                break;
+
+                case SDL_SCANCODE_RIGHT:
+                        util_set_reset_key(UTIL_KEY_RIGHT,pressrelease);
+                break;
+
+                case SDL_SCANCODE_DOWN:
+                        util_set_reset_key(UTIL_KEY_DOWN,pressrelease);
+                break;
+
+                case SDL_SCANCODE_UP:
+                        util_set_reset_key(UTIL_KEY_UP,pressrelease);
+                break;
+                
 
 	}
 }

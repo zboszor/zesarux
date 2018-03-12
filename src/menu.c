@@ -16525,6 +16525,10 @@ void menu_hardware_recreated_keyboard(MENU_ITEM_PARAMETERS)
 	recreated_zx_keyboard_support.v ^=1;
 }
 
+void menu_hardware_sdl_raw_read(MENU_ITEM_PARAMETERS)
+{
+	sdl_raw_keyboard_read.v ^=1;
+}
 
 //menu keyboard settings
 void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
@@ -16562,6 +16566,16 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_recreated_keyboard,NULL,"ZX Recreated support: %s",
 			(recreated_zx_keyboard_support.v ? "Yes" : "No") );
+
+#ifdef COMPILE_SDL
+		if (!strcmp(scr_driver_name,"sdl")) {
+			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_sdl_raw_read,NULL,"SDL Raw keyboard: %s",
+				(sdl_raw_keyboard_read.v ? "Yes" : "No") );
+			menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Read the keyboard using raw mode. Needed for ZX Recreated to work");
+				menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Read the keyboard using raw mode. Needed for ZX Recreated to work");
+		}
+#endif
+
 
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_chloe_keyboard,NULL,"Chloe Keyboard: %s",(chloe_keyboard.v ? "Yes" : "No") );
