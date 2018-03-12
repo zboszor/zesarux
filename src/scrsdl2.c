@@ -69,7 +69,7 @@ SDL_Renderer *renderer;
 
 
 //Si se lee teclado mediante scancodes raw en vez de usar localizacion de teclado
-z80_bit sdl_raw_keyboard_read={1};
+z80_bit sdl_raw_keyboard_read={0};
 
 
 int scrsdl_crea_ventana(void)
@@ -693,6 +693,16 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
                 case SDL_SCANCODE_M:
                         util_set_reset_key('m',pressrelease);
                 break;
+
+		case SDL_SCANCODE_PERIOD:
+			util_set_reset_key('.',pressrelease);
+                break;
+
+
+		case SDL_SCANCODE_LSHIFT:
+			util_set_reset_key(UTIL_KEY_SHIFT_L,pressrelease);
+		break;
+			
 
 	}
 }
