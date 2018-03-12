@@ -179,7 +179,7 @@ int scrstdout_simpletext_refresh_factor=5;
 
 total_palette_colours total_palette_colours_array[TOTAL_PALETAS_COLORES]={
 	{"Speccy","16 colour standard",0,SPECCY_TOTAL_PALETTE_COLOURS},
-	{"SpeccyReal","Real 16/48/+ palette",SPECCY_1648_REAL_PALETTE_FIRST_COLOR,SPECCY_1648_REAL_PALETTE_COLOURS},
+	//{"SpeccyReal","Real 16/48/+ palette",SPECCY_1648_REAL_PALETTE_FIRST_COLOR,SPECCY_1648_REAL_PALETTE_COLOURS},
 	{"Gigascreen","256 gigascreen",SPECCY_TOTAL_PALETTE_COLOURS+SPECCY_GREY_SCANLINE_TOTAL_PALETTE_COLOURS,GIGASCREEN_TOTAL_PALETTE_COLOURS},
 	{"Z88","Z88 4 colour",Z88_PXCOLON,Z88_TOTAL_PALETTE_COLOURS},
 	{"ULAPlus","ULAPlus GRB palette",ULAPLUS_INDEX_FIRST_COLOR,ULAPLUS_TOTAL_PALETTE_COLOURS},
@@ -297,6 +297,7 @@ void screen_set_spectrum_palette_offset(void)
 {
 	return;
 	//Esto ya no se hace asi....
+	/*
 
 	if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
 		if (spectrum_1648_use_real_palette.v && ulaplus_presente.v==0 && spectra_enabled.v==0 && gigascreen_enabled.v==0 && video_interlaced_scanlines.v==0) {
@@ -306,6 +307,7 @@ void screen_set_spectrum_palette_offset(void)
 	}
 
 	spectrum_palette_offset=0;
+	*/
 }
 
 
@@ -7348,6 +7350,7 @@ G  G   R   R   B   B
 
 
 			//trama de grises para spectrum 16/48/+ real
+			/*
 			for (i=0;i<16;i++) {
                                 valorgris=(i&7)*GRAY_MODE_CONST;
 
@@ -7361,6 +7364,7 @@ G  G   R   R   B   B
 
 			//El color 8 es negro, con brillo 1. Pero negro igual
                         screen_set_colour_normal(SPECCY_1648_REAL_PALETTE_FIRST_COLOR+8,0);
+			*/
 
 			//trama de grises para ulaplus
 			//z80_byte color;
@@ -7467,10 +7471,12 @@ G  G   R   R   B   B
 
 
 			//Colores reales de spectrum 16/48/+
+			/*
 			for (i=0;i<16;i++) {
                                 debug_printf(VERBOSE_DEBUG,"Initializing Standard Spectrum 16/48/+ Real Color. Index: %i  Value: %06XH",i,spectrum_colortable_1648_real[i]);
                                 screen_set_colour_normal(SPECCY_1648_REAL_PALETTE_FIRST_COLOR+i,spectrum_colortable_1648_real[i]);
                         }
+			*/
 
 			//colores ulaplus
 			//ulaplus_rgb_table
