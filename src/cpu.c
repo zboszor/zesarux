@@ -295,6 +295,10 @@ z80_bit snow_effect_enabled;
 z80_bit test_config_and_exit={0};
 
 
+//SDL : Si se lee teclado mediante scancodes raw en vez de usar localizacion de teclado
+z80_bit sdl_raw_keyboard_read={0};
+
+
 void add_scr_init_array(char *name,int (*funcion_init) () , int (*funcion_set) () )
 {
 	if (num_scr_driver_array==MAX_SCR_INIT) {

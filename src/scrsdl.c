@@ -61,8 +61,7 @@ SDL_Surface *sdl_screen;
 int scrsdl_debe_redimensionar=0;
 
 
-//Si se lee teclado mediante scancodes raw en vez de usar localizacion de teclado
-z80_bit sdl_raw_keyboard_read={0};
+
 
 int scrsdl_crea_ventana(void)
 {

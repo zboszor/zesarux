@@ -68,8 +68,7 @@ SDL_Renderer *renderer;
 #define SDL_ALTO_VENTANA screen_get_window_size_height_zoom_border_en()
 
 
-//Si se lee teclado mediante scancodes raw en vez de usar localizacion de teclado
-z80_bit sdl_raw_keyboard_read={0};
+
 
 
 int scrsdl_crea_ventana(void)

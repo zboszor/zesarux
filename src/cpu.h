@@ -482,5 +482,7 @@ extern int exit_emulator_after_seconds_counter;
 
 extern z80_bit do_no_show_changelog_when_update;
 
+extern z80_bit sdl_raw_keyboard_read;
+
 
 #endif
