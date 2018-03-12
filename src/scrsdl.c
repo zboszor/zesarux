@@ -672,6 +672,10 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
                         util_set_reset_key(UTIL_KEY_ENTER,pressrelease);
                 break;  
 
+                case ZESARUX_SDL_SCANCODE_SPACE:
+                        util_set_reset_key(UTIL_KEY_SPACE,pressrelease);
+                break;
+
                 case ZESARUX_SDL_SCANCODE_LEFT:
                         util_set_reset_key(UTIL_KEY_LEFT,pressrelease);
                 break;
@@ -686,7 +690,86 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
 
                 case ZESARUX_SDL_SCANCODE_UP:
                         util_set_reset_key(UTIL_KEY_UP,pressrelease);
-                break;                                           
+                break;  
+
+                        //F1 pulsado
+                        case ZESARUX_SDL_SCANCODE_F1:
+                                util_set_reset_key(UTIL_KEY_F1,pressrelease);
+                        break;
+
+                        //F2 pulsado
+                        case ZESARUX_SDL_SCANCODE_F2:
+                                util_set_reset_key(UTIL_KEY_F2,pressrelease);
+                        break;
+
+                        //F3 pulsado
+                        case ZESARUX_SDL_SCANCODE_F3:
+                                util_set_reset_key(UTIL_KEY_F3,pressrelease);
+                        break;
+
+                        //F4 pulsado
+                        case ZESARUX_SDL_SCANCODE_F4:
+                                util_set_reset_key(UTIL_KEY_F4,pressrelease);
+                        break;
+
+                        //F5 pulsado
+                        case ZESARUX_SDL_SCANCODE_F5:
+                                util_set_reset_key(UTIL_KEY_F5,pressrelease);
+                        break;
+
+                        //F6 pulsado
+                        case ZESARUX_SDL_SCANCODE_F6:
+                                util_set_reset_key(UTIL_KEY_F6,pressrelease);
+                        break;
+
+                        //F7 pulsado
+                        case ZESARUX_SDL_SCANCODE_F7:
+                                util_set_reset_key(UTIL_KEY_F7,pressrelease);
+                        break;
+
+
+                        //F8 pulsado. osdkeyboard
+                        case ZESARUX_SDL_SCANCODE_F8:
+                                util_set_reset_key(UTIL_KEY_F8,pressrelease);
+                        break;
+
+                        //F9 pulsado. quickload
+                        case ZESARUX_SDL_SCANCODE_F9:
+                                util_set_reset_key(UTIL_KEY_F9,pressrelease);
+                        break;
+
+
+                        //F10 pulsado
+                        case ZESARUX_SDL_SCANCODE_F10:
+                                util_set_reset_key(UTIL_KEY_F10,pressrelease);
+                        break;
+
+
+                        //F11 pulsado
+                        case ZESARUX_SDL_SCANCODE_F11:
+                                util_set_reset_key(UTIL_KEY_F11,pressrelease);
+                        break;
+
+                        //F12 pulsado
+                        case ZESARUX_SDL_SCANCODE_F12:
+                                util_set_reset_key(UTIL_KEY_F12,pressrelease);
+                        break;
+
+                        //F13 pulsado
+                        case ZESARUX_SDL_SCANCODE_F13:
+                                util_set_reset_key(UTIL_KEY_F13,pressrelease);
+                        break;
+
+                        //F14 pulsado
+                        case ZESARUX_SDL_SCANCODE_F14:
+                                util_set_reset_key(UTIL_KEY_F14,pressrelease);
+                        break;
+
+                        //F15 pulsado
+                        case ZESARUX_SDL_SCANCODE_F15:
+                                util_set_reset_key(UTIL_KEY_F15,pressrelease);
+                        break;
+                                                         
 			
 
         }
