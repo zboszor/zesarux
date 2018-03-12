@@ -5342,6 +5342,7 @@ void util_set_reset_key_convert_recreated_yesno(enum util_teclas tecla,int press
 
 void util_set_reset_key(enum util_teclas tecla,int pressrelease)
 {
+        printf ("util_set_reset_key tecla: %d pressrelease: %d\n",tecla,pressrelease);
 	util_set_reset_key_convert_recreated_yesno(tecla,pressrelease,1);
 }
 

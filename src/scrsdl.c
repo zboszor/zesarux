@@ -776,7 +776,15 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
 
                 case ZESARUX_SDL_SCANCODE_BACKSPACE:
                         util_set_reset_key(UTIL_KEY_BACKSPACE,pressrelease);
-                break;                                                               
+                break;   
+
+                case ZESARUX_SDL_SCANCODE_LEFTBRACKET:
+                        util_set_reset_key('[',pressrelease);
+                break;              
+
+                case ZESARUX_SDL_SCANCODE_RIGHTBRACKET:
+                        util_set_reset_key(']',pressrelease);
+                break;                                                                                
 			
 
         }

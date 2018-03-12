@@ -815,9 +815,17 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
                                 util_set_reset_key(UTIL_KEY_F15,pressrelease);
                         break;
 
-                        case SDL_SCANCODE_BACKSPACE:
-                                util_set_reset_key(UTIL_KEY_BACKSPACE,pressrelease);
-                        break;                
+                case SDL_SCANCODE_BACKSPACE:
+                        util_set_reset_key(UTIL_KEY_BACKSPACE,pressrelease);
+                break;                
+
+                case SDL_SCANCODE_LEFTBRACKET:
+                        util_set_reset_key('[',pressrelease);
+                break;              
+
+                case SDL_SCANCODE_RIGHTBRACKET:
+                        util_set_reset_key(']',pressrelease);
+                break;                     
                 
 
 	}

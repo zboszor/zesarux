@@ -328,8 +328,8 @@ COCOA_KEY_KP5,
 COCOA_KEY_KP6,
 COCOA_KEY_KP7,
 0,  //90
-COCOA_KEY_KP8,
-COCOA_KEY_KP9,
+COCOA_KEY_KP8,  //91
+COCOA_KEY_KP9,  //93
 0,
 0,
 0,
@@ -1364,7 +1364,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
 
 	if (pressrelease) notificar_tecla_interrupcion_si_z88();
 
-        //printf ("teclareal %d pressrelease: %d\n",teclareal,pressrelease);
+        printf ("teclareal %d pressrelease: %d\n",teclareal,pressrelease);
 
 	//Teclas que necesitan conversion de teclado para Chloe
 	int tecla_gestionada_chloe=0;
