@@ -3644,7 +3644,7 @@ void convert_numeros_letras_puerto_teclado_continue(z80_byte tecla,int pressrele
 
 
        //Si teclado recreated, y menu cerrado
-       if (!menu_abierto && recreated_zx_keyboard_support.v) {
+       /*if (!menu_abierto && recreated_zx_keyboard_support.v) {
 
                enum util_teclas tecla_final;
                int pressrelease_final;
@@ -3679,7 +3679,7 @@ void convert_numeros_letras_puerto_teclado_continue(z80_byte tecla,int pressrele
                        	return;
                        }
                }
-       }
+       }*/
 
        convert_numeros_letras_puerto_teclado_continue_after_recreated(tecla,pressrelease);
 }
@@ -5165,7 +5165,6 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
 }
 
 void util_set_reset_key_convert_recreated_yesno(enum util_teclas tecla,int pressrelease,int convertrecreated)
-//void util_set_reset_key(enum util_teclas tecla,int pressrelease)
 {
 
 
@@ -6541,7 +6540,7 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 
 			//Chapuza. Para gestion de z y b del teclado recreated
 			//La solucion elegante seria que para activar un puerto de tecla, se usase solo util_set_reset_keys, 
-			//y nadie llamase a conver_numeros_teclas_teclado. Para ello, todas las teclas fuera de lo ascii (ctrl, alt, etc)
+			//y nadie llamase a convert_numeros_letras_puerto_teclado . Para ello, todas las teclas fuera de lo ascii (ctrl, alt, etc)
 			//deben tener una numeracion fuera de lo ascii normal (128 en adelante?)
 			//Esta chapuza que hago tambien esta provocando que se llame a la funcion de recreated_zx_spectrum_keyboard_convert
 			//desde dos sitios, cuando deberia llamarse solo desde un sitio
