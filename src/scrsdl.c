@@ -497,8 +497,171 @@ void scrsdl_z88_cpc_load_keymap(void)
         }
 }
 
-void scrsdl_deal_raw_keys(int pressrelease,int tecla)
+void scrsdl_deal_raw_keys(int pressrelease,int scancode)
 {
+        //parece que el scancode de linux de sdl1 es el mismo que windows pero sumando 8
+#ifdef MINGW
+        tecla +=8;
+#endif
+
+	printf ("scrsdl_deal_raw_keys: scancode: %d pressrelease: %d\n",scancode,pressrelease);
+
+	switch (scancode) {
+		case ZESARUX_SDL_SCANCODE_0:
+			util_set_reset_key('0',pressrelease);
+		break;
+
+		case ZESARUX_SDL_SCANCODE_1:
+			util_set_reset_key('1',pressrelease);
+		break;
+
+		case ZESARUX_SDL_SCANCODE_2:
+			util_set_reset_key('2',pressrelease);
+		break;
+
+		case ZESARUX_SDL_SCANCODE_3:
+			util_set_reset_key('3',pressrelease);
+		break;
+
+		case ZESARUX_SDL_SCANCODE_4:
+			util_set_reset_key('4',pressrelease);
+		break;
+
+		case ZESARUX_SDL_SCANCODE_5:
+			util_set_reset_key('5',pressrelease);
+		break;
+
+		case ZESARUX_SDL_SCANCODE_6:
+			util_set_reset_key('6',pressrelease);
+		break;
+
+		case ZESARUX_SDL_SCANCODE_7:
+			util_set_reset_key('7',pressrelease);
+		break;
+
+		case ZESARUX_SDL_SCANCODE_8:
+			util_set_reset_key('8',pressrelease);
+		break;
+
+		case ZESARUX_SDL_SCANCODE_9:
+			util_set_reset_key('9',pressrelease);
+		break;
+
+                case ZESARUX_SDL_SCANCODE_Q:
+                        util_set_reset_key('q',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_W:
+                        util_set_reset_key('w',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_E:
+                        util_set_reset_key('e',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_R:
+                        util_set_reset_key('r',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_T:
+                        util_set_reset_key('t',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_Y:
+                        util_set_reset_key('y',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_U:
+                        util_set_reset_key('u',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_I:
+                        util_set_reset_key('i',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_O:
+                        util_set_reset_key('o',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_P:
+                        util_set_reset_key('p',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_A:
+                        util_set_reset_key('a',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_S:
+                        util_set_reset_key('s',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_D:
+                        util_set_reset_key('d',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_F:
+                        util_set_reset_key('f',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_G:
+                        util_set_reset_key('g',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_H:
+                        util_set_reset_key('h',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_J:
+                        util_set_reset_key('j',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_K:
+                        util_set_reset_key('k',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_L:
+                        util_set_reset_key('l',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_Z:
+                        util_set_reset_key('z',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_X:
+                        util_set_reset_key('x',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_C:
+                        util_set_reset_key('c',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_V:
+                        util_set_reset_key('v',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_B:
+                        util_set_reset_key('b',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_N:
+                        util_set_reset_key('n',pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_M:
+                        util_set_reset_key('m',pressrelease);
+                break;
+
+		case ZESARUX_SDL_SCANCODE_PERIOD:
+			util_set_reset_key('.',pressrelease);
+                break;
+
+
+		case ZESARUX_SDL_SCANCODE_LSHIFT:
+			util_set_reset_key(UTIL_KEY_SHIFT_L,pressrelease);
+		break;
+			
+
+        }
 }
 
 
@@ -985,7 +1148,7 @@ void scrsdl_actualiza_tablas_teclado(void)
 			if (pressrelease) notificar_tecla_interrupcion_si_z88();
 
 
-			if (sdl_raw_keyboard_read.v) scrsdl_deal_raw_keys(pressrelease,tecla);
+			if (sdl_raw_keyboard_read.v) scrsdl_deal_raw_keys(pressrelease,scancode);
 			else scrsdl_deal_keys(pressrelease,tecla);
 
 		}

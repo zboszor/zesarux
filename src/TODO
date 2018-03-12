@@ -5,6 +5,7 @@ nombre fichero en ventana menu?
 lectura raw en sdl:
 -sdl2 de mac y linux generan mismos valores numeros para scancode. tampoco seria un problema pues todos scancodes tienen valores enum definidos
 -que sucede con scancodes de sdl1 en mac, linux  y windows ? son iguales? si no, quiza tener tres tablas, una para conversion de linux y otra de mac y otra de windows?
+SDL1 de windows genera diferentes scancodes que SDL1 de Linux-> parece que el scancode de linux de sdl1 es el mismo que windows pero sumando 8
 
 
 tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
