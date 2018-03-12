@@ -501,7 +501,7 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
 {
         //parece que el scancode de linux de sdl1 es el mismo que windows pero sumando 8
 #ifdef MINGW
-        tecla +=8;
+        scancode +=8;
 #endif
 
 	printf ("scrsdl_deal_raw_keys: scancode: %d pressrelease: %d\n",scancode,pressrelease);
