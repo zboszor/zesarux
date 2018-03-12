@@ -2639,6 +2639,10 @@ void set_machine_params(void)
 
 		set_machine_empties_audio_buffer.v=1;
 
+
+		//Inicializar paletas de colores. Colores basicos de spectrum y algunos derivados (gigascreen, etc) dependen de si paleta real activa y segun que maquina
+		screen_init_colour_table();
+
 		if (MACHINE_IS_CHLOE) chloe_keyboard.v=1;
 
 		//Cargar keymap de manera generica. De momento solo se usa en Z88, CPC y Chloe

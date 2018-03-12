@@ -225,7 +225,7 @@ int spectrum_colortable_normal[EMULATOR_TOTAL_PALETTE_COLOURS];
 int spectrum_colortable_blanco_y_negro[EMULATOR_TOTAL_PALETTE_COLOURS];
 
 //Tabla con los colores reales del Spectrum. Formato RGB
-const int spectrum_colortable_original[16] =
+int spectrum_colortable_original_new[16] =
 {
 
 0x000000,  //negro
@@ -249,7 +249,7 @@ const int spectrum_colortable_original[16] =
 };
 
 //Tabla con los colores exactamente iguales para Spectrum 16/48/+, segun calculos de Richard Atkinson
-const int spectrum_colortable_1648_real[16] =
+int spectrum_colortable_1648_real[16] =
 {
 0x060800,
 0x0D13A7,
@@ -268,6 +268,20 @@ const int spectrum_colortable_1648_real[16] =
 0xEEEB46,
 0xFDFFF7
 };
+
+int *screen_return_spectrum_palette(void)
+{
+	//Retorna la tabla de colores basicos de spectrum 0-16 segun si paleta real activa y segun si maquina tiene paleta diferente o no
+
+        if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
+                if (spectrum_1648_use_real_palette.v) {
+			return spectrum_colortable_1648_real;
+                }
+        }
+
+	return spectrum_colortable_original_new;
+}
+
 
 //Offset a paleta de colores spectrum. Se cambia en el caso de Spectrum 16/48/+, para usar nueva paleta real de Richard Atkinson
 //Se asigna al seleccionar maquina y tambien al cambiar setting desde menu
@@ -7430,9 +7444,15 @@ G  G   R   R   B   B
 			//si no gris
 			//spectrum_colortable_normal=(int *)spectrum_colortable_original;
 			int i;
+			int color32;
+			int *paleta;
+			paleta=screen_return_spectrum_palette();
 			for (i=0;i<16;i++) {
-				debug_printf(VERBOSE_DEBUG,"Initializing Standard Spectrum Color. Index: %i  Value: %06XH",i,spectrum_colortable_original[i]);
-				screen_set_colour_normal(i,spectrum_colortable_original[i]);
+				color32=paleta[i];
+				//debug_printf(VERBOSE_DEBUG,"Initializing Standard Spectrum Color. Index: %i  Value: %06XH",i,spectrum_colortable_original[i]);
+				//screen_set_colour_normal(i,spectrum_colortable_original[i]);
+				debug_printf(VERBOSE_DEBUG,"Initializing Standard Spectrum Color. Index: %i  Value: %06XH",i,color32);
+				screen_set_colour_normal(i,color32);
 			}
 
 
@@ -7453,7 +7473,6 @@ G  G   R   R   B   B
 			//ulaplus_rgb_table
 			//ULAPLUS_INDEX_FIRST_COLOR
 
-			int color32;
 			for (i=0;i<256;i++) {
 				color32=ulaplus_rgb_table[i];
 				debug_printf(VERBOSE_DEBUG,"Initializing ULAPlus Color. Index: %i  Value: %06XH",i,color32);
