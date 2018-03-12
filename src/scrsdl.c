@@ -784,7 +784,27 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
 
                 case ZESARUX_SDL_SCANCODE_RIGHTBRACKET:
                         util_set_reset_key(']',pressrelease);
-                break;                                                                                
+                break;     
+
+                case ZESARUX_SDL_SCANCODE_MINUS:
+                        util_set_reset_key('-',pressrelease);
+                break;                                            
+
+                case ZESARUX_SDL_SCANCODE_EQUALS:
+                        util_set_reset_key('=',pressrelease);
+                break; 
+
+                case ZESARUX_SDL_SCANCODE_SEMICOLON:
+                        util_set_reset_key(';',pressrelease);
+                break;                     
+
+                case ZESARUX_SDL_SCANCODE_APOSTROPHE:
+                        util_set_reset_key('\'',pressrelease);
+                break;  
+
+                case ZESARUX_SDL_SCANCODE_SLASH:
+                        util_set_reset_key('/',pressrelease);
+                break;                                                                                                                                 
 			
 
         }

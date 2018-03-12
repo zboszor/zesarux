@@ -47,6 +47,9 @@ extern void scrsdl_messages_debug(char *s);
 #define ZESARUX_SDL_SCANCODE_9 18
 #define ZESARUX_SDL_SCANCODE_0 19
 
+#define ZESARUX_SDL_SCANCODE_MINUS 20
+#define ZESARUX_SDL_SCANCODE_MINUS 21
+
 #define ZESARUX_SDL_SCANCODE_BACKSPACE 22
 
 #define ZESARUX_SDL_SCANCODE_Q 24
@@ -76,6 +79,9 @@ extern void scrsdl_messages_debug(char *s);
 #define ZESARUX_SDL_SCANCODE_K 45
 #define ZESARUX_SDL_SCANCODE_L 46
 
+#define ZESARUX_SDL_SCANCODE_SEMICOLON 47
+#define ZESARUX_SDL_SCANCODE_APOSTROPHE 48
+
 #define ZESARUX_SDL_SCANCODE_LSHIFT 50
 
 #define ZESARUX_SDL_SCANCODE_Z 52
@@ -88,6 +94,7 @@ extern void scrsdl_messages_debug(char *s);
 
 #define ZESARUX_SDL_SCANCODE_COMMA 59
 #define ZESARUX_SDL_SCANCODE_PERIOD 60
+#define ZESARUX_SDL_SCANCODE_SLASH 61
 
 #define ZESARUX_SDL_SCANCODE_SPACE 65
 
