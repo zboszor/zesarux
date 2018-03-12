@@ -965,13 +965,14 @@ void scrsdl_actualiza_tablas_teclado(void)
 
 			//SDLKey sym=keysym.sym;
 			int tecla=keysym.sym;
+			int scancode=keysym.scancode;
 
 			if (tecla==SDLK_COMPOSE) {
 				if (keysym.scancode==34) tecla=SDLK_COMPOSE_BACKQUOTE;
 				else if (keysym.scancode==48) tecla=SDLK_COMPOSE_APOSTROPHE;
 			}
 
-			//printf ("tecla: %d scancode: %d\n",tecla,keysym.scancode);
+			//printf ("tecla: %d scancode: %d\n",tecla,scancode);
 
 			if (pressrelease) notificar_tecla_interrupcion_si_z88();
 

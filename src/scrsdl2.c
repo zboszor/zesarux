@@ -1027,6 +1027,7 @@ void scrsdl_actualiza_tablas_teclado(void)
 
 
 			SDL_Keysym keysym=event.key.keysym;
+			SDL_Scancode scancode=keysym.scancode;
 
 			//SDLKey sym=keysym.sym;
 			int tecla=keysym.sym;
@@ -1042,7 +1043,7 @@ See the SDL documentation. Scancodes represent the physical position of the keys
 */
 
 			if (keysym.scancode==SDL_SCANCODE_APOSTROPHE) tecla=SDLK_TECLA_INVENTADA_D_ENYE;
-			//printf ("tecla: %d scancode: %d\n",tecla,keysym.scancode);
+			//printf ("tecla: %d scancode: %d\n",tecla,scancode);
 
 			if (pressrelease) notificar_tecla_interrupcion_si_z88();
 
