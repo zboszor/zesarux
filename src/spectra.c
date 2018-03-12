@@ -221,7 +221,6 @@ void spectra_enable(void)
 		//modo 0. no tocar. esto se resetea al hacer un reset cpu
 		//spectra_display_mode_register=0;
 
-		screen_set_spectrum_palette_offset();
 	}
 
 }
@@ -235,7 +234,6 @@ void spectra_disable(void)
 		spectra_restore_poke();
         	spectra_enabled.v=0;
 
-        	screen_set_spectrum_palette_offset();
 	}
 }
 

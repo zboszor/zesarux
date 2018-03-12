@@ -287,23 +287,6 @@ int *screen_return_spectrum_palette(void)
 
 z80_bit spectrum_1648_use_real_palette={0};
 
-void screen_set_spectrum_palette_offset(void)
-{
-	return;
-	//Esto ya no se hace asi....
-	/*
-
-	if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
-		if (spectrum_1648_use_real_palette.v && ulaplus_presente.v==0 && spectra_enabled.v==0 && gigascreen_enabled.v==0 && video_interlaced_scanlines.v==0) {
-			spectrum_palette_offset=SPECCY_1648_REAL_PALETTE_FIRST_COLOR;
-			return;
-		}
-	}
-
-	spectrum_palette_offset=0;
-	*/
-}
-
 
 //Tabla con los colores reales del Z88. Formato RGB
 const int z88_colortable_original[4]={
@@ -10471,7 +10454,6 @@ void disable_gigascreen(void)
 {
 	debug_printf (VERBOSE_INFO,"Disable gigascreen");
 	gigascreen_enabled.v=0;
-	screen_set_spectrum_palette_offset();
 }
 
 void enable_gigascreen(void)
@@ -10492,14 +10474,12 @@ void enable_gigascreen(void)
 	//necesita real video
 	enable_rainbow();
 
-	screen_set_spectrum_palette_offset();
 }
 
 void disable_scanlines(void)
 {
 	debug_printf (VERBOSE_INFO,"Disable scanlines");
 	video_interlaced_scanlines.v=0;
-	screen_set_spectrum_palette_offset();
 }
 
 void enable_scanlines(void)
@@ -10511,7 +10491,6 @@ void enable_scanlines(void)
 	disable_gigascreen();
 	disable_ulaplus();
 	spectra_disable();
-	screen_set_spectrum_palette_offset();
 }
 
 void disable_interlace(void)
