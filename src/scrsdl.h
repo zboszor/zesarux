@@ -122,4 +122,11 @@ extern void scrsdl_messages_debug(char *s);
 
 
 
+#define ZESARUX_SDL_SCANCODE_KP_4 83
+#define ZESARUX_SDL_SCANCODE_KP_6 85
+#define ZESARUX_SDL_SCANCODE_KP_2 88
+#define ZESARUX_SDL_SCANCODE_KP_8 80
+
+
+
 #endif

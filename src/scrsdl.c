@@ -805,7 +805,24 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
                 case ZESARUX_SDL_SCANCODE_SLASH:
                         util_set_reset_key('/',pressrelease);
                 break;                                                                                                                                 
-			
+
+
+                //En caso raw, enviamos cursore del keypad igual que cursores normales
+                case ZESARUX_SDL_SCANCODE_KP_4:
+                        util_set_reset_key(UTIL_KEY_LEFT,pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_KP_6:
+                        util_set_reset_key(UTIL_KEY_RIGHT,pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_KP_2:
+                        util_set_reset_key(UTIL_KEY_DOWN,pressrelease);
+                break;
+
+                case ZESARUX_SDL_SCANCODE_KP_8:
+                        util_set_reset_key(UTIL_KEY_UP,pressrelease);
+                break;     			
 
         }
 }
