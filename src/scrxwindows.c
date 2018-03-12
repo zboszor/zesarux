@@ -1488,7 +1488,8 @@ void deal_with_keys(XEvent *event,int pressrelease)
 
 
 			default:
-				convert_numeros_letras_puerto_teclado(keysym,pressrelease);
+				//convert_numeros_letras_puerto_teclado(keysym,pressrelease);
+				if (keysym<256) util_set_reset_key(keysym,pressrelease);
 			break;
 
 		}

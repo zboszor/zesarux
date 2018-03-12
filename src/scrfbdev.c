@@ -1042,7 +1042,8 @@ void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 				tecla=scrfbdev_convert_ordinary_scancodes(teclaraw);
 				//printf (" parseada: %u '%c' \n",tecla, ( tecla>31 && tecla<128 ? tecla : '.' ) );
 
-				convert_numeros_letras_puerto_teclado(tecla,pressrelease);
+				//convert_numeros_letras_puerto_teclado(tecla,pressrelease);
+				if (tecla<256) util_set_reset_key(tecla,pressrelease);
 				break;
 
 		}

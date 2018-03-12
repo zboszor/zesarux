@@ -1716,7 +1716,10 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
                                 //tecla ordinaria
                                 //printf (" parseada: %u '%c' \n",teclareal, ( teclareal>31 && teclareal<128 ? teclareal : '.' ) );
 
-                                if (teclareal<256) convert_numeros_letras_puerto_teclado(teclareal,pressrelease);
+                                if (teclareal<256) {
+					util_set_reset_key(teclareal,pressrelease);
+					//convert_numeros_letras_puerto_teclado(teclareal,pressrelease);
+				}
                         break;
 
 

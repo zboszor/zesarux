@@ -824,7 +824,10 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
 
 
                         default:
-                                if (tecla<256) convert_numeros_letras_puerto_teclado(tecla,pressrelease);
+                                if (tecla<256) {
+					//convert_numeros_letras_puerto_teclado(tecla,pressrelease);
+					util_set_reset_key(tecla,pressrelease);
+				}
                         break;
 
                 }
