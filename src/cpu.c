@@ -1465,6 +1465,7 @@ printf (
 		"--blue                     Force display mode with blue colour\n"
 		"  Note: You can combine colours, for example, --red --green for Yellow display, or --red --green --blue for Gray display\n"
 		"--inversevideo             Inverse display colours\n"
+		"--realpalette              Use real Spectrum colour palette according to info by Richard Atkinson\n"
 		"--disabletooltips          Disable tooltips on menu\n"
 		"--forcevisiblehotkeys      Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed\n"
 		"--forceconfirmyes          Force confirmation dialogs yes/no always to yes\n"
@@ -5842,6 +5843,10 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--inversevideo")) {
                                 inverse_video.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--realpalette")) {
+                                spectrum_1648_use_real_palette.v=1;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--disabletooltips")) {

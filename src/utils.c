@@ -3256,6 +3256,8 @@ int util_write_configfile(void)
   if (screen_gray_mode&2)                     ADD_STRING_CONFIG,"--green");
   if (screen_gray_mode&4)                     ADD_STRING_CONFIG,"--red");
   if (inverse_video.v)                        ADD_STRING_CONFIG,"--inversevideo");
+  if (spectrum_1648_use_real_palette.v)       ADD_STRING_CONFIG,"--realpalette");
+
   if (tooltip_enabled.v==0)                   ADD_STRING_CONFIG,"--disabletooltips");
   if (menu_desactivado.v)                     ADD_STRING_CONFIG,"--disablemenu");
 
