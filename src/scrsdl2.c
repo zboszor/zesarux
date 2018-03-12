@@ -69,7 +69,7 @@ SDL_Renderer *renderer;
 
 
 //Si se lee teclado mediante scancodes raw en vez de usar localizacion de teclado
-z80_bit sdl_raw_keyboard_read={0};
+z80_bit sdl_raw_keyboard_read={1};
 
 
 int scrsdl_crea_ventana(void)
@@ -544,8 +544,53 @@ void scrsdl_z88_cpc_load_keymap(void)
 }
 
 
-void scrsdl_deal_raw_keys(int pressrelease,int tecla)
+void scrsdl_deal_raw_keys(int pressrelease,int scancode)
 {
+
+	printf ("scrsdl_deal_raw_keys: scancode: %d pressrelease: %d\n",scancode,pressrelease);
+
+	switch (scancode) {
+		case SDL_SCANCODE_0:
+			util_set_reset_key('0',pressrelease);
+		break;
+
+		case SDL_SCANCODE_1:
+			util_set_reset_key('1',pressrelease);
+		break;
+
+		case SDL_SCANCODE_2:
+			util_set_reset_key('2',pressrelease);
+		break;
+
+		case SDL_SCANCODE_3:
+			util_set_reset_key('3',pressrelease);
+		break;
+
+		case SDL_SCANCODE_4:
+			util_set_reset_key('4',pressrelease);
+		break;
+
+		case SDL_SCANCODE_5:
+			util_set_reset_key('5',pressrelease);
+		break;
+
+		case SDL_SCANCODE_6:
+			util_set_reset_key('6',pressrelease);
+		break;
+
+		case SDL_SCANCODE_7:
+			util_set_reset_key('7',pressrelease);
+		break;
+
+		case SDL_SCANCODE_8:
+			util_set_reset_key('8',pressrelease);
+		break;
+
+		case SDL_SCANCODE_9:
+			util_set_reset_key('9',pressrelease);
+		break;
+
+	}
 }
 
 
@@ -1060,7 +1105,7 @@ See the SDL documentation. Scancodes represent the physical position of the keys
 
 			if (pressrelease) notificar_tecla_interrupcion_si_z88();
 
-                        if (sdl_raw_keyboard_read.v) scrsdl_deal_raw_keys(pressrelease,tecla);
+                        if (sdl_raw_keyboard_read.v) scrsdl_deal_raw_keys(pressrelease,scancode);
                         else scrsdl_deal_keys(pressrelease,tecla);
 
 		}
