@@ -6552,7 +6552,14 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 
 
 			default:
-				//printf ("Caso no gestionado de util_reset_key_continue\n");
+				//Caso entre a-z y 0-9
+			if (
+                        (tecla>='a' && tecla<='z') ||
+                        (tecla>='0' && tecla<='9')
+			)
+				{
+					convert_numeros_letras_puerto_teclado_continue_after_recreated(tecla,pressrelease);
+				}
 			break;
 
 
