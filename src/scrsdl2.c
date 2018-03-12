@@ -590,6 +590,110 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
 			util_set_reset_key('9',pressrelease);
 		break;
 
+                case SDL_SCANCODE_Q:
+                        util_set_reset_key('q',pressrelease);
+                break;
+
+                case SDL_SCANCODE_W:
+                        util_set_reset_key('w',pressrelease);
+                break;
+
+                case SDL_SCANCODE_E:
+                        util_set_reset_key('e',pressrelease);
+                break;
+
+                case SDL_SCANCODE_R:
+                        util_set_reset_key('r',pressrelease);
+                break;
+
+                case SDL_SCANCODE_T:
+                        util_set_reset_key('t',pressrelease);
+                break;
+
+                case SDL_SCANCODE_Y:
+                        util_set_reset_key('y',pressrelease);
+                break;
+
+                case SDL_SCANCODE_U:
+                        util_set_reset_key('u',pressrelease);
+                break;
+
+                case SDL_SCANCODE_I:
+                        util_set_reset_key('i',pressrelease);
+                break;
+
+                case SDL_SCANCODE_O:
+                        util_set_reset_key('o',pressrelease);
+                break;
+
+                case SDL_SCANCODE_P:
+                        util_set_reset_key('p',pressrelease);
+                break;
+
+                case SDL_SCANCODE_A:
+                        util_set_reset_key('a',pressrelease);
+                break;
+
+                case SDL_SCANCODE_S:
+                        util_set_reset_key('s',pressrelease);
+                break;
+
+                case SDL_SCANCODE_D:
+                        util_set_reset_key('d',pressrelease);
+                break;
+
+                case SDL_SCANCODE_F:
+                        util_set_reset_key('f',pressrelease);
+                break;
+
+                case SDL_SCANCODE_G:
+                        util_set_reset_key('g',pressrelease);
+                break;
+
+                case SDL_SCANCODE_H:
+                        util_set_reset_key('h',pressrelease);
+                break;
+
+                case SDL_SCANCODE_J:
+                        util_set_reset_key('j',pressrelease);
+                break;
+
+                case SDL_SCANCODE_K:
+                        util_set_reset_key('k',pressrelease);
+                break;
+
+                case SDL_SCANCODE_L:
+                        util_set_reset_key('l',pressrelease);
+                break;
+
+                case SDL_SCANCODE_Z:
+                        util_set_reset_key('z',pressrelease);
+                break;
+
+                case SDL_SCANCODE_X:
+                        util_set_reset_key('x',pressrelease);
+                break;
+
+                case SDL_SCANCODE_C:
+                        util_set_reset_key('c',pressrelease);
+                break;
+
+                case SDL_SCANCODE_V:
+                        util_set_reset_key('v',pressrelease);
+                break;
+
+                case SDL_SCANCODE_B:
+                        util_set_reset_key('b',pressrelease);
+                break;
+
+                case SDL_SCANCODE_N:
+                        util_set_reset_key('n',pressrelease);
+                break;
+
+                case SDL_SCANCODE_M:
+                        util_set_reset_key('m',pressrelease);
+                break;
+
 	}
 }
 
