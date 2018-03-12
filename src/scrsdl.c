@@ -60,6 +60,10 @@ SDL_Surface *sdl_screen;
 //la ventana se redimensiona
 int scrsdl_debe_redimensionar=0;
 
+
+//Si se lee teclado mediante scancodes raw en vez de usar localizacion de teclado
+z80_bit sdl_raw_keyboard_read={0};
+
 int scrsdl_crea_ventana(void)
 {
 
@@ -494,7 +498,9 @@ void scrsdl_z88_cpc_load_keymap(void)
         }
 }
 
-
+void scrsdl_deal_raw_keys(int pressrelease,int tecla)
+{
+}
 
 
 void scrsdl_deal_keys(int pressrelease,int tecla)
@@ -976,7 +982,9 @@ void scrsdl_actualiza_tablas_teclado(void)
 
 			if (pressrelease) notificar_tecla_interrupcion_si_z88();
 
-			scrsdl_deal_keys(pressrelease,tecla);
+
+			if (sdl_raw_keyboard_read.v) scrsdl_deal_raw_keys(pressrelease,tecla);
+			else scrsdl_deal_keys(pressrelease,tecla);
 
 		}
 

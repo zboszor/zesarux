@@ -67,6 +67,11 @@ SDL_Renderer *renderer;
 #define SDL_ANCHO_VENTANA screen_get_window_size_width_zoom_border_en()
 #define SDL_ALTO_VENTANA screen_get_window_size_height_zoom_border_en()
 
+
+//Si se lee teclado mediante scancodes raw en vez de usar localizacion de teclado
+z80_bit sdl_raw_keyboard_read={0};
+
+
 int scrsdl_crea_ventana(void)
 {
 
@@ -538,6 +543,10 @@ void scrsdl_z88_cpc_load_keymap(void)
         }
 }
 
+
+void scrsdl_deal_raw_keys(int pressrelease,int tecla)
+{
+}
 
 
 void scrsdl_deal_keys(int pressrelease,int tecla)
@@ -1047,7 +1056,8 @@ See the SDL documentation. Scancodes represent the physical position of the keys
 
 			if (pressrelease) notificar_tecla_interrupcion_si_z88();
 
-			scrsdl_deal_keys(pressrelease,tecla);
+                        if (sdl_raw_keyboard_read.v) scrsdl_deal_raw_keys(pressrelease,tecla);
+                        else scrsdl_deal_keys(pressrelease,tecla);
 
 		}
 
