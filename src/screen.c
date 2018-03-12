@@ -295,6 +295,9 @@ z80_bit spectrum_1648_use_real_palette={0};
 
 void screen_set_spectrum_palette_offset(void)
 {
+	return;
+	//Esto ya no se hace asi....
+
 	if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
 		if (spectrum_1648_use_real_palette.v && ulaplus_presente.v==0 && spectra_enabled.v==0 && gigascreen_enabled.v==0 && video_interlaced_scanlines.v==0) {
 			spectrum_palette_offset=SPECCY_1648_REAL_PALETTE_FIRST_COLOR;
