@@ -7006,7 +7006,7 @@ void convertir_paleta(z80_int valor)
    fwrite( &buffer_rgb, 1, 3, fichero_out);
 */
 
-int vofile_add_watermark_aux_indice_xy(int x,int y)
+int vofile_add_oldstyle_watermark_aux_indice_xy(int x,int y)
 {
 	         int ancho;
         ancho=screen_get_emulated_display_width_no_zoom_border_en();
@@ -7015,7 +7015,8 @@ int vofile_add_watermark_aux_indice_xy(int x,int y)
 	return ancho*y*3+x*3;
 }
 
-void vofile_add_watermark(void)
+//Antigua "Z" como marca de agua. La nueva es mucho mas bonita :)
+void vofile_add_oldstyle_watermark(void)
 {
 
 
@@ -7032,12 +7033,12 @@ void vofile_add_watermark(void)
 	//Parte de arriba de la Z. 2 lineas de grueso
 	for (x=0;x<z_size;x++) {
 		convertir_paleta(x&15);
-		pos=vofile_add_watermark_aux_indice_xy(x+offset_x,0+offset_y);
+		pos=vofile_add_oldstyle_watermark_aux_indice_xy(x+offset_x,0+offset_y);
 		vofile_buffer[pos++]=buffer_rgb[0];
 		vofile_buffer[pos++]=buffer_rgb[1];
 		vofile_buffer[pos++]=buffer_rgb[2];
 
-                pos=vofile_add_watermark_aux_indice_xy(x+offset_x,1+offset_y);
+                pos=vofile_add_oldstyle_watermark_aux_indice_xy(x+offset_x,1+offset_y);
                 vofile_buffer[pos++]=buffer_rgb[0];
                 vofile_buffer[pos++]=buffer_rgb[1];
                 vofile_buffer[pos++]=buffer_rgb[2];
@@ -7047,7 +7048,7 @@ void vofile_add_watermark(void)
 	//Diagonal de la z. 2 pixeles de ancho
         for (y=1,x=z_size-2;y<z_size-1;x--,y++) {
         	convertir_paleta(x&15);
-                int pos=vofile_add_watermark_aux_indice_xy(x+offset_x,y+offset_y);
+                int pos=vofile_add_oldstyle_watermark_aux_indice_xy(x+offset_x,y+offset_y);
                 vofile_buffer[pos++]=buffer_rgb[0];
                 vofile_buffer[pos++]=buffer_rgb[1];
                 vofile_buffer[pos++]=buffer_rgb[2];
@@ -7061,12 +7062,12 @@ void vofile_add_watermark(void)
         //Parte de abajo de la Z. 2 lineas de grueso
         for (x=0;x<z_size;x++) {
         	convertir_paleta(x&15);
-                pos=vofile_add_watermark_aux_indice_xy(x+offset_x,z_size-2+offset_y);
+                pos=vofile_add_oldstyle_watermark_aux_indice_xy(x+offset_x,z_size-2+offset_y);
                 vofile_buffer[pos++]=buffer_rgb[0];
                 vofile_buffer[pos++]=buffer_rgb[1];
                 vofile_buffer[pos++]=buffer_rgb[2];
 
-                pos=vofile_add_watermark_aux_indice_xy(x+offset_x,z_size-1+offset_y);
+                pos=vofile_add_oldstyle_watermark_aux_indice_xy(x+offset_x,z_size-1+offset_y);
                 vofile_buffer[pos++]=buffer_rgb[0];
                 vofile_buffer[pos++]=buffer_rgb[1];
                 vofile_buffer[pos++]=buffer_rgb[2];
@@ -7124,7 +7125,9 @@ void vofile_send_frame(z80_int *buffer)
 
 
 	//agregamos marca de agua
-	vofile_add_watermark();
+	//fuerzo watermark siempre. Aunque el usuario vaya al menu y lo deshabilite, se volverá a activar
+	screen_watermark_enabled.v=1;
+	//vofile_add_oldstyle_watermark();
 
 	escritos=fwrite(vofile_buffer,1,tamanyo*3, ptr_vofile);
         if (escritos!=tamanyo*3) {

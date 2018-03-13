@@ -2,22 +2,11 @@
 
 nombre fichero en ventana menu?
 
-lectura raw en sdl: 
--sdl2 de mac y linux generan mismos valores numeros para scancode. tampoco seria un problema pues todos scancodes tienen valores enum definidos
--que sucede con scancodes de sdl1 en mac, linux  y windows ? son iguales? si no, quiza tener tres tablas, una para conversion de linux y otra de mac y otra de windows?
-SDL1 de windows genera diferentes scancodes que SDL1 de Linux-> parece que el scancode de linux de sdl1 es el mismo que windows pero sumando 8
-
-
 tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
-
-Tsconf: escritura dma en fmaps
-tsconf: si se cambia a mismo valor turbo no hacer nada. No aplicable a todos los cores: puede ser que en inicializacion interese poner turbo x1 aunque ya este en turbo x1
 
 tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 revisar los que hayan cambiado.
-
-que al hacer video out to file fuerce siempre a mostrar watermark
 
 Validar todos menus con speech 
 
@@ -28,12 +17,11 @@ revisar todos menus que usan put pixel que se ajusten a tamaño ancho caracter: 
 Agregar todas desensamblado roms en txt 
 http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROMDisassembly4.htm
 
-Recreated: que funcione en windows y linux
 QL: lectura de bloques basic no siempre funciona
 
 Mas utilidades de visor archivos: convertir?
 Formato zsf: completar para mas maquinas
-Mirar porque fallan muchos dsk
+
 TBBLue: al hacer hard reset, los colores del boot se cambian :S quiza algun bit de la paleta que no esta bien en reset?
 
 ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo y desactivo setting de divmmc paging, ya aparece:
@@ -136,6 +124,7 @@ jungle warrior
 senda salvaje
 sito pons
 
+Mirar porque fallan muchos dsk
 
 al cambiar funcion de busqueda sectores: ahora busca sector id de cada sector:
 emilio sanchez vicario: usa sectores consecutivos
@@ -607,7 +596,9 @@ hay rutinas, como gestion de sprites y tiles, que se podrian mejorar ligeramente
 
 -factor compresion tsconf a texto en drivers curses, stdout, simpletext que sea configurable
 
-Ocr también de tsconf
+-Ocr también de tsconf
+
+-Tsconf: escritura dma en fmaps. No he encontrado ningun juego que lo haga
 -----------------------
 
 

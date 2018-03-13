@@ -504,7 +504,7 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
         scancode +=8;
 #endif
 
-	printf ("scrsdl_deal_raw_keys: scancode: %d pressrelease: %d\n",scancode,pressrelease);
+	//printf ("scrsdl_deal_raw_keys: scancode: %d pressrelease: %d\n",scancode,pressrelease);
 
 	switch (scancode) {
 		case ZESARUX_SDL_SCANCODE_0:
@@ -1306,7 +1306,7 @@ void scrsdl_actualiza_tablas_teclado(void)
 				else if (keysym.scancode==48) tecla=SDLK_COMPOSE_APOSTROPHE;
 			}
 
-			printf ("tecla: %d scancode: %d\n",tecla,scancode);
+			//printf ("tecla: %d scancode: %d\n",tecla,scancode);
 
 			if (pressrelease) notificar_tecla_interrupcion_si_z88();
 

@@ -1350,7 +1350,8 @@ printf (
 		printf (
 		"--sdlsamplesize n          SDL audio sample size (128 to 2048). Default %d. Lower values reduce latency but can increase cpu usage\n",DEFAULT_AUDIOSDL_SAMPLES);
 		printf (
-		"--fifosdlbuffersize n      SDL fifo buffer size multiplier (2 to 10). Default 2. Lower values reduce latency but can increase cpu usage\n");
+		"--fifosdlbuffersize n      SDL fifo buffer size multiplier (2 to 10). Default 2. Lower values reduce latency but can increase cpu usage\n"
+		"--sdlrawkeyboard           SDL read keyboard in raw mode, needed for ZX Recreated to work well\n");
 
 
 		printf (
@@ -5822,6 +5823,11 @@ int parse_cmdline_options(void) {
 
 #endif
 
+
+			//Este setting lo permitimos siempre, aunque no se haya compilado driver sdl, pues es una variable global, aunque no se verá en la ayuda
+			else if (!strcmp(argv[puntero_parametro],"--sdlrawkeyboard")) {
+					sdl_raw_keyboard_read.v=1;
+			}
 
 			else if (!strcmp(argv[puntero_parametro],"--simulaterealload")) {
                                 tape_loading_simulate.v=1;

@@ -546,7 +546,7 @@ void scrsdl_z88_cpc_load_keymap(void)
 void scrsdl_deal_raw_keys(int pressrelease,int scancode)
 {
 
-	printf ("scrsdl_deal_raw_keys: scancode: %d pressrelease: %d\n",scancode,pressrelease);
+	//printf ("scrsdl_deal_raw_keys: scancode: %d pressrelease: %d\n",scancode,pressrelease);
 
 	switch (scancode) {
 		case SDL_SCANCODE_0:
@@ -1193,7 +1193,7 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
 
                         default:
                                 if (tecla<256) {
-					printf ("tecla: %d\n",tecla);
+					//printf ("tecla: %d\n",tecla);
 					//convert_numeros_letras_puerto_teclado(tecla,pressrelease);
 					util_set_reset_key(tecla,pressrelease);
 				}
@@ -1375,7 +1375,7 @@ See the SDL documentation. Scancodes represent the physical position of the keys
 */
 
 			if (keysym.scancode==SDL_SCANCODE_APOSTROPHE) tecla=SDLK_TECLA_INVENTADA_D_ENYE;
-			printf ("tecla: %d scancode: %d\n",tecla,scancode);
+			//printf ("tecla: %d scancode: %d\n",tecla,scancode);
 
 			if (pressrelease) notificar_tecla_interrupcion_si_z88();
 

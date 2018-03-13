@@ -3250,6 +3250,10 @@ int util_write_configfile(void)
   if (ay_player_limit_infinite_tracks!=0)     ADD_STRING_CONFIG,"--ayplayer-inf-length %d",ay_player_limit_infinite_tracks/50);
   if (ay_player_limit_any_track!=0)           ADD_STRING_CONFIG,"--ayplayer-any-length %d",ay_player_limit_any_track/50);
   if (ay_player_cpc_mode.v)                   ADD_STRING_CONFIG,"--ayplayer-cpc");
+
+  //Este setting lo permitimos siempre, aunque no se haya compilado driver sdl, pues es una variable global, aunque no se verá en la ayuda,
+  if (sdl_raw_keyboard_read.v)                ADD_STRING_CONFIG,"--sdlrawkeyboard");
+  
   if (tape_loading_simulate.v)                ADD_STRING_CONFIG,"--simulaterealload");
   if (tape_loading_simulate_fast.v)           ADD_STRING_CONFIG,"--simulaterealloadfast");
   if (screen_gray_mode&1)                     ADD_STRING_CONFIG,"--blue");
@@ -5342,7 +5346,7 @@ void util_set_reset_key_convert_recreated_yesno(enum util_teclas tecla,int press
 
 void util_set_reset_key(enum util_teclas tecla,int pressrelease)
 {
-        printf ("util_set_reset_key tecla: %d pressrelease: %d\n",tecla,pressrelease);
+        //printf ("util_set_reset_key tecla: %d pressrelease: %d\n",tecla,pressrelease);
 	util_set_reset_key_convert_recreated_yesno(tecla,pressrelease,1);
 }
 
@@ -6539,16 +6543,16 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
 				//Ademas esto identifica cuando no habia tecla previa en Chloe, no tiene sentido aqui en el switch gestionarlo
 			break;
 
-			//Chapuza. Para gestion de z y b del teclado recreated
+			//NO: Chapuza. Para gestion de z y b del teclado recreated
 			//La solucion elegante seria que para activar un puerto de tecla, se usase solo util_set_reset_keys, 
 			//y nadie llamase a convert_numeros_letras_puerto_teclado . Para ello, todas las teclas fuera de lo ascii (ctrl, alt, etc)
 			//deben tener una numeracion fuera de lo ascii normal (128 en adelante?)
 			//Esta chapuza que hago tambien esta provocando que se llame a la funcion de recreated_zx_spectrum_keyboard_convert
 			//desde dos sitios, cuando deberia llamarse solo desde un sitio
-			case 'z':
-			case 'b':
-				convert_numeros_letras_puerto_teclado_continue_after_recreated(tecla,pressrelease);
-			break;
+			//case 'z':
+			//case 'b':
+			//	convert_numeros_letras_puerto_teclado_continue_after_recreated(tecla,pressrelease);
+			//break;
 
 
 			default:

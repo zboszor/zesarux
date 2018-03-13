@@ -16568,6 +16568,7 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 			(recreated_zx_keyboard_support.v ? "Yes" : "No") );
 		menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Enables ZX Recreated support. Press F1 to see details");
 		menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Enables ZX Recreated support. You have to consider the following:\n"
+						"- It supports Game Mode/Layer A on ZX Recreated. QWERTY mode/Layer B works like a normal keyboard\n"
 						"- You must use the ZX Recreated only on the machine emulated, not on the menu\n"
 						"- You must use your normal PC keyboard on the menu\n"
 						"- I can't distinguish between normal keyboard and ZX Recreated keyboard key press. "
@@ -28858,17 +28859,17 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
         	        menu_add_item_menu_tooltip(array_menu_settings_display,"Saves the video output to a file");
                 	menu_add_item_menu_ayuda(array_menu_settings_display,"The generated file have raw format. You can see the file parameters "
 					"on the console enabling verbose debug level to 2 minimum.\n"
+					"A watermark is added to the final video, as you may see when you activate it\n"
 					"Note: Gigascreen, Interlaced effects or menu windows are not saved to file."
 
 					);
 
 			if (menu_vofile_cond() ) {
 				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_fps,menu_vofile_cond,"FPS Video file: %d",50/vofile_fps);
-	        	        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_insert,menu_vofile_cond,"Video file inserted: %s",(vofile_inserted.v ? "Yes" : "No" ));
+	        	menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_insert,menu_vofile_cond,"Video file enabled: %s",(vofile_inserted.v ? "Yes" : "No" ));
 			}
 
 			else {
-
                 	  menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 			}
 
