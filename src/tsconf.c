@@ -69,12 +69,12 @@ void tsconf_write_fmaps(int tsconf_fmaps_offset,z80_byte valor) {
 					tsconf_fmaps[tsconf_fmaps_offset]=valor;
 				}
 
-				if (tsconf_fmaps_offset>0x200 && tsconf_fmaps_offset<0x400) {
+				if (tsconf_fmaps_offset>=0x200 && tsconf_fmaps_offset<0x400) {
 					//printf ("Zona tsconf sprites\n");
 					tsconf_fmaps[tsconf_fmaps_offset]=valor;
 				}
 
-				if (tsconf_fmaps_offset>0x400 && tsconf_fmaps_offset<0x500) {
+				if (tsconf_fmaps_offset>=0x400 && tsconf_fmaps_offset<0x500) {
 					//printf ("Zona tsconf registers\n");
 					//Solo escribe en regustro tsconf. no en ram fmaps
 					tsconf_write_af_port(tsconf_fmaps_offset-0x400,valor);
