@@ -1389,9 +1389,8 @@ void tsconf_store_scanline_border_supinf_izqder(int tipo)
 
 	color=tsconf_get_border_colour();
 
-	color=TSCONF_INDEX_FIRST_COLOR+tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color);
-
-	//color +=240; //Colores de speccy en tsconf empiezan en 240
+	//color=TSCONF_INDEX_FIRST_COLOR+tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color);
+	color=TSCONF_INDEX_FIRST_COLOR+tsconf_return_cram_color(color);
 
 
 
