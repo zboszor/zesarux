@@ -6420,7 +6420,9 @@ void out_port_spectrum_border(z80_int puerto,z80_byte value)
                 else {
                         out_254=value;
 
-			if (MACHINE_IS_TSCONF) tsconf_af_ports[0xF]=value&7;
+			if (MACHINE_IS_TSCONF) {
+				tsconf_af_ports[0xF]=(value&7)|0xF0; //Colores de border mediante puerto FEH siempre suma F0 (254)
+			}
 
 			/*
                         if ( (value & 24) != (ultimo_altavoz & 24) ) {
