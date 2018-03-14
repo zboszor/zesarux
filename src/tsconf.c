@@ -2194,10 +2194,11 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 				int tnum_x=tnum&63;
 				int tnum_y=(tnum>>6)&63;
 
-				z80_byte tile_xf=puntero_layer[1] & 64;
-				z80_byte tile_yf=puntero_layer[1] & 128;
+				//z80_byte tile_xf=puntero_layer[1] & 64;
+				//z80_byte tile_yf=puntero_layer[1] & 128;
 
-			
+				z80_byte tile_xf=valor2 & 64;
+				z80_byte tile_yf=valor2 & 128;			
 				
 				sprite_origen=puntero_graficos+(tnum_y*256*8);
 				
@@ -2218,7 +2219,7 @@ void tsconf_store_scanline_tiles(z80_byte layer,z80_int *layer_tiles)
 				//printf ("desplazamiento scanline: %d\n",desplazamiento_scanline);
 
 				if (tile_yf) {
-					//printf ("y mirror\n");
+					//printf ("y mirror. layer: %d tnum_x: %d tnum_y: %d\n",layer,tnum_x,tnum_y);
 					//sprite_origen +=7*256-desplazamiento_scanline;
 					sprite_origen=sprite_origen+(7*256)-desplazamiento_scanline;
 
