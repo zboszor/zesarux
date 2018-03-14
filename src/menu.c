@@ -23020,7 +23020,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 				repetir_ancho=30;
 			}
 
-			printf ("linea: %d current tile: %d puntero: %d\n",linea_color,current_tile,puntero_tilemap-tsconf_ram_mem_table[0]-tsconf_return_tilemappage()	);
+			//printf ("linea: %3d current tile: %10d puntero: %10d\n",linea_color,current_tile,puntero_tilemap-tsconf_ram_mem_table[0]-tsconf_return_tilemappage()	);
 
 			do {
 				int y=current_tile/64;
@@ -23072,7 +23072,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 				menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 
 				//Siguiente linea de tiles (saltar 64 posiciones, 2 layers, 2 bytes por tile)
-				puntero_tilemap_orig +=64*2*2;
+				//puntero_tilemap_orig +=64*2*2;
 				puntero_tilemap=puntero_tilemap_orig;
 			}
 					
