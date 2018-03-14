@@ -22974,6 +22974,8 @@ int menu_debug_tsconf_tilenav_current_tile=0;
 
 int menu_debug_tsconf_tilenav_current_tilelayer=0;
 
+z80_bit menu_debug_tsconf_tilenav_showmap={0};
+
 
 #define DEBUG_TSCONF_TILENAV_MAX_TILES (64*64)
 
@@ -22992,6 +22994,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 	int current_tile;
 
 	z80_byte *puntero_tilemap;
+	z80_byte *puntero_tilemap_orig;
 	puntero_tilemap=tsconf_ram_mem_table[0]+tsconf_return_tilemappage();
 
 
@@ -22999,8 +23002,23 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 				menu_debug_tsconf_tilenav_current_tile+linea_color<limite;
 				linea_color++) {
 
-			current_tile=menu_debug_tsconf_tilenav_current_tile+linea_color;
 
+			int repetir_ancho=1;
+			int mapa_tile_x=0;
+			if (menu_debug_tsconf_tilenav_showmap.v==0) {
+				//Modo lista tiles
+				current_tile=menu_debug_tsconf_tilenav_current_tile+linea_color;
+			}
+
+			else {
+				//Modo mapa tiles
+				current_tile=menu_debug_tsconf_tilenav_current_tile+linea_color*64;
+				repetir_ancho=30;
+			}
+
+			puntero_tilemap_orig=puntero_tilemap;
+
+			do {
 			int y=current_tile/64;
 			int x=current_tile%64; 
 
@@ -23018,6 +23036,8 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 			z80_byte tile_xf=puntero_tilemap[offset+1]&64;
 			z80_byte tile_yf=puntero_tilemap[offset+1]&128;
 
+			if (menu_debug_tsconf_tilenav_showmap.v==0) {
+				//Modo lista tiles
 			sprintf (dumpmemoria,"X: %3d Y: %3d",x,y);
 			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 
@@ -23025,8 +23045,29 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 				(tile_xf ? "XF" : "  "),(tile_yf ? "YF": "  "),
 				tpal );
 			menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+			}
+			else {
+				//Modo mapa tiles
+				z80_byte caracter_final;
+				int caracteres_totales=127-33;
+
+				if (tnum==0) caracter_final=' ';
+				else caracter_final=33+(tnum%caracteres_totales);
+
+				dumpmemoria[mapa_tile_x++]=caracter_final;
+			}
 
 			puntero_tilemap+=2;
+			repetir_ancho--;
+			} while (repetir_ancho);
+
+			if (menu_debug_tsconf_tilenav_showmap.v) {
+				dumpmemoria[mapa_tile_x++]=0;
+				menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+
+				//Siguiente linea de tiles
+				puntero_tilemap=puntero_tilemap_orig+2*64;
+			}
 					
 		}
 
@@ -23052,8 +23093,15 @@ void menu_debug_tsconf_tilenav_draw_sprites(void)
 
 void menu_debug_tsconf_tilenav_cursor_arriba(void)
 {
+	if (menu_debug_tsconf_tilenav_showmap.v==0) {
 	if (menu_debug_tsconf_tilenav_current_tile>0) {
 		menu_debug_tsconf_tilenav_current_tile--;
+	}
+	}
+	else {
+		if (menu_debug_tsconf_tilenav_current_tile>64) {
+		menu_debug_tsconf_tilenav_current_tile-=64;
+		}
 	}
 }
 
@@ -23062,8 +23110,18 @@ void menu_debug_tsconf_tilenav_cursor_abajo(void)
 
 	int limite=DEBUG_TSCONF_TILENAV_MAX_TILES;
 
+	if (menu_debug_tsconf_tilenav_showmap.v==0) {
+
 	if (menu_debug_tsconf_tilenav_current_tile<limite-1) {
 		menu_debug_tsconf_tilenav_current_tile++;
+	}
+
+	}
+	else {
+		if (menu_debug_tsconf_tilenav_current_tile<limite-64) {
+			menu_debug_tsconf_tilenav_current_tile +=64;
+		}
+
 	}
 
 }
@@ -23155,6 +23213,11 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
 
 					case 'l':
 						menu_debug_tsconf_tilenav_current_tilelayer ^=1;
+					break;
+
+					case 'm':
+						menu_debug_tsconf_tilenav_showmap.v ^=1;
+						menu_debug_tsconf_tilenav_current_tile=0;
 					break;
 
 					//Salir con ESC
