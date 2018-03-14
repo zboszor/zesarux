@@ -86,7 +86,7 @@ z80_int tsconf_return_cram_color(z80_byte color)
 {
   int offset=color*2;
   z80_byte color_l=tsconf_fmaps[offset];
-  z80_byte color_h=tsconf_fmaps[offset+1];
+  z80_byte color_h=tsconf_fmaps[offset+1]&127;
 
   z80_int color_retorno=(color_h<<8)|color_l;
 
