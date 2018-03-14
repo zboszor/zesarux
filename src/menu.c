@@ -23020,7 +23020,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 				repetir_ancho=30;
 			}
 
-			printf ("linea: %d current tile: %d\n",linea_color,current_tile);
+			printf ("linea: %d current tile: %d puntero: %d\n",linea_color,current_tile,puntero_tilemap-tsconf_ram_mem_table[0]-tsconf_return_tilemappage()	);
 
 			do {
 				int y=current_tile/64;
@@ -23125,7 +23125,7 @@ void menu_debug_tsconf_tilenav_cursor_abajo(void)
 
 	}
 	else {
-		if (menu_debug_tsconf_tilenav_current_tile<limite-64) {
+		if (menu_debug_tsconf_tilenav_current_tile<limite-64*TSCONF_TILENAV_TILES_PER_WINDOW*2) {
 			menu_debug_tsconf_tilenav_current_tile +=64;
 		}
 
