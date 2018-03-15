@@ -22961,7 +22961,8 @@ void menu_debug_tsconf_spritenav(MENU_ITEM_PARAMETERS)
 #define TSCONF_TILENAV_WINDOW_Y 0
 #define TSCONF_TILENAV_WINDOW_ANCHO 32
 #define TSCONF_TILENAV_WINDOW_ALTO 24
-#define TSCONF_TILENAV_TILES_PER_WINDOW 10
+#define TSCONF_TILENAV_TILES_VERT_PER_WINDOW 9
+#define TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW 27
 
 void menu_debug_tsconf_tilenav_ventana(void)
 {
@@ -22998,8 +22999,8 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 	puntero_tilemap=tsconf_ram_mem_table[0]+tsconf_return_tilemappage();
 	puntero_tilemap_orig=puntero_tilemap;
 
-	int limite_vertical=TSCONF_TILENAV_TILES_PER_WINDOW;
-	if (menu_debug_tsconf_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_PER_WINDOW*2;
+	int limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;
+	if (menu_debug_tsconf_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2;
 
 
 		for (linea_color=0;linea_color<limite_vertical &&
@@ -23017,7 +23018,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 			else {
 				//Modo mapa tiles
 				current_tile=menu_debug_tsconf_tilenav_current_tile+linea_color*64;
-				repetir_ancho=30;
+				repetir_ancho=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW;
 			}
 
 			//printf ("linea: %3d current tile: %10d puntero: %10d\n",linea_color,current_tile,puntero_tilemap-tsconf_ram_mem_table[0]-tsconf_return_tilemappage()	);
@@ -23125,7 +23126,7 @@ void menu_debug_tsconf_tilenav_cursor_abajo(void)
 
 	}
 	else {
-		if (menu_debug_tsconf_tilenav_current_tile<limite-64*TSCONF_TILENAV_TILES_PER_WINDOW*2) {
+		if (menu_debug_tsconf_tilenav_current_tile<limite-64*TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2) {
 			menu_debug_tsconf_tilenav_current_tile +=64;
 		}
 
@@ -23151,7 +23152,7 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
     do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
 
-		int linea=TSCONF_TILENAV_WINDOW_Y+TSCONF_TILENAV_TILES_PER_WINDOW*2+1;
+		int linea=TSCONF_TILENAV_WINDOW_Y+TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2+1;
 
 			
 		char buffer_linea[40];
@@ -23162,9 +23163,17 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
 
 		menu_writing_inverse_color.v=1;
 
-		sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tilenav_current_tilelayer);
+		if (menu_debug_tsconf_tilenav_showmap.v) {
+			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tilenav_current_tilelayer);
+			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: Visual");
+		}
 
-		menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+		else {
+			sprintf (buffer_linea,"Move: Cursors, PgUp/Dn. ~~Layer %d",menu_debug_tsconf_tilenav_current_tilelayer);
+			menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+			menu_escribe_linea_opcion(linea++,-1,1,"~~Mode: List");
+		}
 
 		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
@@ -23201,7 +23210,7 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
 
 					case 24:
 						//PgUp
-						for (aux_pgdnup=0;aux_pgdnup<TSCONF_TILENAV_TILES_PER_WINDOW;aux_pgdnup++) {
+						for (aux_pgdnup=0;aux_pgdnup<TSCONF_TILENAV_TILES_VERT_PER_WINDOW;aux_pgdnup++) {
 							menu_debug_tsconf_tilenav_cursor_arriba();
 						}
 						menu_debug_tsconf_tilenav_ventana();
@@ -23212,7 +23221,7 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
 
 					case 25:
 						//PgDn
-						for (aux_pgdnup=0;aux_pgdnup<TSCONF_TILENAV_TILES_PER_WINDOW;aux_pgdnup++) {
+						for (aux_pgdnup=0;aux_pgdnup<TSCONF_TILENAV_TILES_VERT_PER_WINDOW;aux_pgdnup++) {
 							menu_debug_tsconf_tilenav_cursor_abajo();
 						}
 						menu_debug_tsconf_tilenav_ventana();
