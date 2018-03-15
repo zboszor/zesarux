@@ -22980,6 +22980,17 @@ z80_bit menu_debug_tsconf_tilenav_showmap={0};
 
 #define DEBUG_TSCONF_TILENAV_MAX_TILES (64*64)
 
+
+char menu_debug_tsconf_tiles_retorna_visualchar(int tnum)
+{
+	//Hacer un conjunto de 64 caracteres. Mismo set de caracteres que para Base64. Por que? Por que si :)
+			   //0123456789012345678901234567890123456789012345678901234567890123
+	char *caracter_list="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+	int index=tnum % 64;
+	return caracter_list[index];
+}
+
 //Muestra lista de tiles
 int menu_debug_tsconf_tilenav_lista_tiles(void)
 {
@@ -23075,13 +23086,14 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 				else {
 					//Modo mapa tiles
 					z80_byte caracter_final;
-					int caracteres_totales=50; //127-33;
 
 					if (tnum==0) {
-						caracter_final=' ';
+						caracter_final=' '; 
 					}
 					else {
-						caracter_final=33+(tnum%caracteres_totales);
+						//int caracteres_totales=50; //127-33;
+						//caracter_final=33+(tnum%caracteres_totales);
+						caracter_final=menu_debug_tsconf_tiles_retorna_visualchar(tnum);
 					}
 
 					dumpmemoria[mapa_tile_x++]=caracter_final;
