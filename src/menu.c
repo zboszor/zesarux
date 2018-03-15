@@ -22985,7 +22985,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 {
 
 	//Suficientemente grande para almacenar regla superior en modo visual
-	char dumpmemoria[65];
+	char dumpmemoria[67]; //64 + 2 espacios izquierda + 0 final
 
 	int linea_color;
 	int limite;
@@ -23007,7 +23007,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 
 	if (menu_debug_tsconf_tilenav_showmap.v) {
 				  //0123456789012345678901234567890123456789012345678901234567890123
-		strcpy(dumpmemoria,"0    5    10   15   20   25   30   35   40   45   50   55   60  ");
+		strcpy(dumpmemoria,"  0    5    10   15   20   25   30   35   40   45   50   55   60  ");
 
 		//Indicar codigo 0 de final
 		dumpmemoria[current_tile_x+TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW]=0;
@@ -23022,7 +23022,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 
 
 			int repetir_ancho=1;
-			int mapa_tile_x=0;
+			int mapa_tile_x=3;
 			if (menu_debug_tsconf_tilenav_showmap.v==0) {
 				//Modo lista tiles
 				current_tile=menu_debug_tsconf_tilenav_current_tile+linea_color;
@@ -23032,6 +23032,11 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 				//Modo mapa tiles
 				current_tile=menu_debug_tsconf_tilenav_current_tile+linea_color*64;
 				repetir_ancho=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW;
+
+				//poner regla vertical
+				int linea_tile=current_tile/64;
+				if ( (linea_tile%5)==0) sprintf (dumpmemoria,"%2d ",linea_tile);
+				else sprintf (dumpmemoria,"   ");
 			}
 
 			//printf ("linea: %3d current tile: %10d puntero: %10d\n",linea_color,current_tile,puntero_tilemap-tsconf_ram_mem_table[0]-tsconf_return_tilemappage()	);
