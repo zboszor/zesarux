@@ -2,6 +2,10 @@
 
 nombre fichero en ventana menu?
 
+parpadeo en tsconf con driver X11 y menu abierto. Quiza no comprueba si menu ocupado al hacer render tsconf?
+parece que lo hace tanto con real video on o off
+
+
 tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
 
 tbblue extended opcodes

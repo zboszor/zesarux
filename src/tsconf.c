@@ -51,7 +51,9 @@ z80_byte tsconf_af_ports[256];
 
 Y a partir de 24 todos son 255
 */
-z80_bit tsconf_with_vdac={1};
+
+//Por defecto desactivado. Unreal emulator lo tendra asi (los colores son iguales que sin vdac), por lo que entiendo que es lo normal
+z80_bit tsconf_with_vdac={0};
 
 
 z80_byte tsconf_fmaps[TSCONF_FMAPS_SIZE];
