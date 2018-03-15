@@ -22985,7 +22985,7 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 {
 
 	//Suficientemente grande para almacenar regla superior en modo visual
-	char dumpmemoria[67]; //64 + 2 espacios izquierda + 0 final
+	char dumpmemoria[68]; //64 + 3 espacios izquierda + 0 final
 
 	int linea_color;
 	int limite;
@@ -23005,12 +23005,13 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 
 	int current_tile_x=menu_debug_tsconf_tilenav_current_tile%64;
 
+
 	if (menu_debug_tsconf_tilenav_showmap.v) {
 				  //0123456789012345678901234567890123456789012345678901234567890123
-		strcpy(dumpmemoria,"  0    5    10   15   20   25   30   35   40   45   50   55   60  ");
+		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60  ");
 
 		//Indicar codigo 0 de final
-		dumpmemoria[current_tile_x+TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW]=0;
+		dumpmemoria[current_tile_x+TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+3]=0;  //3 espacios al inicio
 
 		menu_escribe_linea_opcion(linea++,-1,1,&dumpmemoria[current_tile_x]); //Mostrar regla superior
 	}
@@ -23076,8 +23077,12 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 					z80_byte caracter_final;
 					int caracteres_totales=50; //127-33;
 
-					if (tnum==0) caracter_final=' ';
-					else caracter_final=33+(tnum%caracteres_totales);
+					if (tnum==0) {
+						caracter_final=' ';
+					}
+					else {
+						caracter_final=33+(tnum%caracteres_totales);
+					}
 
 					dumpmemoria[mapa_tile_x++]=caracter_final;
 				}
@@ -23141,7 +23146,7 @@ void menu_debug_tsconf_tilenav_cursor_arriba(void)
 		}
 	}
 	else {
-		if (menu_debug_tsconf_tilenav_current_tile>64) {
+		if (menu_debug_tsconf_tilenav_current_tile>=64) {
 			menu_debug_tsconf_tilenav_current_tile-=64;
 		}
 	}
