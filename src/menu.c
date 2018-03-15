@@ -22984,7 +22984,8 @@ z80_bit menu_debug_tsconf_tilenav_showmap={0};
 int menu_debug_tsconf_tilenav_lista_tiles(void)
 {
 
-	char dumpmemoria[33];
+	//Suficientemente grande para almacenar regla superior en modo visual
+	char dumpmemoria[65];
 
 	int linea_color;
 	int limite;
@@ -23001,6 +23002,18 @@ int menu_debug_tsconf_tilenav_lista_tiles(void)
 
 	int limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;
 	if (menu_debug_tsconf_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW*2;
+
+	int current_tile_x=menu_debug_tsconf_tilenav_current_tile%64;
+
+	if (menu_debug_tsconf_tilenav_showmap.v) {
+				  //0123456789012345678901234567890123456789012345678901234567890123
+		strcpy(dumpmemoria,"0    5    10   15   20   25   30   35   40   45   50   55   60  ");
+
+		//Indicar codigo 0 de final
+		dumpmemoria[current_tile_x+TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW]=0;
+
+		menu_escribe_linea_opcion(linea++,-1,1,&dumpmemoria[current_tile_x]); //Mostrar regla superior
+	}
 
 
 		for (linea_color=0;linea_color<limite_vertical &&
@@ -23097,6 +23110,22 @@ void menu_debug_tsconf_tilenav_draw_sprites(void)
 				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
 				normal_overlay_texto_menu();
 
+}
+
+void menu_debug_tsconf_tilenav_cursor_izquierda(void)
+{
+	if (menu_debug_tsconf_tilenav_showmap.v) {
+		int cursor_x=menu_debug_tsconf_tilenav_current_tile % 64;
+		if (cursor_x>0) menu_debug_tsconf_tilenav_current_tile--;
+	}
+}
+
+void menu_debug_tsconf_tilenav_cursor_derecha(void)
+{
+        if (menu_debug_tsconf_tilenav_showmap.v) {
+                int cursor_x=menu_debug_tsconf_tilenav_current_tile % 64;
+                if (cursor_x<64-TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW) menu_debug_tsconf_tilenav_current_tile++;
+        }
 }
 
 void menu_debug_tsconf_tilenav_cursor_arriba(void)
@@ -23207,6 +23236,23 @@ void menu_debug_tsconf_tilenav(MENU_ITEM_PARAMETERS)
 
 
 					break;
+
+                                        case 8:
+                                                //izquierda
+                                                menu_debug_tsconf_tilenav_cursor_izquierda();
+
+                                                menu_debug_tsconf_tilenav_ventana();
+
+                                        break;
+
+                                        case 9:
+                                                //derecha
+                                                menu_debug_tsconf_tilenav_cursor_derecha();
+
+                                                menu_debug_tsconf_tilenav_ventana();
+
+
+                                        break;
 
 					case 24:
 						//PgUp
