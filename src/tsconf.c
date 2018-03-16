@@ -2537,6 +2537,8 @@ void scr_refresca_border_tsconf_cont(void)
 	int color;
 
 	color=tsconf_get_border_colour();
+        color=TSCONF_INDEX_FIRST_COLOR+tsconf_return_cram_color(color);
+
 
 
 	if (scr_refresca_sin_colores.v) color=7;
