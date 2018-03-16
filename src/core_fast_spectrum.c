@@ -212,7 +212,6 @@ void core_spectrum_store_rainbow_current_atributes(void)
 void cpu_core_loop_spectrum(void)
 {
 
-
 		timer_check_interrupt();
 
 
@@ -224,6 +223,8 @@ void cpu_core_loop_spectrum(void)
 //#ifdef COMPILE_SIMPLETEXT
 //                if (screen_simpletext_driver) scr_simpletext_printchar();
 //#endif
+
+
 		//Gestionar autoload
 		gestionar_autoload_spectrum();
 
@@ -270,12 +271,12 @@ void cpu_core_loop_spectrum(void)
 
 #endif
 
+				if (MACHINE_IS_TSCONF) tsconf_handle_frame_interrupts();
 
-				//Modo normal
+
 
         	                        contend_read( reg_pc, 4 );
 					byte_leido_core_spectrum=fetch_opcode();
-
 
 
 
@@ -287,6 +288,7 @@ void cpu_core_loop_spectrum(void)
                                 reg_pc++;
 
 				reg_r++;
+
 
 
 
@@ -342,6 +344,8 @@ void cpu_core_loop_spectrum(void)
 					//printf ("audio_valor_enviar_sonido: audio_buffer_indice: %d %d %d\n",audio_buffer_indice,value_beeper,audio_valor_enviar_sonido);
 				}
 
+
+
 				if (realtape_inserted.v && realtape_playing.v) {
 					realtape_get_byte();
 					if (realtape_loading_sound.v) {
@@ -369,6 +373,11 @@ void cpu_core_loop_spectrum(void)
 
 
 				ay_chip_siguiente_ciclo();
+
+				if (MACHINE_IS_TSCONF) {
+					//y reseteo de esto, que es para interrupciones frame
+					tsconf_handle_frame_interrupts_prev_horiz=9999;
+				}
 
 			}
 
@@ -462,9 +471,11 @@ void cpu_core_loop_spectrum(void)
 				cpu_loop_refresca_pantalla();
 
 
+
 				siguiente_frame_pantalla();
 
 
+				if (debug_registers) scr_debug_registers();
 
 	  	                contador_parpadeo--;
                         	//printf ("Parpadeo: %d estado: %d\n",contador_parpadeo,estado_parpadeo.v);
@@ -574,7 +585,21 @@ void cpu_core_loop_spectrum(void)
 
                                                 t_estados -=15;
 
+																								if (superupgrade_enabled.v) {
+																									//Saltar a NMI de ROM0. TODO: que pasa con puertos 32765 y 8189?
+																									superupgrade_puerto_43b = 0;
+																									puerto_32765=0;
+																									puerto_8189=0;
+																									superupgrade_set_memory_pages();
+																								}
 
+						//Prueba
+						//Al recibir nmi tiene que poner paginacion normal. Luego ya saltara por autotrap de diviface
+						if (diviface_enabled.v) {
+							//diviface_paginacion_manual_activa.v=0;
+							diviface_control_register&=(255-128);
+							diviface_paginacion_automatica_activa.v=0;
+						}
 
 
 
