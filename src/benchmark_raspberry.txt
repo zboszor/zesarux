@@ -123,3 +123,10 @@
         //sin memptr,sin visualmem, sin cpustats
         //con contended memory
         //128k, ao null, vo fbdev, zoom 1, frameskip 3, over128.z80, 88% cpu
+
+
+	//16 Marzo 2018
+	//zesarux 5 --ao null --vo null --noconfigfile 64 % cpu raspiboy
+	//zesarux 6.1 SN --ao null --vo null --noconfigfile 81 % cpu raspiboy
+	//zesarux 6.1 SN con fast core --ao null --vo null --noconfigfile 58 % cpu raspiboy
+	
