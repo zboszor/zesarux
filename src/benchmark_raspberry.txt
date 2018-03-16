@@ -129,4 +129,6 @@
 	//zesarux 5 --ao null --vo null --noconfigfile 64 % cpu raspiboy
 	//zesarux 6.1 SN --ao null --vo null --noconfigfile 81 % cpu raspiboy
 	//zesarux 6.1 SN con fast core --ao null --vo null --noconfigfile 58 % cpu raspiboy
+
+	//si solo quitase los ifs sin perder casi funcionalidad (chardetect, +3, raster interrupt, frame interrupt tsconf, audiodac) consume 68%. Por lo que raspberry NO tiene speculative execution
 	
