@@ -88,7 +88,7 @@ ZEsarUX_rpi-version-raspbian9.tar.gz
 con comandos:
 export CFLAGS=-O2
 export LDFLAGS=-O2
-./configure --enable-raspberry --disable-xwindows --disable-caca --disable-aa --disable-pulse --disable-simpletext --disable-stdout --prefix /usr
+./configure --enable-raspberry --spectrum-fast-core --disable-xwindows --disable-caca --disable-aa --disable-pulse --disable-simpletext --disable-stdout --prefix /usr
 
 La salida debe ser similar a:
  Enabled Video output drivers: curses sdl fbdev null

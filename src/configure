@@ -60,7 +60,7 @@ show_help()
 	echo "--enable-ssl                 Enable ssl functions"
 	echo "--disable-contend            Disable Contended Memory emulation"
 	echo "--disable-putpixel-cache     Disable putpixel cache. Test feature"
-	echo "--spectrum-fast-core         Use a faster (and REDUCED) spectrum core, useful on slow devices (Raspberry Pi/Zero)"
+	echo "--spectrum-fast-core         Use a faster (and REDUCED) spectrum core, useful on slow devices (Raspberry Pi One/Zero)"
 	echo
 	echo "Installation directories:"
 	echo "--prefix PREFIX              Install program files in PREFIX [/usr/local]"

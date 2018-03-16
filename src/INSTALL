@@ -95,7 +95,7 @@ It makes the emulator use a bit more CPU power)
 export CFLAGS=-O2
 export LDFLAGS=-O2
 
-./configure --enable-raspberry
+./configure --enable-raspberry --spectrum-fast-core
 and not enable memptr, visualmem or cpustats
 )
 
