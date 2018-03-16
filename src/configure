@@ -2281,8 +2281,11 @@ if [ "$OPTIONCORESPECTRUM" == "core_spectrum.c" ]; then
         echo "normal"
 else
         echo "fast"
-	echo "WARNING: You are using the fast Spectrum Core, but some features will NOT be available:"
+	echo
+	echo "!!!!!WARNING!!!!!"
+	echo "You are using the fast Spectrum Core, but some features will NOT be available:"
 	echo "Debug t-states, char detection, +3 Disk, Save to tape, Divide, RZX, Raster interrupts, Audio DAC, Video out to file"
+	echo
 fi
 
 
