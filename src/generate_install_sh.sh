@@ -17,6 +17,7 @@ cp zesarux $INSTALLPREFIX/bin/
 cp *.rom zxuno.flash tbblue.mmc $INSTALLPREFIX/share/zesarux/
 
 cp mantransfev3.bin $INSTALLPREFIX/share/zesarux/
+cp editionnamegame.tap $INSTALLPREFIX/share/zesarux/
 
 cp -r speech_filters $INSTALLPREFIX/share/zesarux/
 cp -r my_soft $INSTALLPREFIX/share/zesarux/
