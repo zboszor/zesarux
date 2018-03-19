@@ -3085,15 +3085,13 @@ int util_write_configfile(void)
 
 
   if (quickload_file[0]!=0) {
-	//Quitar barra del final si la hay
-	util_copy_path_delete_last_slash(quickload_file,buffer_temp);
+	util_get_dir(quickload_file,buffer_temp);
  	ADD_STRING_CONFIG,"--smartloadpath \"%s\"",buffer_temp);
   }
 
 
   if (binary_file_load[0]!=0) {
-	//Quitar barra del final si la hay
-	util_copy_path_delete_last_slash(binary_file_load,buffer_temp);
+	util_get_dir(binary_file_load,buffer_temp);
  	ADD_STRING_CONFIG,"--loadbinarypath \"%s\"",buffer_temp);
   }
 
