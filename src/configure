@@ -307,7 +307,7 @@ while [ $# -gt 0 ]; do
 		INST=`echo -n "$1"|cut -d '=' -f2`
 		set_installprefix "$INST"
 	else
-		echo Unknown parameter
+		echo Unknown parameter $1
 		show_help
 	fi
 	;;
