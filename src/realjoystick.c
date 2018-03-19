@@ -904,7 +904,7 @@ void realjoystick_set_reset_action(int index,int value)
 		case REALJOYSTICK_EVENT_ESC_MENU:
                                 if (value) {
                                         puerto_especial1 &=255-1;
-                                        menu_abierto=1;
+                                        if (util_if_open_just_menu() ) menu_abierto=1;
                                 }
                                 else {
                                         puerto_especial1 |=1;

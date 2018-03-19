@@ -615,4 +615,6 @@ extern char emulator_tmpdir_set_by_user[];
 
 extern void util_spectrumscreen_get_xy(z80_int dir,int *xdest,int *ydest);
 
+extern int util_if_open_just_menu(void);
+
 #endif

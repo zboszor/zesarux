@@ -30291,7 +30291,7 @@ void menu_process_f_functions(void)
 		break;
 
 		case F_FUNCION_OPENMENU:
-			menu_inicio_bucle();
+			if (util_if_open_just_menu() ) menu_inicio_bucle();
 		break;
 
 		case F_FUNCION_OCR:

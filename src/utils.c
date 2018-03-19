@@ -5111,6 +5111,13 @@ int si_menu_mouse_activado(void)
 }
 
 
+//Accion de abrir menu (F5, boton joystick) que ademas controla si el boton esta limitado para que abra el menu solo cuando se pulsa 3 veces seguidas, por ejemplo, en 1 segundo
+int util_if_open_just_menu(void)
+{
+	return 1;
+}
+
+
 //Si esta emulacion de kempston mouse activa, no se puede usar el raton para el menu
 void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
 {
@@ -6224,7 +6231,7 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
                         case UTIL_KEY_F5:
 
                                 if (pressrelease) {
-					                              menu_abierto=1;
+					if (util_if_open_just_menu() )  menu_abierto=1;
                                         ql_keyboard_table[0] &= (255-32); //Caso especial F5 y QL
                                 }
                                 else {
