@@ -27,6 +27,8 @@
 #include <errno.h>
 
 
+#include "core_reduced_spectrum.h"
+#include "core_spectrum.h"
 #include "cpu.h"
 #include "debug.h"
 #include "tape.h"
@@ -54,162 +56,12 @@
 
 #include "scrstdout.h"
 
-z80_byte byte_leido_core_spectrum;
+//z80_byte byte_leido_core_spectrum;
 
 
-//int tempcontafifty=0;
-
-int si_siguiente_sonido(void)
-{
-
-	if (MACHINE_IS_PRISM) {
-/*
-Si son 525 scanlines:
-525/5*3=315
-
-0/1.6=0 mod 5=0
-1/1.6=0 mod 5=1
-2/1.6=1
-3/1.6=1
-4/1.6=2
-
-5/1.6=3
-6/1.6=3
-7/1,6=4
-8/1.6=4
-9/1.6=5
-
-10/1.6=6
-Hacer mod 5 y escoger 0,2,4 (de cada 5 coger 3)
-*/
-		int resto=t_scanline%5;
-		if (resto==0 || resto==2 || resto==4) return 1;
-		else return 0;
-	}
-
-	return 1;
-}
-
-
-/*
-void t_scanline_next_border(void)
-{
-        //resetear buffer border
-
-	int i;
-        //en principio inicializamos el primer valor con el ultimo out del border
-        buffer_border[0]=out_254 & 7;
-
-	//Siguientes valores inicializamos a 255
-        for (i=1;i<BORDER_ARRAY_LENGTH;i++) buffer_border[i]=255;
-
-
-}
-*/
-
-void t_scanline_next_fullborder(void)
-{
-        //resetear buffer border
-
-        int i;
-
-        //a 255
-        for (i=0;i<CURRENT_FULLBORDER_ARRAY_LENGTH;i++) fullbuffer_border[i]=255;
-
-	//Resetear buffer border para prism
-	if (MACHINE_IS_PRISM) {
-		for (i=0;i<CURRENT_PRISM_BORDER_BUFFER;i++) prism_ula2_border_colour_buffer[i]=65535;
-	}
-
-	//printf ("max buffer border : %d\n",i);
-
-
-}
-
-
-
-
-void core_spectrum_store_rainbow_current_atributes(void)
-{
-
-	//En maquina prism, no hacer esto
-	if (MACHINE_IS_PRISM) return;
-
-	//En maquina tsconf, no hacer esto tampoco
-	if (MACHINE_IS_TSCONF) return;
-
-				//ULA dibujo de pantalla
-				//last_x_atributo guarda ultima posicion (+1) antes de ejecutar el opcode
-				//lo que se pretende hacer aqui es guardar los atributos donde esta leyendo la ula actualmente,
-				//y desde esta lectura a la siguiente, dado que cada opcode del z80 puede tardar mas de 4 ciclos (en 4 ciclos se generan 8 pixeles)
-				//Esto no es exactamente perfecto,
-				//lo ideal es que cada vez que avanzase el contador de t_estados se guardase el atributo que se va a leer
-				//como esto es muy costoso, hacemos que se guardan los atributos leidos desde el opcode anterior hasta este
-				if (rainbow_enabled.v) {
-					if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
-						int atributo_pos=(t_estados % screen_testados_linea)/4;
-							z80_byte *screen_atributo=get_base_mem_pantalla_attributes();
-							z80_byte *screen_pixel=get_base_mem_pantalla();
-
-							//printf ("atributos: %p pixeles: %p\n",screen_atributo,screen_pixel);
-
-							int dir_atributo;
-
-							if (timex_si_modo_8x1()) {
-								dir_atributo=screen_addr_table[(t_scanline_draw-screen_indice_inicio_pant)*32];
-							}
-
-							else {
-								dir_atributo=(t_scanline_draw-screen_indice_inicio_pant)/8;
-								dir_atributo *=32;
-							}
-
-
-                                                        int dir_pixel=screen_addr_table[(t_scanline_draw-screen_indice_inicio_pant)*32];
-
-						//si hay cambio de linea, empezamos con el 0
-						//puede parecer que al cambiar de linea nos perdemos el ultimo atributo de pantalla hasta el primero de la linea
-						//siguiente, pero eso es imposible, dado que eso sucede desde el ciclo 128 hasta el 228 (zona de borde)
-						// y no hay ningun opcode que tarde 100 ciclos
-						if (last_x_atributo>atributo_pos) last_x_atributo=0;
-							dir_atributo += last_x_atributo;
-							dir_pixel +=last_x_atributo;
-
-						//Puntero al buffer de atributos
-						z80_byte *puntero_buffer;
-						puntero_buffer=&scanline_buffer[last_x_atributo*2];
-
-						for (;last_x_atributo<=atributo_pos;last_x_atributo++) {
-							//printf ("last_x_atributo: %d atributo_pos: %d\n",last_x_atributo,atributo_pos);
-							last_ula_pixel=screen_pixel[dir_pixel];
-							last_ula_attribute=screen_atributo[dir_atributo];
-
-							//realmente en este array guardamos tambien atributo cuando estamos en la zona de border,
-							//nos da igual, lo hacemos por no complicarlo
-							//debemos tambien suponer que atributo_pos nunca sera mayor o igual que ATRIBUTOS_ARRAY_LENGTH
-							//esto debe ser asi dado que atributo_pos=(t_estados % screen_testados_linea)/4;
-
-							*puntero_buffer++=last_ula_pixel;
-							*puntero_buffer++=last_ula_attribute;
-							dir_atributo++;
-							dir_pixel++;
-						}
-
-						//Siguiente posicion se queda en last_x_atributo
-
-						//printf ("fin lectura attr linea %d\n",t_scanline_draw);
-					}
-
-					//Para el bus idle le decimos que estamos en zona de border superior o inferior y por tanto retornamos 255
-					else {
-						last_ula_attribute=255;
-						last_ula_pixel=255;
-					}
-				}
-}
 
 //bucle principal de ejecucion de la cpu de spectrum
-void cpu_core_loop_spectrum(void)
+void cpu_core_loop_reduced_spectrum(void)
 {
 
 		timer_check_interrupt();

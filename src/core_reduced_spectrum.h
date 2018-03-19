@@ -19,15 +19,13 @@
 
 */
 
-#ifndef CORE_SPECTRUM_H
-#define CORE_SPECTRUM_H
+#ifndef CORE_REDUCED_SPECTRUM_H
+#define CORE_REDUCED_SPECTRUM_H
 
 #include "cpu.h"
 
-extern void cpu_core_loop_spectrum(void);
-extern z80_byte byte_leido_core_spectrum;
-extern void core_spectrum_store_rainbow_current_atributes(void);
-extern int si_siguiente_sonido(void);
-extern void t_scanline_next_fullborder(void);
+extern void cpu_core_loop_reduced_spectrum(void);
+
+
 
 #endif
