@@ -2975,7 +2975,11 @@ void util_copy_path_delete_last_slash(char *origen, char *destino)
     //Quitar barra del final si la hay
     strcpy(destino,origen);
     int i=strlen(destino);
-    if (i>1 && destino[i-1]=='/') destino[i-1]=0;
+    if (i>1 && 
+        (destino[i-1]=='/' || destino[i-1]=='\\')
+        ) {
+            destino[i-1]=0;
+    }
 }
 
 
@@ -3078,8 +3082,21 @@ int util_write_configfile(void)
   if (wrx_present.v)                          ADD_STRING_CONFIG,"--wrx");
                                               ADD_STRING_CONFIG,"--vsync-minimum-length %d",minimo_duracion_vsync);
   if (chroma81.v)                             ADD_STRING_CONFIG,"--chroma81");
-  //TODO smartloadpath
-  //TODO loadbinarypath
+
+
+  if (quickload_file[0]!=0) {
+	//Quitar barra del final si la hay
+	util_copy_path_delete_last_slash(quickload_file,buffer_temp);
+ 	ADD_STRING_CONFIG,"--smartloadpath \"%s\"",buffer_temp);
+  }
+
+
+  if (binary_file_load[0]!=0) {
+	//Quitar barra del final si la hay
+	util_copy_path_delete_last_slash(binary_file_load,buffer_temp);
+ 	ADD_STRING_CONFIG,"--loadbinarypath \"%s\"",buffer_temp);
+  }
+
   if (zxuno_flash_spi_name[0])                ADD_STRING_CONFIG,"--zxunospifile \"%s\"",zxuno_flash_spi_name);
   if (zxuno_flash_persistent_writes.v)     ADD_STRING_CONFIG,"--zxunospi-persistent-writes");
 
