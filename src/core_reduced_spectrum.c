@@ -472,6 +472,8 @@ void cpu_core_loop_reduced_spectrum(void)
 						//Tratar interrupciones maskable
 						interrupcion_maskable_generada.v=0;
 
+						interrupcion_si_despues_lda_ir();
+
 						//Aunque parece que rzx deberia saltar aqui al siguiente frame, lo hacemos solo cuando es necesario (cuando las lecturas en un frame exceden el frame)
 						//if (rzx_reproduciendo) {
 							//rzx_next_frame_recording();

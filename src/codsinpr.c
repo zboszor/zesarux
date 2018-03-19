@@ -2327,7 +2327,7 @@ void instruccion_236()
 }
 
 
-//Variable solo usada en instruccion_237. La dejamos aqui para no tenerla que asignar siempre en el stack
+//Variable usada en instruccion_237 y tambien al generar interrupcion maskable. La dejamos aqui para no tenerla que asignar siempre en el stack
 z80_byte pref237_opcode_leido;
 
 void instruccion_237()

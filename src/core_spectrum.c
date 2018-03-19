@@ -126,7 +126,23 @@ void t_scanline_next_fullborder(void)
 
 }
 
+extern z80_byte pref237_opcode_leido;
+void interrupcion_si_despues_lda_ir(void)
+{
 
+	//Esto es diferente en NMOS y en CMOS
+    if (MACHINE_IS_Z88) return;                //CMOS
+
+	//NMOS
+
+	if (byte_leido_core_spectrum==237) {
+
+		if (pref237_opcode_leido==87 || pref237_opcode_leido==95) {
+			//printf ("Poner PV a 0 despues de LD a,i o LD a,r\n");
+			Z80_FLAGS &=(255-FLAG_PV);
+		}
+	}
+}
 
 
 void core_spectrum_store_rainbow_current_atributes(void)
@@ -670,6 +686,8 @@ void cpu_core_loop_spectrum(void)
 						debug_anota_retorno_step_maskable();
 						//Tratar interrupciones maskable
 						interrupcion_maskable_generada.v=0;
+
+						interrupcion_si_despues_lda_ir();
 
 						//Aunque parece que rzx deberia saltar aqui al siguiente frame, lo hacemos solo cuando es necesario (cuando las lecturas en un frame exceden el frame)
 						//if (rzx_reproduciendo) {
