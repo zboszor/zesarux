@@ -300,7 +300,11 @@ z80_bit test_config_and_exit={0};
 z80_bit sdl_raw_keyboard_read={0};
 
 //Si se usa core de spectrum reducido o no
+#ifdef USE_REDUCED_CORE_SPECTRUM
+z80_bit core_spectrum_uses_reduced={1};
+#else
 z80_bit core_spectrum_uses_reduced={0};
+#endif
 
 
 void add_scr_init_array(char *name,int (*funcion_init) () , int (*funcion_set) () )

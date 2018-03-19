@@ -95,8 +95,17 @@ It makes the emulator use a bit more CPU power)
 export CFLAGS=-O2
 export LDFLAGS=-O2
 
-./configure --enable-raspberry --spectrum-fast-core
-and not enable memptr, visualmem or cpustats
+./configure --enable-raspberry 
+So you are not enabling memptr, visualmem or cpustats
+
+Even more, if you have a slow device, like Raspberry Pi 1 or Zero, I recommend:
+
+./configure --enable-raspberry --spectrum-reduced-core
+So you are not enabling memptr, visualmem or cpustats and using the reduced core by default, which uses less cpu.
+You can also switch it from command line or runtime.
+Using the reduced core, the following features will NOT be available or will NOT be properly emulated:
+Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, Audio DAC, Video out to file
+
 )
 
 

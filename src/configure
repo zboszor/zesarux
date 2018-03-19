@@ -60,6 +60,7 @@ show_help()
 	echo "--enable-ssl                 Enable ssl functions"
 	echo "--disable-contend            Disable Contended Memory emulation"
 	echo "--disable-putpixel-cache     Disable putpixel cache. Test feature"
+	echo "--spectrum-reduced-core      Use reduced Spectrum core by default, recommended for slow devices like Raspberry Pi 1 and Zero. You can also switch it from command line or menu"
 	echo
 	echo "Installation directories:"
 	echo "--prefix PREFIX              Install program files in PREFIX [/usr/local]"
@@ -127,6 +128,7 @@ OPTIONPUTPIXELCACHE="yes"
 OPTION_WORDS_BIGENDIAN=""
 OPTIONCOCOA="enabled"
 OPTIONCOCOA_OPENGL=""
+OPTIONREDUCED_CORE_SPECTRUM=""
 
 
 LIBSDL="SDL"
@@ -284,6 +286,10 @@ while [ $# -gt 0 ]; do
 
 	--disable-putpixel-cache)
 	OPTIONPUTPIXELCACHE=""
+	;;
+
+	--spectrum-reduced-core)
+	OPTIONREDUCED_CORE_SPECTRUM="yes"
 	;;
 
 
@@ -1989,6 +1995,14 @@ COMPILE_VARIABLES="$COMPILE_VARIABLES USE_LINUXREALJOYSTICK"
 fi
 
 
+if [ "$OPTIONREDUCED_CORE_SPECTRUM" != "" ]; then
+cat >> compileoptions.h << _EOF
+#define USE_REDUCED_CORE_SPECTRUM
+_EOF
+COMPILE_VARIABLES="$COMPILE_VARIABLES USE_REDUCED_CORE_SPECTRUM"
+fi
+
+
 #Para que la fecha y mensajes del wc salgan en ingles
 export LANG=C
 
@@ -2270,6 +2284,13 @@ if [ "$OPTIONPUTPIXELCACHE" == "" ]; then
         echo "no"
 else
         echo "yes"
+fi
+
+echo -n " Spectrum default core: "
+if [ "$OPTIONREDUCED_CORE_SPECTRUM" == "" ]; then
+        echo "Normal"
+else
+        echo "Reduced"
 fi
 
 
