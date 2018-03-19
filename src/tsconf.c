@@ -2961,7 +2961,7 @@ void tsconf_fire_frame_interrupt(void)
 int tsconf_handle_frame_interrupts_prev_horiz=9999;
 
 //Para no disparar interrupcion dos interrupcion frame en misma linea . temporal
-int tsconf_last_frame_y=-1;
+//int tsconf_last_frame_y=-1;
 
 void tsconf_handle_frame_interrupts(void)
 {
@@ -3018,7 +3018,7 @@ void tsconf_handle_frame_interrupts(void)
 
 
 			tsconf_handle_frame_interrupts_prev_horiz=estados_en_linea;
-			tsconf_last_frame_y=t_scanline;
+			//tsconf_last_frame_y=t_scanline;
 
 		}
 

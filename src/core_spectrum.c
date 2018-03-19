@@ -445,7 +445,7 @@ void cpu_core_loop_spectrum(void)
 
             if (t_estados>=screen_testados_total) {
 
-				tsconf_last_frame_y=-1;
+				//tsconf_last_frame_y=-1;
 
 				if (rainbow_enabled.v==1) t_scanline_next_fullborder();
 
