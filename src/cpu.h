@@ -484,5 +484,7 @@ extern z80_bit do_no_show_changelog_when_update;
 
 extern z80_bit sdl_raw_keyboard_read;
 
+extern z80_bit core_spectrum_uses_reduced;
+
 
 #endif

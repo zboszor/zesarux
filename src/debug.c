@@ -78,6 +78,8 @@
 
 #include "tsconf.h"
 
+#include "core_reduced_spectrum.h"
+
 
 struct timeval debug_timer_antes, debug_timer_ahora;
 
@@ -1639,7 +1641,13 @@ void set_cpu_core_loop(void)
 
                 case CPU_CORE_SPECTRUM:
                         debug_printf(VERBOSE_INFO,"Setting Spectrum CPU core");
-                        cpu_core_loop=cpu_core_loop_spectrum;
+			if (core_spectrum_uses_reduced.v==0) {
+	                        cpu_core_loop=cpu_core_loop_spectrum;
+			}
+			else {
+				debug_printf(VERBOSE_WARN,"Setting REDUCED Spectrum CPU core");
+				cpu_core_loop=cpu_core_loop_reduced_spectrum;
+			}
                         cpu_core_loop_name="Spectrum";
                 break;
 

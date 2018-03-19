@@ -103,6 +103,7 @@
 #include "betadisk.h"
 #include "codetests.h"
 #include "pd765.h"
+#include "core_reduced_spectrum.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -297,6 +298,9 @@ z80_bit test_config_and_exit={0};
 
 //SDL : Si se lee teclado mediante scancodes raw en vez de usar localizacion de teclado
 z80_bit sdl_raw_keyboard_read={0};
+
+//Si se usa core de spectrum reducido o no
+z80_bit core_spectrum_uses_reduced={0};
 
 
 void add_scr_init_array(char *name,int (*funcion_init) () , int (*funcion_set) () )
