@@ -16667,6 +16667,13 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_spectrum_core_reduced(MENU_ITEM_PARAMETERS)
+{
+	core_spectrum_uses_reduced.v ^=1;
+
+	set_cpu_core_loop();
+
+}
 
 
 //menu hardware settings
@@ -16898,6 +16905,14 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_tooltip(array_menu_hardware_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
 					menu_add_item_menu_ayuda(array_menu_hardware_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
 	  }
+
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_spectrum_core_reduced,NULL,"Spectrum core: %s",
+			(core_spectrum_uses_reduced.v ? "Reduced" : "Normal") );
+			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Switches between the normal Spectrum core or the reduced core");
+			menu_add_item_menu_ayuda(array_menu_hardware_settings,"When using the Spectrum reduced core, the following features are NOT available or are NOT properly emulated:\n"
+				"Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, Audio DAC, Video out to file");
+		}
 
 
 
