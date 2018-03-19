@@ -492,6 +492,9 @@ void timer_check_interrupt(void)
 				}
 			}
 
+			//temporizador cuando se esta limitando el uso de tecla de abrir menu
+			util_if_open_just_menu_counter++;
+
 
 			//temporizador para movimiento de mouse en menu
                         menu_mouse_frame_counter++;

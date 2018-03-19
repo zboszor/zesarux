@@ -617,4 +617,6 @@ extern void util_spectrumscreen_get_xy(z80_int dir,int *xdest,int *ydest);
 
 extern int util_if_open_just_menu(void);
 
+extern int util_if_open_just_menu_counter;
+
 #endif

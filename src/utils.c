@@ -5111,7 +5111,14 @@ int si_menu_mouse_activado(void)
 }
 
 
+//Contador que se incrementa cada vez desde timer.c (50 veces por segundo)
 int util_if_open_just_menu_counter=0;
+
+//Numero de veces que se ha pulsado la tecla de abrir el menu
+int util_if_open_just_menu_times=0;
+
+//Contador inicial de la primera pulsacion de tecla de abrir menu
+int util_if_open_just_menu_initial_counter=0;
 
 //Accion de abrir menu (F5, boton joystick) que ademas controla si el boton esta limitado para que abra el menu solo cuando se pulsa 3 veces seguidas, por ejemplo, en 1 segundo
 int util_if_open_just_menu(void)
@@ -5119,6 +5126,20 @@ int util_if_open_just_menu(void)
 	if (menu_limit_menu_open.v==0) return 1;
 
 	//esta limitado el uso de F5, hay que pulsar 3 veces en el ultimo segundo
+	if (util_if_open_just_menu_times==0) {
+		util_if_open_just_menu_initial_counter=util_if_open_just_menu_counter;
+	}
+
+	util_if_open_just_menu_times++;
+
+	//Si llega a 3 veces, ver si la diferencia del contador es menor o igual que 50
+	if (util_if_open_just_menu_times==3) {
+		util_if_open_just_menu_times=0;
+		int diferencia=util_if_open_just_menu_counter-util_if_open_just_menu_initial_counter;
+		if (diferencia<=50) return 1;
+	}
+
+	return 0;
 }
 
 
