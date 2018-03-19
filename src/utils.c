@@ -3268,6 +3268,10 @@ int util_write_configfile(void)
   if (spectrum_1648_use_real_palette.v)       ADD_STRING_CONFIG,"--realpalette");
 
   if (tooltip_enabled.v==0)                   ADD_STRING_CONFIG,"--disabletooltips");
+
+
+  if (menu_limit_menu_open.v)                 ADD_STRING_CONFIG,"--limitopenmenu");
+
   if (menu_desactivado.v)                     ADD_STRING_CONFIG,"--disablemenu");
 
   if (menu_force_writing_inverse_color.v)     ADD_STRING_CONFIG,"--forcevisiblehotkeys");
@@ -5131,11 +5135,13 @@ int util_if_open_just_menu(void)
 	}
 
 	util_if_open_just_menu_times++;
+	debug_printf (VERBOSE_DEBUG,"Pressed open menu key: %d times",util_if_open_just_menu_times);
 
 	//Si llega a 3 veces, ver si la diferencia del contador es menor o igual que 50
 	if (util_if_open_just_menu_times==3) {
 		util_if_open_just_menu_times=0;
 		int diferencia=util_if_open_just_menu_counter-util_if_open_just_menu_initial_counter;
+		debug_printf (VERBOSE_DEBUG,"Time elapsed between the third keypress and the first one (in 1/50s): %d",diferencia);
 		if (diferencia<=50) return 1;
 	}
 
