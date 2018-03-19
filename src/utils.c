@@ -5129,7 +5129,7 @@ int util_if_open_just_menu(void)
 {
 	if (menu_limit_menu_open.v==0) return 1;
 
-	//esta limitado el uso de F5, hay que pulsar 3 veces en el ultimo segundo
+	//esta limitado el uso de F5, hay que pulsar 4 veces en el ultimo segundo
 	if (util_if_open_just_menu_times==0) {
 		util_if_open_just_menu_initial_counter=util_if_open_just_menu_counter;
 	}
@@ -5137,8 +5137,8 @@ int util_if_open_just_menu(void)
 	util_if_open_just_menu_times++;
 	debug_printf (VERBOSE_DEBUG,"Pressed open menu key: %d times",util_if_open_just_menu_times);
 
-	//Si llega a 3 veces, ver si la diferencia del contador es menor o igual que 50
-	if (util_if_open_just_menu_times==3) {
+	//Si llega a 4 veces, ver si la diferencia del contador es menor o igual que 50
+	if (util_if_open_just_menu_times==4) {
 		util_if_open_just_menu_times=0;
 		int diferencia=util_if_open_just_menu_counter-util_if_open_just_menu_initial_counter;
 		debug_printf (VERBOSE_DEBUG,"Time elapsed between the third keypress and the first one (in 1/50s): %d",diferencia);

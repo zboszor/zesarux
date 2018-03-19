@@ -1489,7 +1489,7 @@ printf (
 
 printf (
 		"\n"
-		"--limitopenmenu            Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second\n"
+		"--limitopenmenu            Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 4 times in one second\n"
 		"--disablemenu              Disable menu. Any event that opens the menu will exit the emulator\n"
 		"\n"
 		"\n"

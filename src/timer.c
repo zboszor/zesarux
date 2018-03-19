@@ -494,6 +494,17 @@ void timer_check_interrupt(void)
 
 			//temporizador cuando se esta limitando el uso de tecla de abrir menu
 			util_if_open_just_menu_counter++;
+			//Si ha pasado 5 segundos entre la primera pulsacion y ahora, resetear todo.
+			//Si no hiciera esto, y por ejemplo pulsase dos veces en un momento, sin mas,
+			//luego al pulsar 4 seguidas, no se abriria el menu, porque contaria 2 primeras fuera de tiempo (mas de un segundo) con diferencia de la primera,
+			//y luego las 2 siguientes. Por lo que en ese supuesto caso tendria que pulsar 4x2=8 veces para poder abrir el menu, y aun asi, tendria siempre dos mas
+			//fuera de secuencia que me perjudicaria
+			if (util_if_open_just_menu_times) {
+				if (util_if_open_just_menu_counter>50*2) {
+					debug_printf(VERBOSE_DEBUG,"Timeout pressing menu key. Reset to 0 times");
+					util_if_open_just_menu_times=0;
+				}
+			}
 
 
 			//temporizador para movimiento de mouse en menu

@@ -619,4 +619,6 @@ extern int util_if_open_just_menu(void);
 
 extern int util_if_open_just_menu_counter;
 
+extern int util_if_open_just_menu_times;
+
 #endif
