@@ -178,6 +178,9 @@ enum defined_f_function_ids defined_f_functions_keys_array[MAX_F_FUNCTIONS_KEYS]
 	F_FUNCION_DEFAULT //F15
 };
 
+//Si el abrir menu (tipica F5 o tecla joystick) esta limitado. De tal manera que para poderlo abrir habra que pulsar 3 veces seguidas en menos de 1 segundo
+z80_bit menu_limit_menu_open={0};
+
 
 //Definir una tecla a una funcion
 //Entrada: tecla: 1...15 F1...15   funcion: string correspondiente a defined_f_functions_array

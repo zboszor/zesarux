@@ -370,6 +370,8 @@ extern int return_color_zesarux_ascii(char c);
 extern z80_bit menu_filesel_posicionar_archivo;
 extern char menu_filesel_posicionar_archivo_nombre[];
 
+extern z80_bit menu_limit_menu_open;
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \

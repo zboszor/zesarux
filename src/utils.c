@@ -5111,10 +5111,14 @@ int si_menu_mouse_activado(void)
 }
 
 
+int util_if_open_just_menu_counter=0;
+
 //Accion de abrir menu (F5, boton joystick) que ademas controla si el boton esta limitado para que abra el menu solo cuando se pulsa 3 veces seguidas, por ejemplo, en 1 segundo
 int util_if_open_just_menu(void)
 {
-	return 1;
+	if (menu_limit_menu_open.v==0) return 1;
+
+	//esta limitado el uso de F5, hay que pulsar 3 veces en el ultimo segundo
 }
 
 
