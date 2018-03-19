@@ -3057,6 +3057,11 @@ int util_write_configfile(void)
 
   if (kempston_mouse_emulation.v)             ADD_STRING_CONFIG,"--enablekempstonmouse");
 
+
+  if (core_spectrum_uses_reduced.v)           ADD_STRING_CONFIG,"--spectrum-reduced-core");
+  else                                        ADD_STRING_CONFIG,"--no-spectrum-reduced-core");
+
+
   if (menu_footer==0)                         ADD_STRING_CONFIG,"--disablefooter");
   if (menu_multitarea==0)                     ADD_STRING_CONFIG,"--disablemultitaskmenu");
 
