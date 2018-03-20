@@ -6913,6 +6913,7 @@ void dump_ram_file_on_exit(void)
 {
 	if (dump_ram_file[0]) {
 
+			debug_printf (VERBOSE_INFO,"Dumping ram contents to file %s",dump_ram_file);
 
                         //Crear archivo vacio
                         FILE *ptr_ramfile;
