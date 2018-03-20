@@ -24625,7 +24625,8 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 void menu_osd_settings_watermark(MENU_ITEM_PARAMETERS)
 {
 	if (screen_watermark_enabled.v==0) {
-		enable_rainbow();
+		//Ya se permite watermark con o sin realvideo
+		//enable_rainbow();
 		screen_watermark_enabled.v=1;
 	}
 
@@ -24663,15 +24664,11 @@ void menu_osd_settings(MENU_ITEM_PARAMETERS)
 
 
 
-//Meter marca de agua en la derecha, abajo, en la zona de pantalla reducida
-/*int screen_watermark_position=3; //0: arriba izq 1: arriba der 2 abajo izq 3 abajo der
 
-//Si marca de agua habilitada
-z80_bit screen_watermark_enabled={1};*/
 
 		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark,NULL,"Watermark: %s",(screen_watermark_enabled.v ? "Yes" : "No" ) );
-		menu_add_item_menu_tooltip(array_menu_osd_settings,"Adds a watermark to the display. Needs realvideo");
-		menu_add_item_menu_ayuda(array_menu_osd_settings,"Adds a watermark to the display. Needs realvideo");
+		menu_add_item_menu_tooltip(array_menu_osd_settings,"Adds a watermark to the display");
+		menu_add_item_menu_ayuda(array_menu_osd_settings,"Adds a watermark to the display. May produce flickering if not enabled realvideo");
 
 		//Esta posicion afecta tanto al watermark normal como al forzado de 0.75
 		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark_position,NULL,"Watermark position: %d",screen_watermark_position);

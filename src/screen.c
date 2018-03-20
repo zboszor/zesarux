@@ -2964,12 +2964,18 @@ void screen_scale_rainbow_43(z80_int *orig,int ancho,int alto,z80_int *dest)
 }
 
 
-//Meter pixel en un buffer rainbow de color indexado 16 bits. Usado en watermark
+//Meter pixel en un buffer rainbow de color indexado 16 bits. Usado en watermark y se podria usar en mas cosas
 void screen_generic_putpixel_indexcolour(z80_int *destino,int x,int y,int ancho,int color)
 {
 	int offset=y*ancho+x;
 
 	destino[offset]=color;
+}
+
+//Hacer putpixel en pantalla de color indexado 16 bits. Usado en watermark para no rainbow
+void screen_generic_putpixel_no_rainbow_watermark(z80_int *destino GCC_UNUSED,int x,int y,int ancho GCC_UNUSED,int color)
+{
+	scr_putpixel(x,y,color);
 }
 
 
@@ -3418,12 +3424,29 @@ void screen_add_watermark_rainbow(void)
 		screen_put_watermark_generic(rainbow_buffer,watermark_x,watermark_y,ancho,screen_generic_putpixel_indexcolour);
 
 	}
-			//Prueba de meter la marca de agua en el buffer rainbow tal cual
-	//Meter marca de agua en la derecha, abajo
-	//int watermark_x=ancho-ZESARUX_ASCII_LOGO_ANCHO-4;
-	//int watermark_y=alto-ZESARUX_ASCII_LOGO_ALTO-4;
-	//screen_put_watermark_generic(puntero,watermark_x,watermark_y,ancho,screen_generic_putpixel_indexcolour);
 	
+}
+
+void screen_add_watermark_no_rainbow(void)
+{
+        //Si esta opcion de watermark general pero no esta el reduce de 0.75 (porque este reduce fuerza siempre watermark)
+        if (screen_watermark_enabled.v && screen_reduce_075.v==0) {
+                int watermark_x;
+                int watermark_y;
+
+                int ancho,alto;
+
+                ancho=screen_get_emulated_display_width_zoom_border_en();
+                alto=screen_get_emulated_display_height_zoom_border_en();
+
+                //Misma variable que watermark general
+                screen_get_offsets_watermark_position(screen_watermark_position,ancho,alto,&watermark_x,&watermark_y);
+
+                screen_put_watermark_generic(rainbow_buffer,watermark_x,watermark_y,ancho,screen_generic_putpixel_no_rainbow_watermark);
+                //screen_put_watermark_generic(rainbow_buffer,watermark_x,watermark_y,ancho,screen_generic_putpixel_indexcolour);
+
+        }
+
 }
 
 //Refresco pantalla con rainbow
@@ -7856,7 +7879,8 @@ int screen_if_refresh(void)
 void cpu_loop_refresca_pantalla(void)
 {
 
-	screen_add_watermark_rainbow();
+	if (rainbow_enabled.v) screen_add_watermark_rainbow();
+	else screen_add_watermark_no_rainbow();
 
 	//Si esta en top speed, solo 1 frame
 	if (timer_condicion_top_speed() ) {
