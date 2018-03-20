@@ -916,11 +916,13 @@ void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 				break;
 
 			case RAWKEY_comma:
-				util_set_reset_key(UTIL_KEY_COMMA,pressrelease);
+				//util_set_reset_key(UTIL_KEY_COMMA,pressrelease);
+				util_set_reset_key(',',pressrelease);
 				break;
 
 			case RAWKEY_period:
-				util_set_reset_key(UTIL_KEY_PERIOD,pressrelease);
+				//util_set_reset_key(UTIL_KEY_PERIOD,pressrelease);
+				util_set_reset_key('.',pressrelease);
 				break;
 
 
