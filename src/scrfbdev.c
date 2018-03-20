@@ -935,7 +935,8 @@ void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 				break;
 
 			case RAWKEY_KP_Divide:
-				util_set_reset_key(UTIL_KEY_SLASH,pressrelease);
+				//util_set_reset_key(UTIL_KEY_SLASH,pressrelease);
+				util_set_reset_key('/',pressrelease);
 				break;
 
 			case RAWKEY_KP_Multiply:
