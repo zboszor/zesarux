@@ -3,6 +3,8 @@
  -debug y en zrcp: poder activar/desctivar interrupcion
 nombre fichero en ventana menu?
 
+-watermark sin realvideo no hace zoom. importante???
+
 -breakpoints con "printe" que siempre saltaan, no dejan abrir el menu con F5
 
 -Escalado 0.75. De cada 4 pixeles, los dos últimos hacer media de color.
