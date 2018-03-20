@@ -235,7 +235,7 @@ void z88_gestionar_interrupcion(void)
 
 
                                                 //desactivar interrupciones al generar una
-                                                iff1.v=0;
+						iff1.v=iff2.v=0;
 
                                                 if (im_mode==0 || im_mode==1) {
                                                         reg_pc=56;

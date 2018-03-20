@@ -134,9 +134,9 @@ void interrupcion_si_despues_lda_ir(void)
     if (MACHINE_IS_Z88) return;                //CMOS
 
 	//NMOS
-
+	//printf ("leido %d en interrupt\n",byte_leido_core_spectrum);
 	if (byte_leido_core_spectrum==237) {
-
+		//printf ("leido 237 en interrupt, siguiente=%d\n",pref237_opcode_leido);
 		if (pref237_opcode_leido==87 || pref237_opcode_leido==95) {
 			//printf ("Poner PV a 0 despues de LD a,i o LD a,r\n");
 			Z80_FLAGS &=(255-FLAG_PV);
@@ -717,7 +717,7 @@ void cpu_core_loop_spectrum(void)
 
 
 						//desactivar interrupciones al generar una
-						iff1.v=0;
+						iff1.v=iff2.v=0;
 						//Modelos spectrum
 
 						if (im_mode==0 || im_mode==1) {
@@ -737,7 +737,6 @@ void cpu_core_loop_spectrum(void)
                                                         dir_h=peek_byte(temp_i);
                                                         reg_pc=value_8_to_16(dir_h,dir_l);
                                                         t_estados += 7;
-
 
 							//Para mejorar demos ula128 y scroll2017
 							//Pero esto hace empeorar la demo ulatest3.tap

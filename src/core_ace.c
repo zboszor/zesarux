@@ -399,7 +399,7 @@ void cpu_core_loop_ace(void)
 						
 						reg_r++;
 
-						iff1.v=0;
+						iff1.v=iff2.v=0;
 
 
 

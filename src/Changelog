@@ -54,6 +54,7 @@ Fixed ZX-Uno emulation: 128kb timings are the same as a Spectrum 128k. When port
 Fixed window footer when running Pentagon
 Fixed some crashes with speech enabled and opening some menus: AY Registers, AY Player, etc...
 Fixed annoying sound on Dandanator rom menu
+Fixed bug on Z80 cpu core, iff2 was not being reset to 0 when firing an interrupt, so reading it by using LD A,R and LD A,I affected many demos
 
 
 Version 6.0. 27 November 2017 - Gunfright edition

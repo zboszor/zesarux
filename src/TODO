@@ -3,6 +3,8 @@
  -debug y en zrcp: poder activar/desctivar interrupcion
 nombre fichero en ventana menu?
 
+-breakpoints con "printe" que siempre saltaan, no dejan abrir el menu con F5
+
 -Escalado 0.75. De cada 4 pixeles, los dos últimos hacer media de color.
  Usar colores gigascreen para eso, pues tienen todas las combinaciones. Setting activable para ese tipo de reducción o la normal
 

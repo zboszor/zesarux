@@ -461,7 +461,7 @@ void cpu_core_loop_cpc(void)
 						
 						
 						//desactivar interrupciones al generar una
-						iff1.v=0;
+						iff1.v=iff2.v=0;
 						//Modelos cpc
 
 						if (im_mode==0 || im_mode==1) {

@@ -521,7 +521,7 @@ void cpu_core_loop_zx8081(void)
 						reg_r++;
 
 						//desactivar interrupciones al generar una
-						iff1.v=0;
+						iff1.v=iff2.v=0;
 
 
 
