@@ -568,6 +568,7 @@ int z88_cpc_keymap_type=0;
 int cpu_turbo_speed=1;
 
 
+char dump_ram_file[PATH_MAX]="";
 
 
 //Si se sale del emulador despues de X segundos. A 0 para desactivarlo
@@ -1250,6 +1251,7 @@ printf(
 
 printf (
 	  "--hardware-debug-ports     Enables hardware debug ports to be able to show on console numbers or ascii characters\n"
+	  "-—dump-ram-to-file f       Dump memory from 4000h to ffffh to a file, when exiting emulator\n"
 		"\n"
 		"\n"
 		"CPU Core\n"
@@ -5987,6 +5989,11 @@ int parse_cmdline_options(void) {
 			 hardware_debug_port.v=1;
 		 }
 
+		 else if (!strcmp(argv[puntero_parametro],"-—dump-ram-to-file")) {
+                                siguiente_parametro_argumento();
+				strcpy(dump_ram_file,argv[puntero_parametro]);
+                 }
+
 			else if (!strcmp(argv[puntero_parametro],"--joystickemulated")) {
                                 siguiente_parametro_argumento();
 				if (realjoystick_set_type(argv[puntero_parametro])) {
@@ -6902,11 +6909,42 @@ struct sched_param sparam;
 
 }
 
+void dump_ram_file_on_exit(void)
+{
+	if (dump_ram_file[0]) {
 
+
+                        //Crear archivo vacio
+                        FILE *ptr_ramfile;
+                        ptr_ramfile=fopen(dump_ram_file,"wb");
+
+                        int totalsize=49152;
+
+                        z80_byte valor_grabar;
+			z80_int dir=16384;
+
+                        if (ptr_ramfile!=NULL) {
+                                while (totalsize) {
+					valor_grabar=peek_byte_no_time(dir++);
+                                        totalsize--;
+
+                                        fwrite(&valor_grabar,1,1,ptr_ramfile);
+                                }
+                                fclose(ptr_ramfile);
+                        }
+
+			else {
+				debug_printf(VERBOSE_ERR,"Error writing dump ram file");
+			}
+
+	}
+}
 
 void end_emulator(void)
 {
 	debug_printf (VERBOSE_INFO,"End emulator");
+
+	dump_ram_file_on_exit();
 
 	top_speed_timer.v=0;
 
