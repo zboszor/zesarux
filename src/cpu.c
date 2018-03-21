@@ -2656,11 +2656,12 @@ void set_machine_params(void)
 		//Cuando se viene aqui desde cambio modo turbo, no interesa vaciar buffer, si no, se oye fatal. Ejemplo: uwol en tsconf
 		if (set_machine_empties_audio_buffer.v) audio_empty_buffer();
 
-		set_machine_empties_audio_buffer.v=1;
-
-
 		//Inicializar paletas de colores. Colores basicos de spectrum y algunos derivados (gigascreen, etc) dependen de si paleta real activa y segun que maquina
-		screen_init_colour_table();
+		//Cuando se viene aqui desde cambio modo turbo, no interesa reinicializar paleta, si no, se realentiza todo mucho. Ejemplo: uwol en tsconf
+		//Nota: Se le podria cambiar el nombre a la variable set_machine_empties_audio_buffer.v
+		if (set_machine_empties_audio_buffer.v) screen_init_colour_table();
+
+		set_machine_empties_audio_buffer.v=1;
 
 		if (MACHINE_IS_CHLOE) chloe_keyboard.v=1;
 
