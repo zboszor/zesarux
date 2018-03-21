@@ -6120,19 +6120,26 @@ int menu_debug_registers_print_registers(void)
 
 			char texto_nmi[10];
 			if (MACHINE_IS_ZX81) {
-				sprintf (texto_nmi,"%s",(nmi_generator_active.v ? "NMI: On" : "NMI: Off"));
+				sprintf (texto_nmi,"%s",(nmi_generator_active.v ? "NMI:On" : "NMI:Off"));
 			}
 
 			else {
 				texto_nmi[0]=0;
 			}
 
-                        sprintf (textoregistros,"R: %02X I: %02X %s IM%d %s",
+                        sprintf (textoregistros,"R:%02X I:%02X IM%d %s %s %s",
 				(reg_r&127)|(reg_r_bit7&128),
 				reg_i,
-				( iff1.v ? "EI" : "DI"),
 				im_mode,
+				( iff1.v ? "IFF1" : "    "),
+				( iff2.v ? "IFF2" : "    "),
+				
 				texto_nmi);
+
+			//01234567890123456789012345678901
+			// R: 84 I: 1E DI IM1 NMI: Off
+			// R: 84 I: 1E IFF1 IFF2 IM1 NMI: Off
+			// R:84 I:1E IFF1 IFF2 IM1 NMI:Off
 
 			menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
 
