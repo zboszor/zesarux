@@ -1681,6 +1681,9 @@ void tsconf_store_scanline_ula(void)
                         byte_leido=screen[direccion];
 
                         attribute=screen[dir_atributo];
+						attribute=56;
+
+						//printf ("byte %d atributo %d\n",byte_leido,attribute);
 
                         ink=attribute &7; 
                         paper=(attribute>>3) &7; 
@@ -1708,14 +1711,16 @@ void tsconf_store_scanline_ula(void)
 																color= ( byte_leido & 128 ? ink : paper ) ;
 
 																color= tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+color);
+																//color=tsconf_return_cram_color(color);
 
 																//doble ancho
+																//color=44;
                                             //doble ancho
                                 tsconf_layer_ula[puntero_layer_ula++]=color;
                                 tsconf_layer_ula[puntero_layer_ula++]=color;
 																
 
-
+//printf ("color final: %d\n",color);
 
 
                                 byte_leido=byte_leido<<1;

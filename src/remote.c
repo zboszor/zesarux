@@ -817,6 +817,7 @@ struct s_items_ayuda items_ayuda[]={
 
  {"tsconf-get-af-port",NULL,"index","Get TSConf XXAF port value"},
  {"tsconf-get-nvram",NULL,"index","Get TSConf NVRAM value at index"},
+ {"tsconf-set-af-port",NULL,"index value","Set TSConf XXAF port value"},
 
 	{"view-basic",NULL,NULL,"Gets Basic program listing"},
 	{"write-memory","|wm","address value","Writes a sequence of bytes starting at desired address on memory. Bytes must be separed by one space each one"},
@@ -4406,6 +4407,36 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
 					}
 
 				}
+
+				else if (!strcmp(comando_sin_parametros,"tsconf-set-af-port") ) {
+
+			  	if (!MACHINE_IS_TSCONF) escribir_socket(misocket,"ERROR. Machine is not TSConf");
+					else {
+
+              remote_parse_commands_argvc(parametros);
+
+              if (remote_command_argc<2) {
+                      escribir_socket(misocket,"ERROR. Needs two parameters");
+                      return;
+              }
+
+							int index_int=parse_string_to_number(remote_command_argv[0]);
+
+            	int value=parse_string_to_number(remote_command_argv[1]);
+
+							if (index_int<0 || index_int>255 || value<0 || value>255) escribir_socket(misocket,"ERROR. Out of range");
+
+							else {
+								tsconf_write_af_port(index_int,value);
+							}
+
+						
+					}
+
+				}				
+
+
+
 
 
         else if (!strcmp(comando_sin_parametros,"quit") || !strcmp(comando_sin_parametros,"exit") || !strcmp(comando_sin_parametros,"logout")) {
