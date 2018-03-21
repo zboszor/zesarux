@@ -224,7 +224,7 @@ char *zx80_rom_tokens[]={
 "RUN","STOP","CONTINUE","IF","GO SUB","LOAD",
 "CLEAR","REM","?"
 };
-
+ 
 //Rutina auxiliar que pueden usar los drivers de video para mostrar los registros. Mete en una string los registros
 void print_registers(char *buffer)
 {
@@ -2770,14 +2770,7 @@ int debug_change_register(char *texto)
     }
 
 
-                /*
-                #define REG_AF (value_8_to_16(reg_a,Z80_FLAGS))
-
-                #define REG_AF_SHADOW (value_8_to_16(reg_a_shadow,Z80_FLAGS_SHADOW))
-                #define REG_HL_SHADOW (value_8_to_16(reg_h_shadow,reg_l_shadow))
-                #define REG_BC_SHADOW (value_8_to_16(reg_b_shadow,reg_c_shadow))
-                #define REG_DE_SHADOW (value_8_to_16(reg_d_shadow,reg_e_shadow))
-                */
+              
 
 
 		else if (!strcasecmp(texto_registro,"BC")) {
@@ -2820,14 +2813,7 @@ int debug_change_register(char *texto)
                 }
 
 
-                            /*
-                            #define REG_AF (value_8_to_16(reg_a,Z80_FLAGS))
-
-                            #define REG_AF_SHADOW (value_8_to_16(reg_a_shadow,Z80_FLAGS_SHADOW))
-                            #define REG_HL_SHADOW (value_8_to_16(reg_h_shadow,reg_l_shadow))
-                            #define REG_BC_SHADOW (value_8_to_16(reg_b_shadow,reg_c_shadow))
-                            #define REG_DE_SHADOW (value_8_to_16(reg_d_shadow,reg_e_shadow))
-                            */
+      
 
 
 		else if (!strcasecmp(texto_registro,"A")) {
@@ -2870,12 +2856,7 @@ int debug_change_register(char *texto)
                         return 0;
                 }
 
-/*
-#define REG_AF_SHADOW ((reg_a_shadow<<8)|Z80_FLAGS_SHADOW)
-#define REG_HL_SHADOW ((reg_h_shadow<<8)|reg_l_shadow)
-#define REG_BC_SHADOW ((reg_b_shadow<<8)|reg_c_shadow)
-#define REG_DE_SHADOW ((reg_d_shadow<<8)|reg_e_shadow)
-*/
+
 
 else if (!strcasecmp(texto_registro,"A'")) {
                     reg_a_shadow=valor_registro;
@@ -2932,6 +2913,15 @@ else if (!strcasecmp(texto_registro,"L'")) {
                         return 0;
                 }
 
+		else if (!strcasecmp(texto_registro,"IFF1")) {
+                    iff1.v=valor_registro;
+                        return 0;
+                }
+
+		else if (!strcasecmp(texto_registro,"IFF2")) {
+                    iff2.v=valor_registro;
+                        return 0;
+                }				
 
 
 	}
