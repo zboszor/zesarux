@@ -222,6 +222,7 @@ z80_byte *get_base_mem_pantalla_continue(void)
 					//TODO pantalla shadow 128
 
                                         z80_byte vram_page=tsconf_get_vram_page();
+										//printf ("vpage: %02XH\n",vram_page);
                                         return tsconf_ram_mem_table[vram_page];
 
 					/*
