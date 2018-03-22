@@ -31336,10 +31336,12 @@ void file_utils_file_mem_load(char *archivo)
 		int tamanyo=get_file_size(archivo);
 		//Asignar memoria si no estaba asignada
 
-		//Max 16 mb- 1 byte (0xFFFFFF)
-		if (tamanyo>0xFFFFFF) {
-			debug_printf (VERBOSE_WARN,"File too big. Reading first 16 Mb");
-			tamanyo=0xFFFFFF;
+		int error_limite=0;
+
+		//Max 16 mb  (0x1000000), para no usar mas de 6 digitos al mostrar la direccion
+		if (tamanyo>0x1000000) {
+			tamanyo=0x1000000;
+			error_limite=1;
 		}
 
 		//liberar si habia algo
@@ -31348,10 +31350,13 @@ void file_utils_file_mem_load(char *archivo)
 			free(memory_zone_by_file_pointer);
 		}
 
+		debug_printf(VERBOSE_DEBUG,"Allocating %d bytes for file memory zone",tamanyo);
 		memory_zone_by_file_pointer=malloc(tamanyo);
 		if (memory_zone_by_file_pointer==NULL) {
 			cpu_panic("Can not allocate memory for file read");
 		}
+
+		memory_zone_by_file_size=tamanyo;
 
                 FILE *ptr_load;
                 ptr_load=fopen(archivo,"rb");
@@ -31377,6 +31382,9 @@ extern int memory_zone_by_file_size;
                 }
 
 		fclose(ptr_load);
+
+		if (error_limite) menu_warn_message("File too big. Reading first 16 Mb");
+		else menu_generic_message_splash("File memory zone","File loaded to File memory zone");
 }
 
 
