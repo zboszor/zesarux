@@ -1135,7 +1135,9 @@ void tsconf_hard_reset(void)
 
 
 	int i;
-	for (i=0;i<TSCONF_FMAPS_SIZE;i++) tsconf_fmaps[i]=0;
+	//por que borramos fmaps??? for (i=0;i<TSCONF_FMAPS_SIZE;i++) tsconf_fmaps[i]=0;
+	//Borro sprites. dejo paleta sin tocar pues hay alguna demo que usa la paleta por defecto (pixeldemo)
+	for (i=0x200;i<0x400;i++) tsconf_fmaps[i]=0;
 
        //Borrar toda memoria ram
         int d;
