@@ -31054,7 +31054,7 @@ void menu_filesel_print_legend(void)
 		menu_writing_inverse_color.v=1;
 
 		menu_escribe_linea_opcion(FILESEL_POS_FILTER-1,-1,1,"~~View ~~Truncate ~~Delete m~~Kdir");
-		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Copy ~~Move ~~Rename ~~Pasteclip");
+		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Copy ~~Move ~~Ren ~~Paste ~~Filemem");
 
 		//Restaurar comportamiento mostrar atajos
 		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
@@ -31329,6 +31329,56 @@ int si_menu_filesel_no_mas_alla_ultimo_item(int linea)
 	if (filesel_archivo_seleccionado+linea<filesel_total_items-1) return 1;
 	return 0;
 }
+
+//Cargar archivo en memory zone
+void file_utils_file_mem_load(char *archivo)
+{
+		int tamanyo=get_file_size(archivo);
+		//Asignar memoria si no estaba asignada
+
+		//Max 16 mb- 1 byte (0xFFFFFF)
+		if (tamanyo>0xFFFFFF) {
+			debug_printf (VERBOSE_WARN,"File too big. Reading first 16 Mb");
+			tamanyo=0xFFFFFF;
+		}
+
+		//liberar si habia algo
+		if (memory_zone_by_file_size>0) {
+			debug_printf(VERBOSE_DEBUG,"Freeing previous file memory zone");
+			free(memory_zone_by_file_pointer);
+		}
+
+		memory_zone_by_file_pointer=malloc(tamanyo);
+		if (memory_zone_by_file_pointer==NULL) {
+			cpu_panic("Can not allocate memory for file read");
+		}
+
+                FILE *ptr_load;
+                ptr_load=fopen(archivo,"rb");
+
+                if (!ptr_load) {
+                        debug_printf (VERBOSE_ERR,"Unable to open file %s",archivo);
+                        return;
+                }
+
+/*
+extern char memory_zone_by_file_name[];
+extern z80_byte *memory_zone_by_file_pointer;
+extern int memory_zone_by_file_size;
+*/
+
+		//Copiamos el nombre del archivo aunque de momento no lo uso
+		strcpy(memory_zone_by_file_name,archivo);
+
+
+                int leidos=fread(memory_zone_by_file_pointer,1,tamanyo,ptr_load);
+                if (leidos!=tamanyo) {
+                        debug_printf (VERBOSE_ERR,"Error reading file. Bytes read: %d bytes",leidos);
+                }
+
+		fclose(ptr_load);
+}
+
 
 //parametro rename: 
 //si 0, move
@@ -32224,7 +32274,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_reset_counters_tecla_repeticion();
 						
 						//Comun para acciones que usan archivo seleccionado
-						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R' || tecla=='C' || tecla=='P') {
+						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R' || tecla=='C' || tecla=='P' || tecla=='F') {
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
@@ -32271,6 +32321,14 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 										file_utils_move_rename_copy_file(file_utils_file_selected,1);
 										releer_directorio=1;
 									}
+
+									//Filemem
+									if (tecla=='F') {
+										file_utils_file_mem_load(file_utils_file_selected);
+										releer_directorio=1;
+									}
+
+						
 
 									//Copy
 									if (tecla=='C') {
