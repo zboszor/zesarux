@@ -219,10 +219,18 @@ z80_byte *get_base_mem_pantalla_continue(void)
 
 				if (MACHINE_IS_TSCONF) {
 
+					//TODO pantalla shadow 128
+
+                                        z80_byte vram_page=tsconf_get_vram_page();
+                                        return tsconf_ram_mem_table[vram_page];
+
+					/*
+
 					if (puerto_32765 & 8) {
 						return tsconf_ram_mem_table[7];
 					}
-					else return tsconf_ram_mem_table[5];
+					else return tsconf_ram_mem_table[5];	
+					*/
 				}
 
 

@@ -1675,13 +1675,22 @@ void tsconf_store_scanline_ula(void)
 				}
 
 				if (videomode==0) {
+
+//temp
+                                        //z80_byte vram_page=tsconf_get_vram_page();
+                                        //z80_byte *screen;
+
+                                        //screen=tsconf_ram_mem_table[vram_page];
+
+
+
         	for (x=0;x<32;x++) {
 
 
                         byte_leido=screen[direccion];
 
                         attribute=screen[dir_atributo];
-						attribute=56;
+						//attribute=56;
 
 						//printf ("byte %d atributo %d\n",byte_leido,attribute);
 
