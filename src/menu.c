@@ -23479,11 +23479,11 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 #ifdef EMULATE_VISUALMEM
 			//if (!CPU_IS_MOTOROLA) {
-			menu_add_item_menu(array_menu_debug_settings,"Old visual memory",MENU_OPCION_NORMAL,menu_debug_visualmem,NULL);
-	                menu_add_item_menu_tooltip(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");
-	                menu_add_item_menu_ayuda(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");
+			//menu_add_item_menu(array_menu_debug_settings,"Old visual memory",MENU_OPCION_NORMAL,menu_debug_visualmem,NULL);
+	                //menu_add_item_menu_tooltip(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");
+	                //menu_add_item_menu_ayuda(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");
 
-			menu_add_item_menu(array_menu_debug_settings,"New ~~Visual memory",MENU_OPCION_NORMAL,menu_debug_new_visualmem,NULL);
+			menu_add_item_menu(array_menu_debug_settings,"~~Visual memory",MENU_OPCION_NORMAL,menu_debug_new_visualmem,NULL);
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'v');
 	                menu_add_item_menu_tooltip(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");
 	                menu_add_item_menu_ayuda(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");			
