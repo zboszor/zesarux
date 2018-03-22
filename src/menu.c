@@ -15694,7 +15694,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		if (MACHINE_IS_SPECTRUM) {
+		if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) {
                        menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_kartusho,NULL,"~~Kartusho");
                         menu_add_item_menu_shortcut(array_menu_storage_settings,'k');
                         menu_add_item_menu_tooltip(array_menu_storage_settings,"Kartusho settings");

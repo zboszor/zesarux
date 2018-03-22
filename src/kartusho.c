@@ -234,8 +234,8 @@ int kartusho_load_rom(void)
 void kartusho_enable(void)
 {
 
-  if (!MACHINE_IS_SPECTRUM) {
-    debug_printf(VERBOSE_INFO,"Can not enable kartusho on non Spectrum machine");
+  if (!MACHINE_IS_SPECTRUM && !MACHINE_IS_CPC) {
+    debug_printf(VERBOSE_INFO,"Can not enable kartusho on non Spectrum or CPC machine");
     return;
   }
 
