@@ -195,6 +195,12 @@ Install it
 Note: you will need mono/.net libraries
 
 
+Q: What is "Memory zone"?
+A: Memory zone is a concept used on some debug menu items, that allows to read different zones of memory, like rom, ram, divmmc ram, zxuno flash, etc.
+Usually you can change the current memory zone by pressing "Z" on a debug menu.
+There is even a "File memory zone", that allows you to read a file (up to 16 MB) and use the debug menus with it. To load a file in that zone, you should open the File utilities menu, select a file, and press key F (Shift-f), which means "File memory zone"
+
+
 ----------------------------------------------------------------------------
 
 

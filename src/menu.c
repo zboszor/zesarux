@@ -32333,7 +32333,6 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									//Filemem
 									if (tecla=='F') {
 										file_utils_file_mem_load(file_utils_file_selected);
-										releer_directorio=1;
 									}
 
 						
