@@ -267,4 +267,9 @@ typedef struct s_debug_memory_segment debug_memory_segment;
 extern int debug_get_memory_pages_extended(debug_memory_segment *segmentos);
 
 
+extern char memory_zone_by_file_name[];
+extern z80_byte *memory_zone_by_file_pointer;
+extern int memory_zone_by_file_size;
+
+
 #endif

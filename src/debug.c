@@ -1781,6 +1781,12 @@ z80_bit cpu_transaction_log_store_registers={0};
 
 int transaction_log_nested_id_core;
 
+
+//Para tener una memory zone que apunte a un archivo
+char memory_zone_by_file_name[PATH_MAX];
+z80_byte *memory_zone_by_file_pointer;
+int memory_zone_by_file_size=0;
+
 ///void cpu_core_loop_transaction_log(void)
 z80_byte cpu_core_loop_transaction_log(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
