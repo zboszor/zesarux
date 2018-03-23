@@ -1205,6 +1205,27 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
 					}
                                 break;
 
+                                //Enviar caps shift con [
+                                case '[':
+                                        if (pressrelease) {
+						//mayus
+						puerto_65278 &=255-1;
+                                        }
+                                        else {
+						//mayus
+						puerto_65278 |=1;
+                                        }
+				break;
+
+                                //Enviar symbol shift con ]
+                                case ']':
+                                        if (pressrelease) {
+						set_symshift();
+                                        }
+                                        else {
+						clear_symshift();
+                                        }
+				break;
 
 				//Enviar Shift + 1 (edit).
 				/*
@@ -1226,7 +1247,7 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
 				break;
 
 
-
+                                //Symbol + 2
                                 case '@':
                                         if (pressrelease) {
 						set_symshift();
@@ -1238,6 +1259,7 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
 					}
                                 break;
 
+                                 //Symbol + 3
                                 case '#':
 					if (pressrelease) {
 	                                        set_symshift();
