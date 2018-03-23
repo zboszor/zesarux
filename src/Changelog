@@ -6,51 +6,63 @@ Added Spectrum keyboard ghosting error feature
 Added ZX Spectrum Recreated keyboard support
 Added setting to exit emulator after a number of seconds (--exit-after)
 Added setting to show changelog when updating emulator version
-Added actions to file utilities: Copy, Move, Rename
+Added actions to file utilities menu: Copy, Move, Rename
 Added setting to write protect IDE, MMC, ZX-Uno Flash
 Added setting to disable persistent writes on IDE and MMC
-Added two more GUI styles: Clean and CleanInverse
 Added second Easter Egg ;)
 Added improved Spectrum 16/48/+ colour palette
 Added setting to add a watermark on the display
 Added setting to reduce display to a factor of 0.75. Used on RunZX event
-Added TSConf DMA emulation, line interrupt, sprites layers
-Added a fast spectrum core (with some features disabled) just for slow devices, like Raspberry Pi 1/Zero
-Added a setting to limit menu event: enabling it you should press the menu key 4 times in a second
-Added a setting to hide directories from file selector menus, useful when you don't want the user to be able to navigate the filesystem
+Added a fast spectrum core (with some features disabled) just for slow devices, like Raspberry Pi 1/Zero. Now ZEsarUX is playable on RPi1/Zero again!
 Added a setting to dump ram contents to file when exiting ZEsarUX, ideal to run automatic tests
 Added cpu-step-over function on debug menu (was already available from ZRCP)
+
 Improved frameskip: now realvideo buffer is not updated when frameskip
 Improved ZRCP: run command is stopped by default when pressing a key (or sending data to the socket)
 Improved joystick support: 
 * added joystick test menu
 * buttons to events and buttons to joystick configuration are saved on configuration file
+
 Improved OSD keyboard:
 * now you can press up to all 40 keys (on Spectrum/ZX80/ZX81) at the same time
 * now it can be opened from any place (needs multitask on)
+
 Improved QL emulation: 
 * experimental support of LOAD, LRUN command
 * can now open qlay mdv microdrive image files
+
 Improved file viewer from file utilities: 
 *specific file viewers for these kind of files: .tap, .zx, .zsf, .sp, .z80, .sna, .spg, .p, .o, .mmc/.ide (fat browser, plus3dos browser), .dsk, .trd, .tzx, .cdt, .flash (zxuno flash, z88 flash, superupgrade flash), .epr, .eprom
 *default hexadecimal file viewer for unknown files
-Improved TSConf rendering: now tiles and sprites are drawn per scanline. Border drawing. Handling of scroll registers
-Improved TSConf debugging: debug for DMA, Video registers, Video layers, Sprites, Tiles
+
+Improved TSConf emulation:
+* Added TSConf DMA, line interrupt, sprites layers
+* TSConf rendering: now tiles and sprites are drawn per scanline. Border drawing. Handling of scroll registers
+* TSConf debugging: debug for DMA, Video registers, Video layers, Sprites, Tiles
+
 Improved text mode drivers (aalib, stdout, simpletext, curses): text settings are in different submenu, setting to set stdout/simpletext fps
 Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
-Improved menus, a new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
-Improved menu: now character width can be reduced to 7,6 or 5 pixels width
-Improved smartload: now the cursor remembers last file loaded
+
+Improved menu interface:
+* A new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
+* Character width can be reduced to 7,6 or 5 pixels width
+* Added a setting to limit menu event: enabling it you should press the menu key 4 times in a second
+* Added a setting to hide directories from file selector menus, useful when you don't want the user to be able to navigate the filesystem
+* Smartload: now the cursor remembers last file loaded
+* Added two more GUI styles: Clean and CleanInverse
+
 Improved sprite viewer: 
-*now can see sprites with speccy screen format
-*you can view sprites up to 512x192 
-*you can see tsconf sprites
+* now can see sprites with speccy screen format
+* you can view sprites up to 512x192 
+* you can see tsconf sprites
+
 Improved sound: Silence detector does not activate on pthreads versions
 Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
 Improved configuration parsing: if unknown setting found on configuration file, ZEsarUX will open but warns about the error, and the autosave feature is not enabled
 Improved TBBlue emulation: Added clip window registers
 Improved rendering on text mode drivers: now realvideo mode can render directly to black&white text. Try TSConf with --vo stdout --realvideo --autoredrawstdout
 Improved Linux library dependencies: libssl is not enabled by default on compilation
+
 Fixed TBBlue MMU when using segment 0000-3FFFH
 Fixed ZX-Uno emulation: 128kb timings are the same as a Spectrum 128k. When port 1ffd enabled, port FF return FF
 Fixed window footer when running Pentagon
