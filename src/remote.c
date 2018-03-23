@@ -1076,16 +1076,6 @@ void remote_set_breakpointaction(int misocket,char *parametros)
   debug_set_breakpoint_action(indice-1,&parametros[i]);
 }
 
-int remote_get_opcode_length(unsigned int direccion)
-{
-  char buffer_retorno[101];
-  size_t longitud_opcode;
-
-  debugger_disassemble(buffer_retorno,100,&longitud_opcode,direccion);
-
-  return longitud_opcode;
-
-}
 
 void remote_disassemble(int misocket,unsigned int direccion,int lineas,int mostrar_direccion)
 {
@@ -1479,6 +1469,10 @@ void remote_cpu_step_over(int misocket) {
     return;
   }
 
+
+debug_cpu_step_over();
+
+/*
   unsigned int direccion=get_pc_register();
   int longitud_opcode=remote_get_opcode_length(direccion);
 
@@ -1499,6 +1493,8 @@ void remote_cpu_step_over(int misocket) {
 
     if (menu_abierto) salir=1;
   }
+*/
+
   remote_cpu_after_core_loop();
 
   remote_get_regs_disassemble(misocket);

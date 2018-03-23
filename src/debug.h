@@ -273,4 +273,8 @@ extern int memory_zone_by_file_size;
 
 extern int si_cpu_step_over_jpret(void);
 
+extern int debug_get_opcode_length(unsigned int direccion);
+
+extern void debug_cpu_step_over(void);
+
 #endif

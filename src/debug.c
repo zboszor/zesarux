@@ -80,6 +80,8 @@
 
 #include "core_reduced_spectrum.h"
 
+#include "remote.h"
+
 
 struct timeval debug_timer_antes, debug_timer_ahora;
 
@@ -4305,5 +4307,43 @@ int si_cpu_step_over_jpret(void)
         }
 
         return 0;
+
+}
+
+
+void debug_cpu_step_over(void)
+{
+  unsigned int direccion=get_pc_register();
+  int longitud_opcode=debug_get_opcode_length(direccion);
+
+  unsigned int direccion_final=direccion+longitud_opcode;
+  direccion_final=adjust_address_space_cpu(direccion_final);
+
+
+  //Parar hasta volver de la instruccion actual o cuando se produzca algun evento de apertura de menu, como un breakpoint
+  menu_abierto=0;
+  int salir=0;
+  while (get_pc_register()!=direccion_final && !salir) {
+    debug_core_lanzado_inter.v=0;
+    cpu_core_loop();
+
+    if (debug_core_lanzado_inter.v && (remote_debug_settings&32)) {
+        debug_run_until_return_interrupt();
+    }
+
+    if (menu_abierto) salir=1;
+  }
+}
+
+
+
+int debug_get_opcode_length(unsigned int direccion)
+{
+  char buffer_retorno[101];
+  size_t longitud_opcode;
+
+  debugger_disassemble(buffer_retorno,100,&longitud_opcode,direccion);
+
+  return longitud_opcode;
 
 }
