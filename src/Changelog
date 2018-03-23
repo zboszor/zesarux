@@ -18,6 +18,7 @@ Added TSConf DMA emulation, line interrupt, sprites layers
 Added a fast spectrum core (with some features disabled) just for slow devices, like Raspberry Pi 1/Zero
 Added a setting to limit menu event: enabling it you should press the menu key 4 times in a second
 Added a setting to dump ram contents to file when exiting ZEsarUX, ideal to run automatic tests
+Added cpu-step-over function on debug menu (was already available from ZRCP)
 Improved frameskip: now realvideo buffer is not updated when frameskip
 Improved ZRCP: run command is stopped by default when pressing a key (or sending data to the socket)
 Improved joystick support: 

@@ -4279,6 +4279,8 @@ int si_cpu_step_over_jpret(void)
         if (CPU_IS_MOTOROLA || CPU_IS_SCMP) return 0;
         z80_byte opcode=peek_byte_no_time(reg_pc);
 
+	debug_printf(VERBOSE_DEBUG,"cpu step over, first opcode at %04XH is %02XH",reg_pc,opcode);
+
         switch (opcode)
         {
 
