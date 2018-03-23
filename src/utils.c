@@ -1205,8 +1205,8 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
 					}
                                 break;
 
-                                //Enviar caps shift con [
-                                case '[':
+                                //Enviar caps shift con 128
+                                case 128:
                                         if (pressrelease) {
 						//mayus
 						puerto_65278 &=255-1;
@@ -1217,8 +1217,8 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
                                         }
 				break;
 
-                                //Enviar symbol shift con ]
-                                case ']':
+                                //Enviar symbol shift con 129
+                                case 129:
                                         if (pressrelease) {
 						set_symshift();
                                         }
