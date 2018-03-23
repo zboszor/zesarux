@@ -6509,6 +6509,21 @@ void menu_debug_registers_change_memory_zone(void)
 
 }
 
+void menu_debug_cpu_step_over(void)
+{
+  //Si apunta PC a instrucciones RET o JP, hacer un cpu-step
+  if (si_cpu_step_over_jpret()) {
+          debug_printf(VERBOSE_DEBUG,"Running only cpu-step as current opcode is JP or RET");
+	  cpu_core_loop();
+          return;
+  }
+
+
+  debug_cpu_step_over();
+
+
+}
+
 
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
@@ -6694,7 +6709,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                        	menu_escribe_linea_opcion(linea++,-1,1,"");
 
 			if (continuous_step==0) {
-				menu_escribe_linea_opcion(linea++,-1,1,"ESC: Exit step C: Cont step");
+								//      01234567890123456789012345678901
+				menu_escribe_linea_opcion(linea++,-1,1,"ESC:Exit O:Stepover C:Contstep");
 				menu_escribe_linea_opcion(linea++,-1,1,"B: Breakp W: Watch V: V.Scr");
 				menu_escribe_linea_opcion(linea++,-1,1,"P: Clr tstatesp G: Chg View");
 			}
@@ -6756,6 +6772,17 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				if (tecla=='c') {
 					continuous_step=1;
 				}
+
+                                if (tecla=='o') {
+                                        cls_menu_overlay();
+                                        menu_debug_cpu_step_over();
+                                        //Decimos que no hay tecla pulsada
+                                        acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                                        menu_debug_registers_ventana();
+
+                                        //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                                        si_ejecuta_una_instruccion=0;
+                                }
 
                                 if (tecla=='b') {
                                         cls_menu_overlay();
