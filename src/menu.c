@@ -24730,7 +24730,10 @@ void menu_osd_settings(MENU_ITEM_PARAMETERS)
 }
 
 
-
+void menu_setting_limit_menu_open(MENU_ITEM_PARAMETERS)
+{
+	menu_limit_menu_open.v ^=1;
+}
 
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
@@ -24753,11 +24756,6 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"Menu char width: %d",menu_char_width);
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
-
-
-
-
-
 
 
 
@@ -24821,6 +24819,10 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 					"CPC: Amstrad CPC style\n"
 					);
 
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_limit_menu_open,NULL,"Limit menu opening: %s",
+			(menu_limit_menu_open.v ? "Yes" : "No") );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button)");			
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second");
 
 
                 menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
