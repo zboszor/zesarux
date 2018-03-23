@@ -3063,3 +3063,17 @@ void tsconf_handle_line_interrupts(void)
 	
 }
 
+const z80_byte tsconf_default_basic_palette[]={
+0x00,0x00,0x10,0x00,0x00,0x40,0x10,0x40,0x00,0x02,0x10,0x02,0x00,0x42,0x10,0x42,0x08,0x21,0x18,0x00,0x00,0x60,0x18,0x60,0x00,0x03,0x18,0x03,0x00,0x63,0x18,0x63
+};
+
+//Inicializar tabla de colores 240-255 pues hay juegos, como pixeldemo, que usan dichos colores, y si se carga desde linea de comandos, sin pasar por la bios de tsconf, la paleta esta vacia
+void tsconf_set_default_basic_palette(void)
+{
+	int index=240*2;
+	int i;
+
+	for (i=0;i<16*2;i++) {
+		tsconf_fmaps[index+i]=tsconf_default_basic_palette[i];
+	}
+}

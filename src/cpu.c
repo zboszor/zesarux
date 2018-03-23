@@ -758,6 +758,7 @@ void cold_start_cpu_registers(void)
 
 	if (MACHINE_IS_TSCONF) {
 		tsconf_hard_reset();
+		tsconf_set_default_basic_palette();
 	}
 }
 

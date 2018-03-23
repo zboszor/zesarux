@@ -108,7 +108,8 @@ void load_spg_snapshot(char *filename)
     current_machine_type=MACHINE_ID_TSCONF;
         set_machine(NULL);
         //reset_cpu();
-      tsconf_hard_reset();
+      //tsconf_hard_reset();
+	cold_start_cpu_registers(); //cold start ya hace hard reset e inicializa paleta de colores basicos
 
 
 
