@@ -3287,6 +3287,8 @@ int util_write_configfile(void)
 
   if (menu_limit_menu_open.v)                 ADD_STRING_CONFIG,"--limitopenmenu");
 
+  if (menu_filesel_hide_dirs.v)         ADD_STRING_CONFIG,"--hide-dirs");
+
   if (menu_desactivado.v)                     ADD_STRING_CONFIG,"--disablemenu");
 
   if (menu_force_writing_inverse_color.v)     ADD_STRING_CONFIG,"--forcevisiblehotkeys");

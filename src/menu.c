@@ -181,6 +181,9 @@ enum defined_f_function_ids defined_f_functions_keys_array[MAX_F_FUNCTIONS_KEYS]
 //Si el abrir menu (tipica F5 o tecla joystick) esta limitado. De tal manera que para poderlo abrir habra que pulsar 3 veces seguidas en menos de 1 segundo
 z80_bit menu_limit_menu_open={0};
 
+//No mostrar subdirectorios en file selector
+z80_bit menu_filesel_hide_dirs={0};
+
 
 //Definir una tecla a una funcion
 //Entrada: tecla: 1...15 F1...15   funcion: string correspondiente a defined_f_functions_array
@@ -17332,7 +17335,9 @@ int menu_filesel_filter_func(const struct dirent *d)
 
 
 	//si es directorio, ver si empieza con . y segun el filtro activo
+	//Y si setting no mostrar directorios, no mostrar
 	if (tipo_archivo == 2) {
+		if (menu_filesel_hide_dirs.v) return 0;
 		if (menu_file_filter_dir(d->d_name,filesel_filtros)==1) return 1;
 		return 0;
 	}
@@ -24735,6 +24740,12 @@ void menu_setting_limit_menu_open(MENU_ITEM_PARAMETERS)
 	menu_limit_menu_open.v ^=1;
 }
 
+
+void menu_setting_filesel_no_show_dirs(MENU_ITEM_PARAMETERS)
+{
+	menu_filesel_hide_dirs.v ^=1;
+}
+
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_interface_settings;
@@ -24824,6 +24835,11 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button)");			
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second");
 
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_filesel_no_show_dirs,NULL,"Hide dirs in filesel: %s",
+			(menu_filesel_hide_dirs.v ? "Yes" : "No") );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Hide directories from file selector menus");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Hide directories from file selector menus. "
+								"Useful on demo environments and you don't want the user to be able to navigate the filesystem");
 
                 menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_interface_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
