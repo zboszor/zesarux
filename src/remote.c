@@ -1425,6 +1425,7 @@ void remote_cpu_step(int misocket) {
 
 }
 
+/*
 int si_remote_cpu_step_over_jpret(void)
 {
 	if (CPU_IS_MOTOROLA || CPU_IS_SCMP) return 0;
@@ -1460,12 +1461,13 @@ int si_remote_cpu_step_over_jpret(void)
 	return 0;
 
 }
+*/
 
 void remote_cpu_step_over(int misocket) {
 
   //char buffer_retorno[1024];
   //Si apunta PC a instrucciones RET o JP, hacer un cpu-step
-  if (si_remote_cpu_step_over_jpret()) {
+  if (si_cpu_step_over_jpret()) {
 	  debug_printf(VERBOSE_DEBUG,"Running only cpu-step as current opcode is JP or RET");
 	  remote_cpu_step(misocket);
 	  return;

@@ -271,5 +271,6 @@ extern char memory_zone_by_file_name[];
 extern z80_byte *memory_zone_by_file_pointer;
 extern int memory_zone_by_file_size;
 
+extern int si_cpu_step_over_jpret(void);
 
 #endif

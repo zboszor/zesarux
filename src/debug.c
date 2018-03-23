@@ -4269,3 +4269,41 @@ void debug_get_paging_screen_state(char *s)
 
 
 }
+
+
+
+int si_cpu_step_over_jpret(void)
+{
+        if (CPU_IS_MOTOROLA || CPU_IS_SCMP) return 0;
+        z80_byte opcode=peek_byte_no_time(reg_pc);
+
+        switch (opcode)
+        {
+
+                case 0xC3: // JP
+                case 0xCA: // JP Z
+                case 0xD2: // JP NC
+                case 0xDA: // JP C
+                case 0xE2: // JP PO
+                case 0xE9: // JP (HL)
+                case 0xEA: // JP PE
+                case 0xF2: // JP P
+                case 0xFA: // JP M
+
+                case 0xC0: // RET NZ
+                case 0xC8: // RET Z
+                case 0xC9: // RET
+                case 0xD0: // RET NC
+                case 0xD8: // RET C
+                case 0xE0: // RET PO
+                case 0xE8: // RET PE
+                case 0xF0: // RET P
+                case 0xF8: // RET M
+
+                        return 1;
+                break;
+        }
+
+        return 0;
+
+}
