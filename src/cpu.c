@@ -1691,9 +1691,10 @@ printf (
 	printf ("\n"
 		"--joystickkeybt but key    Define a key pressed when a joystick button pressed (changes joystick to key table)\n"
 		"                           If it's a button (not axis), must be specified with its number, without sign, for example: 2\n"
-                "                           If it's axis, must be specified with its number and sign, for example: +2 or -2\n"
-                "                           Key must be an ascii character number or a character included in escaped quotes, like: 13 (for enter) or \\'q\\'\n"
+        "                           If it's axis, must be specified with its number and sign, for example: +2 or -2\n"
+        "                           Key must be an ascii character number or a character included in escaped quotes, like: 13 (for enter) or \\'q\\'\n"
 		"                           (the escaped quotes are used only in command line; on configuration file, they are normal quotes '')\n"
+		"                           Note: to simulate Caps shift, use key value 128, and to simulate Symbol shift, use key value 129\n"
 
 
 
@@ -1706,6 +1707,7 @@ printf (
 	printf ("\n"
 		"                           Key must be an ascii character number or a character included in escaped quotes, like: 13 (for enter) or \\'q\\' \n"
 		"                           (the escaped quotes are used only in command line; on configuration file, they are normal quotes '')\n"
+		"                           Note: to simulate Caps shift, use key value 128, and to simulate Symbol shift, use key value 129\n"
 
         	"\n"
 		"  Note: As you may see, --joystickkeyev is not dependent on the real joystick type you use, because it sets an event to a key, "
