@@ -277,7 +277,10 @@ z80_bit menu_event_new_version_show_changes={0};
 
 z80_bit menu_button_f_function={0};
 
+//tecla f pulsada
 int menu_button_f_function_index;
+//accion de tecla f
+int menu_button_f_function_action=0;
 
 //char menu_event_drag_drop_file[PATH_MAX];
 
@@ -30350,11 +30353,8 @@ void menu_process_f_functions_by_action(int accion)
 		case F_FUNCION_QUICKSAVE:
 
 			snapshot_quick_save(final_name);
-
-
 			menu_generic_message_format("Quicksave","OK. Snapshot name: %s",final_name);
 
-			//snapshot_quick_save(NULL);
 		break;
 
 		case F_FUNCION_LOADBINARY:
@@ -30637,7 +30637,13 @@ void menu_inicio(void)
 
 		//Procesar comandos F
 
-		menu_process_f_functions();
+		//Procesamos cuando se pulsa tecla F concreta
+		if (menu_button_f_function_action==0) menu_process_f_functions();
+		else {
+			//O procesar cuando se envia una accion concreta
+			menu_process_f_functions_by_action(menu_button_f_function_action);
+			menu_button_f_function_action=0;
+		}
 
 		menu_muestra_pending_error_message(); //Si se genera un error derivado de funcion F
 		cls_menu_overlay();

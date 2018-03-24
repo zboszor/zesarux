@@ -871,6 +871,12 @@ void realjoystick_set_reset_key(int index,int value)
 void realjoystick_send_f_function(int accion)
 {
 		printf ("pulsada tecl de funcion\n");
+
+      menu_button_f_function.v=1;
+      menu_button_f_function_action=accion;
+      menu_abierto=1;
+	  /*
+
 		//Entrada
 		//menu_espera_no_tecla();
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
@@ -886,6 +892,7 @@ void realjoystick_send_f_function(int accion)
 		cls_menu_overlay();
 
 		menu_abierto=0;
+	*/
 }
 
 //si value=0, es reset

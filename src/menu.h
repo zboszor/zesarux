@@ -376,6 +376,8 @@ extern z80_bit menu_filesel_hide_dirs;
 
 extern int osd_kb_no_mostrar_desde_menu;
 
+extern int menu_button_f_function_action;
+
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint has the following format: \n" \
