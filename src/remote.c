@@ -46,6 +46,7 @@
 #include "tsconf.h"
 #include "operaciones.h"
 #include "snap.h"
+#include "kartusho.h"
 
 
 
@@ -752,6 +753,7 @@ struct s_items_ayuda items_ayuda[]={
 							"superupgrade_ram: where the superupgrade RAM is located\n"
 							"\n"
 							"Use with care, pointer address is a memory address on the emulator program (not the emulated memory)"},
+	{"kartusho-press-button",NULL,NULL,"Press button on the Kartusho interface"},
 	{"load-source-code","|lsc","file","Load source file to be used on disassemble opcode functions"},
 	{"ls",NULL,NULL,"Minimal command list"},
 	{"noop",NULL,NULL,"This command does nothing"},
@@ -3677,6 +3679,10 @@ char buffer_retorno[2048];
 
 		remote_hexdump_internal(misocket,inicio,longitud,offset);
 
+	}
+
+	else if (!strcmp(comando_sin_parametros,"kartusho-press-button")) {
+			kartusho_press_button();
 	}
 
 	else if (!strcmp(comando_sin_parametros,"load-source-code") || !strcmp(comando_sin_parametros,"lsc")) {
