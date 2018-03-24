@@ -4088,28 +4088,34 @@ typedef struct s_debug_memory_segment debug_memory_segment;
   //extern z80_byte debug_cpc_type_memory_paged_read[];
   //extern z80_byte debug_cpc_paginas_memoria_mapeadas_read[];
   			if (MACHINE_IS_CPC) {
-                                  //char texto_paginas[4][5];
-                                  segmentos_totales=4;
-                                  int pagina;
-                                  for (pagina=0;pagina<4;pagina++) {
-                                          if (debug_cpc_type_memory_paged_read[pagina]==CPC_MEMORY_TYPE_ROM) {
-  						sprintf (segmentos[pagina].shortname,"ROM%d",debug_cpc_paginas_memoria_mapeadas_read[pagina]);
-  						sprintf (segmentos[pagina].longname,"ROM %d",debug_cpc_paginas_memoria_mapeadas_read[pagina]);
+                        //char texto_paginas[4][5];
+                        segmentos_totales=4;
+                        int pagina;
+                        for (pagina=0;pagina<4;pagina++) {
+                            if (debug_cpc_type_memory_paged_read[pagina]==CPC_MEMORY_TYPE_ROM) {
+  								sprintf (segmentos[pagina].shortname,"ROM%d",debug_cpc_paginas_memoria_mapeadas_read[pagina]);
+  								sprintf (segmentos[pagina].longname,"ROM %d",debug_cpc_paginas_memoria_mapeadas_read[pagina]);
   					
-  					   }
+  					   		}
 
-                                          if (debug_cpc_type_memory_paged_read[pagina]==CPC_MEMORY_TYPE_RAM) {
-  						sprintf (segmentos[pagina].shortname,"RAM%d",debug_cpc_paginas_memoria_mapeadas_read[pagina]);
-  						sprintf (segmentos[pagina].longname,"RAM %d",debug_cpc_paginas_memoria_mapeadas_read[pagina]);
-  					  }
+                            if (debug_cpc_type_memory_paged_read[pagina]==CPC_MEMORY_TYPE_RAM) {
+  								sprintf (segmentos[pagina].shortname,"RAM%d",debug_cpc_paginas_memoria_mapeadas_read[pagina]);
+  								sprintf (segmentos[pagina].longname,"RAM %d",debug_cpc_paginas_memoria_mapeadas_read[pagina]);
+  					  		}
+
+							//Si es kartusho
+        					if (pagina==0 && kartusho_enabled.v==1) {
+                				sprintf (segmentos[pagina].shortname,"KB%d",kartusho_active_bank);
+                				sprintf (segmentos[pagina].longname,"Kartusho Block %d",kartusho_active_bank);
+							}
 
 
-  					 segmentos[pagina].length=16384;
-	                               	 segmentos[pagina].start=16384*pagina;
+  							segmentos[pagina].length=16384;
+	                        segmentos[pagina].start=16384*pagina;
 
-                                  }
+                        }
 
-                          }
+            }
 
   			//Paginas RAM en SAM
   			if (MACHINE_IS_SAM) {
