@@ -30309,16 +30309,9 @@ void menu_inicio_pre_retorno(void)
 
 }
 
-void menu_process_f_functions(void)
+void menu_process_f_functions_by_action(int accion)
 {
-
 	int antes_multitarea;
-
-	int indice=menu_button_f_function_index;
-
-	enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
-
-	//printf ("Menu process Tecla: F%d Accion: %s\n",indice+1,defined_f_functions_array[accion].texto_funcion);
 
 	char final_name[PATH_MAX];
 
@@ -30412,6 +30405,20 @@ void menu_process_f_functions(void)
 
 }
 
+void menu_process_f_functions(void)
+{
+
+
+
+	int indice=menu_button_f_function_index;
+
+	enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+
+	//printf ("Menu process Tecla: F%d Accion: %s\n",indice+1,defined_f_functions_array[accion].texto_funcion);
+
+	menu_process_f_functions_by_action(accion);
+
+}
 
 //menu principal
 void menu_inicio(void)
@@ -30623,6 +30630,7 @@ void menu_inicio(void)
 	}
 
 	else if (menu_button_f_function.v) {
+		//printf ("pulsada tecl de funcion\n");
 		//Entrada
 		menu_espera_no_tecla();
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd

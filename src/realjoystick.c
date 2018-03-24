@@ -436,14 +436,15 @@ realjoystick_events_keys_function realjoystick_events_array[MAX_EVENTS_JOYSTICK]
 realjoystick_events_keys_function realjoystick_keys_array[MAX_KEYS_JOYSTICK];
 
 char *realjoystick_event_names[]={
-        "Up",
-        "Down",
-        "Left",
-        "Right",
-        "Fire",
-        "EscMenu",
-        "Enter",
-        "Smartload",
+    "Up",
+    "Down",
+    "Left",
+    "Right",
+    "Fire",
+    "EscMenu",
+    "Enter",
+    "Smartload",
+	"Quicksave",
 	"Osdkeyboard",
 	"NumSelect",
 	"NumAction",
@@ -867,6 +868,26 @@ void realjoystick_set_reset_key(int index,int value)
 
 }
 
+void realjoystick_send_f_function(int accion)
+{
+		printf ("pulsada tecl de funcion\n");
+		//Entrada
+		//menu_espera_no_tecla();
+		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
+
+		//Procesar comandos F
+
+		//menu_button_f_function.v=1;
+      	//menu_button_f_function_index=F_FUNCION_QUICKSAVE;
+      	menu_abierto=1;
+		menu_process_f_functions_by_action(accion);
+
+		menu_muestra_pending_error_message(); //Si se genera un error derivado de funcion F
+		cls_menu_overlay();
+
+		menu_abierto=0;
+}
+
 //si value=0, es reset
 //si value != no, es set
 void realjoystick_set_reset_action(int index,int value)
@@ -963,6 +984,15 @@ void realjoystick_set_reset_action(int index,int value)
 				menu_button_quickload.v=1;
 			}
 		break;
+
+		case REALJOYSTICK_EVENT_QUICKSAVE:
+
+			if (value) {
+				printf ("boton quicksave\n");
+				realjoystick_send_f_function(F_FUNCION_QUICKSAVE);
+		      	//Activar funcion f en menu. Primera funcion que llamo desde joystick de la misma manera que cuando se pulsa tecla F de funcion
+			}
+		break;		
 
 		case REALJOYSTICK_EVENT_OSDKEYBOARD:
 				if (value) {
