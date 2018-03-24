@@ -870,7 +870,7 @@ void realjoystick_set_reset_key(int index,int value)
 
 void realjoystick_send_f_function(int accion)
 {
-		printf ("pulsada tecl de funcion\n");
+		//printf ("pulsada tecl de funcion\n");
 
       menu_button_f_function.v=1;
       menu_button_f_function_action=accion;
@@ -995,7 +995,7 @@ void realjoystick_set_reset_action(int index,int value)
 		case REALJOYSTICK_EVENT_QUICKSAVE:
 
 			if (value) {
-				printf ("boton quicksave\n");
+				//printf ("boton quicksave\n");
 				realjoystick_send_f_function(F_FUNCION_QUICKSAVE);
 		      	//Activar funcion f en menu. Primera funcion que llamo desde joystick de la misma manera que cuando se pulsa tecla F de funcion
 			}
