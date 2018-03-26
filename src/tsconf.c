@@ -372,6 +372,29 @@ int tsconf_align_address(int orig_destination,int destination,int addr_align_siz
 	return destination;
 }
 
+int tsconf_align_address_prueba(int orig_destination,int destination,int addr_align_size)
+{
+
+			int lower;
+
+			if (addr_align_size) { //1 alinear a 512
+				//printf ("alinear a 512\n");
+				//lower=orig_destination&0x1FF;
+				destination=destination&0xFFFE00;
+				//destination |=lower;
+				destination +=512;
+			}
+			else { //0 alinear a 256
+				//printf ("alinear a 256\n");
+				//lower=orig_destination&0xFF;
+				destination=destination&0xFFFF00;
+				//destination |=lower;
+				destination +=256;
+			}
+
+	return destination;
+}
+
 int debug_tsconf_dma_source=0;
 int debug_tsconf_dma_destination=0;
 int debug_tsconf_dma_burst_length=0;
