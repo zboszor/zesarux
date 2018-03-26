@@ -1,7 +1,5 @@
 -Prioridades para la 6.1 
--pantalla shadow 128 debe afectar a vpage de tsconf
 
- 
 -debug y en zrcp: poder activar/desctivar interrupcion
 nombre fichero en ventana menu?
 
@@ -237,6 +235,8 @@ Mark Hutchings
 -opcion ZRCP para cargar y grabar binary
 
 -Opción para indicar otro archivo de configuración 
+
+
 
 -smartloadpath en auto save 
 
@@ -1913,6 +1913,8 @@ algo que descuadra la lectura de puertos (alguna de mas o de menos) y ya por eso
 ->quiza hacer que al cargar un snapshot .zx salta texto indicativo del snapshot: fecha, etc
 -probado en second overlay, que ya no existe. no queda muy bien
 -quiza probarlo en footer? Pero y si se mete en footer, si hay algun .config o autodeteccion ssl, sobreescribira la info que hayamos metido antes de fecha? quien tiene preferencia?
+
+-Opción para generar un .config con opciones en curso, opciones basicas
 
 -soporte de carga szx? Y quizá grabación también? Problema con compresion de datos, hay que usar libreria externa
 

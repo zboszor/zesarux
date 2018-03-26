@@ -6945,6 +6945,11 @@ acts as expected unless this registe is explicitly changed by the user/software.
 							z80_byte memconfig=tsconf_af_ports[0x21];
 							memconfig &=(255-1); //Reset del bit 0
 
+							//Bit vshadow
+							z80_byte vpage=(value&8 ? 7 : 5);
+							tsconf_af_ports[1]=vpage;
+
+
 							//Y ponemos a 1 si conviene
 							if (value&16) memconfig |=1;
 
