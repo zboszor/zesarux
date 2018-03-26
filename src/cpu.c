@@ -1273,6 +1273,7 @@ printf (
 		"--simulaterealload         Simulate real tape loading\n"
 		"--simulaterealloadfast     Enable fast real tape loading\n"
 		"--smartloadpath path       Select initial smartload path\n"
+		"--quicksavepath path       Select path for quicksave\n"
 		"--autoloadsnap             Load last snapshot on start\n"
 		"--autosavesnap             Save snapshot on exit\n"
 		"--autosnappath path        Folder to save/load automatic snapshots\n"
@@ -4870,6 +4871,11 @@ int parse_cmdline_options(void) {
 				sprintf(quickload_file,"%s/",argv[puntero_parametro]);
 
                                 quickfile=quickload_file;
+                        }
+
+			else if (!strcmp(argv[puntero_parametro],"--quicksavepath")) {
+                                siguiente_parametro_argumento();
+				sprintf(snapshot_autosave_interval_quicksave_directory,"%s/",argv[puntero_parametro]);
                         }
 
 

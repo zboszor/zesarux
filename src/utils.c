@@ -847,7 +847,7 @@ int util_compare_file_extension(char *filename,char *extension_compare)
 
 
 
-//Retorna el directorio de una ruta completa
+//Retorna el directorio de una ruta completa, ignorando barras repetidas del final
 void util_get_dir(char *ruta,char *directorio)
 {
         int i;
@@ -863,16 +863,22 @@ void util_get_dir(char *ruta,char *directorio)
                 if (ruta[i]=='/' || ruta[i]=='\\') break;
         }
 
+        //Ubicarse en el primer caracter no /
+        for (;i>=0;i--) {
+                if (ruta[i]!='/' && ruta[i]!='\\') break;
+        }        
+
         if (i>=0) {
 
                 //TODO. porque esto no va con strcpy??? Da segmentation fault en mac, en cintas de revenge.p
                 int j;
-                for (j=0;j<i+1;j++) {
+                for (j=0;j<=i;j++) {
                         directorio[j]=ruta[j];
                 }
                 //sleep(1);
                 //printf ("despues de strncpy\n");
-                directorio[i+1]=0;
+                directorio[i+1]='/';
+                directorio[i+2]=0;
                 //printf ("directorio final: %s\n",directorio);
         }
 
@@ -2994,15 +3000,20 @@ void util_write_config_aux_realjoystick(int button_type, int button, char *texto
 
 void util_copy_path_delete_last_slash(char *origen, char *destino)
 {
-    //Quitar barra del final si la hay
+    //Quitar barras del final si las hay
     strcpy(destino,origen);
     int i=strlen(destino);
-    if (i>1 && 
-        (destino[i-1]=='/' || destino[i-1]=='\\')
+    i--;
+    while (i>0 && 
+        (destino[i]=='/' || destino[i]=='\\')
         ) {
-            destino[i-1]=0;
+            destino[i]=0;
+            i--;
     }
+
 }
+
+//void util_save_config_normalize_path
 
 
 //1 si ok
@@ -3023,6 +3034,7 @@ int util_write_configfile(void)
   char config_settings[20000]; //Esto es mas que suficiente
 
   char buffer_temp[MAX_CONFIG_SETTING]; //Para cadenas temporales
+  char buffer_temp2[MAX_CONFIG_SETTING]; //Para cadenas temporales
 
   int indice_string=0;
 
@@ -3111,9 +3123,23 @@ int util_write_configfile(void)
  	ADD_STRING_CONFIG,"--smartloadpath \"%s\"",buffer_temp);
   }
 
+  if (snapshot_autosave_interval_quicksave_directory[0]!=0) {
+        //Rutas que son directorios, llamar a util_copy_path_delete_last_slash (sobretodo aquellas rutas que se pueden editar desde menu)
+        //Rutas que apuntan a archivos, llamar a util_get_dir
+        //printf ("dir quicksave: %s\n",snapshot_autosave_interval_quicksave_directory);
+        util_copy_path_delete_last_slash(snapshot_autosave_interval_quicksave_directory,buffer_temp);
+        //util_get_dir(snapshot_autosave_interval_quicksave_directory,buffer_temp);
+        //printf ("dir quicksave final: %s\n",buffer_temp);
+
+ 	ADD_STRING_CONFIG,"--quicksavepath \"%s\"",buffer_temp);
+  }
+  
 
   if (binary_file_load[0]!=0) {
-	util_get_dir(binary_file_load,buffer_temp);
+        //printf ("dir binary_file_load: %s\n",binary_file_load);
+	//util_get_dir(binary_file_load,buffer_temp);
+        util_copy_path_delete_last_slash(binary_file_load,buffer_temp);
+        //printf ("dir binary_file_load final: %s\n",buffer_temp);
  	ADD_STRING_CONFIG,"--loadbinarypath \"%s\"",buffer_temp);
   }
 
@@ -3133,21 +3159,21 @@ int util_write_configfile(void)
   if (autosave_snapshot_on_exit.v)            ADD_STRING_CONFIG,"--autosavesnap");
   if (autosave_snapshot_path_buffer[0]!=0) {
     //Quitar barra del final si la hay
-    strcpy(buffer_temp,autosave_snapshot_path_buffer);
-    i=strlen(buffer_temp);
-    if (i>1 && buffer_temp[i-1]=='/') buffer_temp[i-1]=0;
-                                              ADD_STRING_CONFIG,"--autosnappath \"%s\"",buffer_temp);
+    //strcpy(buffer_temp,autosave_snapshot_path_buffer);
+    //i=strlen(buffer_temp);
+    //if (i>1 && buffer_temp[i-1]=='/') buffer_temp[i-1]=0;
+    util_copy_path_delete_last_slash(autosave_snapshot_path_buffer,buffer_temp);
+        ADD_STRING_CONFIG,"--autosnappath \"%s\"",buffer_temp);
   }
 
 
   if (emulator_tmpdir_set_by_user[0]!=0) {
 	//Quitar barra del final si la hay
 	util_copy_path_delete_last_slash(emulator_tmpdir_set_by_user,buffer_temp);
- 		      ADD_STRING_CONFIG,"--tempdir \"%s\"",buffer_temp);
+ 	ADD_STRING_CONFIG,"--tempdir \"%s\"",buffer_temp);
   }
 
 
-  //TODO loadbinary
   if (texto_artistico.v==0)                   ADD_STRING_CONFIG,"--disablearttext");
                                               ADD_STRING_CONFIG,"--arttextthresold %d",umbral_arttext);
   if (chardetect_printchar_enabled.v)         ADD_STRING_CONFIG,"--enableprintchartrap");
