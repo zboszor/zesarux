@@ -7,8 +7,7 @@ nombre fichero en ventana menu?
 
 -breakpoints con "printe" que siempre saltaan, no dejan abrir el menu con F5
 
--Escalado 0.75. De cada 4 pixeles, los dos últimos hacer media de color.
- Usar colores gigascreen para eso, pues tienen todas las combinaciones. Setting activable para ese tipo de reducción o la normal
+
 
 parpadeo en tsconf con driver X11 y menu abierto. Quiza no comprueba si menu ocupado al hacer render tsconf?
 parece que lo hace tanto con real video on o off
@@ -1421,6 +1420,8 @@ Opcion desactivar colores que solo va en realvideo off:
 -Quitar atributos que se pueda aunque esté modo rainbow 
 -Quizá simplemente una paleta grayscale y cuando haga render final, que convierta valores rgb a gris
 
+-Escalado 0.75. De cada 4 pixeles, los dos últimos hacer media de color.
+ Usar colores gigascreen para eso, pues tienen todas las combinaciones. Setting activable para ese tipo de reducción o la normal
 
 -interlaced con frameskip impar no dibuja bien el menu (se ve entrelazado el menu)
 

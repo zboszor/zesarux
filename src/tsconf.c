@@ -578,6 +578,8 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			destination &=destination_mask;
 			source &=source_mask;
 
+		int incremento_destino=0;
+		int incremento_origen=0;
 
 		switch (dma_operation) {
 
@@ -585,8 +587,10 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 					//printf ("RAM (Src) is copied to RAM (Dst)\n");
 					destination_pointer[destination]=source_pointer[source];
 					destination_pointer[destination+1]=source_pointer[source+1];	
-					destination +=2;
-					source +=2;
+					//destination +=2;
+					//source +=2;
+
+					incremento_destino=incremento_origen=2;
 			break;
 
 			case 3:
@@ -594,8 +598,9 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 					//edge_grinder usa esto
 					tsconf_dma_put_pixel_ifnotzero(&destination_pointer[destination],source_pointer[source],addr_align_size);
 					tsconf_dma_put_pixel_ifnotzero(&destination_pointer[destination+1],source_pointer[source+1],addr_align_size);
-					destination +=2;
-					source +=2;
+					//destination +=2;
+					//source +=2;
+					incremento_destino=incremento_origen=2;
 
 			break;
 
@@ -603,7 +608,9 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 					//printf ("RAM (Dst) is filled with word from RAM (Src)\n");
 					destination_pointer[destination]=source_pointer[source];
 					destination_pointer[destination+1]=source_pointer[source+1];	
-					destination +=2;
+					//destination +=2;
+
+					incremento_destino=2;
 
 			break;
 
@@ -611,8 +618,10 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 					//printf ("RAM (Src) is copied to CRAM (Dst) source %06XH dest %06XH\n",source,destination);
 					destination_pointer[destination]=source_pointer[source];
 					destination_pointer[destination+1]=source_pointer[source+1];	
-					destination +=2;
-					source +=2;					
+					//destination +=2;
+					//source +=2;	
+
+					incremento_destino=incremento_origen=2;				
 	
 			break;
 
@@ -621,25 +630,34 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 					//printf ("RAM (Src) is copied to SFILE (Dst)\n"); //Digger usa esto
 					destination_pointer[destination]=source_pointer[source];
 					destination_pointer[destination+1]=source_pointer[source+1];	
-					destination +=2;
-					source +=2;					
+					//destination +=2;
+					//source +=2;		
+
+					incremento_destino=incremento_origen=2;			
 	
 			break;
 
 
 			case 12:
 			//ldd.spg usa Unemulated dma type: rw: 0 ddev: 06H
-					//Pixels from RAM (Src) are blitted to RAM (Dst) with adder. De momento hacemos copia tal cual
+					//Pixels from RAM (Src) are blitted to RAM (Dst) with adder. 
 					//printf ("Pixels from RAM (Src) are blitted to RAM (Dst) with adder\n");
 					tsconf_dma_put_pixel_blit2(&destination_pointer[destination],source_pointer[source],addr_align_size,dma_opt);
 					tsconf_dma_put_pixel_blit2(&destination_pointer[destination+1],source_pointer[source+1],addr_align_size,dma_opt);
-					destination +=2;
-					source +=2;
+					//destination +=2;
+					//source +=2;
+
+					incremento_destino=incremento_origen=2;
 
 			break;
 
 
 		}
+
+		//if (i!=burst_length-1) {
+		destination +=incremento_destino;
+		source +=incremento_origen;
+		//}
 
 
 			
