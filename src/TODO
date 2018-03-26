@@ -175,9 +175,6 @@ Mark Hutchings
 -Opción para indicar otro archivo de configuración 
 
 
-
--smartloadpath en auto save 
-
 -licencia tipo letra man soft
 
 -Estadísticas de diferentes componentes del core, ya sea cpu u otra cosa, como memoria usada para el rainbow buffer, el buffer de audio  y cosas así
@@ -209,15 +206,12 @@ http://forum.tslabs.info/viewtopic.php?f=12&t=157
 para probar sprites: ny17, cfparallax, digger, fast, fishbone, 200, mustang, 3bm, alterego beta,
 girlsun, hny2k16, jptst, merhaba_fixed, mf11intro, robfgift, sirababol, soco, tcircles, uwol
 
-HNY2k16_2TS.spg: no se ve la parte de abajo
 
 newschool: usa mirror xf, yf de sprites. uwol mirror xf
 con mirror_x en sprite, xorig debe decrementarse y detectar cuando xorig<0 tiene que hacerse xorig=511
 
 mirror x,y en tiles: hnk2015, merhaba_fixed usa los dos tipos de mirror
 probar capas de sprites tsconf: 200, , sirababol, mustang, alterego, fast, fishbone, uwol, soco
-
-
 
 
 -Comandos ZRCP obtener datos sprites tsconf
