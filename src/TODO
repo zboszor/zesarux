@@ -1,40 +1,36 @@
 -Prioridades para la 6.1 
 
--debug y en zrcp: poder activar/desctivar interrupcion
-nombre fichero en ventana menu?
+-debug y en zrcp: poder activar/desactivar interrupcion
 
 -watermark sin realvideo no hace zoom. importante???
 
 -breakpoints con "printe" que siempre saltaan, no dejan abrir el menu con F5
 
-
-
-parpadeo en tsconf con driver X11 y menu abierto. Quiza no comprueba si menu ocupado al hacer render tsconf?
+-parpadeo en tsconf con driver X11 y menu abierto. Quiza no comprueba si menu ocupado al hacer render tsconf?
 parece que lo hace tanto con real video on o off
+-tsconf con fbdev y real video hace parpadeo el menu
  
+-tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
 
-tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
-
-tbblue extended opcodes
+-tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 revisar los que hayan cambiado.
 
-Validar todos menus con speech 
+-Validar todos menus con speech 
 
-Opcion para forzar siempre snap grabar zsf de 48k
+-Opcion para forzar siempre snap grabar zsf de 48k
 
-revisar todos menus que usan put pixel que se ajusten a tamaño ancho caracter: para cuando se reduce tamaño caracter de 8 a menos
 
 Agregar todas desensamblado roms en txt 
 http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROMDisassembly4.htm
 
-QL: lectura de bloques basic no siempre funciona
 
-Mas utilidades de visor archivos: convertir?
-Formato zsf: completar para mas maquinas
+-Mas utilidades de visor archivos: convertir?
 
-TBBLue: al hacer hard reset, los colores del boot se cambian :S quiza algun bit de la paleta que no esta bien en reset?
 
+-TBBLue: al hacer hard reset, los colores del boot se cambian :S quiza algun bit de la paleta que no esta bien en reset?
+
+-Formato zsf: completar para mas maquinas
 ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo y desactivo setting de divmmc paging, ya aparece:
 porque no habilita el nested_function de divmmc. Sera tan facil como guardar el setting de diviface-paged-enabled y si es asi, 
 activar ese nested (por defecto tenerlo desactivado). En caso de zxuno, divmmc en zsf no debe guardar/grabar su memoria ram ya que es 
@@ -49,37 +45,6 @@ buscar "download_count"
 curl -s https://api.github.com/repos/chernandezba/zesarux/releases | egrep '"name"|"download_count"'
 
 --- Cosas para la version 6.1
-
-QL:
-parece que los fallos de lectura en sentencias basic no son del archivo original sino que es algún tipo de error del emulador.
-No sera culpa de esa suma de punteros a1+a6 que no siempre se produce, y que depende de… lo de los traps que me dijeron en el foro
-
--Intento interceptar funciones de lectura de sectores de microdrive. MD.READ. aparentemente tiene que saltar desde la direccion 525CH pero ahi no parece saltar nunca,
-si desactivo todo trap de rom de ql, se queda colgado despues del menu inicial, seguramente intentando detectar microdrive
-si no desactivo traps, no parece llegar tampoco ahi, aunque esto me ha llevado a interceptar el trap FS.MDINF, que se usa en dir mdv1_,
-cosa que ahora consigo mostrar sectores libres/usados aunque no aparece el nombre del microdrive (registro A1 donde hay que guardar eso contiene direccion 100H !)
-
--teniendo desactivada la emulacion de microdrive , igualmente consulta cosas al root path
-Debug: Source path: MDV1_BOOT Device: mdv1 File: boot
-Paranoid: File /Users/chernandezba/Documents/ZEsarUX/zesarux/extras/media/ql/spacepods/boot not found
-
-
-
-Ejemplo:
-demos/cueshell.zip 
-
-Linea 70, la lee mal hacia el final. pero no siempre lo hace… :(
-
--solo cambiar en la ruta de archivos de ql, la primera _ empezando por la derecha es un ".", sin tener en cuenta logicamente el mdv1_
-Necesario?? si se pone ruta entre comillas no hay que cambiar los . en el basic por _
-casos antonimos:
-archivo se llama mouse_bin y hace lbytes mdv1_mouse_bin  -> lo raro
-archivo se llama spacepods.bas y hace lbytes mdv1_spacepods_bas -> lo normal
-
--tema mayusculas/ minusculas en ql solo funciona directo en mac... que pasa con windows? y mac?
-
-
--implementar exec_mdv1_... mismo ejemplo con cueshell, va a   Returning header for file on address 00100H y ahi peta
 
 -quiza en set_machine, cuando hace:
   //Si estaba divmmc o divide activo, desactivarlos
@@ -101,6 +66,7 @@ probado lo siguiente:
 ->Quiza solucion es que haga reseteo solo cuando se haya llenado 1 vez el buffer al menos
 ->ya no lo hace??
 
+
 -enter le envia siempre speech pending. normal?
 
 -eventos joystick para simular pgup, pgdn
@@ -114,35 +80,11 @@ probado lo siguiente:
 -agregar un handler especial para esas teclas. Pero entonces como se mueve uno por los ítems? Con tecla tab?
 Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En menú tabular, el tab sale?
 
--Funcion genérico leer archivo y asignar memoria para browsers
-
--Recreated Keyboard en Linux con fbdev
 
 -cargar scl:
 http://www.zx-modules.de/fileformats/sclformat.html
 
 -Config sinclair1/2 interface 2 joystick está bien? Ver página wos joystick
-
--+3: funcionan :
-
-3d kit disco 1
-
-zigurat software:
-autocrash
-carlos sainz
-gp f1
-jungle warrior
-senda salvaje
-sito pons
-
-Mirar porque fallan muchos dsk
-
-al cambiar funcion de busqueda sectores: ahora busca sector id de cada sector:
-emilio sanchez vicario: usa sectores consecutivos
-paris dakar: NO va, pero veo que usa sectores consecutivos tambien (a partir de pista 1)
-drazen petrovic basket
-night hunter. aunque luego no carga la cara b
-
 
 -Quizá resetear puntero escritura latencia siempre que carga, graba, etc
 
@@ -150,8 +92,6 @@ night hunter. aunque luego no carga la cara b
 deberia verse bien, pues se usan funciones de putchar igual que en menu. si realvideo, no se ve el texto que queda en border. con real video, se ve esa parte pero no mucho mas
 
 -Intentar reproducir click inicial metiendo pausa expresamente. E intentar que solo haga ajuste de buffer cuando haya algo en dicho buffer 
-
--autoload en +3 de cinta no va, seguramente porque al tener un dsk insertado, la rutina salta diferente (o le envia el enter antes)
 
 
 -menus tabulados:
@@ -174,9 +114,8 @@ luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu 
 
 -fallback de video y/o audio no lo hace si se especifica --vo .... o --ao ...... cosa que normalmente ya estara en el .zesaruxrc y por tanto no se hara fallback
 
--tsconf con fbdev y real video hace parpadeo el menu
 
--mk14 en fbdev hace parpadeo
+
 
 -sdl2 en linux no deja redimensionar ventana con raton
 
@@ -308,13 +247,6 @@ o bien el mezclado de chip ay
 -Full screen cocoa gl
 -Grabar en archivo configuracion joystick: eventos, teclas, etc
 
--QL:
-*cpu stats: quiza no porque hay mas instrucciones que z80....
--Soporte microdrive / floppy QL
--Que QL, cuando busque un archivo, lo haga todo en minusculas y tambien todo en mayusculas
--Soft QL
-http://www.rwapadventures.com/ql_wiki/index.php?title=Sinclair%20QL%20Home%20Computer&lang=en
--Mirar uqlx a ver cómo hace el load 
 
 
 
@@ -510,6 +442,46 @@ no cierra la ventana sdl. si en cambio el driver audio no es sdl, al cambiar de 
 
 --- QL ---
 
+QL: lectura de bloques basic no siempre funciona
+*cpu stats: quiza no porque hay mas instrucciones que z80....
+-Soporte microdrive / floppy QL
+-Que QL, cuando busque un archivo, lo haga todo en minusculas y tambien todo en mayusculas
+-Soft QL
+http://www.rwapadventures.com/ql_wiki/index.php?title=Sinclair%20QL%20Home%20Computer&lang=en
+-Mirar uqlx a ver cómo hace el load 
+
+-QL:
+parece que los fallos de lectura en sentencias basic no son del archivo original sino que es algún tipo de error del emulador.
+No sera culpa de esa suma de punteros a1+a6 que no siempre se produce, y que depende de… lo de los traps que me dijeron en el foro
+
+-Intento interceptar funciones de lectura de sectores de microdrive. MD.READ. aparentemente tiene que saltar desde la direccion 525CH pero ahi no parece saltar nunca,
+si desactivo todo trap de rom de ql, se queda colgado despues del menu inicial, seguramente intentando detectar microdrive
+si no desactivo traps, no parece llegar tampoco ahi, aunque esto me ha llevado a interceptar el trap FS.MDINF, que se usa en dir mdv1_,
+cosa que ahora consigo mostrar sectores libres/usados aunque no aparece el nombre del microdrive (registro A1 donde hay que guardar eso contiene direccion 100H !)
+
+-teniendo desactivada la emulacion de microdrive , igualmente consulta cosas al root path
+Debug: Source path: MDV1_BOOT Device: mdv1 File: boot
+Paranoid: File /Users/chernandezba/Documents/ZEsarUX/zesarux/extras/media/ql/spacepods/boot not found
+
+
+
+Ejemplo:
+demos/cueshell.zip 
+
+Linea 70, la lee mal hacia el final. pero no siempre lo hace… :(
+
+-solo cambiar en la ruta de archivos de ql, la primera _ empezando por la derecha es un ".", sin tener en cuenta logicamente el mdv1_
+Necesario?? si se pone ruta entre comillas no hay que cambiar los . en el basic por _
+casos antonimos:
+archivo se llama mouse_bin y hace lbytes mdv1_mouse_bin  -> lo raro
+archivo se llama spacepods.bas y hace lbytes mdv1_spacepods_bas -> lo normal
+
+-tema mayusculas/ minusculas en ql solo funciona directo en mac... que pasa con windows? y mac?
+
+
+-implementar exec_mdv1_... mismo ejemplo con cueshell, va a   Returning header for file on address 00100H y ahi peta
+
+
 
 -get-stack-backtrace para motorola
 
@@ -554,6 +526,9 @@ http://www.dilwyn.me.uk/downloads.html
 *condiciones registros, establecer registros
 *input, output, teclas, visualizacion leds
 *y posiblemente muchas mas cosas...
+
+
+-mk14 en fbdev hace parpadeo
 
 -------------
 
@@ -740,6 +715,34 @@ Ver registro 2:
 *Contended en mmu tbblue. De momento la contencion la hace por bloques de 16 kb
 
 -------------
+
+--- +3 ---
+-+3: funcionan :
+
+3d kit disco 1
+
+zigurat software:
+autocrash
+carlos sainz
+gp f1
+jungle warrior
+senda salvaje
+sito pons
+
+Mirar porque fallan muchos dsk
+
+al cambiar funcion de busqueda sectores: ahora busca sector id de cada sector:
+emilio sanchez vicario: usa sectores consecutivos
+paris dakar: NO va, pero veo que usa sectores consecutivos tambien (a partir de pista 1)
+drazen petrovic basket
+night hunter. aunque luego no carga la cara b
+
+-autoload en +3 de cinta no va, seguramente porque al tener un dsk insertado, la rutina salta diferente (o le envia el enter antes)
+
+
+
+-------------
+
 
 --- SAM coupe ---
 
@@ -1416,6 +1419,8 @@ eliminar warnings de funciones sin definir como extern
 
 *** Video ***
 
+-nombre ultimo juego cargado en titulo ventana 
+
 Opcion desactivar colores que solo va en realvideo off:
 -Quitar atributos que se pueda aunque esté modo rainbow 
 -Quizá simplemente una paleta grayscale y cuando haga render final, que convierta valores rgb a gris
@@ -1577,6 +1582,10 @@ Etc...
 
 -Menú utilidades archivos
 Convertir archivo
+
+
+
+-revisar todos menus que usan put pixel que se ajusten a tamaño ancho caracter: para cuando se reduce tamaño caracter de 8 a menos
 
 -probar como hacer transparencia en menu:
 -un layer de color indexado 16 bits para pantalla de spectrum
@@ -2025,7 +2034,6 @@ Si es botón está también mapeado a un evento, entonces esa letra no se ve
 
 -update roms +3e. Falla también por usar cmd8. como generamos el error de illegal command???. mismo pasa en roms +3e de Spectrum Next
 
--Floppy +3. Quiza para poderlo hacer hay que tener un sistema de gestion de eventos, en que se puedan programar eventos futuros, como cuando el floppy llega a la pista que se le ha pedido con operacion de seek
 
 -Spectra: dos ventanas, una muestra pantalla principal (salida normal de spectrum) y la otra muestra la pantalla que genera la salida del spectra
 quizá modo dual de spectra se puede hacer en misma ventana pero haciéndola el doble de ancho para que se vean las dos pantallas
