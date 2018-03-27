@@ -318,23 +318,16 @@ void init_breakpoints_table(void)
 
 
 //Dibuja la pantalla de panico
-void screen_show_panic_screen(void)
+void old_screen_show_panic_screen(void)
 {
-        int x,y;
+	int x,y;
 
-        int color=0;
+    int color=0;
 
 	int xmax;
 	int ymax;
 
-	/*if (MACHINE_IS_Z88) {
-		xmax=screen_get_emulated_display_width_no_zoom();
-		ymax=screen_get_emulated_display_height_no_zoom();
-	}
-	else {
-		xmax=256;
-		ymax=192;
-	}*/
+
 	z80_bit antes_border;
 	antes_border.v=border_enabled.v;
 	border_enabled.v=0;
@@ -354,6 +347,33 @@ void screen_show_panic_screen(void)
         }
 }
 
+
+//Dibuja la pantalla de panico
+void screen_show_panic_screen(void)
+{
+	int x,y;
+
+	int color=0;
+
+	int xmax;
+	int ymax;
+
+
+	xmax=screen_get_emulated_display_width_zoom_border_en();
+	ymax=screen_get_emulated_display_height_zoom_border_en();
+
+	//printf ("Filling colour bars up to %dX%d\n",xmax,ymax);
+
+
+	for (x=0;x<xmax;x++) {
+		for (y=0;y<ymax;y++) {
+			scr_putpixel(x,y,(color&15) );
+
+			color++;
+			//esto genera lineas horizontales de con todos los colores en orden -> arcoiris
+		}
+	}
+}
 
 //Compile with -g -rdynamic to show function names
 void exec_show_backtrace(void) {
@@ -385,7 +405,7 @@ void cpu_panic_printf_mensaje(char *mensaje)
 
 
 //Abortar ejecucion del emulador con kernel panic
-void cpu_panic(char *mensaje)
+void old_cpu_panic(char *mensaje)
 {
 	char buffer[1024];
 
@@ -455,6 +475,61 @@ void cpu_panic(char *mensaje)
 	exit(1);
 }
 
+//Abortar ejecucion del emulador con kernel panic
+void cpu_panic(char *mensaje)
+{
+	char buffer[1024];
+
+	//por si acaso, antes de hacer nada mas, vamos con el printf, para que muestre el error (si es que el driver de video lo permite)
+	//hacemos pantalla de panic en xwindows y fbdev, y despues de finalizar el driver, volvemos a mostrar error
+	cpu_panic_printf_mensaje(mensaje);
+
+
+	if (scr_end_pantalla!=NULL) {
+
+		//si es xwindows o fbdev, mostramos panic mas mono
+		if (si_complete_video_driver() ) {
+			//quitar splash text por si acaso
+			menu_splash_segundos=1;
+			reset_splash_text();
+
+
+			cls_menu_overlay();
+
+
+
+			screen_show_panic_screen();
+
+
+			/*screen_print(0,0,7,1,"ZEsarUX kernel panic:");
+			screen_print(0,1,7,1,mensaje);
+
+			print_registers(buffer);
+			//los registros los mostramos dos lineas por debajo de la ultima usada
+			screen_print(0,screen_print_y+2,7,1,buffer);*/
+
+
+			scr_refresca_pantalla();
+
+			//Para xwindows hace falta esto, sino no refresca
+			scr_actualiza_tablas_teclado();
+
+
+			sleep(10);
+			scr_end_pantalla();
+		}
+
+		else {
+			scr_end_pantalla();
+		}
+	}
+
+	cpu_panic_printf_mensaje(mensaje);
+
+	exec_show_backtrace();
+
+	exit(1);
+}
 
 
 //Para calcular tiempos funciones. Iniciar contador antes
