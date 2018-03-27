@@ -12538,6 +12538,7 @@ void menu_ula_advanced(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,NULL,NULL,"Total line TLength: %d",screen_testados_linea);
 		menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,NULL,NULL,"Total scanlines: %d",screen_scanlines);
 		menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,NULL,NULL,"Total T-states: %d",screen_testados_total);
+		menu_add_item_menu_format(array_menu_hardware_advanced,MENU_OPCION_NORMAL,NULL,NULL,"Total Hz: %d",screen_testados_total*50);
 
                 menu_add_item_menu(array_menu_hardware_advanced,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_hardware_advanced,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
@@ -16458,13 +16459,31 @@ void menu_spectrum_core_reduced(MENU_ITEM_PARAMETERS)
 //menu cpu settings
 void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 {
-        menu_item *array_menu_cpu_settings;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
+    menu_item *array_menu_cpu_settings;
+    menu_item item_seleccionado;
+    int retorno_menu;
+    do {
 
+		char buffer_velocidad[16];
 
-		menu_add_item_menu_inicial_format(&array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_turbo_mode,NULL,"Turbo: %dX",cpu_turbo_speed);
+		if (CPU_IS_Z80 && !MACHINE_IS_Z88) {
+			int cpu_hz=screen_testados_total*50;
+			int cpu_khz=cpu_hz/1000;
+
+			//Obtener decimales
+			int mhz_enteros=cpu_khz/1000;
+			int decimal_mhz=cpu_khz-(mhz_enteros*1000);
+
+								//01234567890123456789012345678901
+								//           1234567890
+								//Turbo: 16X 99.999 MHz
+			sprintf(buffer_velocidad,"%d.%d MHz",mhz_enteros,decimal_mhz);
+		}
+		else {
+			buffer_velocidad[0]=0;
+		}
+
+		menu_add_item_menu_inicial_format(&array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_turbo_mode,NULL,"Turbo: %dX %s",cpu_turbo_speed,buffer_velocidad);
 		menu_add_item_menu_tooltip(array_menu_cpu_settings,"Changes only the Z80 speed");
 		menu_add_item_menu_ayuda(array_menu_cpu_settings,"Changes only the Z80 speed. Do not modify FPS, interrupts or any other parameter. "
 					"Some machines, like ZX-Uno or Chloe, change this setting");
