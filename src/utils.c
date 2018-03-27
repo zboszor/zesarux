@@ -3124,11 +3124,10 @@ int util_write_configfile(void)
   }
 
   if (snapshot_autosave_interval_quicksave_directory[0]!=0) {
-        //Rutas que son directorios, llamar a util_copy_path_delete_last_slash (sobretodo aquellas rutas que se pueden editar desde menu)
-        //Rutas que apuntan a archivos, llamar a util_get_dir
+        //Rutas que son directorios, llamar a util_copy_path_delete_last_slash 
+        //Rutas que apuntan a archivos (o directorios por linea de comandos pero que en menu almacenan archivos), llamar a util_get_dir
         //printf ("dir quicksave: %s\n",snapshot_autosave_interval_quicksave_directory);
         util_copy_path_delete_last_slash(snapshot_autosave_interval_quicksave_directory,buffer_temp);
-        //util_get_dir(snapshot_autosave_interval_quicksave_directory,buffer_temp);
         //printf ("dir quicksave final: %s\n",buffer_temp);
 
  	ADD_STRING_CONFIG,"--quicksavepath \"%s\"",buffer_temp);
@@ -3138,13 +3137,11 @@ int util_write_configfile(void)
   if (binary_file_load[0]!=0) {
         //printf ("dir binary_file_load: %s\n",binary_file_load);
 	util_get_dir(binary_file_load,buffer_temp);
-        //util_copy_path_delete_last_slash(binary_file_load,buffer_temp);
         //printf ("dir binary_file_load final: %s\n",buffer_temp);
  	ADD_STRING_CONFIG,"--loadbinarypath \"%s\"",buffer_temp);
   }
 
   if (binary_file_save[0]!=0) {
-        //util_copy_path_delete_last_slash(binary_file_save,buffer_temp);
         util_get_dir(binary_file_save,buffer_temp);
  	ADD_STRING_CONFIG,"--savebinarypath \"%s\"",buffer_temp);
   }  
