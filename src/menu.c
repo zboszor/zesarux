@@ -22590,6 +22590,7 @@ void menu_debug_tsconf_dma_overlay(void)
 
     
     	//mostrarlos siempre a cada refresco
+    menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 		char texto_dma[33];
 
@@ -22622,7 +22623,7 @@ void menu_debug_tsconf_dma_overlay(void)
 
 
 
-		menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
 
 	
 	
