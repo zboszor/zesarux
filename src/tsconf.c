@@ -1316,10 +1316,22 @@ void scr_tsconf_putpixel_zx_mode(int x,int y,unsigned color)
 {
 	y*=2;
 	x*=2;
-	scr_tsconf_putpixel_sum_border(x,y,color);
-	scr_tsconf_putpixel_sum_border(x,y+1,color);
-	scr_tsconf_putpixel_sum_border(x+1,y,color);
-	scr_tsconf_putpixel_sum_border(x+1,y+1,color);
+
+	int border_x=tsconf_current_border_width*2;
+	int border_y=tsconf_current_border_height*2;
+
+	int menu_x=(x+border_x)/8;
+	int menu_y=(y+border_y)/8;
+
+	//Suponemos que x, x+1 e y e y+1 van a estar dentro de una cuadricula igual los dos, por tanto la comprobacion siguiente solo la hacemos una vez
+	if (scr_ver_si_refrescar_por_menu_activo(menu_x,menu_y)){
+        scr_tsconf_putpixel_sum_border(x,y,color);
+        scr_tsconf_putpixel_sum_border(x,y+1,color);
+        scr_tsconf_putpixel_sum_border(x+1,y,color);
+        scr_tsconf_putpixel_sum_border(x+1,y+1,color);
+    }
+
+
 }
 
 void scr_tsconf_putpixel_zoom_rainbow_text_mode(unsigned color,z80_int *puntero_rainbow,int ancho_linea)
@@ -2583,10 +2595,17 @@ void scr_tsconf_putpixel_zoom_border(int x,int y, unsigned int color)
 	x*=2;
 	y*=2;
 
-	scr_putpixel_zoom(x,y,color);
-	scr_putpixel_zoom(x+1,y,color);
-	scr_putpixel_zoom(x,y+1,color);
-	scr_putpixel_zoom(x+1,y+1,color);
+    int menu_x=x/8;
+    int menu_y=y/8;
+
+
+    //Suponemos que x, x+1 e y e y+1 van a estar dentro de una cuadricula igual los dos, por tanto la comprobacion siguiente solo la hacemos una vez
+    if (scr_ver_si_refrescar_por_menu_activo(menu_x,menu_y)){
+        scr_putpixel_zoom(x,y,color);
+        scr_putpixel_zoom(x+1,y,color);
+        scr_putpixel_zoom(x,y+1,color);
+        scr_putpixel_zoom(x+1,y+1,color);
+    }
 }
 
 void scr_refresca_border_tsconf_cont(void)
@@ -2631,15 +2650,14 @@ void scr_refresca_border_tsconf_cont(void)
 void screen_tsconf_refresca_border(void)
 {
 	if (rainbow_enabled.v==0) {
-					if (border_enabled.v) {
-									//ver si hay que refrescar border
-									if (modificado_border.v)
-									{
-													scr_refresca_border_tsconf_cont();
-													modificado_border.v=0;
-									}
+        if (border_enabled.v) {
+		    //ver si hay que refrescar border
+			if (modificado_border.v) {
+                scr_refresca_border_tsconf_cont();
+                modificado_border.v=0;
+            }
 
-					}
+        }
 	}
 }
 
@@ -2748,74 +2766,64 @@ void scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(int modo)
 	int x,y;
 
 
-        z80_byte color;
+    z80_byte color;
 
 
 
 
 
-       z80_int puntero=0;
+    z80_int puntero=0;
 
-			 z80_byte vrampage;
-			 vrampage=tsconf_get_vram_page();
-
-
-			 //vrampage=temp_conta_ts;
-
-//printf ("refresca 16c/256c. vram page: %d modo: %d pagina forzada: %d\n",tsconf_af_ports[1],modo,vrampage);
-
-			 //temp_conta_ts2++;
-			 //if ((temp_conta_ts2 % 4)==0) temp_conta_ts++;
+    z80_byte vrampage;
+    vrampage=tsconf_get_vram_page();
 
 
 
 
+    z80_byte *screen=tsconf_ram_mem_table[vrampage];
 
-			 z80_byte *screen=tsconf_ram_mem_table[vrampage];
 
-
-        for (y=0;y<tsconf_current_pixel_height;y++) {
+    for (y=0;y<tsconf_current_pixel_height;y++) {
                 //direccion=16384 | devuelve_direccion_pantalla(0,y);
 
-								z80_int puntero_orig=puntero;
+        z80_int puntero_orig=puntero;
 
-                for (x=0;x<tsconf_current_pixel_width;) {
+        for (x=0;x<tsconf_current_pixel_width;) {
 
 
 			//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-									if (1==1) {
+            if (1==1) {
 			//if (scr_ver_si_refrescar_por_menu_activo(x,fila)) {
 
-										if (modo==1) { //16c
-                	    color=screen[puntero++];
-											//printf ("color: %d\n",color);
-	        						scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color (tsconf_return_cram_palette_offset()+( (color>>4)&0xF) ) );
-											scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+ (color&0xF) ) );
-										}
+                if (modo==1) { //16c
+                    color=screen[puntero++];
+					//printf ("color: %d\n",color);
+                    scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color (tsconf_return_cram_palette_offset()+( (color>>4)&0xF) ) );
+                    scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+ tsconf_return_cram_color  (tsconf_return_cram_palette_offset()+ (color&0xF) ) );
+                }
 
-										if (modo==2) { //256c
-											color=screen[puntero++];
-											scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+tsconf_return_cram_color(color) );
-										}
-
-
-        	         }
-							}
-								//Siguiente linea
-								if (modo==1) puntero=puntero_orig+256;
-								else puntero=puntero_orig+512;
-
-								if (puntero>=16384) {
-									puntero=0;
-									vrampage++;
-									screen=tsconf_ram_mem_table[vrampage];
-
-								}
+                if (modo==2) { //256c
+                    color=screen[puntero++];
+                    scr_tsconf_putpixel_zx_mode(x++,y,TSCONF_INDEX_FIRST_COLOR+tsconf_return_cram_color(color) );
+                }
 
 
+            }
+        }
 
+        //Siguiente linea
+        if (modo==1) puntero=puntero_orig+256;
+        else puntero=puntero_orig+512;
+
+        if (puntero>=16384) {
+            puntero=0;
+            vrampage++;
+            screen=tsconf_ram_mem_table[vrampage];
 
         }
+
+
+    }
 
 }
 
@@ -2933,8 +2941,8 @@ void screen_tsconf_refresca_pantalla(void)
 
 			//printf ("modo video: %d\n",modo_video );
 					if (modo_video==0) scr_tsconf_refresca_pantalla_zxmode_no_rainbow();
-					if (modo_video==1)scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(1);
-					if (modo_video==2)scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(2);
+					if (modo_video==1) scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(1);
+					if (modo_video==2) scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(2);
 					if (modo_video==3) {
 						screen_tsconf_refresca_border();
 						screen_tsconf_refresca_text_mode();
