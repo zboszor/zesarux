@@ -16897,14 +16897,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_ula_settings,NULL,"~~ULA Settings");
-			menu_add_item_menu_shortcut(array_menu_hardware_settings,'u');
-	                menu_add_item_menu_tooltip(array_menu_hardware_settings,"Change some ULA settings");
-	                menu_add_item_menu_ayuda(array_menu_hardware_settings,"Change some ULA settings");
-
-
-		}
+	
 
 
 			
@@ -30037,10 +30030,21 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings,"Settings for the GUI");
 		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the GUI interface");
 
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_ula_settings,NULL,"~~ULA");
+			menu_add_item_menu_shortcut(array_menu_settings,'u');
+	                menu_add_item_menu_tooltip(array_menu_settings,"Change some ULA settings");
+	                menu_add_item_menu_ayuda(array_menu_settings,"Change some ULA settings");
+
+
+		}			
+
 		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_hardware_settings,NULL,"~~Hardware");
 		menu_add_item_menu_shortcut(array_menu_settings,'h');
-		menu_add_item_menu_tooltip(array_menu_settings,"Hardware options for the running machine");
-		menu_add_item_menu_ayuda(array_menu_settings,"Select different options for the machine and change its behaviour");
+		menu_add_item_menu_tooltip(array_menu_settings,"Other hardware settings for the running machine (not cpu or ula)");
+		menu_add_item_menu_ayuda(array_menu_settings,"Select different settings for the machine and change its behaviour (not cpu or ula)");
+
+	
 
 		menu_add_item_menu(array_menu_settings,"D~~ebug",MENU_OPCION_NORMAL,menu_settings_debug,NULL);
 		menu_add_item_menu_shortcut(array_menu_settings,'e');
