@@ -30296,19 +30296,23 @@ void menu_inicio_bucle(void)
 
 void menu_inicio_pre_retorno(void)
 {
-        //desactivar botones de acceso directo
-        menu_button_quickload.v=0;
-        menu_button_osdkeyboard.v=0;
-        menu_button_exit_emulator.v=0;
-				menu_event_drag_drop.v=0;
-        menu_breakpoint_exception.v=0;
-				menu_event_remote_protocol_enterstep.v=0;
-				menu_button_f_function.v=0;
+    //desactivar botones de acceso directo
+    menu_button_quickload.v=0;
+    menu_button_osdkeyboard.v=0;
+    menu_button_exit_emulator.v=0;
+    menu_event_drag_drop.v=0;
+    menu_breakpoint_exception.v=0;
+    menu_event_remote_protocol_enterstep.v=0;
+    menu_button_f_function.v=0;
 
-        reset_menu_overlay_function();
-        menu_abierto=0;
+    reset_menu_overlay_function();
+    menu_abierto=0;
 
-        timer_reset();
+
+    //Para refrescar border en caso de tsconf por ejemplo, en que el menu sobreescribe el border
+    //modificado_border.v=1;
+
+    timer_reset();
 
 }
 

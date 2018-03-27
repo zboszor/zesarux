@@ -2649,7 +2649,7 @@ void scr_refresca_border_tsconf_cont(void)
 
 void screen_tsconf_refresca_border(void)
 {
-	if (rainbow_enabled.v==0) {
+	//if (rainbow_enabled.v==0) {
         if (border_enabled.v) {
 		    //ver si hay que refrescar border
 			if (modificado_border.v) {
@@ -2658,7 +2658,7 @@ void screen_tsconf_refresca_border(void)
             }
 
         }
-	}
+	//}
 }
 
 //z80_int temp_cc=0;
@@ -2784,7 +2784,6 @@ void scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(int modo)
 
 
     for (y=0;y<tsconf_current_pixel_height;y++) {
-                //direccion=16384 | devuelve_direccion_pantalla(0,y);
 
         z80_int puntero_orig=puntero;
 
@@ -2832,7 +2831,7 @@ void scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(int modo)
 void scr_tsconf_refresca_pantalla_zxmode_no_rainbow(void)
 {
 
-	if (border_enabled.v) {
+	/*if (border_enabled.v) {
 		//ver si hay que refrescar border
 		if (modificado_border.v) {
 
@@ -2843,7 +2842,7 @@ void scr_tsconf_refresca_pantalla_zxmode_no_rainbow(void)
 			modificado_border.v=0;
 		}
 
-	}
+	}*/
 
 	scr_tsconf_refresca_pantalla_zxmode_no_rainbow_comun();
 
@@ -2936,6 +2935,7 @@ void screen_tsconf_refresca_pantalla(void)
 
 	//modo clasico. sin rainbow
 	if (rainbow_enabled.v==0) {
+        screen_tsconf_refresca_border();
 			z80_byte modo_video=tsconf_get_video_mode_display();
 
 
@@ -2944,7 +2944,7 @@ void screen_tsconf_refresca_pantalla(void)
 					if (modo_video==1) scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(1);
 					if (modo_video==2) scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(2);
 					if (modo_video==3) {
-						screen_tsconf_refresca_border();
+
 						screen_tsconf_refresca_text_mode();
 					}
 

@@ -3513,10 +3513,6 @@ void scr_refresca_pantalla_rainbow_comun(void)
 
 
 
-
-
-
-
 	for (y=0;y<alto;y++) {
 		//Truco para tener a partir de una posicion y modo timex 512x192
 
