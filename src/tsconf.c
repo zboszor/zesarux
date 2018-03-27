@@ -2882,13 +2882,15 @@ void screen_tsconf_refresca_rainbow(void) {
         for (x=0;x<ancho;x+=8) {
             dibujar=1;
 
-            //Ver si esa zona esta ocupada por texto de menu u overlay
-            if (y<192 && x<256) {
-                //dibujar=0;
+            //Ver si esa zona esta ocupada por texto de menu u overlay.
+            // Como tsconf usa menu doble de tamanyo, multiplicamos por valor de menu_gui_zoom que sera 2 siempre (seria lo mismo
+            //que poner y<384 && x<512, pero queda mas explicativo en este caso y se puede usar el mismo if para diferentes maquinas
+            if (y<192*menu_gui_zoom && x<256*menu_gui_zoom) {
+                dibujar=0;
 				menu_x=x/8;
 				menu_y=y/8;
 
-				if (!scr_ver_si_refrescar_por_menu_activo(menu_x,menu_y)) dibujar=0;
+				if (scr_ver_si_refrescar_por_menu_activo(menu_x,menu_y)) dibujar=1;
             }
 
 
