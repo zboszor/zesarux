@@ -53,3 +53,5 @@ dkms.conf
 
 config.log
 Makefile
+
+.idea/

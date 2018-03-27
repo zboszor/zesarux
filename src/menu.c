@@ -28155,8 +28155,8 @@ void menu_about_statistics(MENU_ITEM_PARAMETERS)
 	menu_generic_message_format("Statistics",
 		"Source code lines: %d\n"
 		"Total time invested on programming ZEsarUX: ^^%d^^ hours (and growing)\n\n"
-		"Edited with vim and atom\n"
-		"Developed on Debian 9, macOS High Sierra, Raspbian and MinGW environment on Windows\n"
+		"Edited with vim, VSCode and CLion\n"
+		"Developed on Debian 9, Raspbian, macOS High Sierra, and MinGW environment on Windows\n"
 		,LINES_SOURCE,tiempo_trabajado_en_zesarux);
 
 }
