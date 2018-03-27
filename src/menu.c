@@ -30350,7 +30350,6 @@ void menu_process_f_functions_by_action(int accion)
 		break;
 
 		case F_FUNCION_SMARTLOAD:
-            //cpu_panic("probando mensaje panic");
 			menu_quickload(0);
 		break;
 

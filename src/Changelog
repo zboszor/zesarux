@@ -66,6 +66,7 @@ Improved Linux library dependencies: libssl is not enabled by default on compila
 Fixed TBBlue MMU when using segment 0000-3FFFH
 Fixed ZX-Uno emulation: 128kb timings are the same as a Spectrum 128k. When port 1ffd enabled, port FF return FF
 Fixed window footer when running Pentagon
+Fixed panic screen: now it is shown on all machines. New design. I hope you never see it ;)
 Fixed some crashes with speech enabled and opening some menus: AY Registers, AY Player, etc...
 Fixed annoying sound on Dandanator rom menu
 Fixed bug on Z80 cpu core, iff2 was not being reset to 0 when firing an interrupt, so reading it by using LD A,R and LD A,I affected many demos

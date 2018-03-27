@@ -318,48 +318,20 @@ void init_breakpoints_table(void)
 }
 
 
-//Dibuja la pantalla de panico
-/*void old_screen_show_panic_screen(void)
-{
-	int x,y;
 
-    int color=0;
-
-	int xmax;
-	int ymax;
-
-
-	z80_bit antes_border;
-	antes_border.v=border_enabled.v;
-	border_enabled.v=0;
-	xmax=screen_get_emulated_display_width_no_zoom_border_en();
-	ymax=screen_get_emulated_display_height_no_zoom_border_en();
-	border_enabled.v=antes_border.v;
-	//printf ("Filling colour bars up to %dX%d\n",xmax,ymax);
-	
-
-        for (x=0;x<xmax;x++) {
-                for (y=0;y<ymax;y++) {
-                        scr_putpixel_zoom(x,y,(color&15) );
-
-                        color++;
-			//esto genera lineas horizontales de con todos los colores en orden -> arcoiris
-                }
-        }
-}*/
 
 
 //Dibuja la pantalla de panico
 void screen_show_panic_screen(int xmax, int ymax)
 {
     //rojo, amarillo, verde, azul,negro
-    int colores_rainbow[]={2,6,4,1,0};
+    int colores_rainbow[]={2+8,6+8,4+8,1+8,0};
 
 	int x,y;
 
 
 	int total_colores=5;
-	int grueso_colores=4;
+	int grueso_colores=8; //grueso de 8 pixeles cada franja
 
 	//printf ("Filling colour bars up to %dX%d\n",xmax,ymax);
 
@@ -370,8 +342,8 @@ void screen_show_panic_screen(int xmax, int ymax)
 			//scr_putpixel(x,y,(color&15) );
             scr_putpixel(x,y,colores_rainbow[(color%total_colores)] );
 
-			if ((y%grueso_colores)==grueso_colores-1) color++; //grueso de 4 pixeles cada franja
-			//esto genera lineas horizontales de con todos los colores en orden -> arcoiris
+			if ((y%grueso_colores)==grueso_colores-1) color++;
+
 		}
 	}
 }
@@ -405,100 +377,8 @@ void cpu_panic_printf_mensaje(char *mensaje)
 }
 
 
-//Abortar ejecucion del emulador con kernel panic
-/*void old_cpu_panic(char *mensaje)
-{
-	char buffer[1024];
-
-	//por si acaso, antes de hacer nada mas, vamos con el printf, para que muestre el error (si es que el driver de video lo permite)
-	//hacemos pantalla de panic en xwindows y fbdev, y despues de finalizar el driver, volvemos a mostrar error
-	cpu_panic_printf_mensaje(mensaje);
 
 
-	if (scr_end_pantalla!=NULL) {
-
-		//si es xwindows o fbdev, mostramos panic mas mono
-		if (si_complete_video_driver() ) {
-		        //quitar splash text por si acaso
-		        menu_splash_segundos=1;
-		        reset_splash_text();
-
-
-		        cls_menu_overlay();
-
-
-		        set_menu_overlay_function(normal_overlay_texto_menu);
-
-
-		        //clear_putpixel_cache();
-
-			int i;
-			//reservar toda la pantalla, para poderla llenar con pixeles rojos de error
-		        //for (i=0;i<32*24;i++) overlay_screen_array[i].caracter=255;
-		        for (i=0;i<32*24;i++) {
-				overlay_screen_array[i].caracter=255;
-				overlay_usado_screen_array[i]=1;
-			}
-
-
-			menu_overlay_activo=1;
-			menu_abierto=1;
-
-			screen_show_panic_screen();
-
-
-			screen_print(0,0,7,1,"ZEsarUX kernel panic:");
-			screen_print(0,1,7,1,mensaje);
-
-			print_registers(buffer);
-			//los registros los mostramos dos lineas por debajo de la ultima usada
-			screen_print(0,screen_print_y+2,7,1,buffer);
-
-			scr_refresca_pantalla();
-
-			//Para xwindows hace falta esto, sino no refresca
-			scr_actualiza_tablas_teclado();
-
-
-			sleep(10);
-			scr_end_pantalla();
-		}
-
-		else {
-			scr_end_pantalla();
-		}
-	}
-
-	cpu_panic_printf_mensaje(mensaje);
-
-	exec_show_backtrace();
-
-	exit(1);
-}*/
-
-//Escribir caracter en pantalla, teniendo coordenadas en pixeles. Colores sobre tabla de colores de spectrum
-void cpu_panic_printchar_lowlevel(int x,int y,int tinta,int papel,unsigned char c)
-{
-	//Detectar caracteres fuera de rango
-	if (c<32 || c>127) c='?';
-
-	int indice_charset=(c-32)*8;
-	//char_set_spectrum[indice_charset]
-
-	int scanline;
-	int nbit;
-
-	for (scanline=0;scanline<8;scanline++) {
-		z80_byte byte_leido=char_set_spectrum[indice_charset++];
-		for (nbit=0;nbit<8;nbit++) {
-			int color;
-			color=(byte_leido & 128 ? tinta : papel);
-			scr_putpixel(x+nbit,y+scanline,color);
-
-			byte_leido=byte_leido<<1;
-		}
-	}
-}
 
 int cpu_panic_last_x;
 int cpu_panic_last_y;
@@ -509,10 +389,47 @@ int cpu_panic_ymax;
 int cpu_panic_current_tinta;
 int cpu_panic_current_papel;
 
+int cpu_panic_pixel_zoom=1;
+
+//Escribir caracter en pantalla, teniendo coordenadas en pixeles. Colores sobre tabla de colores de spectrum
+//Pixeles de 2x2 en caso de que la ventana sea al menos de 512x384
+void cpu_panic_printchar_lowlevel(int x,int y,int tinta,int papel,unsigned char c)
+{
+    //Detectar caracteres fuera de rango
+    if (c<32 || c>127) c='?';
+
+    int indice_charset=(c-32)*8;
+    //char_set_spectrum[indice_charset]
+
+    int scanline;
+    int nbit;
+
+
+    for (scanline=0;scanline<8;scanline++) {
+        z80_byte byte_leido=char_set_spectrum[indice_charset++];
+        for (nbit=0;nbit<8;nbit++) {
+            int color;
+            color=(byte_leido & 128 ? tinta : papel);
+
+            if (cpu_panic_pixel_zoom==2){
+                scr_putpixel(x+nbit*2,y+scanline*2,color);
+                scr_putpixel(x+nbit*2,y+scanline*2+1,color);
+                scr_putpixel(x+nbit*2+1,y+scanline*2,color);
+                scr_putpixel(x+nbit*2+1,y+scanline*2+1,color);
+            }
+
+            else scr_putpixel(x+nbit,y+scanline,color);
+
+            byte_leido=byte_leido<<1;
+        }
+    }
+}
+
+
 void cpu_panic_printchar_newline(void)
 {
     cpu_panic_last_x=0;
-    cpu_panic_last_y+=8;
+    cpu_panic_last_y+=8*cpu_panic_pixel_zoom;
 
     //Si llega al final
     if (cpu_panic_last_y>cpu_panic_ymax-8) cpu_panic_last_y=cpu_panic_ymax-8;
@@ -520,7 +437,7 @@ void cpu_panic_printchar_newline(void)
 
 void cpu_panic_printchar_nextcolumn(void)
 {
-    cpu_panic_last_x+=8;
+    cpu_panic_last_x+=8*cpu_panic_pixel_zoom;
 
     //Final de linea
     if (cpu_panic_last_x>cpu_panic_xmax-8) cpu_panic_printchar_newline();
@@ -575,6 +492,12 @@ void cpu_panic(char *mensaje)
             cpu_panic_xmax=screen_get_emulated_display_width_zoom_border_en();
             cpu_panic_ymax=screen_get_emulated_display_height_zoom_border_en();
 
+            //Determinar si hacemos zoom 1 o 2, segun tamanyo total ventana
+            int desired_width=32*8*2;
+            int desired_height=24*8*2;
+
+            if (cpu_panic_xmax>=desired_width && cpu_panic_ymax>=desired_height) cpu_panic_pixel_zoom=2;
+
 			screen_show_panic_screen(cpu_panic_xmax,cpu_panic_ymax);
 
 			print_registers(buffer);
@@ -595,15 +518,6 @@ void cpu_panic(char *mensaje)
 			//los registros los mostramos dos lineas por debajo de la ultima usada
 			cpu_panic_printstring(buffer);
 
-            //cpu_panic_printchar_lowlevel(0,0,1,6,'Z');
-            //cpu_panic_printchar_lowlevel(8,0,1,6,'E');
-
-            /*int i;
-            for (i=0;i<300;i++){
-                cpu_panic_printchar('Z');
-                cpu_panic_printchar('E');
-            }*/
-
 
 			scr_refresca_pantalla_solo_driver();
 
@@ -611,7 +525,7 @@ void cpu_panic(char *mensaje)
 			scr_actualiza_tablas_teclado();
 
 
-			sleep(10);
+			sleep(20);
 			scr_end_pantalla();
 		}
 
