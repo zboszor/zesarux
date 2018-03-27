@@ -16476,6 +16476,16 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
 	  }
 
+		if (!MACHINE_IS_Z88) {
+			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_hardware_top_speed,NULL,"~~Top Speed: %s",(top_speed_timer.v ? "Yes" : "No") );
+			menu_add_item_menu_shortcut(array_menu_cpu_settings,'t');
+			menu_add_item_menu_tooltip(array_menu_cpu_settings,"Runs at maximum speed, when menu closed. Not available on Z88");
+			menu_add_item_menu_ayuda(array_menu_cpu_settings,"Runs at maximum speed, using 100% of CPU of host machine, when menu closed. "
+						"The display is refreshed 1 time per second. This mode is also entered when loading a real tape and "
+						"accelerate loaders setting is enabled. Not available on Z88");
+
+		}	  
+
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_spectrum_core_reduced,NULL,"Spectrum core: %s",
 			(core_spectrum_uses_reduced.v ? "Reduced" : "Normal") );
@@ -16800,85 +16810,6 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Hardware settings");
 
 
-		/*
-
-        	//Redefine keys
-		menu_add_item_menu_inicial_format(&array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_redefine_keys,NULL,"Rede~~fine keys");
-		menu_add_item_menu_shortcut(array_menu_hardware_settings,'f');
-		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Redefine one key to another");
-		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Redefine one key to another");
-
-
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_keyboard_issue,menu_hardware_keyboard_issue_cond,"~~Keyboard Issue %s", (keyboard_issue2.v==1 ? "2" : "3"));
-			menu_add_item_menu_shortcut(array_menu_hardware_settings,'k');
-			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Type of Spectrum keyboard emulated");
-			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Changes the way the Spectrum keyboard port returns its value: Issue 3 returns bit 6 off, and Issue 2 has bit 6 on");
-		}
-
-
-		//Soporte para Azerty keyboard
-
-		if (!strcmp(scr_driver_name,"xwindows")) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_azerty,NULL,"Azerty keyboard: %s",(azerty_keyboard.v ? "Yes" : "No") );
-			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Enables azerty keyboard");
-			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Only used on xwindows driver by now. Enables to use numeric keys on Azerty keyboard, without having "
-						"to press Shift. Note we are referring to the numeric keys (up to letter A, Z, etc) and not to the numeric keypad.");
-		}
-
-
-		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_recreated_keyboard,NULL,"ZX Recreated support: %s",
-			(recreated_zx_keyboard_support.v ? "Yes" : "No") );
-
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_chloe_keyboard,NULL,"Chloe Keyboard: %s",(chloe_keyboard.v ? "Yes" : "No") );
-		}
-
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_spectrum_keyboard_matrix_error,NULL,"Speccy keyb. ghosting: %s",
-					(keyboard_matrix_error.v ? "Yes" : "No") );
-			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Enables real keyboard emulation, even with the keyboard matrix error");
-			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Enables real keyboard emulation, even with the keyboard matrix error.\n"
-						"This is the error/feature that returns more key pressed than the real situation, for example, "
-						"pressing keys ASQ, will return ASQW. Using a pc keyboard is difficult to test that effect, because "
-						"that most of them can return more than two or three keys pressed at a time. But using the on-screen keyboard "
-						"and also the Recreated Keyboard, you can test it");
-
-		}
-
-		if (MACHINE_IS_Z88 || MACHINE_IS_CPC || chloe_keyboard.v || MACHINE_IS_SAM || MACHINE_IS_QL)  {
-			//keymap solo hace falta con xwindows y sdl. fbdev y cocoa siempre leen en raw como teclado english
-			if (!strcmp(scr_driver_name,"xwindows")  || !strcmp(scr_driver_name,"sdl") ) {
-				if (MACHINE_IS_Z88) menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Z88 K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				else if (MACHINE_IS_CPC) menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"CPC K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				else if (MACHINE_IS_SAM) menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"SAM K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				else if (MACHINE_IS_QL) menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"QL K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-
-				else menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Chloe K~~eymap: %s",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				menu_add_item_menu_shortcut(array_menu_hardware_settings,'e');
-				menu_add_item_menu_tooltip(array_menu_hardware_settings,"Keyboard Layout");
-				menu_add_item_menu_ayuda(array_menu_hardware_settings,"Used on Z88, CPC, Sam and Chloe machines, needed to map symbol keys. "
-						"You must indicate here which kind of physical keyboard you have. The keyboard will "
-						"be mapped always to a Z88/CPC/Sam/Chloe English keyboard, to the absolute positions of the keys. "
-						"You have two physical keyboard choices: Default (English) and Spanish");
-
-			}
-		}
-
-
-
-
-
-
-		//Set F keys functions
-		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_set_f_functions,NULL,"Set F keys fu~~nctions");
-		menu_add_item_menu_shortcut(array_menu_hardware_settings,'n');
-		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Assign actions to F keys");
-		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Assign actions to F keys");
-
-
-		*/
-
 
 		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081 || MACHINE_IS_SAM) {
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_joystick,NULL,"~~Joystick type: %s",joystick_texto[joystick_emulation]);
@@ -16937,23 +16868,14 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 		
 
 
-
-
 		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX81) {
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_printers,NULL,"~~Printing emulation");
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'p');
 		}
 
-
-
-		/*
-		if (MACHINE_IS_INVES) {
-
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_inves_delay_factor,menu_inves_cond_realvideo,"Inves Ula Delay Every: %d",inves_ula_delay_factor);
-			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Step for the ula delay bug on Inves");
-			menu_add_item_menu_ayuda(array_menu_hardware_settings,"This step can be changed so I do not know which is the exact step on a real Inves");
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_multiface,NULL,"Multiface emulation"  );
 		}
-		*/
 
 
 		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_memory_settings,NULL,"~~Memory Settings");
@@ -16961,23 +16883,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 
 
-
-
 	
-
-
-			
-
-
-		if (!MACHINE_IS_Z88) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_top_speed,NULL,"~~Top Speed: %s",(top_speed_timer.v ? "Yes" : "No") );
-			menu_add_item_menu_shortcut(array_menu_hardware_settings,'t');
-			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Runs at maximum speed, when menu closed. Not available on Z88");
-			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Runs at maximum speed, using 100% of CPU of host machine, when menu closed. "
-						"The display is refreshed 1 time per second. This mode is also entered when loading a real tape and "
-						"accelerate loaders setting is enabled. Not available on Z88");
-
-		}
 
 		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_cpu_speed,NULL,"Emulator Spee~~d: %d%%",porcentaje_velocidad_emulador);
 		menu_add_item_menu_shortcut(array_menu_hardware_settings,'d');
@@ -16992,31 +16898,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 		}
 		*/
 
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_multiface,NULL,"Multiface emulation"  );
-		}
 
-/*
-		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_turbo_mode,NULL,"Turbo: %dX",cpu_turbo_speed);
-		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Changes only the Z80 speed");
-		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Changes only the Z80 speed. Do not modify FPS, interrupts or any other parameter. "
-					"Some machines, like ZX-Uno or Chloe, change this setting");
-
-		if (MACHINE_IS_ZXUNO) {
-					menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_zxuno_deny_turbo_bios_boot,NULL,"Deny turbo on boot: %s",
-							(zxuno_deny_turbo_bios_boot.v ? "Yes" : "No") );
-					menu_add_item_menu_tooltip(array_menu_hardware_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
-					menu_add_item_menu_ayuda(array_menu_hardware_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
-	  }
-
-		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_spectrum_core_reduced,NULL,"Spectrum core: %s",
-			(core_spectrum_uses_reduced.v ? "Reduced" : "Normal") );
-			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Switches between the normal Spectrum core or the reduced core");
-			menu_add_item_menu_ayuda(array_menu_hardware_settings,"When using the Spectrum reduced core, the following features are NOT available or are NOT properly emulated:\n"
-				"Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, Audio DAC, Video out to file");
-		}
-*/
 
 
                 menu_add_item_menu(array_menu_hardware_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
