@@ -55,3 +55,6 @@ config.log
 Makefile
 
 .idea/
+.vscode/
+.zxdbg/
+cmake-build-debug/
