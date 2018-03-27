@@ -6,10 +6,12 @@
 
 -breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
 
--parpadeo en tsconf con driver X11 y menu abierto. Quiza no comprueba si menu ocupado al hacer render tsconf?
-parece que lo hace tanto con real video on o off
--tsconf con fbdev y real video hace parpadeo el menu
- 
+-parpadeo en tsconf con driver X11 y fbdev y menu abierto. Quiza no comprueba si menu ocupado al hacer render tsconf?
+parece que lo hace tanto con real video on o off -> ahora solo con tiles y sprites...
+
+
+-quiza activar real video siempre que seleccione tsconf
+
 -tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
 
 -tbblue extended opcodes

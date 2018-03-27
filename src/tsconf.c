@@ -2853,75 +2853,56 @@ void screen_tsconf_refresca_rainbow(void) {
 
 	int ancho,alto;
 
-        ancho=get_total_ancho_rainbow();
-        alto=get_total_alto_rainbow();
+    ancho=get_total_ancho_rainbow();
+    alto=get_total_alto_rainbow();
 
-		//printf ("ancho: %d alto: %d\n",ancho,alto);
+    //printf ("ancho: %d alto: %d\n",ancho,alto);
 
-        int x,y,bit;
+    int x,y,bit;
 
-        //margenes de zona interior de pantalla. Para overlay menu
-        /*int margenx_izq=screen_total_borde_izquierdo*border_enabled.v;
-        int margenx_der=screen_total_borde_izquierdo*border_enabled.v+512;
-        int margeny_arr=screen_borde_superior*border_enabled.v;
+    //margenes de zona interior de pantalla. Para overlay menu
+    /*int margenx_izq=screen_total_borde_izquierdo*border_enabled.v;
+       int margenx_der=screen_total_borde_izquierdo*border_enabled.v+512;
+       int margeny_arr=screen_borde_superior*border_enabled.v;
         int margeny_aba=screen_borde_superior*border_enabled.v+384;*/
 
-				//en tsconf menu no aparece con margen de border. Sale tal cual desde 0,0
+    //en tsconf menu no aparece con margen de border. Sale tal cual desde 0,0
 
-        //para overlay menu tambien
-        //int fila;
-        //int columna;
+    //para overlay menu tambien
 
-        z80_int color_pixel;
-        z80_int *puntero;
+    z80_int color_pixel;
+    z80_int *puntero;
 
-        puntero=rainbow_buffer;
-        int dibujar;
+    puntero=rainbow_buffer;
+    int dibujar;
 
-	int menu_x,menu_y;
+    int menu_x,menu_y;
 
-        for (y=0;y<alto;y++) {
-                for (x=0;x<ancho;x+=8) {
-                        dibujar=1;
+    for (y=0;y<alto;y++) {
+        for (x=0;x<ancho;x+=8) {
+            dibujar=1;
 
-                        //Ver si esa zona esta ocupada por texto de menu u overlay
-
-                        //if (y>=margeny_arr && y<margeny_aba && x>=margenx_izq && x<margenx_der) {
-			if (y<192 && x<256) {
-
-
-                                //normalmente a 48
-                                //int screen_total_borde_izquierdo;
-
-				dibujar=0;
-				//menu_x=(x-margenx_izq)/8;
-				//menu_y=(y-margeny_arr)/8;
+            //Ver si esa zona esta ocupada por texto de menu u overlay
+            if (y<192 && x<256) {
+                //dibujar=0;
 				menu_x=x/8;
 				menu_y=y/8;
 
-				if (scr_ver_si_refrescar_por_menu_activo(menu_x,menu_y)) dibujar=1;
-
-                        }
-
-												//temp
-												//dibujar=1;
-
-                        if (dibujar==1) {
-
-                                        for (bit=0;bit<8;bit++) {
+				if (!scr_ver_si_refrescar_por_menu_activo(menu_x,menu_y)) dibujar=0;
+            }
 
 
-                                                //printf ("prism refresca x: %d y: %d\n",x,y);
-
-                                                color_pixel=*puntero++;
-
-                                                scr_putpixel_zoom_rainbow(x+bit,y,color_pixel);
-                                        }
-                        }
-                        else puntero+=8;
-
+            if (dibujar==1) {
+                //printf ("dibujamos en X: %d y: %d\n",x,y);
+                for (bit=0;bit<8;bit++) {
+                    color_pixel=*puntero++;
+                    scr_putpixel_zoom_rainbow(x+bit,y,color_pixel);
                 }
+            }
+            else puntero+=8;
+
         }
+    }
 
 
 }
@@ -2936,25 +2917,22 @@ void screen_tsconf_refresca_pantalla(void)
 	//modo clasico. sin rainbow
 	if (rainbow_enabled.v==0) {
         screen_tsconf_refresca_border();
-			z80_byte modo_video=tsconf_get_video_mode_display();
+        z80_byte modo_video=tsconf_get_video_mode_display();
 
 
-			//printf ("modo video: %d\n",modo_video );
-					if (modo_video==0) scr_tsconf_refresca_pantalla_zxmode_no_rainbow();
-					if (modo_video==1) scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(1);
-					if (modo_video==2) scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(2);
-					if (modo_video==3) {
-
-						screen_tsconf_refresca_text_mode();
-					}
+        //printf ("modo video: %d\n",modo_video );
+        if (modo_video==0) scr_tsconf_refresca_pantalla_zxmode_no_rainbow();
+        if (modo_video==1) scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(1);
+        if (modo_video==2) scr_tsconf_refresca_pantalla_16c_256c_no_rainbow(2);
+        if (modo_video==3) screen_tsconf_refresca_text_mode();
 
 	}
 
 	else {
 	//modo rainbow - real video
-				if (tsconf_si_render_spritetile_rapido.v) tsconf_fast_tilesprite_render();
+        if (tsconf_si_render_spritetile_rapido.v) tsconf_fast_tilesprite_render();
 
-				screen_tsconf_refresca_rainbow();
+        screen_tsconf_refresca_rainbow();
 	}
 
 }
