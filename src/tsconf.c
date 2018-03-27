@@ -372,7 +372,7 @@ int tsconf_align_address(int orig_destination,int destination,int addr_align_siz
 	return destination;
 }
 
-int tsconf_align_address_prueba(int orig_destination,int destination,int addr_align_size)
+/*int tsconf_align_address_prueba(int orig_destination,int destination,int addr_align_size)
 {
 
 			int lower;
@@ -393,7 +393,7 @@ int tsconf_align_address_prueba(int orig_destination,int destination,int addr_al
 			}
 
 	return destination;
-}
+}*/
 
 int debug_tsconf_dma_source=0;
 int debug_tsconf_dma_destination=0;

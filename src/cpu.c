@@ -1227,6 +1227,7 @@ void cpu_help_expert(void)
 		"--romfile file             Select custom ROM file\n"
 		"--loadbinary file addr len Load binary file \"file\" at address \"addr\" with length \"len\". Set ln to 0 to load the entire file in memory\n"
 		"--loadbinarypath path      Select initial Load Binary path\n"
+		"--savebinarypath path      Select initial Save Binary path\n"
 		"--keyboardspoolfile file   Insert spool file for keyboard presses\n"
 #ifdef USE_PTHREADS
 		"--enable-remoteprotocol    Enable remote protocol\n"
@@ -4883,6 +4884,11 @@ int parse_cmdline_options(void) {
                                 siguiente_parametro_argumento();
                                 sprintf(binary_file_load,"%s/",argv[puntero_parametro]);
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--savebinarypath")) {
+                                siguiente_parametro_argumento();
+                                sprintf(binary_file_save,"%s/",argv[puntero_parametro]);
+			}			
 
 			else if (!strcmp(argv[puntero_parametro],"--zxunospifile")) {
                                 siguiente_parametro_argumento();

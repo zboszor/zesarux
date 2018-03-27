@@ -3137,11 +3137,17 @@ int util_write_configfile(void)
 
   if (binary_file_load[0]!=0) {
         //printf ("dir binary_file_load: %s\n",binary_file_load);
-	//util_get_dir(binary_file_load,buffer_temp);
-        util_copy_path_delete_last_slash(binary_file_load,buffer_temp);
+	util_get_dir(binary_file_load,buffer_temp);
+        //util_copy_path_delete_last_slash(binary_file_load,buffer_temp);
         //printf ("dir binary_file_load final: %s\n",buffer_temp);
  	ADD_STRING_CONFIG,"--loadbinarypath \"%s\"",buffer_temp);
   }
+
+  if (binary_file_save[0]!=0) {
+        //util_copy_path_delete_last_slash(binary_file_save,buffer_temp);
+        util_get_dir(binary_file_save,buffer_temp);
+ 	ADD_STRING_CONFIG,"--savebinarypath \"%s\"",buffer_temp);
+  }  
 
   if (zxuno_flash_spi_name[0])                ADD_STRING_CONFIG,"--zxunospifile \"%s\"",zxuno_flash_spi_name);
   if (zxuno_flash_persistent_writes.v)     ADD_STRING_CONFIG,"--zxunospi-persistent-writes");

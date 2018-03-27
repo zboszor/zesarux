@@ -20562,9 +20562,31 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
                 filtros[0]="";
                 filtros[1]=0;
 
-       int ret;
+
+        //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
+
+	int ret;
+
+        //Obtenemos ultimo directorio visitado
+        if (binary_file_save[0]!=0) {
+                char directorio[PATH_MAX];
+                util_get_dir(binary_file_save,directorio);
+                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+                //cambiamos a ese directorio, siempre que no sea nulo
+                if (directorio[0]!=0) {
+                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+                        menu_filesel_chdir(directorio);
+                }
+        }
 
         ret=menu_filesel("Select File to Save",filtros,binary_file_save);
+
+        //volvemos a directorio inicial
+        menu_filesel_chdir(directorio_actual);
+
 
     if (ret==1) {
 

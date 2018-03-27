@@ -224,6 +224,7 @@ extern int menu_segundo_contador_teclas_repeticion;
 extern int menu_speech_tecla_pulsada;
 
 extern char binary_file_load[];
+extern char binary_file_save[];
 
 extern char menu_buffer_textspeech_filter_program[];
 
