@@ -30119,7 +30119,7 @@ int menu_tape_settings_cond(void)
 
 void menu_inicio_bucle(void)
 {
-
+    //cpu_panic("probando mensaje panic");
 		int retorno_menu;
 
 		menu_item *array_menu_principal;

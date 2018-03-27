@@ -336,7 +336,6 @@ extern void cpu_loop_refresca_pantalla(void);
 
 extern int si_complete_video_driver(void);
 
-extern void screen_show_panic_screen(void);
 extern void screen_print(int x,int y,z80_byte tinta,z80_byte papel,char *mensaje);
 
 extern int screen_print_y;

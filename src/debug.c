@@ -81,6 +81,7 @@
 #include "core_reduced_spectrum.h"
 
 #include "remote.h"
+#include "charset.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -318,7 +319,7 @@ void init_breakpoints_table(void)
 
 
 //Dibuja la pantalla de panico
-void old_screen_show_panic_screen(void)
+/*void old_screen_show_panic_screen(void)
 {
 	int x,y;
 
@@ -345,22 +346,15 @@ void old_screen_show_panic_screen(void)
 			//esto genera lineas horizontales de con todos los colores en orden -> arcoiris
                 }
         }
-}
+}*/
 
 
 //Dibuja la pantalla de panico
-void screen_show_panic_screen(void)
+void screen_show_panic_screen(int xmax, int ymax)
 {
 	int x,y;
 
 	int color=0;
-
-	int xmax;
-	int ymax;
-
-
-	xmax=screen_get_emulated_display_width_zoom_border_en();
-	ymax=screen_get_emulated_display_height_zoom_border_en();
 
 	//printf ("Filling colour bars up to %dX%d\n",xmax,ymax);
 
@@ -405,7 +399,7 @@ void cpu_panic_printf_mensaje(char *mensaje)
 
 
 //Abortar ejecucion del emulador con kernel panic
-void old_cpu_panic(char *mensaje)
+/*void old_cpu_panic(char *mensaje)
 {
 	char buffer[1024];
 
@@ -473,6 +467,74 @@ void old_cpu_panic(char *mensaje)
 	exec_show_backtrace();
 
 	exit(1);
+}*/
+
+//Escribir caracter en pantalla, teniendo coordenadas en pixeles. Colores sobre tabla de colores de spectrum
+void cpu_panic_printchar_lowlevel(int x,int y,int tinta,int papel,unsigned char c)
+{
+	//Detectar caracteres fuera de rango
+	if (c<32 || c>127) c='?';
+
+	int indice_charset=(c-32)*8;
+	//char_set_spectrum[indice_charset]
+
+	int scanline;
+	int nbit;
+
+	for (scanline=0;scanline<8;scanline++) {
+		z80_byte byte_leido=char_set_spectrum[indice_charset++];
+		for (nbit=0;nbit<8;nbit++) {
+			int color;
+			color=(byte_leido & 128 ? tinta : papel);
+			scr_putpixel(x+nbit,y+scanline,color);
+
+			byte_leido=byte_leido<<1;
+		}
+	}
+}
+
+int cpu_panic_last_x;
+int cpu_panic_last_y;
+
+int cpu_panic_xmax;
+int cpu_panic_ymax;
+
+int cpu_panic_current_tinta;
+int cpu_panic_current_papel;
+
+void cpu_panic_printchar_newline(void)
+{
+    cpu_panic_last_x=0;
+    cpu_panic_last_y+=8;
+
+    //Si llega al final
+    if (cpu_panic_last_y>cpu_panic_ymax-8) cpu_panic_last_y=cpu_panic_ymax-8;
+}
+
+void cpu_panic_printchar_nextcolumn(void)
+{
+    cpu_panic_last_x+=8;
+
+    //Final de linea
+    if (cpu_panic_last_x>cpu_panic_xmax-8) cpu_panic_printchar_newline();
+
+}
+
+void cpu_panic_printchar(unsigned char c)
+{
+    if (c==10 || c==13) cpu_panic_printchar_newline();
+    else {
+        cpu_panic_printchar_lowlevel(cpu_panic_last_x,cpu_panic_last_y,cpu_panic_current_tinta,cpu_panic_current_papel,c);
+        cpu_panic_printchar_nextcolumn();
+    }
+}
+
+void cpu_panic_printstring(char *message)
+{
+	while (*message) {
+		cpu_panic_printchar(*message);
+		message++;
+	}
 }
 
 //Abortar ejecucion del emulador con kernel panic
@@ -483,6 +545,11 @@ void cpu_panic(char *mensaje)
 	//por si acaso, antes de hacer nada mas, vamos con el printf, para que muestre el error (si es que el driver de video lo permite)
 	//hacemos pantalla de panic en xwindows y fbdev, y despues de finalizar el driver, volvemos a mostrar error
 	cpu_panic_printf_mensaje(mensaje);
+
+    cpu_panic_last_x=cpu_panic_last_y=0;
+
+    cpu_panic_current_tinta=6;
+    cpu_panic_current_papel=1;
 
 
 	if (scr_end_pantalla!=NULL) {
@@ -496,20 +563,42 @@ void cpu_panic(char *mensaje)
 
 			cls_menu_overlay();
 
+			set_menu_overlay_function(normal_overlay_texto_menu);
 
+            cpu_panic_xmax=screen_get_emulated_display_width_zoom_border_en();
+            cpu_panic_ymax=screen_get_emulated_display_height_zoom_border_en();
 
-			screen_show_panic_screen();
-
-
-			/*screen_print(0,0,7,1,"ZEsarUX kernel panic:");
-			screen_print(0,1,7,1,mensaje);
+			screen_show_panic_screen(cpu_panic_xmax,cpu_panic_ymax);
 
 			print_registers(buffer);
+
+            //Maximo 32 caracteres, aunque aprovechamos todo (border incluso) pero hay que considerar
+            //por ejemplo pantalla sin border con zoom 1, en ese caso habra un minimo de 256 de ancho (32 caracteres de ancho)
+                                 //01234567890123456789012345678901
+            cpu_panic_printstring("**************************\n");
+			cpu_panic_printstring("ZEsarUX kernel panic\n");
+            cpu_panic_printstring("**************************\n");
+            cpu_panic_printstring("\n\n");
+            cpu_panic_printstring("Panic message:\n");
+			cpu_panic_printstring(mensaje);
+
+            cpu_panic_printstring("\n\nCPU registers:\n");
+
+
 			//los registros los mostramos dos lineas por debajo de la ultima usada
-			screen_print(0,screen_print_y+2,7,1,buffer);*/
+			cpu_panic_printstring(buffer);
+
+            //cpu_panic_printchar_lowlevel(0,0,1,6,'Z');
+            //cpu_panic_printchar_lowlevel(8,0,1,6,'E');
+
+            /*int i;
+            for (i=0;i<300;i++){
+                cpu_panic_printchar('Z');
+                cpu_panic_printchar('E');
+            }*/
 
 
-			scr_refresca_pantalla();
+			scr_refresca_pantalla_solo_driver();
 
 			//Para xwindows hace falta esto, sino no refresca
 			scr_actualiza_tablas_teclado();
