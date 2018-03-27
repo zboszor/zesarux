@@ -30119,7 +30119,6 @@ int menu_tape_settings_cond(void)
 
 void menu_inicio_bucle(void)
 {
-    //cpu_panic("probando mensaje panic");
 		int retorno_menu;
 
 		menu_item *array_menu_principal;
@@ -30351,6 +30350,7 @@ void menu_process_f_functions_by_action(int accion)
 		break;
 
 		case F_FUNCION_SMARTLOAD:
+            //cpu_panic("probando mensaje panic");
 			menu_quickload(0);
 		break;
 

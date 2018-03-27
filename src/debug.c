@@ -352,18 +352,25 @@ void init_breakpoints_table(void)
 //Dibuja la pantalla de panico
 void screen_show_panic_screen(int xmax, int ymax)
 {
+    //rojo, amarillo, verde, azul,negro
+    int colores_rainbow[]={2,6,4,1,0};
+
 	int x,y;
 
-	int color=0;
+
+	int total_colores=5;
+	int grueso_colores=4;
 
 	//printf ("Filling colour bars up to %dX%d\n",xmax,ymax);
 
 
 	for (x=0;x<xmax;x++) {
+        int color=0;
 		for (y=0;y<ymax;y++) {
-			scr_putpixel(x,y,(color&15) );
+			//scr_putpixel(x,y,(color&15) );
+            scr_putpixel(x,y,colores_rainbow[(color%total_colores)] );
 
-			color++;
+			if ((y%grueso_colores)==grueso_colores-1) color++; //grueso de 4 pixeles cada franja
 			//esto genera lineas horizontales de con todos los colores en orden -> arcoiris
 		}
 	}
@@ -575,9 +582,9 @@ void cpu_panic(char *mensaje)
             //Maximo 32 caracteres, aunque aprovechamos todo (border incluso) pero hay que considerar
             //por ejemplo pantalla sin border con zoom 1, en ese caso habra un minimo de 256 de ancho (32 caracteres de ancho)
                                  //01234567890123456789012345678901
-            cpu_panic_printstring("**************************\n");
-			cpu_panic_printstring("ZEsarUX kernel panic\n");
-            cpu_panic_printstring("**************************\n");
+            cpu_panic_printstring("******************************\n");
+			cpu_panic_printstring("*  ZEsarUX kernel panic  :-( *\n");
+            cpu_panic_printstring("******************************\n");
             cpu_panic_printstring("\n\n");
             cpu_panic_printstring("Panic message:\n");
 			cpu_panic_printstring(mensaje);
