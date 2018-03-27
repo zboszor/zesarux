@@ -669,6 +669,7 @@ int hardware_redefine_keys_opcion_seleccionada=0;
 int hardware_set_f_functions_opcion_seleccionada=0;
 int hardware_set_f_func_action_opcion_seleccionada=0;
 int ula_settings_opcion_seleccionada=0;
+int cpu_settings_opcion_seleccionada=0;
 //int debug_configuration_opcion_seleccionada=0;
 int dandanator_opcion_seleccionada=0;
 int kartusho_opcion_seleccionada=0;
@@ -15803,14 +15804,18 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_shortcut(array_menu_ula_settings,'t');
                         menu_add_item_menu_tooltip(array_menu_ula_settings,"Use ULA early or late timings");
                         menu_add_item_menu_ayuda(array_menu_ula_settings,"Late timings have the contended memory table start one t-state later");
+				}
 
+#endif
+
+			if (MACHINE_IS_SPECTRUM) {
 
 			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_im2_slow,NULL,"ULA IM2 slow: %s",(ula_im2_slow.v ? "Yes" : "No"));
 			menu_add_item_menu_tooltip(array_menu_ula_settings,"Add one t-state when an IM2 is fired");
 			menu_add_item_menu_ayuda(array_menu_ula_settings,"It improves visualization on some demos, like overscan, ula128 and scroll2017");
                 }
 
-#endif
+
 
 
 		if (MACHINE_IS_SPECTRUM) {
@@ -15851,6 +15856,9 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
 
 
 }
+
+
+
 
 #define OSD_KEYBOARD_ANCHO_VENTANA 25
 #define OSD_KEYBOARD_ALTO_VENTANA 12
@@ -16438,7 +16446,71 @@ void menu_multiface(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_spectrum_core_reduced(MENU_ITEM_PARAMETERS)
+{
+	core_spectrum_uses_reduced.v ^=1;
 
+	set_cpu_core_loop();
+
+}
+
+
+//menu cpu settings
+void menu_cpu_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_cpu_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+		menu_add_item_menu_inicial_format(&array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_turbo_mode,NULL,"Turbo: %dX",cpu_turbo_speed);
+		menu_add_item_menu_tooltip(array_menu_cpu_settings,"Changes only the Z80 speed");
+		menu_add_item_menu_ayuda(array_menu_cpu_settings,"Changes only the Z80 speed. Do not modify FPS, interrupts or any other parameter. "
+					"Some machines, like ZX-Uno or Chloe, change this setting");
+
+		if (MACHINE_IS_ZXUNO) {
+					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_zxuno_deny_turbo_bios_boot,NULL,"Deny turbo on boot: %s",
+							(zxuno_deny_turbo_bios_boot.v ? "Yes" : "No") );
+					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
+					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode when booting ZX-Uno and on bios");
+	  }
+
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_spectrum_core_reduced,NULL,"Spectrum core: %s",
+			(core_spectrum_uses_reduced.v ? "Reduced" : "Normal") );
+			menu_add_item_menu_tooltip(array_menu_cpu_settings,"Switches between the normal Spectrum core or the reduced core");
+			menu_add_item_menu_ayuda(array_menu_cpu_settings,"When using the Spectrum reduced core, the following features are NOT available or are NOT properly emulated:\n"
+				"Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, Audio DAC, Video out to file");
+		}
+
+
+
+
+
+
+                menu_add_item_menu(array_menu_cpu_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+                menu_add_ESC_item(array_menu_cpu_settings);
+
+                retorno_menu=menu_dibuja_menu(&cpu_settings_opcion_seleccionada,&item_seleccionado,array_menu_cpu_settings,"CPU Settings" );
+
+                cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+}
 
 
 
@@ -16710,13 +16782,7 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 }
 
 
-void menu_spectrum_core_reduced(MENU_ITEM_PARAMETERS)
-{
-	core_spectrum_uses_reduced.v ^=1;
 
-	set_cpu_core_loop();
-
-}
 
 
 //menu hardware settings
@@ -16930,6 +16996,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_multiface,NULL,"Multiface emulation"  );
 		}
 
+/*
 		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_turbo_mode,NULL,"Turbo: %dX",cpu_turbo_speed);
 		menu_add_item_menu_tooltip(array_menu_hardware_settings,"Changes only the Z80 speed");
 		menu_add_item_menu_ayuda(array_menu_hardware_settings,"Changes only the Z80 speed. Do not modify FPS, interrupts or any other parameter. "
@@ -16949,7 +17016,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_hardware_settings,"When using the Spectrum reduced core, the following features are NOT available or are NOT properly emulated:\n"
 				"Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, Audio DAC, Video out to file");
 		}
-
+*/
 
 
                 menu_add_item_menu(array_menu_hardware_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -30037,12 +30104,18 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 	                menu_add_item_menu_ayuda(array_menu_settings,"Change some ULA settings");
 
 
-		}			
+		}	
+
+
+		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_cpu_settings,NULL,"~~CPU");
+		menu_add_item_menu_shortcut(array_menu_settings,'c');
+	    menu_add_item_menu_tooltip(array_menu_settings,"Change some CPU settings");
+	    menu_add_item_menu_ayuda(array_menu_settings,"Change some CPU settings");		
 
 		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_hardware_settings,NULL,"~~Hardware");
 		menu_add_item_menu_shortcut(array_menu_settings,'h');
-		menu_add_item_menu_tooltip(array_menu_settings,"Other hardware settings for the running machine (not cpu or ula)");
-		menu_add_item_menu_ayuda(array_menu_settings,"Select different settings for the machine and change its behaviour (not cpu or ula)");
+		menu_add_item_menu_tooltip(array_menu_settings,"Other hardware settings for the running machine (not CPU or ULA)");
+		menu_add_item_menu_ayuda(array_menu_settings,"Select different settings for the machine and change its behaviour (not CPU or ULA)");
 
 	
 
