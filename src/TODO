@@ -5,14 +5,12 @@
 -watermark sin realvideo no hace zoom. importante???
 
 -breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
+si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5.
+luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
 
--parpadeo en tsconf con driver X11 y fbdev y menu abierto. Quiza no comprueba si menu ocupado al hacer render tsconf?
-parece que lo hace tanto con real video on o off -> ahora solo con tiles y sprites...
-
+-revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
 -quiza activar real video siempre que seleccione tsconf
-
--tsconf sin realvideo con modo spectrum border, se ve menu sobrepuesto (y multitask off)
 
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
@@ -70,8 +68,6 @@ probado lo siguiente:
 
 -enter le envia siempre speech pending. normal?
 
--eventos joystick para simular pgup, pgdn
-
 -menu char size afecta a dibujado de pantalla en zx8081 sin realvideo
 
 -probar speech, stdout driver con menu tabulado
@@ -106,8 +102,6 @@ TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, qu
 -It would be interesting if an emulator could provide FIFOs or shared memory that the host operating system could
  read/write to that were made available to the emulated machine.
 
--si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5. 
-luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
 
 -en mac, con driver cocoagl o no cocoagl, hace una especie de parpadeo abajo en el footer a veces. quiza solo es en el no-opengl?
 
@@ -1556,7 +1550,7 @@ Etc...
 -Menú utilidades archivos
 Convertir archivo
 
-
+-eventos joystick para simular pgup, pgdn
 
 -revisar todos menus que usan put pixel que se ajusten a tamaño ancho caracter: para cuando se reduce tamaño caracter de 8 a menos
 
