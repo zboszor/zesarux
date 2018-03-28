@@ -464,21 +464,12 @@ void cpu_core_loop_spectrum(void)
             if (t_estados>=screen_testados_total) {
 
 				//Siguiente frame de pantalla
-				long tiempo_timer_difftime=timer_stats_diference_time(&core_cpu_timer_frame_antes,&core_cpu_timer_frame_despues);
-				/*
-				gettimeofday(&core_cpu_timer_frame_despues, NULL);
-				long tiempo_timer_difftime, tiempo_timer_seconds, tiempo_timer_useconds;
+				core_cpu_timer_frame_difftime=timer_stats_diference_time(&core_cpu_timer_frame_antes,&core_cpu_timer_frame_despues);
 
-		                tiempo_timer_seconds   = core_cpu_timer_frame_despues.tv_sec  - core_cpu_timer_frame_antes.tv_sec;
-		                tiempo_timer_useconds  = core_cpu_timer_frame_despues.tv_usec  - core_cpu_timer_frame_antes.tv_usec;
-
-				tiempo_timer_difftime = ((tiempo_timer_seconds) * 1000000 + tiempo_timer_useconds);
-				*/
-
-				printf ("tiempo transcurrido: %ld microsec\n",tiempo_timer_difftime);
+				//printf ("tiempo transcurrido: %ld microsec\n",tiempo_timer_difftime);
 				//media de tiempo
-				core_cpu_timer_frame_media=(core_cpu_timer_frame_media+tiempo_timer_difftime)/2;
-				printf ("tiempo medio transcurrido: %ld microsec\n",core_cpu_timer_frame_media);
+				core_cpu_timer_frame_media=(core_cpu_timer_frame_media+core_cpu_timer_frame_difftime)/2;
+				//printf ("tiempo medio transcurrido: %ld microsec\n",core_cpu_timer_frame_media);
 
 
 
@@ -619,7 +610,8 @@ void cpu_core_loop_spectrum(void)
 			interlaced_numero_frame++;
 			//printf ("%d\n",interlaced_numero_frame);
 
-				gettimeofday(&core_cpu_timer_frame_antes, NULL);
+
+			timer_stats_current_time(&core_cpu_timer_frame_antes);
 
 
                 }

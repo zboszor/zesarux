@@ -52,9 +52,11 @@ extern int timer_get_worked_time(void);
 
 extern struct timeval core_cpu_timer_frame_antes;
 extern struct timeval core_cpu_timer_frame_despues;
+extern long core_cpu_timer_frame_difftime;
 extern long core_cpu_timer_frame_media;
 
 extern long timer_stats_diference_time(struct timeval *tiempo_antes, struct timeval *tiempo_despues);
+extern void timer_stats_current_time(struct timeval *tiempo);
 
 
 #endif
