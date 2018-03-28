@@ -28162,6 +28162,86 @@ void menu_about_statistics(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
+{
+
+    //char textostats[32];
+
+    menu_espera_no_tecla();
+    menu_dibuja_ventana(0,7,32,8,"Core Statistics");
+
+    z80_byte acumulado;
+
+        char texto_buffer[33];
+
+        char texto_buffer2[33];
+
+        //Empezar con espacio
+    texto_buffer[0]=' ';
+
+        int valor_contador_segundo_anterior;
+
+        valor_contador_segundo_anterior=contador_segundo;
+
+
+        do {
+
+
+                //esto hara ejecutar esto 2 veces por segundo
+            //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
+                        if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+                                                                                        valor_contador_segundo_anterior=contador_segundo;
+                        //contador_segundo_anterior=contador_segundo;
+                                                                                                //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+                                int linea=0;
+                                //int opcode;
+                                //int sumatotal;
+
+
+//Ultimo intervalo de tiempo
+//long core_cpu_timer_frame_difftime;
+//Media de todos los intervalos
+//long core_cpu_timer_frame_media=0;
+
+				long valor_mostrar;
+				valor_mostrar=core_cpu_timer_frame_difftime;
+				//controlar maximos
+				if (valor_mostrar>999999) valor_mostrar=999999;
+			     //01234567890123456789012345678901
+			     // Last core frame: 999999 us
+				sprintf (texto_buffer,"Last core frame: %ld us",valor_mostrar);
+				menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
+
+                                valor_mostrar=core_cpu_timer_frame_media;
+                                //controlar maximos
+				if (valor_mostrar>999999) valor_mostrar=999999;
+                                //01234567890123456789012345678901
+                                 // Last core frame: 999999 us
+                                sprintf (texto_buffer," Average: %ld us",valor_mostrar);
+                                menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+
+                        if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
+
+                }
+
+                menu_cpu_core_loop();
+                acumulado=menu_da_todas_teclas();
+
+                //si no hay multitarea, esperar tecla y salir
+                if (menu_multitarea==0) {
+                        menu_espera_tecla();
+
+                        acumulado=0;
+                }
+
+        } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
+
+        cls_menu_overlay();
+
+}
+
 void menu_about_running_info(MENU_ITEM_PARAMETERS)
 {
 
@@ -28436,6 +28516,9 @@ void menu_about(MENU_ITEM_PARAMETERS)
 
                 menu_add_item_menu(array_menu_about,"~~Statistics",MENU_OPCION_NORMAL,menu_about_statistics,NULL);
 		menu_add_item_menu_shortcut(array_menu_about,'s');
+
+                menu_add_item_menu(array_menu_about,"Core Statistics",MENU_OPCION_NORMAL,menu_about_core_statistics,NULL);
+		//menu_add_item_menu_shortcut(array_menu_about,'r');
 
                 menu_add_item_menu(array_menu_about,"C~~ompile info",MENU_OPCION_NORMAL,menu_about_compile_info,NULL);
 		menu_add_item_menu_shortcut(array_menu_about,'o');
