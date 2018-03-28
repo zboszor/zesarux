@@ -28198,6 +28198,17 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
                                 //int opcode;
                                 //int sumatotal;
 
+/*
+
+Nota: calcular el tiempo entre ejecuciones de cada opcode no penaliza mucho el uso de cpu real.
+Ejemplo:
+--vo null --machine 48k 
+
+Sin calcular ese tiempo: 9% cpu
+Calculando ese tiempo: 12% cpu
+
+*/
+
 
 //Ultimo intervalo de tiempo
 //long core_cpu_timer_frame_difftime;
