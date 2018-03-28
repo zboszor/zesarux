@@ -28236,7 +28236,7 @@ Calculando ese tiempo: 12% cpu
                                 if (valor_mostrar>999999) valor_mostrar=999999;
                              //01234567890123456789012345678901
                              // Last render display: 999999 us
-                                sprintf (texto_buffer,"Last render display: %ld us",valor_mostrar);
+                                sprintf (texto_buffer,"Last full render: %ld us",valor_mostrar);
                                 menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
                                 valor_mostrar=core_cpu_timer_refresca_pantalla_media;
