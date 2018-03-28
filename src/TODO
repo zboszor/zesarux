@@ -1,5 +1,13 @@
 -Prioridades para la 6.1 
 
+-estadisticas de tiempos usados en:
+*refrescar pantalla
+*ejecutar todos opcodes de pantalla
+*tiempo entre refrescos de pantalla (idealmente 20 ms)
+*tiempo de almacenar rainbow buffer
+*tiempo de enviar buffer audio? no tiene sentido en entornos con pthreads
+* que mas?????
+
 -breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
 si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5.
 luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
