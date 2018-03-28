@@ -7875,7 +7875,11 @@ int screen_if_refresh(void)
 
 void cpu_loop_refresca_pantalla_return(void)
 {
-	timer_stats_current_time(&core_cpu_timer_refresca_pantalla_antes);
+        //Calcular tiempo usado en refrescar pantalla
+        core_cpu_timer_refresca_pantalla_difftime=timer_stats_diference_time(&core_cpu_timer_refresca_pantalla_antes,&core_cpu_timer_refresca_pantalla_despues);
+
+        //media de tiempo
+        core_cpu_timer_refresca_pantalla_media=(core_cpu_timer_refresca_pantalla_media+core_cpu_timer_refresca_pantalla_difftime)/2;
 }
 	
 
@@ -7883,10 +7887,7 @@ void cpu_loop_refresca_pantalla(void)
 {
 
 	//Calcular tiempo usado en refrescar pantalla
-        core_cpu_timer_refresca_pantalla_difftime=timer_stats_diference_time(&core_cpu_timer_refresca_pantalla_antes,&core_cpu_timer_refresca_pantalla_despues);
-                         
-	//media de tiempo
-	core_cpu_timer_refresca_pantalla_media=(core_cpu_timer_refresca_pantalla_media+core_cpu_timer_refresca_pantalla_difftime)/2;
+	timer_stats_current_time(&core_cpu_timer_refresca_pantalla_antes);
 
 
 	if (rainbow_enabled.v) screen_add_watermark_rainbow();
