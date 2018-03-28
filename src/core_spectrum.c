@@ -158,8 +158,18 @@ void core_spectrum_store_rainbow_current_atributes(void)
 
 
 	//Si no vamos a refrescar pantalla, no tiene sentido almacenar nada en el buffer
+/*
+Sin saltar frame aqui, tenemos por ejemplo
+./zesarux --realvideo --frameskip 4  --vo null --exit-after 10
+15 % cpu
+tiempo de proceso en 10 segundos: user	0m1.498s
+
+Saltando frame aqui,
+12% cpu
+tiempo de proceso en 10 segundos: user	0m1.239s
+*/
                                 if (!screen_if_refresh()) {
-                                        //if ((t_estados/screen_testados_linea)>319) printf ("-Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
+                                        //if ((t_estados/screen_testados_linea)>310) printf ("-Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
 					return;
                                 }
 
