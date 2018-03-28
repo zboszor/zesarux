@@ -120,6 +120,15 @@ long core_cpu_timer_refresca_pantalla_difftime;
 long core_cpu_timer_refresca_pantalla_media=0;
 
 
+//Tiempo entre cada refresco de pantalla. Idealmente: 20 ms
+//Tiempos antes y despues
+struct timeval core_cpu_timer_each_frame_antes,core_cpu_timer_each_frame_despues;
+//Ultimo intervalo de tiempo
+long core_cpu_timer_each_frame_difftime;
+//Media de todos los intervalos
+long core_cpu_timer_each_frame_media=0;
+
+
 void timer_stats_current_time(struct timeval *tiempo)
 {
 	gettimeofday(tiempo, NULL);

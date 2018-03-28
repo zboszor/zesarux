@@ -64,5 +64,10 @@ extern long core_cpu_timer_refresca_pantalla_media;
 extern long timer_stats_diference_time(struct timeval *tiempo_antes, struct timeval *tiempo_despues);
 extern void timer_stats_current_time(struct timeval *tiempo);
 
+extern struct timeval core_cpu_timer_each_frame_antes;
+extern struct timeval core_cpu_timer_each_frame_despues;
+extern long core_cpu_timer_each_frame_difftime;
+extern long core_cpu_timer_each_frame_media;
+
 
 #endif

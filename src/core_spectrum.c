@@ -611,6 +611,7 @@ void cpu_core_loop_spectrum(void)
 			//printf ("%d\n",interlaced_numero_frame);
 
 
+			//Para calcular lo que se tarda en ejecutar todo un frame
 			timer_stats_current_time(&core_cpu_timer_frame_antes);
 
 

@@ -7889,6 +7889,14 @@ void cpu_loop_refresca_pantalla(void)
 	//Calcular tiempo usado en refrescar pantalla
 	timer_stats_current_time(&core_cpu_timer_refresca_pantalla_antes);
 
+	//Para calcular el tiempo entre frames. Idealmente 20 ms
+	//Diferencia tiempo
+	core_cpu_timer_each_frame_difftime=timer_stats_diference_time(&core_cpu_timer_each_frame_antes,&core_cpu_timer_each_frame_despues);
+	//Media de tiempo
+	core_cpu_timer_each_frame_media=(core_cpu_timer_each_frame_media+core_cpu_timer_each_frame_difftime)/2;
+	//Siguiente tiempo
+	timer_stats_current_time(&core_cpu_timer_each_frame_antes);
+
 
 	if (rainbow_enabled.v) screen_add_watermark_rainbow();
 	else screen_add_watermark_no_rainbow();
