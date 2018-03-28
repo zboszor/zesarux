@@ -112,6 +112,8 @@ __FEATURES__
 
 * Supports Pentagon timing
 
+* Supports perfect ZX Spectrum 16k/48k colour palette
+
 * Supports ULAplus: Standard 64 colour palette, linear modes with 16 colours per pixel: Radastan Mode: 128x96, ZEsarUX modes: 256x96, 128x192, 256x192
 
 * Supports Chroma81 ZX81 Colour mode
@@ -129,6 +131,10 @@ __FEATURES__
 * Supports interlaced, scanlines and Gigascreen effects
 
 * Supports hi-res modes on ZX Spectrum (rainbow effects and others) and ZX80/ZX81 (UDG, CHR$128, WRX, HRG and some other hi-res modes)
+
+* Supports reducing the screen to 192x144 (0.75 scale)
+
+* Can be used with joystick and environments without keyboard, like Raspiboy / Retropie
 
 * Emulates all the oddities of the Inves Spectrum +: 64 KB RAM, RAM initialization with FF00H pattern, OUT ula AND RAM, EAR and MIC XOR, no contended memory, snow in border, colour ula delay, interrupt starts at end of top border (not at the beginning of the border), corrupt memory on every interrupt, no idle bus
 
@@ -210,7 +216,9 @@ __FEATURES__
 
 * Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX by using a telnet client.
 
-* Powerful debug features: Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Load source code, Hexadecimal Dump, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, verbose messages on console
+* Can use a reduced Spectrum core, with some features disables, useful on slow devices, like Raspberry Pi 1/Zero
+
+* Powerful debug features: Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Load source code, Hexadecimal Dump, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, verbose messages on console
 
 * Accessibility support: Print char traps allows to capture generated text from almost any program or game, using standard ROM calls (RST 10H) or even non standard print character rutines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can be also read by a text-to-speech program.
 
@@ -219,6 +227,8 @@ __FEATURES__
 * Supports command line settings, configuration file settings and per-game configuration settings
 
 * Other features: Visualmem menu, CPU Statistics
+
+* Includes two easter egg: Can you find them? :)
 
 
 
