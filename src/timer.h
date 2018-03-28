@@ -50,4 +50,11 @@ extern void timer_get_texto_time(struct timeval *tv, char *texto);
 extern int timer_get_worked_time(void);
 
 
+extern struct timeval core_cpu_timer_frame_antes;
+extern struct timeval core_cpu_timer_frame_despues;
+extern long core_cpu_timer_frame_media;
+
+extern long timer_stats_diference_time(struct timeval *tiempo_antes, struct timeval *tiempo_despues);
+
+
 #endif

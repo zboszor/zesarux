@@ -99,6 +99,30 @@ int timer_on_screen_key=0;
 //lo que dura un frame en microsegundos  (20 ms = 200000 milisec)
 //#define FRAME_MICROSECONDS (1000000/50)
 
+
+
+//Estadisticas de diferentes partes del emulador
+
+//Tiempo que se tarda en generar un frame completo de pantalla
+struct timeval core_cpu_timer_frame_antes,core_cpu_timer_frame_despues;
+long core_cpu_timer_frame_media=0;
+
+
+
+long timer_stats_diference_time(struct timeval *tiempo_antes, struct timeval *tiempo_despues)
+{
+	gettimeofday(tiempo_despues, NULL);
+	long difftime_seconds, difftime_useconds;
+
+	difftime_seconds = tiempo_despues->tv_sec  - tiempo_antes->tv_sec;
+	difftime_useconds = tiempo_despues->tv_usec  - tiempo_antes->tv_usec;
+
+	long difftime = ((difftime_seconds) * 1000000 + difftime_useconds);
+
+	return difftime;
+}
+
+
 void timer_sleep(int milisec)
 {
         usleep(milisec*1000);

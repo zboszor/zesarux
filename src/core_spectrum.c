@@ -145,6 +145,8 @@ void interrupcion_si_despues_lda_ir(void)
 }
 
 
+
+
 void core_spectrum_store_rainbow_current_atributes(void)
 {
 
@@ -461,6 +463,25 @@ void cpu_core_loop_spectrum(void)
 
             if (t_estados>=screen_testados_total) {
 
+				//Siguiente frame de pantalla
+				long tiempo_timer_difftime=timer_stats_diference_time(&core_cpu_timer_frame_antes,&core_cpu_timer_frame_despues);
+				/*
+				gettimeofday(&core_cpu_timer_frame_despues, NULL);
+				long tiempo_timer_difftime, tiempo_timer_seconds, tiempo_timer_useconds;
+
+		                tiempo_timer_seconds   = core_cpu_timer_frame_despues.tv_sec  - core_cpu_timer_frame_antes.tv_sec;
+		                tiempo_timer_useconds  = core_cpu_timer_frame_despues.tv_usec  - core_cpu_timer_frame_antes.tv_usec;
+
+				tiempo_timer_difftime = ((tiempo_timer_seconds) * 1000000 + tiempo_timer_useconds);
+				*/
+
+				printf ("tiempo transcurrido: %ld microsec\n",tiempo_timer_difftime);
+				//media de tiempo
+				core_cpu_timer_frame_media=(core_cpu_timer_frame_media+tiempo_timer_difftime)/2;
+				printf ("tiempo medio transcurrido: %ld microsec\n",core_cpu_timer_frame_media);
+
+
+
 				//tsconf_last_frame_y=-1;
 
 				if (rainbow_enabled.v==1) t_scanline_next_fullborder();
@@ -597,6 +618,10 @@ void cpu_core_loop_spectrum(void)
                         esperando_tiempo_final_t_estados.v=0;
 			interlaced_numero_frame++;
 			//printf ("%d\n",interlaced_numero_frame);
+
+				gettimeofday(&core_cpu_timer_frame_antes, NULL);
+
+
                 }
 
 
