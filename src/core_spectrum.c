@@ -156,6 +156,13 @@ void core_spectrum_store_rainbow_current_atributes(void)
 	//En maquina tsconf, no hacer esto tampoco
 	if (MACHINE_IS_TSCONF) return;
 
+
+	//Si no vamos a refrescar pantalla, no tiene sentido almacenar nada en el buffer
+                                if (!screen_if_refresh()) {
+                                        //if ((t_estados/screen_testados_linea)>319) printf ("-Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
+					return;
+                                }
+
 				//ULA dibujo de pantalla
 				//last_x_atributo guarda ultima posicion (+1) antes de ejecutar el opcode
 				//lo que se pretende hacer aqui es guardar los atributos donde esta leyendo la ula actualmente,
