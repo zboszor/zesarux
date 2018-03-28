@@ -7870,10 +7870,24 @@ int screen_if_refresh(void)
 
 	return 0;
 }
+
+
+
+void cpu_loop_refresca_pantalla_return(void)
+{
+	timer_stats_current_time(&core_cpu_timer_refresca_pantalla_antes);
+}
 	
 
 void cpu_loop_refresca_pantalla(void)
 {
+
+	//Calcular tiempo usado en refrescar pantalla
+        core_cpu_timer_refresca_pantalla_difftime=timer_stats_diference_time(&core_cpu_timer_refresca_pantalla_antes,&core_cpu_timer_refresca_pantalla_despues);
+                         
+	//media de tiempo
+	core_cpu_timer_refresca_pantalla_media=(core_cpu_timer_refresca_pantalla_media+core_cpu_timer_refresca_pantalla_difftime)/2;
+
 
 	if (rainbow_enabled.v) screen_add_watermark_rainbow();
 	else screen_add_watermark_no_rainbow();
@@ -7883,17 +7897,24 @@ void cpu_loop_refresca_pantalla(void)
 		//printf ("top_speed_real_frames:%d\n",top_speed_real_frames);
 
 		if (MACHINE_IS_Z88) {
-			if ((top_speed_real_frames%200)<197) return;
+			if ((top_speed_real_frames%200)<197) {
+				cpu_loop_refresca_pantalla_return();
+				return;	
+			}
 		}
 
 		else {
-			if ((top_speed_real_frames%50)!=0) return;
+			if ((top_speed_real_frames%50)!=0) {
+				cpu_loop_refresca_pantalla_return();
+				return;
+			}
 		}
 
 		top_speed_real_frames=1;
 		debug_printf (VERBOSE_DEBUG,"Refreshing screen on top speed");
 		scr_refresca_pantalla();
 		frameskip_counter=frameskip;
+		cpu_loop_refresca_pantalla_return();
 		return;
 	}
 
@@ -7921,6 +7942,8 @@ void cpu_loop_refresca_pantalla(void)
                                         framedrop_total++;
 
                                 }
+
+	cpu_loop_refresca_pantalla_return();
 }
 
 

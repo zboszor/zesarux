@@ -28221,6 +28221,22 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
                                 sprintf (texto_buffer," Average: %ld us",valor_mostrar);
                                 menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
 
+                                valor_mostrar=core_cpu_timer_refresca_pantalla_difftime;
+                                //controlar maximos
+                                if (valor_mostrar>999999) valor_mostrar=999999;
+                             //01234567890123456789012345678901
+                             // Last render display: 999999 us
+                                sprintf (texto_buffer,"Last render display: %ld us",valor_mostrar);
+                                menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
+                                valor_mostrar=core_cpu_timer_refresca_pantalla_media;
+                                //controlar maximos
+                                if (valor_mostrar>999999) valor_mostrar=999999;
+                                //01234567890123456789012345678901
+                                 // Last core refresca_pantalla: 999999 us
+                                sprintf (texto_buffer," Average: %ld us",valor_mostrar);
+                                menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+
 
                         if (menu_multitarea==0) all_interlace_scr_refresca_pantalla();
 

@@ -103,13 +103,21 @@ int timer_on_screen_key=0;
 
 //Estadisticas de diferentes partes del emulador
 
-// Tiempo que se tarda en generar un frame completo de pantalla
+// Tiempo que se tarda en ejecutar todas las instrucciones de un frame completo de pantalla
 //Tiempos antes y despues
 struct timeval core_cpu_timer_frame_antes,core_cpu_timer_frame_despues;
 //Ultimo intervalo de tiempo
 long core_cpu_timer_frame_difftime;
 //Media de todos los intervalos
 long core_cpu_timer_frame_media=0;
+
+// Tiempo que se tarda en refrescar la pantalla
+//Tiempos antes y despues
+struct timeval core_cpu_timer_refresca_pantalla_antes,core_cpu_timer_refresca_pantalla_despues;
+//Ultimo intervalo de tiempo
+long core_cpu_timer_refresca_pantalla_difftime;
+//Media de todos los intervalos
+long core_cpu_timer_refresca_pantalla_media=0;
 
 
 void timer_stats_current_time(struct timeval *tiempo)
