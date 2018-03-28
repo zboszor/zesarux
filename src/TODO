@@ -4,9 +4,13 @@
 *refrescar pantalla
 *ejecutar todos opcodes de pantalla
 *tiempo entre refrescos de pantalla (idealmente 20 ms)
-*tiempo de almacenar rainbow buffer
+*tiempo de almacenar rainbow buffer de cada opcode-> se hace despues de cada opcode, penalizaria mucho
 *tiempo de enviar buffer audio? no tiene sentido en entornos con pthreads
 * que mas?????
+*tiempos de guardar scanline en buffer rainbow:
+                                        screen_store_scanline_rainbow_solo_border();
+                                        screen_store_scanline_rainbow_solo_display();
+->quiza ralentiza mucho? se realiza 312 veces por cada frame->15600 veces por segundo aprox
 
 -breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
 si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5.
