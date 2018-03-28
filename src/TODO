@@ -12,6 +12,7 @@
                                         screen_store_scanline_rainbow_solo_display();
 ->quiza ralentiza mucho? se realiza 312 veces por cada frame->15600 veces por segundo aprox
 
+
 -breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
 si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5.
 luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
