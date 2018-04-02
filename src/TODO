@@ -44,13 +44,9 @@ pueden quedarse activos. Esto en load snapshot zsf de zxuno lo hace aparte
 
 -probar speech, stdout driver con menu tabulado
 
--It would be interesting if an emulator could provide FIFOs or shared memory that the host operating system could
- read/write to that were made available to the emulated machine.
-
 -en mac, con driver cocoagl o no cocoagl, hace una especie de parpadeo abajo en el footer a veces. quiza solo es en el no-opengl?
 
--Uso el debugger del Spectaculator y el del SpecEmu. Echo de menos es algo que he visto en el emulador SimCoupé y es una 
-representación de la posición de pantalla que la ULA está refrescando cuando ejecutas un programa paso a paso
+
 
 -fallback de video y/o audio no lo hace si se especifica --vo .... o --ao ...... cosa que normalmente ya estara en el .zesaruxrc y por tanto no se hara fallback
 
@@ -92,17 +88,11 @@ Luego se podrá usar en el futuro para nuevos settings de menú y command line, 
 -for the get-visualmem-xxx commands, could you please add start address & length/end address params?
 Mark Hutchings  
 
--Puertos debug zx81. Ver hilo sinclairzxworld
-
--opcion ZRCP que indique que memoria divmmc/divide esta mapeada: de momento dice divmmc sin mas
-
--opcion ZRCP para cargar y grabar binary
-
 -Opción para indicar otro archivo de configuración 
 
 -licencia tipo letra man soft
 
--Evitar el uso de ../../ etc en esxdos handler para evitar que puedan salir del root de esxdos. Esto también está planteado para zxpand 
+
 
 -teclas F11-F15 para fbdev
 teclas F en general en fbdev driver no raw
@@ -484,7 +474,7 @@ mirror x,y en tiles: hnk2015, merhaba_fixed usa los dos tipos de mirror
 probar capas de sprites tsconf: 200, , sirababol, mustang, alterego, fast, fishbone, uwol, soco
 
 
--Comandos ZRCP obtener datos sprites tsconf
+
 -synchronization demo .trd es para tsconfig
 
 
@@ -769,6 +759,7 @@ ver que hace zxpand aqui....
 *recomendar que o bien usen todo mayusculas o todo minusculas... en mac o windows no hay problemas, en linux si
 -FAQ esxdos handler. Comentar mayúsculas etc
 
+-Evitar el uso de ../../ etc en esxdos handler para evitar que puedan salir del root de esxdos. Esto también está planteado para zxpand 
 
 -------------
 
@@ -788,6 +779,12 @@ Ver si la simulación de pulsado de escape desde smartload de remote protocol no
 -Mejorar load source code. Poder saber líneas siguientes a un label empezando en siguientes líneas a label. Cache? Indices?
 
 -comando send-keys-string  y send-keys-ascii no van si driver stdout. con otro (incluso con null) va. Quiza tampoco va spool file con stdout?
+
+-opcion ZRCP que indique que memoria divmmc/divide esta mapeada: de momento dice divmmc sin mas
+
+-opcion ZRCP para cargar y grabar binary
+
+-Comandos ZRCP obtener datos sprites tsconf
 
 
 -------------
@@ -1501,8 +1498,6 @@ ver de momento workaround audio_using_sdl2
 
 *** Menu  ***
 
--Menú utilidades archivos
-Convertir archivo
 
 -menu char size afecta a dibujado de pantalla en zx8081 sin realvideo
 
@@ -1539,46 +1534,22 @@ Para ello, las rutinas que escriben texto en menu, deben usar otro destino desti
 que son comunes para zx8081 (y modo simulado zx81 de spectrum) y menu
 ->drivers de texto usaran texto sobre pantalla como hasta ahora
 
--visor sprites: quizá mejorarlo para que se pueda elegir el incremento de salto para cada scanline... Por ejemplo, sprites de tsconf saltan de 256 en 256
-
 -unificar funciones de debug y visores de archivo, etc. Para diferentes fuentes de datos (archivo, memoria emulada) que se pueda ver sprites, ver hexa, ver pantalla, etc....
-
--pantalla de test teclado
 
 -AY piano pero que vaya mostrando las notas en scroll, y quiza guardando notas en archivo de texto?
 
 -AY piano notas en pentagrama. maximo canales en pantalla? quiza 1 solo e ir conmutando con una tecla
 
--Paso a paso cuando hay condición de debug activa no deja salir (en menú) : ocurre porque sale y al momento salta 
-breakpoint y vuelve a entrar. Es normal->opcion para poder salir de ahi aun con breakpoint activo? tiene sentido?
 
--Disassemble a txt
 -Más f funciones. Habrá que hacer lista de funciones con ventana en vez de menú con opciones
 -mejorar deteccion frecuencia sonido en audio wave form
 -beeper piano
--debugger z80: que sea capaz de mostrar direcciones NNNN correctas (para JR CC DIS) aunque se este debugando con memory zone y direccion alta.
-Por ejemplo:
-estamos en full ram en zxuno, vamos a la direccion donde empieza propiamente la rom 0, a la 131072:
 
- 20000 F3       DI
- 20001 01036C   LD BC,6C03
- 20004 0B       DEC BC
- 20005 78       LD A,B
- 20006 B1       OR C
- 20007 20FB     JR NZ,0004
-
-Este JR NZ deberia aparecer como 20004
-
--Archivos recientes. Solo para smartload ?
 
 -Otra mejora: poder mover ventanas menu con ratón 
 
 -Poder buscar cadenas de texto en find byte. Al estilo de strings de linux, es decir, indicarle un minimo de caracteres juntos y saque todas las cadenas de texto
 opcion tambien para bajar bit 7 final
-
--Agregar ensamblador
-
--Agregar cambiar valor registros en menú debug 
 
 -Mostrar juego cargado en titulo ventana. Desaparece al hacer reset 
 
@@ -1596,15 +1567,9 @@ opcion tambien para bajar bit 7 final
 
 -joystick derecha para tab. solo en menu
 
--menu debug keys. que muestre en pantalla las teclas que se pulsan
-
 -watches necesita que show splash texts este activo. bug o feature?
 
 -menu_ventana_scanf deberia retornar un codigo de retorno en caso de pulsado ESC
-
--en fileselector, aparte de abrir ultima ruta, ir al archivo ultimo seleccionado
-
--Poder pasar a rwa desde opcion del menu en emulador
 
 -Buscar bytes (mas de uno)
 
@@ -1620,9 +1585,6 @@ no-thread no funcionara tampoco
 
 -Mostrar consumo de cpu solo del proceso del emulador?
 
--Desensamblador, que permita copiar código assembler a texto
-->desensamblador, pero de momento no puede copiar a texto
-
 -menus transparentes
 
 -acceso a cintas, snaps , etc de archive WOS. Hacer un browser sencillo html para poder navegar entre las cintas
@@ -1635,8 +1597,6 @@ no-thread no funcionara tampoco
 
 -incluir pantallas de teclado spectrum, zx80,zx81, z88, etc
 
--quickload debe dejar bajar a subcarpetas pero no ir mas arriba de ruta inicial (--quickloadpath) ?
-
 -descomprimir rar,gz, etc con espacio en nombres a veces falla. el comando system le envia las "" pero el propio comando
 no gestiona bien nombres con espacios
 
@@ -1644,23 +1604,57 @@ no gestiona bien nombres con espacios
 
 -tecla ',' en zx80/81 no va en menu porque se interpreta como symbol+shift y es lo mismo que TAB para el menu
 
--en menu debug, poder ver sprites del chip de sprites ZGX
-
--debug exit and disable breakpoint
-
--registros ' no se pueden usar como breakpoints o watches
--Registro af como tal (no solo como a y f separados) usable en breakpoint y en watches
--debug:
-Ejecutar hasta que se vuelve a la función que llama en debug....
-O bien poder saltar ejecución de call, metiendo breakpoint justo a después del call
-
-
 -en menu cambio z88 memory slots, que el apply changes salga justo en la ventana anterior, para poder cambiar varios slots a la vez y que se aplique solo una vez
 (como abrir tapa, insertar 2 slots, y cerrar tapa)
 
 
 *************
 
+
+*** Debug ***
+
+-Agregar cambiar valor registros en menú debug 
+
+-Uso el debugger del Spectaculator y el del SpecEmu. Echo de menos es algo que he visto en el emulador SimCoupé y es una 
+representación de la posición de pantalla que la ULA está refrescando cuando ejecutas un programa paso a paso
+
+-registros ' no se pueden usar como breakpoints o watches
+-Registro af como tal (no solo como a y f separados) usable en breakpoint y en watches
+-debug:
+Ejecutar hasta que se vuelve a la función que llama en debug....
+O bien poder saltar ejecución de call, metiendo breakpoint justo a después del call
+-en menu debug, poder ver sprites del chip de sprites ZGX
+
+-debug exit and disable breakpoint
+
+-Desensamblador, que permita copiar código assembler a texto
+->desensamblador, pero de momento no puede copiar a texto
+
+-Agregar ensamblador
+
+-debugger z80: que sea capaz de mostrar direcciones NNNN correctas (para JR CC DIS) aunque se este debugando con memory zone y direccion alta.
+Por ejemplo:
+estamos en full ram en zxuno, vamos a la direccion donde empieza propiamente la rom 0, a la 131072:
+
+ 20000 F3       DI
+ 20001 01036C   LD BC,6C03
+ 20004 0B       DEC BC
+ 20005 78       LD A,B
+ 20006 B1       OR C
+ 20007 20FB     JR NZ,0004
+
+Este JR NZ deberia aparecer como 20004
+
+-visor sprites: quizá mejorarlo para que se pueda elegir el incremento de salto para cada scanline... Por ejemplo, sprites de tsconf saltan de 256 en 256
+
+-Paso a paso cuando hay condición de debug activa no deja salir (en menú) : ocurre porque sale y al momento salta 
+breakpoint y vuelve a entrar. Es normal->opcion para poder salir de ahi aun con breakpoint activo? tiene sentido?
+
+-menu debug keys. que muestre en pantalla las teclas que se pulsan
+
+-Disassemble a txt
+
+*************
 
 
 *** Core CPU ***
@@ -1687,6 +1681,9 @@ es decir, la pantalla en ascii esta ubicada hacia el final de la ram. obtener de
 -funcion strcasestr da warning al compilar en linux
 
 -poder configurar lightgun por linea de comandos
+
+-It would be interesting if an emulator could provide FIFOs or shared memory that the host operating system could
+ read/write to that were made available to the emulated machine.
 
 
 -Multiface 128 falla en algunos juegos, como abadia del crimen. En eightyone tambien falla en este caso
