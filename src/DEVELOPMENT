@@ -29,6 +29,16 @@ Star raiders 2, toi acid, sabre wulf, turbo esprit, great escape, target renegad
 Establecer username y mail en repo descargado:
 git config --global user.name "chernandezba" ; git config --global user.email chernandezba@hotmail.com
 
+
+--------------
+
+Notas: para ver las descargas de github:
+https://api.github.com/repos/chernandezba/zesarux/releases
+
+buscar "download_count"
+
+curl -s https://api.github.com/repos/chernandezba/zesarux/releases | egrep '"name"|"download_count"'
+
 --------------
 
 

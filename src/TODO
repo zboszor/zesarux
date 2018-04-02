@@ -1,4 +1,4 @@
--Prioridades para la 6.1 
+--- Cosas para la version 6.1
 
 -breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
 si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5.
@@ -12,6 +12,17 @@ revisar los que hayan cambiado.
 
 -TBBLue: al hacer hard reset, los colores del boot se cambian :S quiza algun bit de la paleta que no esta bien en reset?
 
+-tbblue:
+*seguir nuevos opcodes next https://dailly.blogspot.com.es/2017/08/version-04-of-cspect.html?m=1  ,  https://github.com/z88dk/z88dk/issues/312
+*probar que pasa cuando llega a mas de 12 sprites en linea tbblue
+*eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
+*y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
+*Desactivar puertos viejos de establecer paleta sprites get/set
+*next opcodes. acesos memoria (para parametros) son 3 o 4 t estados. revisar y actualizar doc
+
+
+
+
 -Formato zsf: completar para mas maquinas
 ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo y desactivo setting de divmmc paging, ya aparece:
 porque no habilita el nested_function de divmmc. Sera tan facil como guardar el setting de diviface-paged-enabled y si es asi, 
@@ -23,15 +34,6 @@ la propia memoria de zxuno quien lo tiene, lo mismo para tbblue, y prism
 -Opcion para forzar siempre snap grabar zsf de 48k
 
 
-Notas: para ver las descargas de github:
-https://api.github.com/repos/chernandezba/zesarux/releases
-
-buscar "download_count"
-
-curl -s https://api.github.com/repos/chernandezba/zesarux/releases | egrep '"name"|"download_count"'
-
---- Cosas para la version 6.1
-
 -quiza en set_machine, cuando hace:
   //Si estaba divmmc o divide activo, desactivarlos
   //if (divmmc_enabled.v) divmmc_disable();
@@ -40,84 +42,24 @@ curl -s https://api.github.com/repos/chernandezba/zesarux/releases | egrep '"nam
 Igual deberia desactivar tambien setting divmmc_enabled y divide_enabled.v, porque sino, desactiva el setting diviface pero los otros 
 pueden quedarse activos. Esto en load snapshot zsf de zxuno lo hace aparte
 
+Speech:
 -enter le envia siempre speech pending. normal?
-
 -probar speech, stdout driver con menu tabulado
-
--en mac, con driver cocoagl o no cocoagl, hace una especie de parpadeo abajo en el footer a veces. quiza solo es en el no-opengl?
-
-
-
--fallback de video y/o audio no lo hace si se especifica --vo .... o --ao ...... cosa que normalmente ya estara en el .zesaruxrc y por tanto no se hara fallback
-
--backspace no lo lee en curses?? parece que tanto en mac como linux
-
--Set breakpoint en dirección vista (en la que se esta viendo en pantalla y en ZRCP)
-
--exit-emulator de ZRCP no parece funcionar en Mac, pero en Linux si. Va como a medias, desactiva el sonido pero no sale
-
 -en speech de mac, en english, al enviar opcion "yes/no", la "No" dice: "No. N"->eso lo traduce como "Number N"
-
--util z80 moto poke pokea en motorola pero sin protección de escritura en rom
-
--ver si texto memory zone puede ser >15. hay alguna zona de memoria que queda cortada
-
--Parámetro change slow en rpi que no venga por defecto
-Y lo haga la gente manualmente y/ o se detecte si es rpi1
-
 -Tecla escape debería hacer break cuando se está escuchando speech
 O quizá setting configurable 
 
+-backspace no lo lee en curses?? parece que tanto en mac como linux
 
--tbblue:
-*seguir nuevos opcodes next https://dailly.blogspot.com.es/2017/08/version-04-of-cspect.html?m=1  ,  https://github.com/z88dk/z88dk/issues/312
-*probar que pasa cuando llega a mas de 12 sprites en linea tbblue
-*eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
-*y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
-*Desactivar puertos viejos de establecer paleta sprites get/set
-*next opcodes. acesos memoria (para parametros) son 3 o 4 t estados. revisar y actualizar doc
-
-
--Comando genérico para alterar algunos settings desde ZRCP hacia settings de menú
-Quizá haver función que mediante una string de entrada (quizá misma que command line) que pueda:
--establecer valor
--conmutar valor, en el caso de variables 0/1
-Luego se podrá usar en el futuro para nuevos settings de menú y command line, y automáticamente desde ZRCP 
-
-
--for the get-visualmem-xxx commands, could you please add start address & length/end address params?
-Mark Hutchings  
-
--Opción para indicar otro archivo de configuración 
 
 -licencia tipo letra man soft
-
-
 
 -teclas F11-F15 para fbdev
 teclas F en general en fbdev driver no raw
 Creo que ya esta
 
--reducir fifo por defecto de pulse? de 10 a 2?
-reducir fifo por defecto de alsa? de 4 a 2?
-
 -revisar mezclado ay+beeper . posiblemente set_value_beeper acaba sacando algun valor beeper 50*2 y se sale todo de rango?
-o bien el mezclado de chip ay
-
--probar a reducir buffer sonido en otros drivers: dsp, alsa, pulse
-
--Full screen cocoa gl
-
-
-void debug_dump_nested_functions(char *result)
-  Ver en cada caso que haya algo en la lista y que ademas,
-  el handler (por ejemplo, cpu_core_loop) apunte a handler nested
-  Sucede que si por ejemplo activamos kartusho, y luego hacemos un smartload,
-  el kartusho se desactiva, pero la lista contiene funciones nested, aunque los handler de peek y poke
-  apuntan a los normales y no a kartusho (como debe ser)
-->Se deberia tener algo que , cuando se cambian los handler (peek, poke, cpu etc) se borrase la lista nested,
-aunque no es necesario, pues cuando se crea un elemento y el handler no apunta a nested, se crea lista nueva,
-y ademas, la funcion de debug_dump_nested_functions ya controla esos casos y no retorna nada de la lista
+o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el test de 6/9 canales turbosound?
 
 
 --- Fin cosas para version 6.1
@@ -374,6 +316,7 @@ http://www.dilwyn.me.uk/downloads.html
 
 -Combinación de teclas de QL que... resetea el IPC? Mencionado en manual
 
+-util z80 moto poke pokea en motorola pero sin protección de escritura en rom
 
 -------------
 
@@ -787,6 +730,19 @@ Ver si la simulación de pulsado de escape desde smartload de remote protocol no
 -Comandos ZRCP obtener datos sprites tsconf
 
 
+-Comando genérico para alterar algunos settings desde ZRCP hacia settings de menú
+Quizá haver función que mediante una string de entrada (quizá misma que command line) que pueda:
+-establecer valor
+-conmutar valor, en el caso de variables 0/1
+Luego se podrá usar en el futuro para nuevos settings de menú y command line, y automáticamente desde ZRCP 
+
+
+-for the get-visualmem-xxx commands, could you please add start address & length/end address params?
+Mark Hutchings  
+
+-exit-emulator de ZRCP no parece funcionar en Mac, pero en Linux si. Va como a medias, desactiva el sonido pero no sale
+
+
 -------------
 
 
@@ -837,6 +793,9 @@ y haciendo maximize desde ventana, hace full screen pero distorsionado
 -script de speech say falla cuando texto empieza con "-", como en README
 -con app de "loopback audio", ejecutando ZEsarUX como app de Mac se oye diferente. ->  Desinstalando "loopback audio" no pasa
 
+-Full screen cocoa gl
+
+-en mac, con driver cocoagl o no cocoagl, hace una especie de parpadeo abajo en el footer a veces. quiza solo es en el no-opengl?
 
 ------------------
 
@@ -1029,6 +988,14 @@ en pruebas: -timer audio en raspberry, quiza pausa deberia ser menor en el caso 
 
 
 --- Genericos - mejoras ---
+
+-Opción para indicar otro archivo de configuración 
+
+
+-fallback de video y/o audio no lo hace si se especifica --vo .... o --ao ...... cosa que normalmente ya estara en el .zesaruxrc y por tanto no se hara fallback
+
+-Parámetro change slow en rpi que no venga por defecto
+Y lo haga la gente manualmente y/ o se detecte si es rpi1
 
 -Quizá componentes threads que se pueda decidir cuál se activa como threads y cual no 
 Como variable de ejecucion
@@ -1491,6 +1458,10 @@ ver de momento workaround audio_using_sdl2
 
 -lectura de sonido desde line-in, para poder cargar directo desde casette
 
+-reducir fifo por defecto de pulse? de 10 a 2?
+reducir fifo por defecto de alsa? de 4 a 2?
+-probar a reducir buffer sonido en otros drivers: dsp, alsa, pulse
+
 
 *************
 
@@ -1653,6 +1624,20 @@ breakpoint y vuelve a entrar. Es normal->opcion para poder salir de ahi aun con 
 -menu debug keys. que muestre en pantalla las teclas que se pulsan
 
 -Disassemble a txt
+
+-Set breakpoint en dirección vista (en la que se esta viendo en pantalla y en ZRCP)
+
+
+->Esto siguiente de debug_dump_nested_functions ya está corregido en principio
+void debug_dump_nested_functions(char *result)
+  Ver en cada caso que haya algo en la lista y que ademas,
+  el handler (por ejemplo, cpu_core_loop) apunte a handler nested
+  Sucede que si por ejemplo activamos kartusho, y luego hacemos un smartload,
+  el kartusho se desactiva, pero la lista contiene funciones nested, aunque los handler de peek y poke
+  apuntan a los normales y no a kartusho (como debe ser)
+->Se deberia tener algo que , cuando se cambian los handler (peek, poke, cpu etc) se borrase la lista nested,
+aunque no es necesario, pues cuando se crea un elemento y el handler no apunta a nested, se crea lista nueva,
+y ademas, la funcion de debug_dump_nested_functions ya controla esos casos y no retorna nada de la lista
 
 *************
 
