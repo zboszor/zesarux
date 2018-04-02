@@ -1844,7 +1844,7 @@ void realtape_insert(void)
 	else if (!util_compare_file_extension(realtape_name,"smp")) {
 		debug_printf (VERBOSE_INFO,"Detected raw file SMP");
 		realtape_tipo=1;
-		if (convert_smp_to_rwa(realtape_name,realtape_name_rwa)) {
+		if (convert_smp_to_rwa_tmpdir(realtape_name,realtape_name_rwa)) {
 			//debug_printf(VERBOSE_ERR,"Error converting input file");
 			return;
 		}
@@ -1861,7 +1861,7 @@ void realtape_insert(void)
         else if (!util_compare_file_extension(realtape_name,"wav")) {
                 debug_printf (VERBOSE_INFO,"Detected WAV file");
                 realtape_tipo=2;
-		if (convert_wav_to_rwa(realtape_name,realtape_name_rwa)) {
+		if (convert_wav_to_rwa_tmpdir(realtape_name,realtape_name_rwa)) {
 			//debug_printf(VERBOSE_ERR,"Error converting input file");
                         return;
                 }
@@ -1897,7 +1897,7 @@ void realtape_insert(void)
         else if (!util_compare_file_extension(realtape_name,"p")) {
                 debug_printf (VERBOSE_INFO,"Detected P file");
                 realtape_tipo=4;
-                if (convert_p_to_rwa(realtape_name,realtape_name_rwa)) {
+                if (convert_p_to_rwa_tmpdir(realtape_name,realtape_name_rwa)) {
                         //debug_printf(VERBOSE_ERR,"Error converting input file");
                         return;
                 }
@@ -1914,7 +1914,7 @@ void realtape_insert(void)
         else if (!util_compare_file_extension(realtape_name,"o")) {
                 debug_printf (VERBOSE_INFO,"Detected O file");
                 realtape_tipo=5;
-                if (convert_o_to_rwa(realtape_name,realtape_name_rwa)) {
+                if (convert_o_to_rwa_tmpdir(realtape_name,realtape_name_rwa)) {
                         //debug_printf(VERBOSE_ERR,"Error converting input file");
                         return;
                 }

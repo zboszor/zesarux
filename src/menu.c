@@ -31618,6 +31618,72 @@ void file_utils_file_convert(char *fullpath)
 
                 }
         }
+/*
+extern int convert_smp_to_rwa_tmpdir(char *origen, char *destino);
+extern int convert_wav_to_rwa_tmpdir(char *origen, char *destino);
+extern int convert_o_to_rwa_tmpdir(char *origen, char *destino);
+extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
+*/
+
+        else if (!util_compare_file_extension(archivo,"smp")) {
+                char *opciones[]={
+                        "SMP to RWA",
+                        NULL};
+
+                int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
+                                convert_smp_to_rwa(fullpath,archivo_destino);
+                        break;
+
+                }
+        }
+
+        else if (!util_compare_file_extension(archivo,"wav")) {
+                char *opciones[]={
+                        "WAV to RWA",
+                        NULL};
+
+                int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
+                                convert_wav_to_rwa(fullpath,archivo_destino);
+                        break;
+
+                }
+        }
+
+        else if (!util_compare_file_extension(archivo,"o")) {
+                char *opciones[]={
+                        "O to RWA",
+                        NULL};
+
+                int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
+                                convert_o_to_rwa(fullpath,archivo_destino);
+                        break;
+
+                }
+        }
+
+        else if (!util_compare_file_extension(archivo,"p")) {
+                char *opciones[]={
+                        "P to RWA",
+                        NULL};
+
+                int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
+                                convert_p_to_rwa(fullpath,archivo_destino);
+                        break;
+
+                }
+        }
 
 	else {
 		menu_error_message("No conversion valid for this file type");

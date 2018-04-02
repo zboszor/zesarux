@@ -6834,12 +6834,6 @@ char *get_tmpdir_base(void)
 int convert_smp_to_rwa(char *origen, char *destino)
 {
 
-	char nombre_origen[NAME_MAX];
-	util_get_file_no_directory(origen,nombre_origen);
-
-	sprintf (destino,"%s/tmp_%s.rwa",get_tmpdir_base(),nombre_origen);
-	debug_printf (VERBOSE_INFO,"Creating temporary file %s",destino);
-
 	FILE *ptr_origen;
 	ptr_origen=fopen(origen,"rb");
 	if (ptr_origen==NULL) {
@@ -6894,12 +6888,6 @@ int convert_smp_to_rwa(char *origen, char *destino)
 
 int convert_wav_to_rwa(char *origen, char *destino)
 {
-
-        char nombre_origen[NAME_MAX];
-        util_get_file_no_directory(origen,nombre_origen);
-
-        sprintf (destino,"%s/tmp_%s.rwa",get_tmpdir_base(),nombre_origen);
-        debug_printf (VERBOSE_INFO,"Creating temporary file %s",destino);
 
 
 
@@ -7045,11 +7033,6 @@ void convert_o_p_to_rwa_write_byte(FILE *ptr_archivo,unsigned char leido)
 
 int convert_o_p_to_rwa(char *origen, char *destino,int si_p)
 {
-        char nombre_origen[NAME_MAX];
-        util_get_file_no_directory(origen,nombre_origen);
-
-        sprintf (destino,"%s/tmp_%s.rwa",get_tmpdir_base(),nombre_origen);
-        debug_printf (VERBOSE_INFO,"Creating temporary file %s",destino);
 
 
 /*
@@ -7385,15 +7368,21 @@ Spectrum Cassette Blocks
         return 0;
 }
 
-
-//Convierte archivo tap a rwa en carpeta temporal, generando nombre de archivo destino
-int convert_tap_to_rwa_tmpdir(char *origen, char *destino)
+//Crea carpeta temporal y asigna nombre para archivo temporal rwa
+int convert_to_rwa_common_tmp(char *origen, char *destino)
 {
         char nombre_origen[NAME_MAX];
         util_get_file_no_directory(origen,nombre_origen);
 
         sprintf (destino,"%s/tmp_%s.rwa",get_tmpdir_base(),nombre_origen);
         debug_printf (VERBOSE_INFO,"Creating temporary file %s",destino);
+}
+
+
+//Convierte archivo tap a rwa en carpeta temporal, generando nombre de archivo destino
+int convert_tap_to_rwa_tmpdir(char *origen, char *destino)
+{
+	convert_to_rwa_common_tmp(origen,destino);
 
 	return convert_tap_to_rwa(origen,destino);
 }
@@ -7402,15 +7391,44 @@ int convert_tap_to_rwa_tmpdir(char *origen, char *destino)
 //Convierte archivo tzx a rwa en carpeta temporal, generando nombre de archivo destino
 int convert_tzx_to_rwa_tmpdir(char *origen, char *destino)
 {
-        char nombre_origen[NAME_MAX];
-        util_get_file_no_directory(origen,nombre_origen);
-
-        sprintf (destino,"%s/tmp_%s.rwa",get_tmpdir_base(),nombre_origen);
-        debug_printf (VERBOSE_INFO,"Creating temporary file %s",destino);
+	convert_to_rwa_common_tmp(origen,destino);
 
         return convert_tzx_to_rwa(origen,destino);
 
 }
+
+int convert_smp_to_rwa_tmpdir(char *origen, char *destino)
+{
+        convert_to_rwa_common_tmp(origen,destino);
+
+        return convert_smp_to_rwa(origen,destino);
+
+}
+
+int convert_wav_to_rwa_tmpdir(char *origen, char *destino)
+{
+        convert_to_rwa_common_tmp(origen,destino);
+
+        return convert_wav_to_rwa(origen,destino);
+
+}
+
+int convert_o_to_rwa_tmpdir(char *origen, char *destino)
+{
+        convert_to_rwa_common_tmp(origen,destino);
+
+        return convert_o_to_rwa(origen,destino);
+
+}
+
+int convert_p_to_rwa_tmpdir(char *origen, char *destino)
+{
+        convert_to_rwa_common_tmp(origen,destino);
+
+        return convert_p_to_rwa(origen,destino);
+
+}
+
 
 //Retorna 0 si ok
 //1 si archivo no encontrado
