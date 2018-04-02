@@ -27979,6 +27979,57 @@ int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior)
 }
 
 
+//Funcion para preguntar opcion de una lista, usando interfaz de menus
+//Entradas de lista finalizadas con NULL
+//Retorna 0=Primera opcion, 1=Segunda opcion, etc
+//Retorna <0 si salir con ESC
+int menu_ask_list_texto(char *texto_ventana,char *texto_interior,char *entradas_lista[])
+{
+
+
+
+        cls_menu_overlay();
+
+        menu_espera_no_tecla();
+
+
+        menu_item *array_menu_ask_list;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+        //Siempre indicamos primera opcion
+        int ask_list_texto_opcion_seleccionada=1;
+        do {
+
+                menu_add_item_menu_inicial_format(&array_menu_ask_list,MENU_OPCION_SEPARADOR,NULL,NULL,texto_interior);
+
+                int i=0;
+
+                while(entradas_lista[i]!=NULL) {
+                        menu_add_item_menu_format(array_menu_ask_list,MENU_OPCION_NORMAL,NULL,NULL,entradas_lista[i]);
+			i++;
+                }
+
+                //separador adicional para que quede mas grande la ventana y mas mono
+                menu_add_item_menu_format(array_menu_ask_list,MENU_OPCION_SEPARADOR,NULL,NULL," ");
+
+
+
+                retorno_menu=menu_dibuja_menu(&ask_list_texto_opcion_seleccionada,&item_seleccionado,array_menu_ask_list,texto_ventana);
+
+                cls_menu_overlay();
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        return ask_list_texto_opcion_seleccionada-1;
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+        return -1;
+
+}
+
+
 void menu_generic_message_format(char *titulo, const char * texto_format , ...)
 {
 
@@ -31521,8 +31572,46 @@ int si_menu_filesel_no_mas_alla_ultimo_item(int linea)
 	return 0;
 }
 
-void file_utils_file_convert(char *archivo)
+void file_utils_file_convert(char *fullpath)
 {
+
+	//Obtener directorio y archivo
+	char archivo[PATH_MAX];
+	char directorio[PATH_MAX];
+
+	util_get_file_no_directory(fullpath,archivo);
+	util_get_dir(fullpath,directorio);
+
+
+
+	//printf ("convert\n");
+
+	if (!util_compare_file_extension(archivo,"tap")) {
+		char *opciones[]={
+			"TAP to RWA",
+			"TAP to WAV",
+			NULL};
+
+		int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		switch (opcion) {
+			case 0:
+				printf ("Tap to rwa\n");
+			break;
+
+			case 1:
+				printf ("Tap to wav\n");
+			break;
+
+			default:
+				printf ("return code: %d\n",opcion);
+			break;
+		}
+	}
+
+	else {
+		menu_error_message("No conversion valid for this file type");
+	}
+
 }
 
 //Cargar archivo en memory zone
