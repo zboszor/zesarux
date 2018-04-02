@@ -31242,7 +31242,9 @@ void menu_filesel_print_legend(void)
 		antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
 		menu_writing_inverse_color.v=1;
 
-		menu_escribe_linea_opcion(FILESEL_POS_FILTER-1,-1,1,"~~View ~~Truncate ~~Delete m~~Kdir");
+
+								//    01234  567890  12345  678901  2345678901
+		menu_escribe_linea_opcion(FILESEL_POS_FILTER-1,-1,1,"~~View ~~Trunc ~~Del m~~Kdir C~~Onvert");
 		menu_escribe_linea_opcion(FILESEL_POS_FILTER,-1,1,"~~Copy ~~Move ~~Ren ~~Paste ~~Filemem");
 
 		//Restaurar comportamiento mostrar atajos
@@ -31517,6 +31519,10 @@ int si_menu_filesel_no_mas_alla_ultimo_item(int linea)
 {
 	if (filesel_archivo_seleccionado+linea<filesel_total_items-1) return 1;
 	return 0;
+}
+
+void file_utils_file_convert(char *archivo)
+{
 }
 
 //Cargar archivo en memory zone
@@ -32471,7 +32477,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_reset_counters_tecla_repeticion();
 						
 						//Comun para acciones que usan archivo seleccionado
-						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R' || tecla=='C' || tecla=='P' || tecla=='F') {
+						if (tecla=='V' || tecla=='T' || tecla=='D' || tecla=='M' || tecla=='R' || tecla=='C' || tecla=='P' || tecla=='F' || tecla=='O') {
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
@@ -32522,6 +32528,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									//Filemem
 									if (tecla=='F') {
 										file_utils_file_mem_load(file_utils_file_selected);
+									}
+
+									//Convert
+									if (tecla=='O') {
+										file_utils_file_convert(file_utils_file_selected);
+										releer_directorio=1;
 									}
 
 						
