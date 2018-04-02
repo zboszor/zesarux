@@ -15,7 +15,10 @@ Added setting to add a watermark on the display
 Added setting to reduce display to a factor of 0.75. Used on RunZX event
 Added a fast spectrum core (with some features disabled) just for slow devices, like Raspberry Pi 1/Zero. Now ZEsarUX is playable on RPi1/Zero again!
 Added a setting to dump ram contents to file when exiting ZEsarUX, ideal to run automatic tests
-Added cpu-step-over function on debug menu (was already available from ZRCP)
+
+Improved debugging:
+* added cpu-step-over function on debug menu (was already available from ZRCP)
+* added function to write byte to file on ZEsarUX hardware debug ports
 
 Improved frameskip: now realvideo buffer is not updated when frameskip
 Improved ZRCP: run command is stopped by default when pressing a key (or sending data to the socket)

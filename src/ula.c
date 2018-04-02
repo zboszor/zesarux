@@ -45,6 +45,8 @@ z80_byte zesarux_zxi_last_register=0;
 
 z80_byte zesarux_zxi_registers_array[256];
 
+char zesarux_zxi_hardware_debug_file[PATH_MAX]="";
+
 //ultimo valor enviado al border, tal cual
 z80_byte out_254_original_value;
 
@@ -199,6 +201,26 @@ Bit 1-7: Unused
 		end_emulator();
 	}
     break;
+
+    case 6:
+      //HARDWARE_DEBUG_BYTE_FILE
+        if (zesarux_zxi_hardware_debug_file[0]==0) debug_printf(VERBOSE_ERR,"HARDWARE_DEBUG_BYTE_FILE unconfigured");
+        else {
+            FILE *ptr_destino;
+            ptr_destino=fopen(zesarux_zxi_hardware_debug_file,"ab");
+
+            if (ptr_destino==NULL) {
+                debug_printf (VERBOSE_ERR,"Error opening HARDWARE_DEBUG_BYTE_FILE");
+                return;
+            }
+
+            //Escribir 1 byte
+            fwrite(&value,1,1,ptr_destino);
+            fclose(ptr_destino);
+
+        }
+    break;
+
   }
 
   zesarux_zxi_registers_array[zesarux_zxi_last_register]=value;

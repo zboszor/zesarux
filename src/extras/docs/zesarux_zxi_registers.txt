@@ -19,7 +19,7 @@ There are 256 possible registers:
 
 ----
 
-* Reg 0: CONTROL_BITS0. Set to 0 when doing a reset
+* Reg 0: Write: CONTROL_BITS0. Set to 0 when doing a reset
 
 Bit 0: Set to 1 to map lower 16kb inves memory ram readable from 0000-3fffh
 Bits 1-7: Unused
@@ -27,28 +27,28 @@ Bits 1-7: Unused
 
 ----
 
-* Reg 1: HARDWARE_DEBUG_ASCII
+* Reg 1: Write: HARDWARE_DEBUG_ASCII
 
-Write this register to output an ascii character to the pc console. Must be enabled on debug settings
-
-
-----
-
-* Reg 2: HARDWARE_DEBUG_NUMBER 
-
-Write this register to output a number to the pc console. Must be enabled on debug settings
+Write this register to output an ascii character to the pc console
 
 
 ----
 
-* Reg 3: ZEsarUX control register
+* Reg 2: Write: HARDWARE_DEBUG_NUMBER 
+
+Write this register to output a number to the pc console
+
+
+----
+
+* Reg 3: Write: ZEsarUX control register
 Bit 0: Set to 1 to exit emulator
 Bit 1-7: Unused
 
 
 ----
 
-* Reg 4: ZEsarUX version number
+* Reg 4: Read: ZEsarUX version number
 
 Used to get ZEsarUX version number string. 
 Emulator version format:
@@ -73,7 +73,7 @@ Index is reset to 0 every reset
 
 ----
 
-* Reg 5: ZEsarUX build number
+* Reg 5: Read: ZEsarUX build number
 
 Used to get ZEsarUX build number string. Build number is the unix time of the ZEsarUX compilation
 Same behaviour as "Reg 4: ZEsarUX version number": write value 0 here to reset string index. 
@@ -82,4 +82,10 @@ Index is reset to 0 every reset
 
 ----
 
-* Reg 6-255: Unused
+* Reg 6: Write: HARDWARE_DEBUG_BYTE_FILE
+
+Write this register to output a byte to a file. File must be configured from the debug settings menu
+
+----
+
+* Reg 7-255: Unused

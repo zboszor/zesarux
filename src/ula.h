@@ -66,7 +66,7 @@ extern z80_byte zesarux_zxi_last_register;
 
 extern z80_byte zesarux_zxi_registers_array[];
 
-
+extern char zesarux_zxi_hardware_debug_file[];
 
 extern z80_byte zesarux_zxi_read_last_register(void);
 extern void zesarux_zxi_write_last_register(z80_byte value);

@@ -30012,6 +30012,31 @@ void menu_hardware_debug_port(MENU_ITEM_PARAMETERS)
 	hardware_debug_port.v ^=1;
 }
 
+
+void menu_zesarux_zxi_hardware_debug_file(MENU_ITEM_PARAMETERS)
+{
+
+	char *filtros[2];
+
+    filtros[0]="";
+    filtros[1]=0;
+
+
+    if (menu_filesel("Select Debug File",filtros,zesarux_zxi_hardware_debug_file)==1) {
+    	//Ver si archivo existe y preguntar
+		if (si_existe_archivo(zesarux_zxi_hardware_debug_file)) {
+            if (menu_confirm_yesno_texto("File exists","Append?")==0) {
+				zesarux_zxi_hardware_debug_file[0]=0;
+				return;
+			}
+        }
+
+    }
+
+	else zesarux_zxi_hardware_debug_file[0]=0;
+
+}
+
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
 {
@@ -30021,6 +30046,8 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
         do {
 
 
+      char string_zesarux_zxi_hardware_debug_file_shown[18];
+      
 
 
 		menu_add_item_menu_inicial_format(&array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"Show r~~egisters in console: %s",(debug_registers==1 ? "On" : "Off"));
@@ -30057,6 +30084,14 @@ menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_bre
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"If hardware debug ports are enabled");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"It shows a ASCII character or a number on console sending some OUT sequence to ports. "
 														"Read file docs/zesarux_zxi_registers.txt for more information");
+
+
+		if (hardware_debug_port.v) {
+			menu_tape_settings_trunc_name(zesarux_zxi_hardware_debug_file,string_zesarux_zxi_hardware_debug_file_shown,18);
+        	menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_zesarux_zxi_hardware_debug_file,NULL,"Byte file: %s",string_zesarux_zxi_hardware_debug_file_shown);
+			menu_add_item_menu_tooltip(array_menu_settings_debug,"File used on using register 6 (HARDWARE_DEBUG_BYTE_FILE)");		
+			menu_add_item_menu_ayuda(array_menu_settings_debug,"File used on using register 6 (HARDWARE_DEBUG_BYTE_FILE)");								
+		}
 
 
                 menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
