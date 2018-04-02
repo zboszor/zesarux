@@ -6,11 +6,14 @@ luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu 
 
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
+
+TBBLUE:
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 revisar los que hayan cambiado.
 
--TBBLue: al hacer hard reset, los colores del boot se cambian :S quiza algun bit de la paleta que no esta bien en reset?
+-al hacer hard reset, los colores del boot se cambian :S quiza algun bit de la paleta que no esta bien en reset?
+Parece que solo falla con nuevo nextos?
 
 -tbblue:
 *seguir nuevos opcodes next https://dailly.blogspot.com.es/2017/08/version-04-of-cspect.html?m=1  ,  https://github.com/z88dk/z88dk/issues/312
@@ -19,7 +22,7 @@ revisar los que hayan cambiado.
 *y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
 *Desactivar puertos viejos de establecer paleta sprites get/set
 *next opcodes. acesos memoria (para parametros) son 3 o 4 t estados. revisar y actualizar doc
-
+* update a ultima version nextos rom, sd, etc
 
 
 

@@ -1904,7 +1904,47 @@ void instruccion_ed_179 ()
 
 void instruccion_ed_180 ()
 {
-        invalid_opcode_ed("ED180");
+        if (MACHINE_IS_TBBLUE) {
+                //LDIRX ED B4     As LDIR, if byte == A then skips byte.
+
+//Como instruccion ldir excepto el poke....
+#ifdef EMULATE_MEMPTR
+        if (reg_b!=0 || reg_c!=1) set_memptr(reg_pc-1);
+#endif
+
+	//instruccion_ed_160();
+
+        z80_byte byte_leido;
+
+        byte_leido=peek_byte(HL);
+        //LDIRX ED B4     As LDIR, if byte == A then skips byte.
+        if (reg_a!=byte_leido) poke_byte(DE,byte_leido);
+
+        contend_write_no_mreq( DE, 1 );
+	contend_write_no_mreq( DE, 1 );
+
+	BC--;
+
+        Z80_FLAGS &=(255-FLAG_H-FLAG_N-FLAG_PV-FLAG_3-FLAG_5);
+
+        if (byte_leido & 8 ) Z80_FLAGS |=FLAG_3;
+
+        if (byte_leido & 2 ) Z80_FLAGS |=FLAG_5;
+
+        if (BC) {
+	  Z80_FLAGS |=FLAG_PV;
+          contend_write_no_mreq( DE, 1 );
+	  contend_write_no_mreq( DE, 1 );
+          contend_write_no_mreq( DE, 1 );
+	  contend_write_no_mreq( DE, 1 );
+          contend_write_no_mreq( DE, 1 );
+          reg_pc -=2;
+        }
+        HL++; DE++;
+
+
+        }
+        else invalid_opcode_ed("ED180");
 }
 
 void instruccion_ed_181 ()

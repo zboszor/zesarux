@@ -30,7 +30,7 @@ New Z80 opcodes on the NEXT (more to come)
 -   pixelad           ED 94           using D,E (as Y,X) calculate the ULA screen address and store in HL
    setae             ED 95           Using the lower 3 bits of E (X coordinate), set the correct bit value in A
    ldix              ED A4           As LDI,  but if byte==A does not copy
-   ldirx             ED B4           As LDIR, but if byte==A does not copy
+-   ldirx             ED B4           As LDIR, but if byte==A does not copy
    lddx              ED AC           As LDD,  but if byte==A does not copy, and DE is incremented
    lddrx             ED BC           As LDDR,  but if byte==A does not copy
    ldirscale         ED B6           As LDIRX,  if(hl)!=A then (de)=(hl); HL_E'+=BC'; DE+=DE'; dec BC; Loop.
