@@ -6,9 +6,7 @@ luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu 
 
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
--dividir menu.c en varios archivos para que no sea tan grande
-
--quiza activar real video siempre que seleccione tsconf
+-quiza activar real video siempre que seleccione tsconf y siempre que autoreal video
 
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
@@ -1341,6 +1339,8 @@ eliminar warnings de funciones sin definir como extern
 
 -s TOTAL_MEMORY=167772160 -o zesarux.html  --embed-file roms
 
+
+-dividir menu.c en varios archivos para que no sea tan grande
 
 * -Agregar todas desensamblado roms en txt
   http://www.fruitcake.plus.com/Sinclair/Spectrum128/ROMDisassembly/Spectrum128ROMDisassembly4.htm

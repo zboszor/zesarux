@@ -3171,6 +3171,11 @@ You don't need timings for H/V sync =)
 								poke_byte_no_time=poke_byte_no_time_tsconf;
 								lee_puerto=lee_puerto_spectrum;
 								ay_chip_present.v=1;
+
+								//TSConf hacemos que active siempre realvideo (siempre que setting de autoactivar este yes)
+								//por conveniencia, dado que se verá todo mejor asi que no con real video off
+								if (autodetect_rainbow.v) enable_rainbow();
+
 								break;
 
 
