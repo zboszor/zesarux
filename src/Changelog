@@ -36,7 +36,7 @@ Improved file viewer from file utilities:
 * default hexadecimal file viewer for unknown files
 
 Improved TSConf emulation:
-* Added TSConf DMA, line interrupt, sprites layers
+* added TSConf DMA, line interrupt, sprites layers
 * TSConf rendering: now tiles and sprites are drawn per scanline. Border drawing. Handling of scroll registers
 * TSConf debugging: debug for DMA, Video registers, Video layers, Sprites, Tiles
 
@@ -44,19 +44,19 @@ Improved text mode drivers (aalib, stdout, simpletext, curses): text settings ar
 Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
 
 Improved menu interface:
-* A new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
+* a new "tabbed" menus to improve usability and interaction with mouse, joystick and stdout driver: waveform, visualmem, ay player
 * Character width can be reduced to 7,6 or 5 pixels width
-* Added a setting to limit menu event: enabling it you should press the menu key 4 times in a second
-* Added a setting to hide directories from file selector menus, useful when you don't want the user to be able to navigate the filesystem
+* added a setting to limit menu event: enabling it you should press the menu key 3 times in a second to open the menu
+* added a setting to hide directories from file selector menus, useful when you don't want the user to be able to navigate the filesystem
 * Smartload: now the cursor remembers last file loaded
-* Added two more GUI styles: Clean and CleanInverse
+* added two more GUI styles: Clean and CleanInverse
 
 Improved sprite viewer: 
 * now can see sprites with speccy screen format
 * you can view sprites up to 512x192 
 * you can see tsconf sprites
 
-Improved sound: Silence detector does not activate on pthreads versions
+Improved sound: Silence detector activated by default but can be disabled
 Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
 Improved configuration parsing: if unknown setting found on configuration file, ZEsarUX will open but warns about the error, and the autosave feature is not enabled
 Improved TBBlue emulation: Added clip window registers
