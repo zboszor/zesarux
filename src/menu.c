@@ -31687,6 +31687,18 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
 	else {
 		menu_error_message("No conversion valid for this file type");
+		return;
+	}
+
+	//Si no hay error
+	if (!if_pending_error_message) {
+		//char buffer_mensaje_ok[PATH_MAX+1024];
+		//sprintf (buffer_mensaje_ok,"File converted to %s",archivo_destino);
+
+		//menu_generic_message_splash("File converter",buffer_mensaje_ok);
+		//menu_warn_message(buffer_mensaje_ok);
+
+		menu_generic_message_format("File converter","OK. File converted to %s",archivo_destino);
 	}
 
 }

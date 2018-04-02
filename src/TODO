@@ -8,6 +8,8 @@ luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu 
 
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
+-dividir menu.c en varios archivos para que no sea tan grande
+
 -quiza activar real video siempre que seleccione tsconf
 
 -tbblue extended opcodes
