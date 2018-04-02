@@ -372,7 +372,19 @@ void instruccion_ed_51 ()
 
 void instruccion_ed_52 ()
 {
-        invalid_opcode_ed("ED52");
+        if (MACHINE_IS_TBBLUE) {
+                //add  hl,$0000     ED 34 LO HI     Add XXXX to HL (no flags set)
+              
+
+                z80_int operador;
+                operador= lee_byte_pc();
+                operador |= (lee_byte_pc()<<8);
+
+                HL +=operador;
+
+
+        }
+        else invalid_opcode_ed("ED52");
 }
 
 void instruccion_ed_53 ()

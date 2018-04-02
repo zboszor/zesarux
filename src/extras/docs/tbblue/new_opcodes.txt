@@ -13,7 +13,7 @@ New Z80 opcodes on the NEXT (more to come)
 -   add  hl,a         ED 31          4+4  Add A to HL (no flags set)
 -   add  de,a         ED 32          4+4 Add A to DE (no flags set)
 -   add  bc,a         ED 33          4+4 Add A to BC (no flags set)
-   add  hl,$0000     ED 34 LO HI     Add A to HL (no flags set)
+-   add  hl,$0000     ED 34 LO HI     Add XXXX to HL (no flags set)
    add  de,$0000     ED 35 LO HI     Add A to DE (no flags set)
    add  bc,$0000     ED 36 LO HI     Add A to BC (no flags set)
 -   inc dehl          ED 37          4+4 increment 32bit DEHL
