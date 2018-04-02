@@ -1880,7 +1880,7 @@ void realtape_insert(void)
 		) {
                 debug_printf (VERBOSE_INFO,"Detected TZX file");
                 realtape_tipo=3;
-                if (convert_tzx_to_rwa(realtape_name,realtape_name_rwa)) {
+                if (convert_tzx_to_rwa_tmpdir(realtape_name,realtape_name_rwa)) {
 			//debug_printf(VERBOSE_ERR,"Error converting input file");
                         return;
                 }
@@ -1930,7 +1930,7 @@ void realtape_insert(void)
         else if (!util_compare_file_extension(realtape_name,"tap")) {
                 debug_printf (VERBOSE_INFO,"Detected TAP file");
                 realtape_tipo=6;
-                if (convert_tap_to_rwa(realtape_name,realtape_name_rwa)) {
+                if (convert_tap_to_rwa_tmpdir(realtape_name,realtape_name_rwa)) {
                         //debug_printf(VERBOSE_ERR,"Error converting input file");
                         return;
                 }

@@ -378,8 +378,10 @@ extern char *get_tmpdir_base(void);
 extern int convert_smp_to_rwa(char *origen, char *destino);
 extern int convert_wav_to_rwa(char *origen, char *destino);
 extern int convert_tzx_to_rwa(char *origen, char *destino);
+extern int convert_tzx_to_rwa_tmpdir(char *origen, char *destino);
 extern int convert_o_to_rwa(char *origen, char *destino);
 extern int convert_p_to_rwa(char *origen, char *destino);
+extern int convert_tap_to_rwa_tmpdir(char *origen, char *destino);
 extern int convert_tap_to_rwa(char *origen, char *destino);
 extern z80_bit quickload_guessing_tzx_type;
 

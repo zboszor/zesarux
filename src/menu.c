@@ -31582,6 +31582,9 @@ void file_utils_file_convert(char *fullpath)
 	util_get_file_no_directory(fullpath,archivo);
 	util_get_dir(fullpath,directorio);
 
+	//Archivo de destino
+	char archivo_destino[PATH_MAX];
+
 
 
 	//printf ("convert\n");
@@ -31589,24 +31592,32 @@ void file_utils_file_convert(char *fullpath)
 	if (!util_compare_file_extension(archivo,"tap")) {
 		char *opciones[]={
 			"TAP to RWA",
-			"TAP to WAV",
 			NULL};
 
 		int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
 		switch (opcion) {
 			case 0:
-				printf ("Tap to rwa\n");
+				sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
+				convert_tap_to_rwa(fullpath,archivo_destino);
 			break;
 
-			case 1:
-				printf ("Tap to wav\n");
-			break;
-
-			default:
-				printf ("return code: %d\n",opcion);
-			break;
 		}
 	}
+
+        else if (!util_compare_file_extension(archivo,"tzx")) {
+                char *opciones[]={
+                        "TZX to RWA",
+                        NULL};
+
+                int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.rwa",directorio,archivo);
+                                convert_tzx_to_rwa(fullpath,archivo_destino);
+                        break;
+
+                }
+        }
 
 	else {
 		menu_error_message("No conversion valid for this file type");
