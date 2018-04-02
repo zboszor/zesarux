@@ -1386,6 +1386,8 @@ http://www.worldofspectrum.org/forums/discussion/44669/clashbasher-a-new-interfa
 
 -Drag -  Drop en X11. En SDL2 y Cocoa si que funciona
 
+-sin multitask, con filtro color azul por ejemplo, en menu, la pantalla de spectrum no aplica filtro color
+
 -Splash en drivers caca?
 ->ya lo muestra dado que el splash es texto!
 
