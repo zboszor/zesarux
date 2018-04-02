@@ -1,7 +1,5 @@
 -Prioridades para la 6.1 
 
--en top speed no parece refrescar la pantalla?
-
 -breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
 si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5.
 luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu

@@ -7864,6 +7864,20 @@ void scr_fadeout(void)
 //Retorna 1 si se tiene que refrescar pantalla. Aplica frameskip y autoframeskip
 int screen_if_refresh(void)
 {
+
+	//Si esta en top speed, solo 1 frame
+	if (timer_condicion_top_speed() ) {
+		if (MACHINE_IS_Z88) {
+			if ((top_speed_real_frames%200)<197) return 0;
+		}
+
+		else {
+			if ((top_speed_real_frames%50)!=0) return 0;
+		}
+		return 1;
+	}
+
+
 	if ( (framescreen_saltar==0 || autoframeskip.v==0) && frameskip_counter==0) {
 		return 1;
 	}
@@ -7903,26 +7917,16 @@ void cpu_loop_refresca_pantalla(void)
 
 	//Si esta en top speed, solo 1 frame
 	if (timer_condicion_top_speed() ) {
-		//printf ("top_speed_real_frames:%d\n",top_speed_real_frames);
 
-		if (MACHINE_IS_Z88) {
-			if ((top_speed_real_frames%200)<197) {
-				cpu_loop_refresca_pantalla_return();
-				return;	
-			}
+		if (screen_if_refresh() ) {
+			//printf ("top_speed_real_frames:%d\n",top_speed_real_frames);
+	
+			top_speed_real_frames=1;
+			debug_printf (VERBOSE_DEBUG,"Refreshing screen on top speed");
+			scr_refresca_pantalla();
+			frameskip_counter=frameskip;
+
 		}
-
-		else {
-			if ((top_speed_real_frames%50)!=0) {
-				cpu_loop_refresca_pantalla_return();
-				return;
-			}
-		}
-
-		top_speed_real_frames=1;
-		debug_printf (VERBOSE_DEBUG,"Refreshing screen on top speed");
-		scr_refresca_pantalla();
-		frameskip_counter=frameskip;
 		cpu_loop_refresca_pantalla_return();
 		return;
 	}
