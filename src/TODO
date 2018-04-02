@@ -6,8 +6,6 @@ luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu 
 
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
--quiza activar real video siempre que seleccione tsconf y siempre que autoreal video
-
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 revisar los que hayan cambiado.
@@ -42,30 +40,9 @@ curl -s https://api.github.com/repos/chernandezba/zesarux/releases | egrep '"nam
 Igual deberia desactivar tambien setting divmmc_enabled y divide_enabled.v, porque sino, desactiva el setting diviface pero los otros 
 pueden quedarse activos. Esto en load snapshot zsf de zxuno lo hace aparte
 
-
-IMPORTANTE: ruido al iniciar emulador en mac, no siempre, debido al agregar rutina de autoresize audio puntero
-Quiza solo permitir cuando hayan pasado unos segundos desde el inicio del emulador
-->ya no lo hace??
-
--problema de reseteo de buffer audio al iniciar el emulador, hace un sonido estridente a veces al arrancar. Detectado con coreaudio
-probado lo siguiente:
-* resetear a 0 cada driver al iniciar: ningun cambio
-* poner a 0 tambien fifo_read_position al hacer empty buffer: ningun cambio
-->Quiza solucion es que haga reseteo solo cuando se haya llenado 1 vez el buffer al menos
-->ya no lo hace??
-
--Quizá resetear puntero escritura latencia siempre que carga, graba, etc
-
--Intentar reproducir click inicial metiendo pausa expresamente. E intentar que solo haga ajuste de buffer cuando haya algo en dicho buffer
-
 -enter le envia siempre speech pending. normal?
 
 -probar speech, stdout driver con menu tabulado
-
--Config sinclair1/2 interface 2 joystick está bien? Ver página wos joystick
-
-
--betadisk: nmi no parece guardar el snapshot, aunque lo intenta
 
 -It would be interesting if an emulator could provide FIFOs or shared memory that the host operating system could
  read/write to that were made available to the emulated machine.
@@ -667,6 +644,12 @@ night hunter. aunque luego no carga la cara b
 -autoload en +3 de cinta no va, seguramente porque al tener un dsk insertado, la rutina salta diferente (o le envia el enter antes)
 
 
+
+-------------
+
+--- Betadisk ---
+
+-betadisk: nmi no parece guardar el snapshot, aunque lo intenta
 
 -------------
 

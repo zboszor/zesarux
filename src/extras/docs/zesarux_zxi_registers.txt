@@ -1,5 +1,10 @@
+On Spectrum:
 ZEsarUX ZXI Port register: 53051 (CF3BH)
 ZEsarUX ZXI Port data:     57147 (DF3BH)
+
+On ZX80/81:
+ZEsarUX Port register:  53 (35H)
+ZEsarUX Port data:      83 (53H)
 
 To write a register, first OUT to port register 0xCF3B and then OUT to port data 0xDF3B
 To read a register, first OUT to port register 0xCF3B and then IN from port data 0xDF3B

@@ -6123,6 +6123,11 @@ void out_port_zx80_no_time(z80_int puerto,z80_byte value)
 		zxpand_write(puerto_h,value);
         }
 
+	//ZEsarUX ZXI ports
+    	if (hardware_debug_port.v) {
+		if (puerto==ZESARUX_ZXI_ZX8081_PORT_REGISTER) zesarux_zxi_write_last_register(value);
+	   	if (puerto==ZESARUX_ZXI_ZX8081_PORT_DATA)     zesarux_zxi_write_register_value(value);
+    	}
 
 
 	//Cualquier puerto generara vsync

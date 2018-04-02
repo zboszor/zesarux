@@ -7369,7 +7369,7 @@ Spectrum Cassette Blocks
 }
 
 //Crea carpeta temporal y asigna nombre para archivo temporal rwa
-int convert_to_rwa_common_tmp(char *origen, char *destino)
+void convert_to_rwa_common_tmp(char *origen, char *destino)
 {
         char nombre_origen[NAME_MAX];
         util_get_file_no_directory(origen,nombre_origen);

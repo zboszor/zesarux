@@ -59,6 +59,9 @@ extern z80_bit hardware_debug_port;
 #define ZESARUX_ZXI_PORT_REGISTER 0xCF3B
 #define ZESARUX_ZXI_PORT_DATA     0xDF3B
 
+#define ZESARUX_ZXI_ZX8081_PORT_REGISTER 0x35
+#define ZESARUX_ZXI_ZX8081_PORT_DATA     0x53
+
 extern z80_byte zesarux_zxi_last_register;
 
 extern z80_byte zesarux_zxi_registers_array[];
