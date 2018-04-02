@@ -32,8 +32,8 @@ Improved QL emulation:
 * can now open qlay mdv microdrive image files
 
 Improved file viewer from file utilities: 
-*specific file viewers for these kind of files: .tap, .zx, .zsf, .sp, .z80, .sna, .spg, .p, .o, .mmc/.ide (fat browser, plus3dos browser), .dsk, .trd, .tzx, .cdt, .flash (zxuno flash, z88 flash, superupgrade flash), .epr, .eprom
-*default hexadecimal file viewer for unknown files
+* specific file viewers for these kind of files: .tap, .zx, .zsf, .sp, .z80, .sna, .spg, .p, .o, .mmc/.ide (fat browser, plus3dos browser), .dsk, .trd, .tzx, .cdt, .flash (zxuno flash, z88 flash, superupgrade flash), .epr, .eprom
+* default hexadecimal file viewer for unknown files
 
 Improved TSConf emulation:
 * Added TSConf DMA, line interrupt, sprites layers
