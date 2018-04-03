@@ -1631,7 +1631,38 @@ void instruccion_ed_163 ()
 
 void instruccion_ed_164 ()
 {
-        invalid_opcode_ed("237 164");
+        if (MACHINE_IS_TBBLUE) {
+                //ED A4 As LDI, if byte == A then skips byte.
+        //LDI
+
+/*
+LDD         --0*0-  Load and Decrement    [DE]=[HL],HL=HL-1,#
+LDDR        --000-  Load, Dec., Repeat    LDD till BC=0
+LDI         --0*0-  Load and Increment    [DE]=[HL],HL=HL+1,#
+LDIR        --000-  Load, Inc., Repeat    LDI till BC=0
+*/
+
+	z80_byte byte_leido;
+
+	byte_leido=peek_byte(HL);
+        //As LDI, if byte == A then skips byte.
+	if (reg_a!=byte_leido) poke_byte(DE,byte_leido);
+
+        contend_write_no_mreq( DE, 1 ); contend_write_no_mreq( DE, 1 );
+
+	HL++;
+	DE++;
+	BC--;
+
+	Z80_FLAGS &=(255-FLAG_H-FLAG_N-FLAG_PV-FLAG_3-FLAG_5);
+
+	if (BC) Z80_FLAGS |=FLAG_PV;
+
+	if (byte_leido & 8 ) Z80_FLAGS |=FLAG_3;
+
+	if (byte_leido & 2 ) Z80_FLAGS |=FLAG_5;
+        }
+        else invalid_opcode_ed("237 164");
 }
 
 void instruccion_ed_165 ()
@@ -1767,7 +1798,31 @@ void instruccion_ed_171 ()
 
 void instruccion_ed_172 ()
 {
-        invalid_opcode_ed("237 172");
+        if (MACHINE_IS_TBBLUE) {
+                //ED AC   As LDD, except DE++ and if byte == A then skips byte.
+	z80_byte byte_leido;
+
+	byte_leido=peek_byte(HL);
+        if (reg_a!=byte_leido) poke_byte(DE,byte_leido);
+
+        contend_write_no_mreq( DE, 1 ); contend_write_no_mreq( DE, 1 );
+
+        HL--;
+        DE++;
+
+        BC--;
+
+
+        Z80_FLAGS &=(255-FLAG_H-FLAG_N-FLAG_PV-FLAG_3-FLAG_5);
+
+        if (BC) Z80_FLAGS |=FLAG_PV;
+
+        if (byte_leido & 8 ) Z80_FLAGS |=FLAG_3;
+
+        if (byte_leido & 2 ) Z80_FLAGS |=FLAG_5;
+
+        }
+        else invalid_opcode_ed("237 172");
 }
 
 void instruccion_ed_173 ()
@@ -2123,7 +2178,46 @@ void instruccion_ed_187 ()
 
 void instruccion_ed_188 ()
 {
-        invalid_opcode_ed("237 188");
+        if (MACHINE_IS_TBBLUE) {
+                //ED BC    As LDDR, except DE++ and if byte == A then skips byte.
+//LDDR
+#ifdef EMULATE_MEMPTR
+        if (reg_b!=0 || reg_c!=1) set_memptr(reg_pc-1);
+#endif
+
+        //instruccion_ed_168();
+
+        z80_byte byte_leido;
+
+        byte_leido=peek_byte(HL);
+        if (reg_a!=byte_leido) poke_byte(DE,byte_leido);
+
+        contend_write_no_mreq( DE, 1 );
+	contend_write_no_mreq( DE, 1 );
+
+        BC--;
+
+	Z80_FLAGS &=(255-FLAG_H-FLAG_N-FLAG_PV-FLAG_3-FLAG_5);
+
+
+        if (byte_leido & 8 ) Z80_FLAGS |=FLAG_3;
+
+        if (byte_leido & 2 ) Z80_FLAGS |=FLAG_5;
+
+        if (BC) {
+	  Z80_FLAGS |=FLAG_PV;
+          contend_write_no_mreq( DE, 1 );
+	  contend_write_no_mreq( DE, 1 );
+          contend_write_no_mreq( DE, 1 );
+	  contend_write_no_mreq( DE, 1 );
+          contend_write_no_mreq( DE, 1 );
+          reg_pc -=2;
+        }
+        HL--; DE++;
+
+                
+        }
+        else invalid_opcode_ed("237 188");
 }
 
 void instruccion_ed_189 ()
