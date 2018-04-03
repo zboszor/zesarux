@@ -1404,9 +1404,18 @@ void instruccion_ed_147 ()
 {
         if (MACHINE_IS_TBBLUE) {
 		//pixeldn ED 93	Moves HL down one line in the ULA screen
-		//printf ("pixeldn. hl=%d\n",reg_hl);
+		//printf ("pixeldn before. hl=%d\n",reg_hl);
 		int x,y;
 		x=y=0;
+
+                
+                //Hay que preservar bits 7,6,5 de H
+                z80_byte mascara_offset=reg_h & (128+64+32);
+
+                //Quitar bits 7,6,5 (+32768, +16384, y +8192)
+                //reg_h &=(255-128-64-32);
+
+                //Esta funcion no tiene en cuenta los bits altos 15,14,13
 		util_spectrumscreen_get_xy(reg_hl,&x,&y);
 		//printf ("x: %d y: %d\n",x,y);
 
@@ -1416,11 +1425,13 @@ void instruccion_ed_147 ()
 		//x sale en coordenadas de pixel
 		x /=8;
 
-                z80_int resultado=16384+screen_addr_table[y*32+x];
+                //z80_int resultado=16384+screen_addr_table[y*32+x];
+                z80_int resultado=screen_addr_table[y*32+x];
 
-                reg_h=value_16_to_8h(resultado);
+                reg_h=value_16_to_8h(resultado) | mascara_offset;
                 reg_l=value_16_to_8l(resultado);	
-		//printf ("pixeldn after. hl=%d\n",reg_hl);
+
+		//printf ("pixeldn after. hl=%d. mascara: %02XH\n",reg_hl,mascara_offset);
 
         }
         else invalid_opcode_ed("ED147");

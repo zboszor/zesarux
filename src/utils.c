@@ -10185,7 +10185,11 @@ void util_spectrumscreen_get_xy(z80_int dir,int *xdest,int *ydest)
         //De momento para ir rapido, buscamos direccion en array de scanline
         //screen_addr_table
 
-        dir -=16384;
+        //dir -=16384;  //TODO: quiza en vez de hacer una resta, hacer un AND para quitar ese bit. Quiza incluso quitar todos los bits 15,14,13
+        //asi quitaria offsets 32768, 16384 y 8192
+
+        dir &=(65535-32768-16384-8192);
+
 
         int indice=0;
         int x,y;
