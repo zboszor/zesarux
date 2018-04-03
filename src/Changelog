@@ -4,18 +4,18 @@ Added BetaDisk and TR-DOS emulation
 Added Spectrum +3 emulation
 Added Spectrum keyboard ghosting error feature
 Added ZX Spectrum Recreated keyboard support
-Added setting to exit emulator after a number of seconds (--exit-after)
+Added a setting to start TBBlue directly to a 48 rom but with all the Next features enabled, useful for fast snapshot loading
+Added improved Spectrum 16/48/+ colour palette
+Added a fast spectrum core (with some features disabled) just for slow devices, like Raspberry Pi 1/Zero. Now ZEsarUX is playable on RPi1/Zero again!
+Added setting to write protect IDE, MMC, ZX-Uno Flash
 Added setting to show changelog when updating emulator version
 Added actions to file utilities menu: Copy, Move, Rename
-Added setting to write protect IDE, MMC, ZX-Uno Flash
 Added setting to disable persistent writes on IDE and MMC
-Added second Easter Egg ;)
-Added improved Spectrum 16/48/+ colour palette
 Added setting to add a watermark on the display
 Added setting to reduce display to a factor of 0.75. Used on RunZX event
-Added a fast spectrum core (with some features disabled) just for slow devices, like Raspberry Pi 1/Zero. Now ZEsarUX is playable on RPi1/Zero again!
 Added a setting to dump ram contents to file when exiting ZEsarUX, ideal to run automatic tests
-Added a setting to start tbblue directly to a 48 rom but with all the Next features enabled, useful for fast snapshot loading
+Added setting to exit emulator after a number of seconds (--exit-after)
+Added second Easter Egg ;)
 
 
 Improved debugging:
