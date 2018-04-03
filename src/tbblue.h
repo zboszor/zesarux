@@ -165,4 +165,6 @@ extern z80_byte clip_window_layer2[];
 extern z80_byte clip_window_sprites[];
 extern z80_byte clip_window_ula[];
 
+extern z80_bit tbblue_fast_boot_mode;
+
 #endif

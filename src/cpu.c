@@ -782,8 +782,7 @@ void hard_reset_cpu(void)
 	}
 
 	else if (MACHINE_IS_TBBLUE) {
-    tbblue_hard_reset();
-		reset_cpu();
+    	tbblue_hard_reset();
   }
 
 	else if (superupgrade_enabled.v) {
@@ -972,8 +971,11 @@ util_stats_init();
 	}
 
 	if (MACHINE_IS_TBBLUE) {
-		tbblue_set_memory_pages();
 		tbblue_reset();
+		tbblue_set_memory_pages();
+
+		//porque antes estaba el tbblue_reset aqui despues de set_memory_pages???
+
 		//tbblue_read_port_24d5_index=0;
 	}
 
@@ -3695,7 +3697,8 @@ void rom_load(char *romfilename)
 		break;
 
 		case 19:
-		romfilename="tbblue_loader.rom";
+		if (tbblue_fast_boot_mode.v) romfilename="48.rom";
+		else romfilename="tbblue_loader.rom";
 		break;
 
                 case 20:
@@ -3876,13 +3879,25 @@ Total 20 pages=320 Kb
                 }
 
 		else if (MACHINE_IS_TBBLUE) {
-			//Carga en memoria de rom de fpga, cargado dos veces
-			leidos=fread(tbblue_fpga_rom,1,8192,ptr_romfile);
-			memcpy(&tbblue_fpga_rom[8192],tbblue_fpga_rom,8192);
+			
+			//Cargamos solo la rom de 48 4 veces 
+			if (tbblue_fast_boot_mode.v) {
+			leidos=fread(&memoria_spectrum[0],1,16384,ptr_romfile);
+			memcpy(&memoria_spectrum[16384],&memoria_spectrum[0],16384);
+			memcpy(&memoria_spectrum[32768],&memoria_spectrum[0],16384);
+			memcpy(&memoria_spectrum[49152],&memoria_spectrum[0],16384);
+			
+                                if (leidos!=16384) {
+                                        cpu_panic("Error loading ROM");
+                                 }				
+			}
+			else {
+				leidos=fread(tbblue_fpga_rom,1,8192,ptr_romfile);
+				memcpy(&tbblue_fpga_rom[8192],tbblue_fpga_rom,8192);
                                 if (leidos!=8192) {
                                         cpu_panic("Error loading ROM");
                                  }
-
+			}
 
                 }
 

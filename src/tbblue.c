@@ -68,6 +68,9 @@ z80_byte *tbblue_fpga_rom;
 z80_byte *tbblue_memory_paged[8];
 
 
+//Si arranca rapido sin pasar por el proceso de boot. Va directamente a rom 48k
+z80_bit tbblue_fast_boot_mode={0};
+
 //Sprites
 
 //Paleta de 256 colores formato RGB9 RRRGGGBBB
@@ -1708,6 +1711,8 @@ void tbblue_set_memory_pages(void)
 
 				z80_byte rom_page=rom1f | rom7f;
 
+				//printf ("rom: %d:\n",rom_page);
+
 
                         	tbblue_set_rom_page(0,rom_page*2);
 				tbblue_set_rom_page(1,rom_page*2+1);
@@ -1989,16 +1994,29 @@ void tbblue_hard_reset(void)
 	tbblue_port_123b=0;
 
 
-	tbblue_bootrom.v=1;
+	if (tbblue_fast_boot_mode.v) {
+//Spectrum 7FFD port: 30
+//Spectrum 1FFD port: 04
+		puerto_32765=0x30;
+		puerto_8189=0x04;
+		tbblue_registers[3]=3;
+		tbblue_registers[80]=0xff;
+		tbblue_registers[81]=0xff;
+		tbblue_set_memory_pages();
+	}
+
+	else {
+		tbblue_bootrom.v=1;
 	//printf ("----setting bootrom to 1\n");
-	
+		tbblue_set_memory_pages();
+		tbblue_set_emulator_setting_divmmc();
+	}
 
-	tbblue_set_memory_pages();
 
-	tbblue_set_emulator_setting_divmmc();
 
 	tbblue_reset_sprites();
 	tbblue_reset_palettes();
+
 
 }
 
