@@ -488,20 +488,45 @@ void tbblue_reset_sprites(void)
 
 }
 
+z80_int tbblue_get_9bit_colour(z80_byte valor)
+{
+	//Retorna color de 9 bits en base a 8 bits
+	z80_int valor16=valor;
+
+	//Bit bajo sale de hacer or de bit 1 y 0
+	//z80_byte bit_bajo=valor&1;
+	z80_byte bit_bajo=(valor&1)|((valor&2)>>1);
+
+	//rotamos a la izquierda para que sean los 8 bits altos
+	valor16=valor16<<1;
+
+	valor16 |=bit_bajo;
+
+	return valor16;	
+}
 
 void tbblue_reset_palettes(void)
 {
-	//Inicializar Paleta
+	//Inicializar Paletas
 	int i;
 
+//z80_int valor16=tbblue_get_9bit_colour(valor);
+
+	//Paletas layer2 & sprites son los mismos valores del indice*2 y metiendo bit 0 como el bit1 inicial
+	//(cosa absurda pues no sigue) la logica de mezclar bit 0 y bit 1
 	for (i=0;i<256;i++) {
-		//Metemos colores RRRGGGBB0
-		tbblue_palette_ula_first[i]=i*2;
- 		tbblue_palette_ula_second[i]=i*2;
- 		tbblue_palette_layer2_first[i]=i*2;
- 		tbblue_palette_layer2_second[i]=i*2;
- 		tbblue_palette_sprite_first[i]=i*2;
- 		tbblue_palette_sprite_second[i]=i*2;
+		z80_int color;
+		color=i*2;
+		if (i&2) color |=1;
+		//if (i==245) printf ("i: %d color: %d %X\n",i,color,color);
+
+		//Metemos colores RRRGGGBBx , donde x es un OR de los bits BB
+		//tbblue_palette_ula_first[i]=i*2;
+ 		//tbblue_palette_ula_second[i]=i*2;
+ 		tbblue_palette_layer2_first[i]=color;
+ 		tbblue_palette_layer2_second[i]=color;
+ 		tbblue_palette_sprite_first[i]=color;
+ 		tbblue_palette_sprite_second[i]=color;
 	}
 
 	//Pero el ultimo color quiero que apunte a 511 y no 510, porque sino, el 510 es:
@@ -510,12 +535,12 @@ void tbblue_reset_palettes(void)
 	//FFFFFFH blanco
 
 
-	tbblue_palette_ula_first[255]=511;
+	/*tbblue_palette_ula_first[255]=511;
  	tbblue_palette_ula_second[255]=511;
  	tbblue_palette_layer2_first[255]=511;
  	tbblue_palette_layer2_second[255]=511;
  	tbblue_palette_sprite_first[255]=511;
- 	tbblue_palette_sprite_second[255]=511;
+ 	tbblue_palette_sprite_second[255]=511;*/
 	
 
 	//Y de momento la paleta ula first tiene los colores lo mas parecido a spectrum:
@@ -551,6 +576,37 @@ The palette entry numbers for standard ULA mode are: 0-7 for the standard ink co
 http://devnext.referata.com/wiki/Palettes
 */
 
+	//Se repiten los 16 colores en los 256. Para colores sin brillo, componente de color vale 5 (101b)
+	const z80_int tbblue_default_ula_colours[16]={
+0 ,   //000000000 
+5 ,   //000000101 
+320 , //101000000 
+325 , //101000101 
+40 ,  //000101000 
+45 ,  //000101101 
+360 , //101101000 
+365 , //101101101 
+0 ,   //000000000 
+7 ,   //000000111 
+448 , //111000000 
+455 , //111000111 
+56 ,  //000111000 
+63 ,  //000111111 
+504 , //111111000 
+511   //111111111 
+	};
+
+	int j;
+
+	for (j=0;j<16;j++) {
+		for (i=0;i<16;i++) {
+			tbblue_palette_ula_first[j*16+i]=tbblue_default_ula_colours[i];
+			tbblue_palette_ula_second[j*16+i]=tbblue_default_ula_colours[i];
+		}
+	}
+
+	/*
+
  	tbblue_palette_ula_first[0]=tbblue_palette_ula_first[0+128]=0;
 	tbblue_palette_ula_first[1]=tbblue_palette_ula_first[1+128]=6; 
 	tbblue_palette_ula_first[2]=tbblue_palette_ula_first[2+128]=384;
@@ -569,7 +625,7 @@ http://devnext.referata.com/wiki/Palettes
 	tbblue_palette_ula_first[12]=tbblue_palette_ula_first[12+128]=56;
 	tbblue_palette_ula_first[13]=tbblue_palette_ula_first[13+128]=63;
 	tbblue_palette_ula_first[14]=tbblue_palette_ula_first[14+128]=504;
-	tbblue_palette_ula_first[15]=tbblue_palette_ula_first[15+128]=511;
+	tbblue_palette_ula_first[15]=tbblue_palette_ula_first[15+128]=511;*/
 
 
 }
@@ -613,6 +669,8 @@ void tbblue_increment_palette_index(void)
 	tbblue_reset_palette_write_state();
 }
 
+
+
 //Escribe valor de 8 bits superiores (de total de 9) para indice de color de paleta 
 void tbblue_write_palette_value_high8(z80_byte valor)
 {
@@ -653,7 +711,7 @@ void tbblue_write_palette_value_high8(z80_byte valor)
 	//color_actual &=1;
 	//Bit bajo es el mismo que bit 1
 
-	z80_int valor16=valor;
+	/*z80_int valor16=valor;
 
 	//Bit bajo sale de hacer or de bit 1 y 0
 	//z80_byte bit_bajo=valor&1;
@@ -662,9 +720,9 @@ void tbblue_write_palette_value_high8(z80_byte valor)
 	//rotamos a la izquierda para que sean los 8 bits altos
 	valor16=valor16<<1;
 
-	valor16 |=bit_bajo;
+	valor16 |=bit_bajo;*/
 
-	
+	z80_int valor16=tbblue_get_9bit_colour(valor);
 
 	//y or del valor de 1 bit de B
 	//valor16 |=color_actual;
