@@ -783,6 +783,7 @@ void hard_reset_cpu(void)
 
 	else if (MACHINE_IS_TBBLUE) {
     	tbblue_hard_reset();
+		reset_cpu();
   }
 
 	else if (superupgrade_enabled.v) {
@@ -1269,6 +1270,7 @@ printf (
 
 		"--cpuspeed n               Set CPU speed in percentage\n"
 		"--denyturbozxunoboot       Deny setting turbo mode on ZX-Uno boot\n"
+		"--tbblue-fast-boot-mode    Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)\n"
 
 		"\n"
 		"\n"
@@ -1285,6 +1287,8 @@ printf (
 		"--autosavesnap             Save snapshot on exit\n"
 		"--autosnappath path        Folder to save/load automatic snapshots\n"
 		"--tempdir path             Folder to save temporary files. Folder must exist and have read and write permissions\n"
+		"--sna-no-change-machine    Do not change machine when loading sna snapshots. Just load it on memory\n"
+		
 
 		"\n"
 		"\n"
@@ -4522,6 +4526,10 @@ int parse_cmdline_options(void) {
 					zxuno_deny_turbo_bios_boot.v=1;
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--tbblue-fast-boot-mode")) {
+				tbblue_fast_boot_mode.v=1;
+			}  
+
                         else if (!strcmp(argv[puntero_parametro],"--zx8081mem")) {
                                 siguiente_parametro_argumento();
 				int valor=atoi(argv[puntero_parametro]);
@@ -5020,6 +5028,10 @@ int parse_cmdline_options(void) {
                                 siguiente_parametro_argumento();
                                 sprintf(emulator_tmpdir_set_by_user,"%s/",argv[puntero_parametro]);
                         }
+
+			else if (!strcmp(argv[puntero_parametro],"--sna-no-change-machine")) {
+				sna_setting_no_change_machine.v=1;
+			}
 
 			else if (!strcmp(argv[puntero_parametro],"--loadbinary")) {
 				siguiente_parametro_argumento();
