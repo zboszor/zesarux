@@ -408,6 +408,10 @@ Then load the demo program and will work
 
 z80_byte tbblue_port_123b;
 
+
+//valor inicial para tbblue_port_123b en caso de fast boot mode
+int tbblue_initial_123b_port=-1;
+
 int tbblue_write_on_layer2(void)
 {
 	if (tbblue_port_123b &1) return 1;
@@ -2003,6 +2007,8 @@ void tbblue_hard_reset(void)
 		tbblue_registers[80]=0xff;
 		tbblue_registers[81]=0xff;
 		tbblue_set_memory_pages();
+
+		if (tbblue_initial_123b_port>=0) tbblue_port_123b=tbblue_initial_123b_port;
 	}
 
 	else {

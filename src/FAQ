@@ -433,7 +433,8 @@ Q: Booting TBBlue is a bit slow. Can I run a sna snapshot without having to wait
 A: Yes. You can use the tbblue-fast-boot-mode setting and it will go directly to a 48 rom, but with all the Next features enabled (except divmmc). For example, you can run the Dungeonette game with: 
 
 ./zesarux --noconfigfile --machine tbblue --realvideo --enabletimexvideo --tbblue-fast-boot-mode --sna-no-change-machine --enable-esxdos-handler --esxdos-root-dir /Users/cesarhernandez/Downloads/Dungeonette/ /Users/cesarhernandez/Downloads/Dungeonette/project.sna
-
+ 
+Note: this Dungeonette demo seems to need some internal registers set to concrete values... first time the initial screen doesnt show. just press space...
 
 
 ----------------------------------------------------------------------------

@@ -1271,6 +1271,7 @@ printf (
 		"--cpuspeed n               Set CPU speed in percentage\n"
 		"--denyturbozxunoboot       Deny setting turbo mode on ZX-Uno boot\n"
 		"--tbblue-fast-boot-mode    Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)\n"
+		//no uso esto de momento "--tbblue-123b-port n        Sets the initial value for port 123b on hard reset, for tbblue-fast-boot-mode\n"
 
 		"\n"
 		"\n"
@@ -4529,6 +4530,12 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--tbblue-fast-boot-mode")) {
 				tbblue_fast_boot_mode.v=1;
 			}  
+
+			/* no uso esto de momento
+			else if (!strcmp(argv[puntero_parametro],"--tbblue-123b-port")) {
+				siguiente_parametro_argumento();
+				tbblue_initial_123b_port=atoi(argv[puntero_parametro]);
+			}*/
 
                         else if (!strcmp(argv[puntero_parametro],"--zx8081mem")) {
                                 siguiente_parametro_argumento();
