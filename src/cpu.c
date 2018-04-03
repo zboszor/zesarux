@@ -587,6 +587,10 @@ int cpu_turbo_speed_antes=1;
 
 z80_bit set_machine_empties_audio_buffer={1};
 
+
+//Si se muestra por verbose debug los opcodes incorrectos
+z80_bit debug_shows_invalid_opcode={0};
+
 void cpu_set_turbo_speed(void)
 {
 

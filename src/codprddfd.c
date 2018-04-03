@@ -34,61 +34,59 @@ z80_byte offset_xycb;
 
 void invalid_opcode_ddfd(char *s)
 {
-	//debug_printf(VERBOSE_ERR,"Invalid opcode %s. Final PC: %X. Executing opcode without preffix",s,reg_pc);
+	if (debug_shows_invalid_opcode.v) debug_printf(VERBOSE_INFO,"Invalid opcode %s. Final PC: %04XH. Executing opcode without preffix",s,reg_pc);
 
 	//En este caso, retroceder 1 instruccion y volver a parsear
 	reg_pc--;
 	reg_r--;
 
-	//Para que no se queje el compilador
-	if (s) {}
 
 }	
 
 
 void instruccion_ddfd_0 ()
 {
-        invalid_opcode_ddfd("DD/FD0");
+        invalid_opcode_ddfd("221/253 0");
 }
 
 void instruccion_ddfd_1 ()
 {
-        invalid_opcode_ddfd("DD/FD1");
+        invalid_opcode_ddfd("221/253 1");
 }
 
 void instruccion_ddfd_2 ()
 {
-        invalid_opcode_ddfd("DD/FD2");
+        invalid_opcode_ddfd("221/253 2");
 }
 
 void instruccion_ddfd_3 ()
 {
-        invalid_opcode_ddfd("DD/FD3");
+        invalid_opcode_ddfd("221/253 3");
 }
 
 void instruccion_ddfd_4 ()
 {                                                                                                                                                      
-        invalid_opcode_ddfd("DD/FD4");                                                                                                                
+        invalid_opcode_ddfd("221/253 4");                                                                                                                
 }
 
 void instruccion_ddfd_5 ()
 {
-        invalid_opcode_ddfd("DD/FD5");
+        invalid_opcode_ddfd("221/253 5");
 }
 
 void instruccion_ddfd_6 ()
 {
-        invalid_opcode_ddfd("DD/FD6");
+        invalid_opcode_ddfd("221/253 6");
 }
 
 void instruccion_ddfd_7 ()
 {
-        invalid_opcode_ddfd("DD/FD7");
+        invalid_opcode_ddfd("221/253 7");
 }
 
 void instruccion_ddfd_8 ()
 {
-        invalid_opcode_ddfd("DD/FD8");
+        invalid_opcode_ddfd("221/253 8");
 }
 
 
@@ -117,77 +115,77 @@ void instruccion_ddfd_9 ()
 
 void instruccion_ddfd_10 ()
 {
-        invalid_opcode_ddfd("DD/FD10");
+        invalid_opcode_ddfd("221/253 10");
 }
 
 void instruccion_ddfd_11 ()
 {
-        invalid_opcode_ddfd("DD/FD11");
+        invalid_opcode_ddfd("221/253 11");
 }
 
 void instruccion_ddfd_12 ()
 {
-        invalid_opcode_ddfd("DD/FD12");
+        invalid_opcode_ddfd("221/253 12");
 }
 
 void instruccion_ddfd_13 ()
 {
-        invalid_opcode_ddfd("DD/FD13");
+        invalid_opcode_ddfd("221/253 13");
 }
 
 void instruccion_ddfd_14 ()
 {
-        invalid_opcode_ddfd("DD/FD14");
+        invalid_opcode_ddfd("221/253 14");
 }
 
 void instruccion_ddfd_15 ()
 {
-        invalid_opcode_ddfd("DD/FD15");
+        invalid_opcode_ddfd("221/253 15");
 }
 
 void instruccion_ddfd_16 ()
 {
-        invalid_opcode_ddfd("DD/FD16");
+        invalid_opcode_ddfd("221/253 16");
 }
 
 void instruccion_ddfd_17 ()
 {
-        invalid_opcode_ddfd("DD/FD17");
+        invalid_opcode_ddfd("221/253 17");
 }
 
 void instruccion_ddfd_18 ()
 {
-        invalid_opcode_ddfd("DD/FD18");
+        invalid_opcode_ddfd("221/253 18");
 }
 
 void instruccion_ddfd_19 ()
 {
-        invalid_opcode_ddfd("DD/FD19");
+        invalid_opcode_ddfd("221/253 19");
 }
 
 void instruccion_ddfd_20 ()
 {
-        invalid_opcode_ddfd("DD/FD20");
+        invalid_opcode_ddfd("221/253 20");
 }
 
 void instruccion_ddfd_21 ()
 {
-        invalid_opcode_ddfd("DD/FD21");
+        invalid_opcode_ddfd("221/253 21");
 }
 
 void instruccion_ddfd_22 ()
 {
-        invalid_opcode_ddfd("DD/FD22");
+        invalid_opcode_ddfd("221/253 22");
 }
 
 void instruccion_ddfd_23 ()
 {
-        invalid_opcode_ddfd("DD/FD23");
+        invalid_opcode_ddfd("221/253 23");
 }
 
 void instruccion_ddfd_24 ()
 {
-        invalid_opcode_ddfd("DD/FD24");
+        invalid_opcode_ddfd("221/253 24");
 }
 
 
@@ -216,37 +214,37 @@ void instruccion_ddfd_25 ()
 
 void instruccion_ddfd_26 ()
 {
-        invalid_opcode_ddfd("DD/FD26");
+        invalid_opcode_ddfd("221/253 26");
 }
 
 void instruccion_ddfd_27 ()
 {
-        invalid_opcode_ddfd("DD/FD27");
+        invalid_opcode_ddfd("221/253 27");
 }
 
 void instruccion_ddfd_28 ()
 {
-        invalid_opcode_ddfd("DD/FD28");
+        invalid_opcode_ddfd("221/253 28");
 }
 
 void instruccion_ddfd_29 ()
 {
-        invalid_opcode_ddfd("DD/FD29");
+        invalid_opcode_ddfd("221/253 29");
 }
 
 void instruccion_ddfd_30 ()
 {
-        invalid_opcode_ddfd("DD/FD30");
+        invalid_opcode_ddfd("221/253 30");
 }
 
 void instruccion_ddfd_31 ()
 {
-        invalid_opcode_ddfd("DD/FD31");
+        invalid_opcode_ddfd("221/253 31");
 }
 
 void instruccion_ddfd_32 ()
 {
-        invalid_opcode_ddfd("DD/FD32");
+        invalid_opcode_ddfd("221/253 32");
 }
 
 
@@ -330,12 +328,12 @@ void instruccion_ddfd_38 ()
 
 void instruccion_ddfd_39 ()
 {
-        invalid_opcode_ddfd("DD/FD39");
+        invalid_opcode_ddfd("221/253 39");
 }
 
 void instruccion_ddfd_40 ()
 {
-        invalid_opcode_ddfd("DD/FD40");
+        invalid_opcode_ddfd("221/253 40");
 }
 
 
@@ -437,27 +435,27 @@ void instruccion_ddfd_46 ()
 
 void instruccion_ddfd_47 ()
 {
-        invalid_opcode_ddfd("DD/FD47");
+        invalid_opcode_ddfd("221/253 47");
 }
 
 void instruccion_ddfd_48 ()
 {
-        invalid_opcode_ddfd("DD/FD48");
+        invalid_opcode_ddfd("221/253 48");
 }
 
 void instruccion_ddfd_49 ()
 {
-        invalid_opcode_ddfd("DD/FD49");
+        invalid_opcode_ddfd("221/253 49");
 }
 
 void instruccion_ddfd_50 ()
 {
-        invalid_opcode_ddfd("DD/FD50");
+        invalid_opcode_ddfd("221/253 50");
 }
 
 void instruccion_ddfd_51 ()
 {
-        invalid_opcode_ddfd("DD/FD51");
+        invalid_opcode_ddfd("221/253 51");
 }
 
 void instruccion_ddfd_52 ()
@@ -533,12 +531,12 @@ void instruccion_ddfd_54 ()
 
 void instruccion_ddfd_55 ()
 {
-        invalid_opcode_ddfd("DD/FD55");
+        invalid_opcode_ddfd("221/253 55");
 }
 
 void instruccion_ddfd_56 ()
 {
-        invalid_opcode_ddfd("DD/FD56");
+        invalid_opcode_ddfd("221/253 56");
 }
 
 void instruccion_ddfd_57 ()
@@ -566,52 +564,52 @@ void instruccion_ddfd_57 ()
 
 void instruccion_ddfd_58 ()
 {
-        invalid_opcode_ddfd("DD/FD58");
+        invalid_opcode_ddfd("221/253 58");
 }
 
 void instruccion_ddfd_59 ()
 {
-        invalid_opcode_ddfd("DD/FD59");
+        invalid_opcode_ddfd("221/253 59");
 }
 
 void instruccion_ddfd_60 ()
 {
-        invalid_opcode_ddfd("DD/FD60");
+        invalid_opcode_ddfd("221/253 60");
 }
 
 void instruccion_ddfd_61 ()
 {
-        invalid_opcode_ddfd("DD/FD61");
+        invalid_opcode_ddfd("221/253 61");
 }
 
 void instruccion_ddfd_62 ()
 {
-        invalid_opcode_ddfd("DD/FD62");
+        invalid_opcode_ddfd("221/253 62");
 }
 
 void instruccion_ddfd_63 ()
 {
-        invalid_opcode_ddfd("DD/FD63");
+        invalid_opcode_ddfd("221/253 63");
 }
 
 void instruccion_ddfd_64 ()
 {
-        invalid_opcode_ddfd("DD/FD64");
+        invalid_opcode_ddfd("221/253 64");
 }
 
 void instruccion_ddfd_65 ()
 {
-        invalid_opcode_ddfd("DD/FD65");
+        invalid_opcode_ddfd("221/253 65");
 }
 
 void instruccion_ddfd_66 ()
 {
-        invalid_opcode_ddfd("DD/FD66");
+        invalid_opcode_ddfd("221/253 66");
 }
 
 void instruccion_ddfd_67 ()
 {
-        invalid_opcode_ddfd("DD/FD67");
+        invalid_opcode_ddfd("221/253 67");
 }
 
 void instruccion_ddfd_68 ()
@@ -656,27 +654,27 @@ void instruccion_ddfd_70 ()
 
 void instruccion_ddfd_71 ()
 {
-        invalid_opcode_ddfd("DD/FD71");
+        invalid_opcode_ddfd("221/253 71");
 }
 
 void instruccion_ddfd_72 ()
 {
-        invalid_opcode_ddfd("DD/FD72");
+        invalid_opcode_ddfd("221/253 72");
 }
 
 void instruccion_ddfd_73 ()
 {
-        invalid_opcode_ddfd("DD/FD73");
+        invalid_opcode_ddfd("221/253 73");
 }
 
 void instruccion_ddfd_74 ()
 {
-        invalid_opcode_ddfd("DD/FD74");
+        invalid_opcode_ddfd("221/253 74");
 }
 
 void instruccion_ddfd_75 ()
 {
-        invalid_opcode_ddfd("DD/FD75");
+        invalid_opcode_ddfd("221/253 75");
 }
 
 void instruccion_ddfd_76 ()
@@ -721,27 +719,27 @@ void instruccion_ddfd_78 ()
 
 void instruccion_ddfd_79 ()
 {
-        invalid_opcode_ddfd("DD/FD79");
+        invalid_opcode_ddfd("221/253 79");
 }
 
 void instruccion_ddfd_80 ()
 {
-        invalid_opcode_ddfd("DD/FD80");
+        invalid_opcode_ddfd("221/253 80");
 }
 
 void instruccion_ddfd_81 ()
 {
-        invalid_opcode_ddfd("DD/FD81");
+        invalid_opcode_ddfd("221/253 81");
 }
 
 void instruccion_ddfd_82 ()
 {
-        invalid_opcode_ddfd("DD/FD82");
+        invalid_opcode_ddfd("221/253 82");
 }
 
 void instruccion_ddfd_83 ()
 {
-        invalid_opcode_ddfd("DD/FD83");
+        invalid_opcode_ddfd("221/253 83");
 }
 
 
@@ -789,27 +787,27 @@ void instruccion_ddfd_86 ()
 
 void instruccion_ddfd_87 ()
 {
-        invalid_opcode_ddfd("DD/FD87");
+        invalid_opcode_ddfd("221/253 87");
 }
 
 void instruccion_ddfd_88 ()
 {
-        invalid_opcode_ddfd("DD/FD88");
+        invalid_opcode_ddfd("221/253 88");
 }
 
 void instruccion_ddfd_89 ()
 {
-        invalid_opcode_ddfd("DD/FD89");
+        invalid_opcode_ddfd("221/253 89");
 }
 
 void instruccion_ddfd_90 ()
 {
-        invalid_opcode_ddfd("DD/FD90");
+        invalid_opcode_ddfd("221/253 90");
 }
 
 void instruccion_ddfd_91 ()
 {
-        invalid_opcode_ddfd("DD/FD91");
+        invalid_opcode_ddfd("221/253 91");
 }
 
 void instruccion_ddfd_92 ()
@@ -855,7 +853,7 @@ void instruccion_ddfd_94 ()
 
 void instruccion_ddfd_95 ()
 {
-        invalid_opcode_ddfd("DD/FD95");
+        invalid_opcode_ddfd("221/253 95");
 }
 
 
@@ -1136,7 +1134,7 @@ void instruccion_ddfd_117 ()
 
 void instruccion_ddfd_118 ()
 {
-        invalid_opcode_ddfd("DD/FD118");
+        invalid_opcode_ddfd("221/253 118");
 }
 
 
@@ -1160,22 +1158,22 @@ void instruccion_ddfd_119 ()
 
 void instruccion_ddfd_120 ()
 {
-        invalid_opcode_ddfd("DD/FD120");
+        invalid_opcode_ddfd("221/253 120");
 }
 
 void instruccion_ddfd_121 ()
 {
-        invalid_opcode_ddfd("DD/FD121");
+        invalid_opcode_ddfd("221/253 121");
 }
 
 void instruccion_ddfd_122 ()
 {
-        invalid_opcode_ddfd("DD/FD122");
+        invalid_opcode_ddfd("221/253 122");
 }
 
 void instruccion_ddfd_123 ()
 {
-        invalid_opcode_ddfd("DD/FD123");
+        invalid_opcode_ddfd("221/253 123");
 }
 
 
@@ -1222,27 +1220,27 @@ void instruccion_ddfd_126 ()
 
 void instruccion_ddfd_127 ()
 {
-        invalid_opcode_ddfd("DD/FD127");
+        invalid_opcode_ddfd("221/253 127");
 }
 
 void instruccion_ddfd_128 ()
 {
-        invalid_opcode_ddfd("DD/FD128");
+        invalid_opcode_ddfd("221/253 128");
 }
 
 void instruccion_ddfd_129 ()
 {
-        invalid_opcode_ddfd("DD/FD129");
+        invalid_opcode_ddfd("221/253 129");
 }
 
 void instruccion_ddfd_130 ()
 {
-        invalid_opcode_ddfd("DD/FD130");
+        invalid_opcode_ddfd("221/253 130");
 }
 
 void instruccion_ddfd_131 ()
 {
-        invalid_opcode_ddfd("DD/FD131");
+        invalid_opcode_ddfd("221/253 131");
 }
 
 void instruccion_ddfd_132()
@@ -1283,27 +1281,27 @@ void instruccion_ddfd_134 ()
 
 void instruccion_ddfd_135 ()
 {
-        invalid_opcode_ddfd("DD/FD135");
+        invalid_opcode_ddfd("221/253 135");
 }
 
 void instruccion_ddfd_136 ()
 {
-        invalid_opcode_ddfd("DD/FD136");
+        invalid_opcode_ddfd("221/253 136");
 }
 
 void instruccion_ddfd_137 ()
 {
-        invalid_opcode_ddfd("DD/FD137");
+        invalid_opcode_ddfd("221/253 137");
 }
 
 void instruccion_ddfd_138 ()
 {
-        invalid_opcode_ddfd("DD/FD138");
+        invalid_opcode_ddfd("221/253 138");
 }
 
 void instruccion_ddfd_139 ()
 {
-        invalid_opcode_ddfd("DD/FD139");
+        invalid_opcode_ddfd("221/253 139");
 }
 
 
@@ -1343,27 +1341,27 @@ void instruccion_ddfd_142 ()
 
 void instruccion_ddfd_143 ()
 {
-        invalid_opcode_ddfd("DD/FD143");
+        invalid_opcode_ddfd("221/253 143");
 }
 
 void instruccion_ddfd_144 ()
 {
-        invalid_opcode_ddfd("DD/FD144");
+        invalid_opcode_ddfd("221/253 144");
 }
 
 void instruccion_ddfd_145 ()
 {
-        invalid_opcode_ddfd("DD/FD145");
+        invalid_opcode_ddfd("221/253 145");
 }
 
 void instruccion_ddfd_146 ()
 {
-        invalid_opcode_ddfd("DD/FD146");
+        invalid_opcode_ddfd("221/253 146");
 }
 
 void instruccion_ddfd_147 ()
 {
-        invalid_opcode_ddfd("DD/FD147");
+        invalid_opcode_ddfd("221/253 147");
 }
 
 void instruccion_ddfd_148()
@@ -1402,27 +1400,27 @@ void instruccion_ddfd_150 ()
 
 void instruccion_ddfd_151 ()
 {
-        invalid_opcode_ddfd("DD/FD151");
+        invalid_opcode_ddfd("221/253 151");
 }
 
 void instruccion_ddfd_152 ()
 {
-        invalid_opcode_ddfd("DD/FD152");
+        invalid_opcode_ddfd("221/253 152");
 }
 
 void instruccion_ddfd_153 ()
 {
-        invalid_opcode_ddfd("DD/FD153");
+        invalid_opcode_ddfd("221/253 153");
 }
 
 void instruccion_ddfd_154 ()
 {
-        invalid_opcode_ddfd("DD/FD154");
+        invalid_opcode_ddfd("221/253 154");
 }
 
 void instruccion_ddfd_155 ()
 {
-        invalid_opcode_ddfd("DD/FD155");
+        invalid_opcode_ddfd("221/253 155");
 }
 
 void instruccion_ddfd_156()
@@ -1461,27 +1459,27 @@ void instruccion_ddfd_158 ()
 
 void instruccion_ddfd_159 ()
 {
-        invalid_opcode_ddfd("DD/FD159");
+        invalid_opcode_ddfd("221/253 159");
 }
 
 void instruccion_ddfd_160 ()
 {
-        invalid_opcode_ddfd("DD/FD160");
+        invalid_opcode_ddfd("221/253 160");
 }
 
 void instruccion_ddfd_161 ()
 {
-        invalid_opcode_ddfd("DD/FD161");
+        invalid_opcode_ddfd("221/253 161");
 }
 
 void instruccion_ddfd_162 ()
 {
-        invalid_opcode_ddfd("DD/FD162");
+        invalid_opcode_ddfd("221/253 162");
 }
 
 void instruccion_ddfd_163 ()
 {
-        invalid_opcode_ddfd("DD/FD163");
+        invalid_opcode_ddfd("221/253 163");
 }
 
 
@@ -1521,27 +1519,27 @@ void instruccion_ddfd_166 ()
 
 void instruccion_ddfd_167 ()
 {
-        invalid_opcode_ddfd("DD/FD167");
+        invalid_opcode_ddfd("221/253 167");
 }
 
 void instruccion_ddfd_168 ()
 {
-        invalid_opcode_ddfd("DD/FD168");
+        invalid_opcode_ddfd("221/253 168");
 }
 
 void instruccion_ddfd_169 ()
 {
-        invalid_opcode_ddfd("DD/FD169");
+        invalid_opcode_ddfd("221/253 169");
 }
 
 void instruccion_ddfd_170 ()
 {
-        invalid_opcode_ddfd("DD/FD170");
+        invalid_opcode_ddfd("221/253 170");
 }
 
 void instruccion_ddfd_171 ()
 {
-        invalid_opcode_ddfd("DD/FD171");
+        invalid_opcode_ddfd("221/253 171");
 }
 
 void instruccion_ddfd_172()
@@ -1583,27 +1581,27 @@ void instruccion_ddfd_174 ()
 
 void instruccion_ddfd_175 ()
 {
-        invalid_opcode_ddfd("DD/FD175");
+        invalid_opcode_ddfd("221/253 175");
 }
 
 void instruccion_ddfd_176 ()
 {
-        invalid_opcode_ddfd("DD/FD176");
+        invalid_opcode_ddfd("221/253 176");
 }
 
 void instruccion_ddfd_177 ()
 {
-        invalid_opcode_ddfd("DD/FD177");
+        invalid_opcode_ddfd("221/253 177");
 }
 
 void instruccion_ddfd_178 ()
 {
-        invalid_opcode_ddfd("DD/FD178");
+        invalid_opcode_ddfd("221/253 178");
 }
 
 void instruccion_ddfd_179 ()
 {
-        invalid_opcode_ddfd("DD/FD179");
+        invalid_opcode_ddfd("221/253 179");
 }
 
 void instruccion_ddfd_180()
@@ -1643,27 +1641,27 @@ void instruccion_ddfd_182 ()
 
 void instruccion_ddfd_183 ()
 {
-        invalid_opcode_ddfd("DD/FD183");
+        invalid_opcode_ddfd("221/253 183");
 }
 
 void instruccion_ddfd_184 ()
 {
-        invalid_opcode_ddfd("DD/FD184");
+        invalid_opcode_ddfd("221/253 184");
 }
 
 void instruccion_ddfd_185 ()
 {
-        invalid_opcode_ddfd("DD/FD185");
+        invalid_opcode_ddfd("221/253 185");
 }
 
 void instruccion_ddfd_186 ()
 {
-        invalid_opcode_ddfd("DD/FD186");
+        invalid_opcode_ddfd("221/253 186");
 }
 
 void instruccion_ddfd_187 ()
 {
-        invalid_opcode_ddfd("DD/FD187");
+        invalid_opcode_ddfd("221/253 187");
 }
 
 
@@ -1703,62 +1701,62 @@ void instruccion_ddfd_190 ()
 
 void instruccion_ddfd_191 ()
 {
-        invalid_opcode_ddfd("DD/FD191");
+        invalid_opcode_ddfd("221/253 191");
 }
 
 void instruccion_ddfd_192 ()
 {
-        invalid_opcode_ddfd("DD/FD192");
+        invalid_opcode_ddfd("221/253 192");
 }
 
 void instruccion_ddfd_193 ()
 {
-        invalid_opcode_ddfd("DD/FD193");
+        invalid_opcode_ddfd("221/253 193");
 }
 
 void instruccion_ddfd_194 ()
 {
-        invalid_opcode_ddfd("DD/FD194");
+        invalid_opcode_ddfd("221/253 194");
 }
 
 void instruccion_ddfd_195 ()
 {
-        invalid_opcode_ddfd("DD/FD195");
+        invalid_opcode_ddfd("221/253 195");
 }
 
 void instruccion_ddfd_196 ()
 {
-        invalid_opcode_ddfd("DD/FD196");
+        invalid_opcode_ddfd("221/253 196");
 }
 
 void instruccion_ddfd_197 ()
 {
-        invalid_opcode_ddfd("DD/FD197");
+        invalid_opcode_ddfd("221/253 197");
 }
 
 void instruccion_ddfd_198 ()
 {
-        invalid_opcode_ddfd("DD/FD198");
+        invalid_opcode_ddfd("221/253 198");
 }
 
 void instruccion_ddfd_199 ()
 {
-        invalid_opcode_ddfd("DD/FD199");
+        invalid_opcode_ddfd("221/253 199");
 }
 
 void instruccion_ddfd_200 ()
 {
-        invalid_opcode_ddfd("DD/FD200");
+        invalid_opcode_ddfd("221/253 200");
 }
 
 void instruccion_ddfd_201 ()
 {
-        invalid_opcode_ddfd("DD/FD201");
+        invalid_opcode_ddfd("221/253 201");
 }
 
 void instruccion_ddfd_202 ()
 {
-        invalid_opcode_ddfd("DD/FD202");
+        invalid_opcode_ddfd("221/253 202");
 }
 
 
@@ -1867,107 +1865,107 @@ void instruccion_ddfd_203 ()
 
 void instruccion_ddfd_204 ()
 {
-        invalid_opcode_ddfd("DD/FD204");
+        invalid_opcode_ddfd("221/253 204");
 }
 
 void instruccion_ddfd_205 ()
 {
-        invalid_opcode_ddfd("DD/FD205");
+        invalid_opcode_ddfd("221/253 205");
 }
 
 void instruccion_ddfd_206 ()
 {
-        invalid_opcode_ddfd("DD/FD206");
+        invalid_opcode_ddfd("221/253 206");
 }
 
 void instruccion_ddfd_207 ()
 {
-        invalid_opcode_ddfd("DD/FD207");
+        invalid_opcode_ddfd("221/253 207");
 }
 
 void instruccion_ddfd_208 ()
 {
-        invalid_opcode_ddfd("DD/FD208");
+        invalid_opcode_ddfd("221/253 208");
 }
 
 void instruccion_ddfd_209 ()
 {
-        invalid_opcode_ddfd("DD/FD209");
+        invalid_opcode_ddfd("221/253 209");
 }
 
 void instruccion_ddfd_210 ()
 {
-        invalid_opcode_ddfd("DD/FD210");
+        invalid_opcode_ddfd("221/253 210");
 }
 
 void instruccion_ddfd_211 ()
 {
-        invalid_opcode_ddfd("DD/FD211");
+        invalid_opcode_ddfd("221/253 211");
 }
 
 void instruccion_ddfd_212 ()
 {
-        invalid_opcode_ddfd("DD/FD212");
+        invalid_opcode_ddfd("221/253 212");
 }
 
 void instruccion_ddfd_213 ()
 {
-        invalid_opcode_ddfd("DD/FD213");
+        invalid_opcode_ddfd("221/253 213");
 }
 
 void instruccion_ddfd_214 ()
 {
-        invalid_opcode_ddfd("DD/FD214");
+        invalid_opcode_ddfd("221/253 214");
 }
 
 void instruccion_ddfd_215 ()
 {
-        invalid_opcode_ddfd("DD/FD215");
+        invalid_opcode_ddfd("221/253 215");
 }
 
 void instruccion_ddfd_216 ()
 {
-        invalid_opcode_ddfd("DD/FD216");
+        invalid_opcode_ddfd("221/253 216");
 }
 
 void instruccion_ddfd_217 ()
 {
-        invalid_opcode_ddfd("DD/FD217");
+        invalid_opcode_ddfd("221/253 217");
 }
 
 void instruccion_ddfd_218 ()
 {
-        invalid_opcode_ddfd("DD/FD218");
+        invalid_opcode_ddfd("221/253 218");
 }
 
 void instruccion_ddfd_219 ()
 {
-        invalid_opcode_ddfd("DD/FD219");
+        invalid_opcode_ddfd("221/253 219");
 }
 
 void instruccion_ddfd_220 ()
 {
-        invalid_opcode_ddfd("DD/FD220");
+        invalid_opcode_ddfd("221/253 220");
 }
 
 void instruccion_ddfd_221 ()
 {
-        invalid_opcode_ddfd("DD/FD221");
+        invalid_opcode_ddfd("221/253 221");
 }
 
 void instruccion_ddfd_222 ()
 {
-        invalid_opcode_ddfd("DD/FD222");
+        invalid_opcode_ddfd("221/253 222");
 }
 
 void instruccion_ddfd_223 ()
 {
-        invalid_opcode_ddfd("DD/FD223");
+        invalid_opcode_ddfd("221/253 223");
 }
 
 void instruccion_ddfd_224 ()
 {
-        invalid_opcode_ddfd("DD/FD224");
+        invalid_opcode_ddfd("221/253 224");
 }
 
 void instruccion_ddfd_225 ()
@@ -1978,7 +1976,7 @@ void instruccion_ddfd_225 ()
 
 void instruccion_ddfd_226 ()
 {
-	invalid_opcode_ddfd("DD/FD226");
+	invalid_opcode_ddfd("221/253 226");
 }
 
 void instruccion_ddfd_227 ()
@@ -2002,7 +2000,7 @@ void instruccion_ddfd_227 ()
 
 void instruccion_ddfd_228 ()
 {
-	invalid_opcode_ddfd("DD/FD228");
+	invalid_opcode_ddfd("221/253 228");
 }
 
 void instruccion_ddfd_229 ()
@@ -2014,17 +2012,17 @@ void instruccion_ddfd_229 ()
 
 void instruccion_ddfd_230 ()
 {
-	invalid_opcode_ddfd("DD/FD230");
+	invalid_opcode_ddfd("221/253 230");
 }
 
 void instruccion_ddfd_231 ()
 {
-	invalid_opcode_ddfd("DD/FD231");
+	invalid_opcode_ddfd("221/253 231");
 }
 
 void instruccion_ddfd_232 ()
 {
-	invalid_opcode_ddfd("DD/FD232");
+	invalid_opcode_ddfd("221/253 232");
 }
 
 void instruccion_ddfd_233 ()
@@ -2037,7 +2035,7 @@ void instruccion_ddfd_233 ()
 
 void instruccion_ddfd_234 ()
 {
-	invalid_opcode_ddfd("DD/FD234");
+	invalid_opcode_ddfd("221/253 234");
 }
 
 void instruccion_ddfd_235 ()
@@ -2058,67 +2056,67 @@ void instruccion_ddfd_235 ()
 
 void instruccion_ddfd_236 ()
 {
-        invalid_opcode_ddfd("DD/FD236");
+        invalid_opcode_ddfd("221/253 236");
 }
 
 void instruccion_ddfd_237 ()
 {
-        invalid_opcode_ddfd("DD/FD237");
+        invalid_opcode_ddfd("221/253 237");
 }
 
 void instruccion_ddfd_238 ()
 {
-        invalid_opcode_ddfd("DD/FD238");
+        invalid_opcode_ddfd("221/253 238");
 }
 
 void instruccion_ddfd_239 ()
 {
-        invalid_opcode_ddfd("DD/FD239");
+        invalid_opcode_ddfd("221/253 239");
 }
 
 void instruccion_ddfd_240 ()
 {
-        invalid_opcode_ddfd("DD/FD240");
+        invalid_opcode_ddfd("221/253 240");
 }
 
 void instruccion_ddfd_241 ()
 {
-        invalid_opcode_ddfd("DD/FD241");
+        invalid_opcode_ddfd("221/253 241");
 }
 
 void instruccion_ddfd_242 ()
 {
-        invalid_opcode_ddfd("DD/FD242");
+        invalid_opcode_ddfd("221/253 242");
 }
 
 void instruccion_ddfd_243 ()
 {
-        invalid_opcode_ddfd("DD/FD243");
+        invalid_opcode_ddfd("221/253 243");
 }
 
 void instruccion_ddfd_244 ()
 {
-        invalid_opcode_ddfd("DD/FD244");
+        invalid_opcode_ddfd("221/253 244");
 }
 
 void instruccion_ddfd_245 ()
 {
-        invalid_opcode_ddfd("DD/FD245");
+        invalid_opcode_ddfd("221/253 245");
 }
 
 void instruccion_ddfd_246 ()
 {
-        invalid_opcode_ddfd("DD/FD246");
+        invalid_opcode_ddfd("221/253 246");
 }
 
 void instruccion_ddfd_247 ()
 {
-        invalid_opcode_ddfd("DD/FD247");
+        invalid_opcode_ddfd("221/253 247");
 }
 
 void instruccion_ddfd_248 ()
 {
-        invalid_opcode_ddfd("DD/FD248");
+        invalid_opcode_ddfd("221/253 248");
 }
 
 void instruccion_ddfd_249 ()
@@ -2132,32 +2130,32 @@ void instruccion_ddfd_249 ()
 
 void instruccion_ddfd_250 ()
 {
-        invalid_opcode_ddfd("DD/FD250");
+        invalid_opcode_ddfd("221/253 250");
 }
 
 void instruccion_ddfd_251 ()
 {
-        invalid_opcode_ddfd("DD/FD251");
+        invalid_opcode_ddfd("221/253 251");
 }
 
 void instruccion_ddfd_252 ()
 {
-        invalid_opcode_ddfd("DD/FD252");
+        invalid_opcode_ddfd("221/253 252");
 }
 
 void instruccion_ddfd_253 ()
 {
-        invalid_opcode_ddfd("DD/FD253");
+        invalid_opcode_ddfd("221/253 253");
 }
 
 void instruccion_ddfd_254 ()
 {
-        invalid_opcode_ddfd("DD/FD254");
+        invalid_opcode_ddfd("221/253 254");
 }
 
 void instruccion_ddfd_255 ()
 {
-        invalid_opcode_ddfd("DD/FD255");
+        invalid_opcode_ddfd("221/253 255");
 }
 
 

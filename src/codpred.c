@@ -30,189 +30,188 @@
 
 void invalid_opcode_ed(char *s)
 {
-	//debug_printf(VERBOSE_ERR,"Invalid opcode %s. Final PC: %X",s,reg_pc);
-	//printf ("Invalid opcode %s. Final PC: %X\n",s,reg_pc);
+	if (debug_shows_invalid_opcode.v) {
+                debug_printf(VERBOSE_INFO,"Invalid opcode %s. Final PC: %04XH",s,reg_pc);
+	        //printf ("Invalid opcode %s. Final PC: %04XH\n",s,reg_pc);
+        }
 
-
-        //Para que no se queje el compilador
-        if (s) {}
 
 }
 
 
 void instruccion_ed_0 ()
 {
-        invalid_opcode_ed("ED0");
+        invalid_opcode_ed("237 0");
 }
 
 void instruccion_ed_1 ()
 {
-        invalid_opcode_ed("ED1");
+        invalid_opcode_ed("237 1");
 }
 
 void instruccion_ed_2 ()
 {
-        invalid_opcode_ed("ED2");
+        invalid_opcode_ed("237 2");
 }
 
 void instruccion_ed_3 ()
 {
-        invalid_opcode_ed("ED3");
+        invalid_opcode_ed("237 3");
 }
 
 void instruccion_ed_4 ()
 {
-        invalid_opcode_ed("ED4");
+        invalid_opcode_ed("237 4");
 }
 
 void instruccion_ed_5 ()
 {
-        invalid_opcode_ed("ED5");
+        invalid_opcode_ed("237 5");
 }
 
 void instruccion_ed_6 ()
 {
-        invalid_opcode_ed("ED6");
+        invalid_opcode_ed("237 6");
 }
 
 void instruccion_ed_7 ()
 {
-        invalid_opcode_ed("ED7");
+        invalid_opcode_ed("237 7");
 }
 
 void instruccion_ed_8 ()
 {
-        invalid_opcode_ed("ED8");
+        invalid_opcode_ed("237 8");
 }
 
 void instruccion_ed_9 ()
 {
-        invalid_opcode_ed("ED9");
+        invalid_opcode_ed("237 9");
 }
 
 void instruccion_ed_10 ()
 {
-        invalid_opcode_ed("ED10");
+        invalid_opcode_ed("237 10");
 }
 
 void instruccion_ed_11 ()
 {
-        invalid_opcode_ed("ED11");
+        invalid_opcode_ed("237 11");
 }
 
 void instruccion_ed_12 ()
 {
-        invalid_opcode_ed("ED12");
+        invalid_opcode_ed("237 12");
 }
 
 void instruccion_ed_13 ()
 {
-        invalid_opcode_ed("ED13");
+        invalid_opcode_ed("237 13");
 }
 
 void instruccion_ed_14 ()
 {
-        invalid_opcode_ed("ED14");
+        invalid_opcode_ed("237 14");
 }
 
 void instruccion_ed_15 ()
 {
-        invalid_opcode_ed("ED15");
+        invalid_opcode_ed("237 15");
 }
 
 void instruccion_ed_16 ()
 {
-        invalid_opcode_ed("ED16");
+        invalid_opcode_ed("237 16");
 }
 
 void instruccion_ed_17 ()
 {
-        invalid_opcode_ed("ED17");
+        invalid_opcode_ed("237 17");
 }
 
 void instruccion_ed_18 ()
 {
-        invalid_opcode_ed("ED18");
+        invalid_opcode_ed("237 18");
 }
 
 void instruccion_ed_19 ()
 {
-        invalid_opcode_ed("ED19");
+        invalid_opcode_ed("237 19");
 }
 
 void instruccion_ed_20 ()
 {
-        invalid_opcode_ed("ED20");
+        invalid_opcode_ed("237 20");
 }
 
 void instruccion_ed_21 ()
 {
-        invalid_opcode_ed("ED21");
+        invalid_opcode_ed("237 21");
 }
 
 void instruccion_ed_22 ()
 {
-        invalid_opcode_ed("ED22");
+        invalid_opcode_ed("237 22");
 }
 
 void instruccion_ed_23 ()
 {
-        invalid_opcode_ed("ED23");
+        invalid_opcode_ed("237 23");
 }
 
 void instruccion_ed_24 ()
 {
-        invalid_opcode_ed("ED24");
+        invalid_opcode_ed("237 24");
 }
 
 void instruccion_ed_25 ()
 {
-        invalid_opcode_ed("ED25");
+        invalid_opcode_ed("237 25");
 }
 
 void instruccion_ed_26 ()
 {
-        invalid_opcode_ed("ED26");
+        invalid_opcode_ed("237 26");
 }
 
 void instruccion_ed_27 ()
 {
-        invalid_opcode_ed("ED27");
+        invalid_opcode_ed("237 27");
 }
 
 void instruccion_ed_28 ()
 {
-        invalid_opcode_ed("ED28");
+        invalid_opcode_ed("237 28");
 }
 
 void instruccion_ed_29 ()
 {
-        invalid_opcode_ed("ED29");
+        invalid_opcode_ed("237 29");
 }
 
 void instruccion_ed_30 ()
 {
-        invalid_opcode_ed("ED30");
+        invalid_opcode_ed("237 30");
 }
 
 void instruccion_ed_31 ()
 {
-        invalid_opcode_ed("ED31");
+        invalid_opcode_ed("237 31");
 }
 
 void instruccion_ed_32 ()
 {
-        invalid_opcode_ed("ED32");
+        invalid_opcode_ed("237 32");
 }
 
 void instruccion_ed_33 ()
 {
-        invalid_opcode_ed("ED33");
+        invalid_opcode_ed("237 33");
 }
 
 void instruccion_ed_34 ()
 {
-        invalid_opcode_ed("ED34");
+        invalid_opcode_ed("237 34");
 }
 
 void instruccion_ed_35 ()
@@ -223,7 +222,7 @@ void instruccion_ed_35 ()
                 z80_byte final_h=(reg_a<<4)&0xF0;
                 reg_a=final_l|final_h;
         }
-        else invalid_opcode_ed("ED35");
+        else invalid_opcode_ed("237 35");
 }
 
 void instruccion_ed_36 ()
@@ -241,7 +240,7 @@ void instruccion_ed_36 ()
 
                 reg_a=result_a;
         }  
-        else invalid_opcode_ed("ED36");
+        else invalid_opcode_ed("237 36");
 }
 
 void instruccion_ed_37 ()
@@ -250,7 +249,7 @@ void instruccion_ed_37 ()
                 //ld  hl,sp         ED 25          4+4 transfer SP to HL
                 HL=reg_sp;
         }  
-        else invalid_opcode_ed("ED37");
+        else invalid_opcode_ed("237 37");
 }
 
 void instruccion_ed_38 ()
@@ -268,7 +267,7 @@ void instruccion_ed_38 ()
 
                 DE=result_de;
         }  
-        else invalid_opcode_ed("ED38");
+        else invalid_opcode_ed("237 38");
 }
 
 void instruccion_ed_39 ()
@@ -284,47 +283,47 @@ void instruccion_ed_39 ()
 
         }  
 
-        else invalid_opcode_ed("ED39");
+        else invalid_opcode_ed("237 39");
 }
 
 void instruccion_ed_40 ()
 {
-        invalid_opcode_ed("ED40");
+        invalid_opcode_ed("237 40");
 }
 
 void instruccion_ed_41 ()
 {
-        invalid_opcode_ed("ED41");
+        invalid_opcode_ed("237 41");
 }
 
 void instruccion_ed_42 ()
 {
-        invalid_opcode_ed("ED42");
+        invalid_opcode_ed("237 42");
 }
 
 void instruccion_ed_43 ()
 {
-        invalid_opcode_ed("ED43");
+        invalid_opcode_ed("237 43");
 }
 
 void instruccion_ed_44 ()
 {
-        invalid_opcode_ed("ED44");
+        invalid_opcode_ed("237 44");
 }
 
 void instruccion_ed_45 ()
 {
-        invalid_opcode_ed("ED45");
+        invalid_opcode_ed("237 45");
 }
 
 void instruccion_ed_46 ()
 {
-        invalid_opcode_ed("ED46");
+        invalid_opcode_ed("237 46");
 }
 
 void instruccion_ed_47 ()
 {
-        invalid_opcode_ed("ED47");
+        invalid_opcode_ed("237 47");
 }
 
 void instruccion_ed_48 ()
@@ -337,7 +336,7 @@ void instruccion_ed_48 ()
 		reg_e=value_16_to_8l(resultado);
         }
 
-        else invalid_opcode_ed("ED48");
+        else invalid_opcode_ed("237 48");
 }
 
 void instruccion_ed_49 ()
@@ -347,7 +346,7 @@ void instruccion_ed_49 ()
                 HL +=reg_a;
         }
         
-        else invalid_opcode_ed("ED49");
+        else invalid_opcode_ed("237 49");
 }
 
 void instruccion_ed_50 ()
@@ -357,7 +356,7 @@ void instruccion_ed_50 ()
                 DE +=reg_a;
         }
         
-        else invalid_opcode_ed("ED50");
+        else invalid_opcode_ed("237 50");
 }
 
 void instruccion_ed_51 ()
@@ -367,7 +366,7 @@ void instruccion_ed_51 ()
                 BC +=reg_a;
         }  
         
-        else invalid_opcode_ed("ED51");
+        else invalid_opcode_ed("237 51");
 }
 
 void instruccion_ed_52 ()
@@ -384,17 +383,17 @@ void instruccion_ed_52 ()
 
 
         }
-        else invalid_opcode_ed("ED52");
+        else invalid_opcode_ed("237 52");
 }
 
 void instruccion_ed_53 ()
 {
-        invalid_opcode_ed("ED53");
+        invalid_opcode_ed("237 53");
 }
 
 void instruccion_ed_54 ()
 {
-        invalid_opcode_ed("ED54");
+        invalid_opcode_ed("237 54");
 }
 
 void instruccion_ed_55 ()
@@ -407,7 +406,7 @@ void instruccion_ed_55 ()
                 DE=(dehl>>16) & 0xFFFF;
         }  
         
-        else invalid_opcode_ed("ED55");
+        else invalid_opcode_ed("237 55");
 }
 
 void instruccion_ed_56 ()
@@ -420,7 +419,7 @@ void instruccion_ed_56 ()
                 DE=(dehl>>16) & 0xFFFF;
         }  
         
-        else invalid_opcode_ed("ED56");
+        else invalid_opcode_ed("237 56");
 }
 
 void instruccion_ed_57 ()
@@ -433,7 +432,7 @@ void instruccion_ed_57 ()
                 DE=(dehl>>16) & 0xFFFF;
         }  
         
-        else invalid_opcode_ed("ED57");
+        else invalid_opcode_ed("237 57");
 }
 
 void instruccion_ed_58 ()
@@ -446,7 +445,7 @@ void instruccion_ed_58 ()
                 DE=(dehl>>16) & 0xFFFF;
         }  
         
-        else invalid_opcode_ed("ED58");
+        else invalid_opcode_ed("237 58");
 }
 
 void instruccion_ed_59 ()
@@ -464,7 +463,7 @@ void instruccion_ed_59 ()
                 DE=(dehl>>16) & 0xFFFF;
         }  
         
-        else invalid_opcode_ed("ED59");
+        else invalid_opcode_ed("237 59");
 }
 
 void instruccion_ed_60 ()
@@ -477,7 +476,7 @@ void instruccion_ed_60 ()
                 DE=(dehl>>16) & 0xFFFF;
         }  
         
-        else invalid_opcode_ed("ED60");
+        else invalid_opcode_ed("237 60");
 }
 
 void instruccion_ed_61 ()
@@ -490,17 +489,17 @@ void instruccion_ed_61 ()
                 DE=(dehl>>16) & 0xFFFF;
         }  
         
-        else invalid_opcode_ed("ED61");
+        else invalid_opcode_ed("237 61");
 }
 
 void instruccion_ed_62 ()
 {
-        invalid_opcode_ed("ED62");
+        invalid_opcode_ed("237 62");
 }
 
 void instruccion_ed_63 ()
 {
-        invalid_opcode_ed("ED63");
+        invalid_opcode_ed("237 63");
 }
 
 
@@ -1189,7 +1188,7 @@ void instruccion_ed_118 ()
 
 void instruccion_ed_119 ()
 {
-	invalid_opcode_ed("ED119");
+	invalid_opcode_ed("237 119");
 }
 
 void instruccion_ed_120 ()
@@ -1270,57 +1269,57 @@ void instruccion_ed_126 ()
 
 void instruccion_ed_127 ()
 {
-        invalid_opcode_ed("ED127");
+        invalid_opcode_ed("237 127");
 }
 
 void instruccion_ed_128 ()
 {
-        invalid_opcode_ed("ED128");
+        invalid_opcode_ed("237 128");
 }
 
 void instruccion_ed_129 ()
 {
-        invalid_opcode_ed("ED129");
+        invalid_opcode_ed("237 129");
 }
 
 void instruccion_ed_130 ()
 {
-        invalid_opcode_ed("ED130");
+        invalid_opcode_ed("237 130");
 }
 
 void instruccion_ed_131 ()
 {
-        invalid_opcode_ed("ED131");
+        invalid_opcode_ed("237 131");
 }
 
 void instruccion_ed_132 ()
 {
-        invalid_opcode_ed("ED132");
+        invalid_opcode_ed("237 132");
 }
 
 void instruccion_ed_133 ()
 {
-        invalid_opcode_ed("ED133");
+        invalid_opcode_ed("237 133");
 }
 
 void instruccion_ed_134 ()
 {
-        invalid_opcode_ed("ED134");
+        invalid_opcode_ed("237 134");
 }
 
 void instruccion_ed_135 ()
 {
-        invalid_opcode_ed("ED135");
+        invalid_opcode_ed("237 135");
 }
 
 void instruccion_ed_136 ()
 {
-        invalid_opcode_ed("ED136");
+        invalid_opcode_ed("237 136");
 }
 
 void instruccion_ed_137 ()
 {
-        invalid_opcode_ed("ED137");
+        invalid_opcode_ed("237 137");
 }
 
 void instruccion_ed_138 ()
@@ -1333,7 +1332,7 @@ void instruccion_ed_138 ()
                 push_valor( value );
         }
 
-        else invalid_opcode_ed("ED138");
+        else invalid_opcode_ed("237 138");
 }
 
 void instruccion_ed_139 ()
@@ -1345,32 +1344,32 @@ void instruccion_ed_139 ()
                 reg_sp +=2;
         }
 
-        else invalid_opcode_ed("ED139");
+        else invalid_opcode_ed("237 139");
 }
 
 void instruccion_ed_140 ()
 {
-        invalid_opcode_ed("ED140");
+        invalid_opcode_ed("237 140");
 }
 
 void instruccion_ed_141 ()
 {
-        invalid_opcode_ed("ED141");
+        invalid_opcode_ed("237 141");
 }
 
 void instruccion_ed_142 ()
 {
-        invalid_opcode_ed("ED142");
+        invalid_opcode_ed("237 142");
 }
 
 void instruccion_ed_143 ()
 {
-        invalid_opcode_ed("ED143");
+        invalid_opcode_ed("237 143");
 }
 
 void instruccion_ed_144 ()
 {
-        invalid_opcode_ed("ED144");
+        invalid_opcode_ed("237 144");
 }
 
 void instruccion_ed_145 ()
@@ -1385,7 +1384,7 @@ void instruccion_ed_145 ()
                 //if (puerto==TBBLUE_REGISTER_PORT) tbblue_set_register_port(value);
                 //if (puerto==TBBLUE_VALUE_PORT) tbblue_set_value_port(value);
         }
-        else invalid_opcode_ed("ED145");
+        else invalid_opcode_ed("237 145");
 }
 
 void instruccion_ed_146 ()
@@ -1397,7 +1396,7 @@ void instruccion_ed_146 ()
                 tbblue_set_register_port(registro);
                 tbblue_set_value_port(reg_a);
         }
-        else invalid_opcode_ed("ED146");
+        else invalid_opcode_ed("237 146");
 }
 
 void instruccion_ed_147 ()
@@ -1434,7 +1433,7 @@ void instruccion_ed_147 ()
 		//printf ("pixeldn after. hl=%d. mascara: %02XH\n",reg_hl,mascara_offset);
 
         }
-        else invalid_opcode_ed("ED147");
+        else invalid_opcode_ed("237 147");
 }
 
 void instruccion_ed_148 ()
@@ -1455,63 +1454,63 @@ void instruccion_ed_148 ()
 		reg_l=value_16_to_8l(resultado);
 		//printf ("pixelad after: hl=%d\n",reg_hl);
         }
-        else invalid_opcode_ed("ED148");
+        else invalid_opcode_ed("237 148");
 }
 
 void instruccion_ed_149 ()
 {
-        invalid_opcode_ed("ED149");
+        invalid_opcode_ed("237 149");
 }
 
 void instruccion_ed_150 ()
 {
-        invalid_opcode_ed("ED150");
+        invalid_opcode_ed("237 150");
 }
 
 void instruccion_ed_151 ()
 {
-        invalid_opcode_ed("ED151");
+        invalid_opcode_ed("237 151");
 }
 
 void instruccion_ed_152 ()
 {
-        invalid_opcode_ed("ED152");
+        invalid_opcode_ed("237 152");
 }
 
 void instruccion_ed_153 ()
 {
-        invalid_opcode_ed("ED153");
+        invalid_opcode_ed("237 153");
 }
 
 void instruccion_ed_154 ()
 {
-        invalid_opcode_ed("ED154");
+        invalid_opcode_ed("237 154");
 }
 
 void instruccion_ed_155 ()
 {
-        invalid_opcode_ed("ED155");
+        invalid_opcode_ed("237 155");
 }
 
 void instruccion_ed_156 ()
 {
-        invalid_opcode_ed("ED156");
+        invalid_opcode_ed("237 156");
 }
 
 void instruccion_ed_157 ()
 {
-        invalid_opcode_ed("ED157");
+        invalid_opcode_ed("237 157");
 }
 
 void instruccion_ed_158 ()
 {
-        invalid_opcode_ed("ED158");
+        invalid_opcode_ed("237 158");
 }
 
 
 void instruccion_ed_159 ()
 {
-        invalid_opcode_ed("ED159");
+        invalid_opcode_ed("237 159");
 }
 
 void instruccion_ed_160 ()
@@ -1632,22 +1631,22 @@ void instruccion_ed_163 ()
 
 void instruccion_ed_164 ()
 {
-        invalid_opcode_ed("ED164");
+        invalid_opcode_ed("237 164");
 }
 
 void instruccion_ed_165 ()
 {
-        invalid_opcode_ed("ED165");
+        invalid_opcode_ed("237 165");
 }
 
 void instruccion_ed_166 ()
 {
-        invalid_opcode_ed("ED166");
+        invalid_opcode_ed("237 166");
 }
 
 void instruccion_ed_167 ()
 {
-        invalid_opcode_ed("ED167");
+        invalid_opcode_ed("237 167");
 }
 
 void instruccion_ed_168 ()
@@ -1768,22 +1767,22 @@ void instruccion_ed_171 ()
 
 void instruccion_ed_172 ()
 {
-        invalid_opcode_ed("ED172");
+        invalid_opcode_ed("237 172");
 }
 
 void instruccion_ed_173 ()
 {
-        invalid_opcode_ed("ED173");
+        invalid_opcode_ed("237 173");
 }
 
 void instruccion_ed_174 ()
 {
-        invalid_opcode_ed("ED174");
+        invalid_opcode_ed("237 174");
 }
 
 void instruccion_ed_175 ()
 {
-        invalid_opcode_ed("ED175");
+        invalid_opcode_ed("237 175");
 }
 
 void instruccion_ed_176 ()
@@ -1967,22 +1966,22 @@ void instruccion_ed_180 ()
 
 
         }
-        else invalid_opcode_ed("ED180");
+        else invalid_opcode_ed("237 180");
 }
 
 void instruccion_ed_181 ()
 {
-        invalid_opcode_ed("ED181");
+        invalid_opcode_ed("237 181");
 }
 
 void instruccion_ed_182 ()
 {
-        invalid_opcode_ed("ED182");
+        invalid_opcode_ed("237 182");
 }
 
 void instruccion_ed_183 ()
 {
-        invalid_opcode_ed("ED183");
+        invalid_opcode_ed("237 183");
 }
 
 
@@ -2124,342 +2123,342 @@ void instruccion_ed_187 ()
 
 void instruccion_ed_188 ()
 {
-        invalid_opcode_ed("ED188");
+        invalid_opcode_ed("237 188");
 }
 
 void instruccion_ed_189 ()
 {
-        invalid_opcode_ed("ED189");
+        invalid_opcode_ed("237 189");
 }
 
 void instruccion_ed_190 ()
 {
-        invalid_opcode_ed("ED190");
+        invalid_opcode_ed("237 190");
 }
 
 void instruccion_ed_191 ()
 {
-        invalid_opcode_ed("ED191");
+        invalid_opcode_ed("237 191");
 }
 
 void instruccion_ed_192 ()
 {
-        invalid_opcode_ed("ED192");
+        invalid_opcode_ed("237 192");
 }
 
 void instruccion_ed_193 ()
 {
-        invalid_opcode_ed("ED193");
+        invalid_opcode_ed("237 193");
 }
 
 void instruccion_ed_194 ()
 {
-        invalid_opcode_ed("ED194");
+        invalid_opcode_ed("237 194");
 }
 
 void instruccion_ed_195 ()
 {
-        invalid_opcode_ed("ED195");
+        invalid_opcode_ed("237 195");
 }
 
 void instruccion_ed_196 ()
 {
-        invalid_opcode_ed("ED196");
+        invalid_opcode_ed("237 196");
 }
 
 void instruccion_ed_197 ()
 {
-        invalid_opcode_ed("ED197");
+        invalid_opcode_ed("237 197");
 }
 
 void instruccion_ed_198 ()
 {
-        invalid_opcode_ed("ED198");
+        invalid_opcode_ed("237 198");
 }
 
 void instruccion_ed_199 ()
 {
-        invalid_opcode_ed("ED199");
+        invalid_opcode_ed("237 199");
 }
 
 void instruccion_ed_200 ()
 {
-        invalid_opcode_ed("ED200");
+        invalid_opcode_ed("237 200");
 }
 
 void instruccion_ed_201 ()
 {
-        invalid_opcode_ed("ED201");
+        invalid_opcode_ed("237 201");
 }
 
 void instruccion_ed_202 ()
 {
-        invalid_opcode_ed("ED202");
+        invalid_opcode_ed("237 202");
 }
 
 void instruccion_ed_203 ()
 {
-        invalid_opcode_ed("ED203");
+        invalid_opcode_ed("237 203");
 }
 
 void instruccion_ed_204 ()
 {
-        invalid_opcode_ed("ED204");
+        invalid_opcode_ed("237 204");
 }
 
 void instruccion_ed_205 ()
 {
-        invalid_opcode_ed("ED205");
+        invalid_opcode_ed("237 205");
 }
 
 void instruccion_ed_206 ()
 {
-        invalid_opcode_ed("ED206");
+        invalid_opcode_ed("237 206");
 }
 
 void instruccion_ed_207 ()
 {
-        invalid_opcode_ed("ED207");
+        invalid_opcode_ed("237 207");
 }
 
 void instruccion_ed_208 ()
 {
-        invalid_opcode_ed("ED208");
+        invalid_opcode_ed("237 208");
 }
 
 void instruccion_ed_209 ()
 {
-        invalid_opcode_ed("ED209");
+        invalid_opcode_ed("237 209");
 }
 
 void instruccion_ed_210 ()
 {
-        invalid_opcode_ed("ED210");
+        invalid_opcode_ed("237 210");
 }
 
 void instruccion_ed_211 ()
 {
-        invalid_opcode_ed("ED211");
+        invalid_opcode_ed("237 211");
 }
 
 void instruccion_ed_212 ()
 {
-        invalid_opcode_ed("ED212");
+        invalid_opcode_ed("237 212");
 }
 
 void instruccion_ed_213 ()
 {
-        invalid_opcode_ed("ED213");
+        invalid_opcode_ed("237 213");
 }
 
 void instruccion_ed_214 ()
 {
-        invalid_opcode_ed("ED214");
+        invalid_opcode_ed("237 214");
 }
 
 void instruccion_ed_215 ()
 {
-        invalid_opcode_ed("ED215");
+        invalid_opcode_ed("237 215");
 }
 
 void instruccion_ed_216 ()
 {
-        invalid_opcode_ed("ED216");
+        invalid_opcode_ed("237 216");
 }
 
 void instruccion_ed_217 ()
 {
-        invalid_opcode_ed("ED217");
+        invalid_opcode_ed("237 217");
 }
 
 void instruccion_ed_218 ()
 {
-        invalid_opcode_ed("ED218");
+        invalid_opcode_ed("237 218");
 }
 
 void instruccion_ed_219 ()
 {
-        invalid_opcode_ed("ED219");
+        invalid_opcode_ed("237 219");
 }
 
 void instruccion_ed_220 ()
 {
-        invalid_opcode_ed("ED220");
+        invalid_opcode_ed("237 220");
 }
 
 void instruccion_ed_221 ()
 {
-        invalid_opcode_ed("ED221");
+        invalid_opcode_ed("237 221");
 }
 
 void instruccion_ed_222 ()
 {
-        invalid_opcode_ed("ED222");
+        invalid_opcode_ed("237 222");
 }
 
 void instruccion_ed_223 ()
 {
-        invalid_opcode_ed("ED223");
+        invalid_opcode_ed("237 223");
 }
 
 void instruccion_ed_224 ()
 {
-        invalid_opcode_ed("ED224");
+        invalid_opcode_ed("237 224");
 }
 
 void instruccion_ed_225 ()
 {
-        invalid_opcode_ed("ED225");
+        invalid_opcode_ed("237 225");
 }
 
 void instruccion_ed_226 ()
 {
-        invalid_opcode_ed("ED226");
+        invalid_opcode_ed("237 226");
 }
 
 void instruccion_ed_227 ()
 {
-        invalid_opcode_ed("ED227");
+        invalid_opcode_ed("237 227");
 }
 
 void instruccion_ed_228 ()
 {
-        invalid_opcode_ed("ED228");
+        invalid_opcode_ed("237 228");
 }
 
 void instruccion_ed_229 ()
 {
-        invalid_opcode_ed("ED229");
+        invalid_opcode_ed("237 229");
 }
 
 void instruccion_ed_230 ()
 {
-        invalid_opcode_ed("ED230");
+        invalid_opcode_ed("237 230");
 }
 
 void instruccion_ed_231 ()
 {
-        invalid_opcode_ed("ED231");
+        invalid_opcode_ed("237 231");
 }
 
 void instruccion_ed_232 ()
 {
-        invalid_opcode_ed("ED232");
+        invalid_opcode_ed("237 232");
 }
 
 void instruccion_ed_233 ()
 {
-        invalid_opcode_ed("ED233");
+        invalid_opcode_ed("237 233");
 }
 
 void instruccion_ed_234 ()
 {
-        invalid_opcode_ed("ED234");
+        invalid_opcode_ed("237 234");
 }
 
 void instruccion_ed_235 ()
 {
-        invalid_opcode_ed("ED235");
+        invalid_opcode_ed("237 235");
 }
 
 void instruccion_ed_236 ()
 {
-        invalid_opcode_ed("ED236");
+        invalid_opcode_ed("237 236");
 }
 
 void instruccion_ed_237 ()
 {
-        invalid_opcode_ed("ED237");
+        invalid_opcode_ed("237 237");
 }
 
 void instruccion_ed_238 ()
 {
-        invalid_opcode_ed("ED238");
+        invalid_opcode_ed("237 238");
 }
 
 void instruccion_ed_239 ()
 {
-        invalid_opcode_ed("ED239");
+        invalid_opcode_ed("237 239");
 }
 
 void instruccion_ed_240 ()
 {
-        invalid_opcode_ed("ED240");
+        invalid_opcode_ed("237 240");
 }
 
 void instruccion_ed_241 ()
 {
-        invalid_opcode_ed("ED241");
+        invalid_opcode_ed("237 241");
 }
 
 void instruccion_ed_242 ()
 {
-        invalid_opcode_ed("ED242");
+        invalid_opcode_ed("237 242");
 }
 
 void instruccion_ed_243 ()
 {
-        invalid_opcode_ed("ED243");
+        invalid_opcode_ed("237 243");
 }
 
 void instruccion_ed_244 ()
 {
-        invalid_opcode_ed("ED244");
+        invalid_opcode_ed("237 244");
 }
 
 void instruccion_ed_245 ()
 {
-        invalid_opcode_ed("ED245");
+        invalid_opcode_ed("237 245");
 }
 
 void instruccion_ed_246 ()
 {
-        invalid_opcode_ed("ED246");
+        invalid_opcode_ed("237 246");
 }
 
 void instruccion_ed_247 ()
 {
-        invalid_opcode_ed("ED247");
+        invalid_opcode_ed("237 247");
 }
 
 void instruccion_ed_248 ()
 {
-        invalid_opcode_ed("ED248");
+        invalid_opcode_ed("237 248");
 }
 
 void instruccion_ed_249 ()
 {
-        invalid_opcode_ed("ED249");
+        invalid_opcode_ed("237 249");
 }
 
 void instruccion_ed_250 ()
 {
-        invalid_opcode_ed("ED250");
+        invalid_opcode_ed("237 250");
 }
 
 void instruccion_ed_251 ()
 {
-        invalid_opcode_ed("ED251");
+        invalid_opcode_ed("237 251");
 }
 
 void instruccion_ed_252 ()
 {
-        invalid_opcode_ed("ED252");
+        invalid_opcode_ed("237 252");
 }
 
 void instruccion_ed_253 ()
 {
-        invalid_opcode_ed("ED253");
+        invalid_opcode_ed("237 253");
 }
 
 void instruccion_ed_254 ()
 {
-        invalid_opcode_ed("ED254");
+        invalid_opcode_ed("237 254");
 }
 
 void instruccion_ed_255 ()
 {
-        invalid_opcode_ed("ED255");
+        invalid_opcode_ed("237 255");
 }
 
 

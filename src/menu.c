@@ -30037,6 +30037,11 @@ void menu_zesarux_zxi_hardware_debug_file(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_debug_shows_invalid_opcode(MENU_ITEM_PARAMETERS)
+{
+	debug_shows_invalid_opcode.v ^=1;
+}
+
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
 {
@@ -30053,44 +30058,57 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial_format(&array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"Show r~~egisters in console: %s",(debug_registers==1 ? "On" : "Off"));
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'e');
 
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_shows_invalid_opcode,NULL,"Show ~~invalid opcode: %s",
+			(debug_shows_invalid_opcode.v ? "Yes" : "No") );
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'i');
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Show which opcodes are invalid (considering ED, DD, FD prefixes)");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Show which opcodes are invalid (considering ED, DD, FD prefixes). "
+								"A message will be shown on console, when verbose level is 2 or higher");
+
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_verbose,NULL,"Verbose ~~level: %d",verbose_level);
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'l');
 
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_configuration_stepover,NULL,"Step over interrupt: %s",(remote_debug_settings&32 ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_configuration_stepover,NULL,"Step ~~over interrupt: %s",(remote_debug_settings&32 ? "Yes" : "No") );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'o');
 
 
-menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_breakpoints_condition_behaviour,NULL,"Breakp. behaviour: %s",(debug_breakpoints_cond_behaviour.v ? "On Change" : "Always") );
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_breakpoints_condition_behaviour,NULL,"~~Breakp. behaviour: %s",(debug_breakpoints_cond_behaviour.v ? "On Change" : "Always") );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'b');
 
 
 #ifdef USE_PTHREADS
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto,NULL,"Remote protocol: %s",(remote_protocol_enabled.v ? "Enabled" : "Disabled") );
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto,NULL,"~~Remote protocol: %s",(remote_protocol_enabled.v ? "Enabled" : "Disabled") );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Enables or disables ZEsarUX remote command protocol (ZRCP)");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Enables or disables ZEsarUX remote command protocol (ZRCP)");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'r');
 
 		if (remote_protocol_enabled.v) {
-			menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto_port,NULL,"Remote protocol port: %d",remote_protocol_port );
+			menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto_port,NULL,"Remote protocol ~~port: %d",remote_protocol_port );
 			menu_add_item_menu_tooltip(array_menu_settings_debug,"Changes remote command protocol port");
 			menu_add_item_menu_ayuda(array_menu_settings_debug,"Changes remote command protocol port");
+			menu_add_item_menu_shortcut(array_menu_settings_debug,'p');
 		}
 
 #endif
 
 
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_hardware_debug_port,NULL,"Hardware debug ports: %s",(hardware_debug_port.v ? "Yes" : "No") );
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_hardware_debug_port,NULL,"Hardware ~~debug ports: %s",(hardware_debug_port.v ? "Yes" : "No") );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"If hardware debug ports are enabled");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"It shows a ASCII character or a number on console sending some OUT sequence to ports. "
 														"Read file docs/zesarux_zxi_registers.txt for more information");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'d');
 
 
 		if (hardware_debug_port.v) {
 			menu_tape_settings_trunc_name(zesarux_zxi_hardware_debug_file,string_zesarux_zxi_hardware_debug_file_shown,18);
-        	menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_zesarux_zxi_hardware_debug_file,NULL,"Byte file: %s",string_zesarux_zxi_hardware_debug_file_shown);
+        	menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_zesarux_zxi_hardware_debug_file,NULL,"Byte ~~file: %s",string_zesarux_zxi_hardware_debug_file_shown);
 			menu_add_item_menu_tooltip(array_menu_settings_debug,"File used on using register 6 (HARDWARE_DEBUG_BYTE_FILE)");		
-			menu_add_item_menu_ayuda(array_menu_settings_debug,"File used on using register 6 (HARDWARE_DEBUG_BYTE_FILE)");								
+			menu_add_item_menu_ayuda(array_menu_settings_debug,"File used on using register 6 (HARDWARE_DEBUG_BYTE_FILE)");	
+			menu_add_item_menu_shortcut(array_menu_settings_debug,'f');							
 		}
 
 
