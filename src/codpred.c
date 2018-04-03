@@ -372,7 +372,7 @@ void instruccion_ed_51 ()
 void instruccion_ed_52 ()
 {
         if (MACHINE_IS_TBBLUE) {
-                //add  hl,$0000     ED 34 LO HI     Add XXXX to HL (no flags set)
+                //add  hl,$0000     ED 34 LO HI     Add XXXX to HL 
               
 
                 z80_int operador;
@@ -387,13 +387,35 @@ void instruccion_ed_52 ()
 }
 
 void instruccion_ed_53 ()
-{
-        invalid_opcode_ed("237 53");
+{        if (MACHINE_IS_TBBLUE) {
+                //add  de,$0000     ED 35 LO HI     Add XXXX to DE 
+              
+
+                z80_int operador;
+                operador= lee_byte_pc();
+                operador |= (lee_byte_pc()<<8);
+
+                DE +=operador;
+
+
+        }
+        else invalid_opcode_ed("237 53");
 }
 
 void instruccion_ed_54 ()
-{
-        invalid_opcode_ed("237 54");
+{        if (MACHINE_IS_TBBLUE) {
+                //add  bc,$0000     ED 36 LO HI     Add XXXX to BC 
+              
+
+                z80_int operador;
+                operador= lee_byte_pc();
+                operador |= (lee_byte_pc()<<8);
+
+                BC +=operador;
+
+
+        }
+        else invalid_opcode_ed("237 54");
 }
 
 void instruccion_ed_55 ()
@@ -1369,7 +1391,42 @@ void instruccion_ed_143 ()
 
 void instruccion_ed_144 ()
 {
-        invalid_opcode_ed("237 144");
+        if (MACHINE_IS_TBBLUE) {
+                //ED 90  OUTINB As OUTI but B is not incremented
+	z80_byte value,aux;
+
+        contend_read_no_mreq( IR, 1 );
+
+
+        value=peek_byte(HL);
+
+
+        //reg_b--;
+
+#ifdef EMULATE_MEMPTR
+        set_memptr( BC+1  );
+#endif
+        out_port(BC,value);
+
+        HL++;
+
+        aux=value+reg_l;
+        if (value & 0x80) Z80_FLAGS |=FLAG_N;
+        else Z80_FLAGS &=(255-FLAG_N);
+
+        if (aux<value) {
+                Z80_FLAGS |=FLAG_H|FLAG_C;
+        }
+        else {
+                Z80_FLAGS &=(255-FLAG_H-FLAG_C);
+        }
+
+        Z80_FLAGS = (Z80_FLAGS & (255-FLAG_S-FLAG_Z-FLAG_3-FLAG_5) ) | sz53_table[reg_b];
+
+        set_flags_parity(( aux & 0x07 ) ^ reg_b);
+
+        }
+        else invalid_opcode_ed("237 144");
 }
 
 void instruccion_ed_145 ()

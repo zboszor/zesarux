@@ -125,7 +125,7 @@ struct s_tbblue_extended_string_opcode {
   int sumar_longitud;
 };
 
-#define TOTAL_TBBLUE_EXTENDED_OPCODES 26
+#define TOTAL_TBBLUE_EXTENDED_OPCODES 30
 
 struct s_tbblue_extended_string_opcode tbblue_extended_string_opcode[TOTAL_TBBLUE_EXTENDED_OPCODES]={
 	{"SWAPNIB",0x23,0},
@@ -137,6 +137,9 @@ struct s_tbblue_extended_string_opcode tbblue_extended_string_opcode[TOTAL_TBBLU
   {"ADD HL,A",0x31,0},
   {"ADD DE,A",0x32,0},
   {"ADD BC,A",0x33,0},
+  {"ADD HL,NN",0x34,2},
+  {"ADD DE,NN",0x35,2},
+  {"ADD BC,NN",0x36,2},
   {"INC DEHL",0x37,0},
   {"DEC DEHL",0x38,0},
   {"ADD DEHL,A",0x39,0},
@@ -146,6 +149,7 @@ struct s_tbblue_extended_string_opcode tbblue_extended_string_opcode[TOTAL_TBBLU
   {"SUB DEHL,BC",0x3D,0}, 
   {"PUSH NN",0x8A,2},
   {"POPX",0x8B,0},
+  {"OUTINB",0x90,0},
   {"NEXTREG N,N",0x91,2},
   {"NEXTREG N,A",0x92,1},
   {"PIXELDN",0x93,0},
