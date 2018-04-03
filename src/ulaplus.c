@@ -193,10 +193,15 @@ void disable_ulaplus(void)
 void enable_ulaplus(void)
 {
 
-	if (!MACHINE_IS_SPECTRUM) {
+  if (!MACHINE_IS_SPECTRUM) {
     debug_printf(VERBOSE_INFO,"Can not enable ULAplus on non Spectrum machine");
     return;
   }
+
+        if (MACHINE_IS_TBBLUE) {
+                //Ulaplus no está para tbblue
+                return;
+        }
         debug_printf (VERBOSE_INFO,"Enabling ULAplus");
         ulaplus_presente.v=1;
 

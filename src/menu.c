@@ -29461,7 +29461,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 		}
 
 
-		if (MACHINE_IS_SPECTRUM) {
+		if (MACHINE_IS_SPECTRUM && !MACHINE_IS_TBBLUE) {
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_ulaplus,NULL,"ULA~~plus support: %s",(ulaplus_presente.v ? "Yes" : "No"));
 			menu_add_item_menu_shortcut(array_menu_settings_display,'p');
 			menu_add_item_menu_tooltip(array_menu_settings_display,"Enables ULAplus support");
