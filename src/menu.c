@@ -24743,6 +24743,11 @@ void menu_setting_filesel_no_show_dirs(MENU_ITEM_PARAMETERS)
 	menu_filesel_hide_dirs.v ^=1;
 }
 
+void menu_setting_quickexit(MENU_ITEM_PARAMETERS)
+{
+	quickexit.v ^=1;
+}
+
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_interface_settings;
@@ -24831,6 +24836,11 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 			(menu_limit_menu_open.v ? "Yes" : "No") );
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button)");			
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second");
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_quickexit,NULL,"Quick exit: %s",
+			(quickexit.v ? "Yes" : "No") );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");			
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_filesel_no_show_dirs,NULL,"Hide dirs in filesel: %s",
 			(menu_filesel_hide_dirs.v ? "Yes" : "No") );

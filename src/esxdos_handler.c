@@ -108,7 +108,9 @@ int esxdos_find_free_fopen(void)
 	int i;
 
 	for (i=0;i<ESXDOS_MAX_OPEN_FILES;i++) {
-		if (esxdos_fopen_files[i].open_file.v==0) {
+		//Evitar valor 0 de numero de archivo. Parece que Dungeonette no le gusta en el primer fopen que el file handle sea 0
+		//Sera algo normal? O fallo de ese juego? En cualquier caso, evitar retornar el handle numero 0
+		if (esxdos_fopen_files[i].open_file.v==0 && i!=0) {
 			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Free handle: %d",i);
 			return i;
 		}
