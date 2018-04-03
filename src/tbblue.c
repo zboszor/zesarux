@@ -513,68 +513,18 @@ void tbblue_reset_palettes(void)
 //z80_int valor16=tbblue_get_9bit_colour(valor);
 
 	//Paletas layer2 & sprites son los mismos valores del indice*2 y metiendo bit 0 como el bit1 inicial
-	//(cosa absurda pues no sigue) la logica de mezclar bit 0 y bit 1
+	//(cosa absurda pues no sigue la logica de mezclar bit 0 y bit 1 usado en registro 41H)
 	for (i=0;i<256;i++) {
 		z80_int color;
 		color=i*2;
 		if (i&2) color |=1;
-		//if (i==245) printf ("i: %d color: %d %X\n",i,color,color);
 
-		//Metemos colores RRRGGGBBx , donde x es un OR de los bits BB
-		//tbblue_palette_ula_first[i]=i*2;
- 		//tbblue_palette_ula_second[i]=i*2;
  		tbblue_palette_layer2_first[i]=color;
  		tbblue_palette_layer2_second[i]=color;
  		tbblue_palette_sprite_first[i]=color;
  		tbblue_palette_sprite_second[i]=color;
 	}
 
-	//Pero el ultimo color quiero que apunte a 511 y no 510, porque sino, el 510 es:
-	//FFFFDBH amarillento
-	//y 511 es:
-	//FFFFFFH blanco
-
-
-	/*tbblue_palette_ula_first[255]=511;
- 	tbblue_palette_ula_second[255]=511;
- 	tbblue_palette_layer2_first[255]=511;
- 	tbblue_palette_layer2_second[255]=511;
- 	tbblue_palette_sprite_first[255]=511;
- 	tbblue_palette_sprite_second[255]=511;*/
-	
-
-	//Y de momento la paleta ula first tiene los colores lo mas parecido a spectrum:
-	//CD->DB
-	/*
-	0x000000,  //negro 0
-0x0000CD,  //azul 1
-0xCD0000,  //rojo 2
-0xCD00CD,  //magenta 3
-0x00CD00,  //verde 4
-0x00CDCD,  //cyan 5
-0xCDCD00,  //amarillo 6
-0xCDCDCD,  //blanco 7
-
-0x000000, 8
-0x0000FF, 9 
-0xFF0000, 10
-0xFF00FF, 11
-0x00FF00, 12
-0x00FFFF, 13
-0xFFFF00, 14
-0xFFFFFF  15
-*/
-
-/*
-Colour IDs in Layer 2 and Sprites are always taken as palette indices. 
-Colour values in the ULA are mapped to the palette as fixed indices, 
-or can be taken as partial palette indices if ULANext mode is enabled. 
-The palette entry numbers for standard ULA mode are: 0-7 for the standard ink colors, 
-8-15 for BRIGHT ink colors, 128-135 for standard paper colors, and 136-143 for BRIGHT paper colors. 
-
-
-http://devnext.referata.com/wiki/Palettes
-*/
 
 	//Se repiten los 16 colores en los 256. Para colores sin brillo, componente de color vale 5 (101b)
 	const z80_int tbblue_default_ula_colours[16]={
@@ -595,6 +545,17 @@ http://devnext.referata.com/wiki/Palettes
 504 , //111111000 
 511   //111111111 
 	};
+	/*
+	Nota: para convertir una lista de valores binarios en decimal:
+	LINEA=""
+
+while read LINEA; do
+echo -n "$((2#$LINEA))"
+echo " , //$LINEA "
+
+
+done < /tmp/archivo_lista.txt
+	*/
 
 	int j;
 
@@ -607,15 +568,7 @@ http://devnext.referata.com/wiki/Palettes
 
 	/*
 
- 	tbblue_palette_ula_first[0]=tbblue_palette_ula_first[0+128]=0;
-	tbblue_palette_ula_first[1]=tbblue_palette_ula_first[1+128]=6; 
-	tbblue_palette_ula_first[2]=tbblue_palette_ula_first[2+128]=384;
-	tbblue_palette_ula_first[3]=tbblue_palette_ula_first[3+128]=390;
-	tbblue_palette_ula_first[4]=tbblue_palette_ula_first[4+128]=48;
-	tbblue_palette_ula_first[5]=tbblue_palette_ula_first[5+128]=54;
-	tbblue_palette_ula_first[6]=tbblue_palette_ula_first[6+128]=432; 
-	tbblue_palette_ula_first[7]=tbblue_palette_ula_first[7+128]=438;
-
+ 	
 	tbblue_palette_ula_first[8]=tbblue_palette_ula_first[8+128]=0;
 	tbblue_palette_ula_first[9]=tbblue_palette_ula_first[9+128]=7;
 	tbblue_palette_ula_first[10]=tbblue_palette_ula_first[10+128]=448;

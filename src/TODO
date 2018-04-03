@@ -553,6 +553,8 @@ Ver registro 2:
 
 
 *Contended en mmu tbblue. De momento la contencion la hace por bloques de 16 kb
+-copper
+-dma
 
 -------------
 
