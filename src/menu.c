@@ -29472,8 +29472,9 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 						"Mode 7: Linear mode 128x192, 16 colours per pixel (ZEsarUX mode 1)\n"
 						"Mode 9: Linear mode 256x192, 16 colours per pixel (ZEsarUX mode 2)\n"
 			);
+		}
 
-
+		if (MACHINE_IS_SPECTRUM) {
 
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_video,NULL,"~~Timex video support: %s",(timex_video_emulation.v ? "Yes" : "No"));
                         menu_add_item_menu_shortcut(array_menu_settings_display,'t');
