@@ -1026,6 +1026,11 @@ util_stats_init();
 		mk14_reset();
 	}
 
+
+	if (esxdos_handler_enabled.v) {
+		esxdos_handler_reset();
+	}
+
 }
 
 char *string_machines_list_description=

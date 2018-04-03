@@ -1420,6 +1420,17 @@ Main syscall entry point. Parameters are the same for code inside ESXDOS (.comma
 
 }
 
+void esxdos_handler_reset(void)
+{
+	//Inicializar array de archivos abiertos
+	//esxdos_fopen_files[ESXDOS_MAX_OPEN_FILES];
+	debug_printf(VERBOSE_DEBUG,"Clearing esxdos file handler open files list");
+	int i;
+	for (i=0;i<ESXDOS_MAX_OPEN_FILES;i++) {
+		esxdos_fopen_files[i].open_file.v=0;
+	}
+}
+
 void esxdos_handler_enable(void)
 {
 
@@ -1448,12 +1459,7 @@ void esxdos_handler_enable(void)
 	//directorio  vacio
 	esxdos_handler_cwd[0]=0;
 
-	//Inicializar array de archivos abiertos
-	//esxdos_fopen_files[ESXDOS_MAX_OPEN_FILES];
-	int i;
-	for (i=0;i<ESXDOS_MAX_OPEN_FILES;i++) {
-		esxdos_fopen_files[i].open_file.v=0;
-	}
+	esxdos_handler_reset();
 }
 
 

@@ -127,6 +127,7 @@ extern char esxdos_handler_cwd[];
 
 extern void esxdos_handler_enable(void);
 extern void esxdos_handler_disable(void);
+extern void esxdos_handler_reset(void);
 
 #define ESXDOS_MAX_OPEN_FILES 16
 

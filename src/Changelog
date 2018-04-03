@@ -15,7 +15,7 @@ Added setting to add a watermark on the display
 Added setting to reduce display to a factor of 0.75. Used on RunZX event
 Added a fast spectrum core (with some features disabled) just for slow devices, like Raspberry Pi 1/Zero. Now ZEsarUX is playable on RPi1/Zero again!
 Added a setting to dump ram contents to file when exiting ZEsarUX, ideal to run automatic tests
-Added setting for tbblue to boot fast (no nextos rom, just 48k)
+Added a setting to start tbblue directly to a 48 rom but with all the Next features enabled, useful for fast snapshot loading
 
 
 Improved debugging:

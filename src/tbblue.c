@@ -1999,10 +1999,6 @@ void tbblue_hard_reset(void)
 
 
 	if (tbblue_fast_boot_mode.v) {
-//Spectrum 7FFD port: 30
-//Spectrum 1FFD port: 04
-		//puerto_32765=0x30;
-		//puerto_8189=0x04;
 		tbblue_registers[3]=3;
 		tbblue_registers[80]=0xff;
 		tbblue_registers[81]=0xff;

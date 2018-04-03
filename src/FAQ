@@ -434,8 +434,6 @@ A: Yes. You can use the tbblue-fast-boot-mode setting and it will go directly to
 
 ./zesarux --noconfigfile --machine tbblue --realvideo --enabletimexvideo --tbblue-fast-boot-mode --sna-no-change-machine --enable-esxdos-handler --esxdos-root-dir /Users/cesarhernandez/Downloads/Dungeonette/ /Users/cesarhernandez/Downloads/Dungeonette/project.sna
  
-Note: this Dungeonette demo seems to need some internal registers set to concrete values... first time the initial screen doesnt show. just press space...
-
 
 ----------------------------------------------------------------------------
 
