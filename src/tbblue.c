@@ -655,8 +655,10 @@ void tbblue_write_palette_value_high8(z80_byte valor)
 
 	z80_int valor16=valor;
 
-	//Bit bajo es el mismo que bit 1
-	z80_byte bit_bajo=valor&1;
+	//Bit bajo sale de hacer or de bit 1 y 0
+	//z80_byte bit_bajo=valor&1;
+	z80_byte bit_bajo=(valor&1)|((valor&2)>>1);
+
 	//rotamos a la izquierda para que sean los 8 bits altos
 	valor16=valor16<<1;
 

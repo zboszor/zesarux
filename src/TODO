@@ -13,8 +13,7 @@ https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9
 revisar los que hayan cambiado.
 
 -al hacer hard reset, los colores del boot se cambian :S quiza algun bit de la paleta que no esta bien en reset?
-Parece que solo falla con nuevo nextos?
-->ver si ejecuta alguna instruccion invalida EDXX
+Parece que solo falla con nuevo nextos. haciendo mismo hard reset pero desde 48 basic, no altera colores
 
 -tbblue:
 *seguir nuevos opcodes next https://dailly.blogspot.com.es/2017/08/version-04-of-cspect.html?m=1  ,  https://github.com/z88dk/z88dk/issues/312
@@ -25,7 +24,7 @@ Parece que solo falla con nuevo nextos?
 *next opcodes. acesos memoria (para parametros) son 3 o 4 t estados. revisar y actualizar doc
 * update a ultima version nextos rom, sd, etc
 
-
+-ulaplus no debe aparecer en caso maquina tbblue
 
 -Formato zsf: completar para mas maquinas
 ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo y desactivo setting de divmmc paging, ya aparece:
