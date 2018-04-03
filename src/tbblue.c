@@ -1871,6 +1871,10 @@ void tbblue_set_emulator_setting_turbo(void)
 void tbblue_reset_common(void)
 {
 
+
+	tbblue_registers[18]=8;
+	tbblue_registers[19]=11;
+
 	tbblue_registers[20]=TBBLUE_DEFAULT_TRANSPARENT;
 
 	tbblue_registers[21]=0;
@@ -1881,6 +1885,17 @@ void tbblue_reset_common(void)
 	tbblue_registers[25]=191;
 	tbblue_registers[26]=191;
 	tbblue_registers[28]=0;
+
+	tbblue_registers[30]=0;
+	tbblue_registers[31]=0;
+	tbblue_registers[34]=0;
+	tbblue_registers[35]=0;
+	tbblue_registers[50]=0;
+	tbblue_registers[51]=0;
+	tbblue_registers[66]=15;
+	tbblue_registers[67]=0;
+	tbblue_registers[74]=0;
+	tbblue_registers[97]=0;
 
 
 	clip_window_layer2[0]=0;
@@ -1902,13 +1917,7 @@ void tbblue_reset_common(void)
 	clip_window_layer2_index=clip_window_sprites_index=clip_window_ula_index=0;
 
 
-	tbblue_registers[30]=0;
-	tbblue_registers[31]=0;
-	tbblue_registers[34]=0;
-	tbblue_registers[35]=0;
-	tbblue_registers[50]=0;
-	tbblue_registers[51]=0;
-	tbblue_registers[66]=15;
+
 
 	
 	tbblue_set_mmu_128k_default();
@@ -1961,11 +1970,6 @@ void tbblue_hard_reset(void)
 	tbblue_registers[7]=0;
 	tbblue_registers[8]=0;
 
-
-	tbblue_registers[18]=8;
-	tbblue_registers[19]=11;
-
-
 	tbblue_reset_common();
 
 
@@ -1976,7 +1980,6 @@ void tbblue_hard_reset(void)
 
 	tbblue_bootrom.v=1;
 	//printf ("----setting bootrom to 1\n");
-
 	
 
 	tbblue_set_memory_pages();
