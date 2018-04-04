@@ -50,8 +50,7 @@ The following is a list of recommended minimum features for each operating syste
 
 # Raspberry Pi
 
-A Raspberry Pi 2 is recommended a minimum. The Raspberry Pi 1 is a bit too slow for ZEsarUX, but you can run at normal Spectrum speed by setting overclock on the Pi and
-having Real Video setting disabled.
+A Raspberry Pi 2 is recommended a minimum. The Raspberry Pi 1 is a bit too slow for ZEsarUX, but you can run at normal Spectrum speed by setting overclock on the Pi, having Real Video setting disabled and using the Spectrum reduced core
 
 - libpthreads
 - alsa
@@ -160,33 +159,14 @@ NOTE: by using the reduced core the following features will NOT be available, or
 
 
 
-# Compiling for macOS
-
-    $ export CFLAGS=-O2
-    $ export LDFLAGS=-O2
-
-    $ ./configure         # ... with any options you want
-
-    $ make clean
-    $ make
-
-
-It is possible to run the emulator from the current directory without installing:
-
-    $ ./zesarux
-
-
-
 Install and Run ZEsarUX
 -----------------------
 
+It is possible to run the emulator from the current directory without installing, just by running:
+    $ ./zesarux
 
-# Raspberry Pi
 
-The recommended way to start the emulator is with:
-
-    $ ./zesarux --disableborder --zoom 1 --fullscreen --vo fbdev --ao sdl --no-detect-realvideo
-
+If you want to install it, the following are the instructions for the different operating systems:
 
 
 # macOS
@@ -213,6 +193,13 @@ If installing from binary:
     $ su root
     $ ./install.sh
 
+
+
+Note for Raspberry Pi
+
+The recommended way to start the emulator is using the following settings:
+
+--disableborder --zoom 1 --fullscreen --vo fbdev --ao sdl --no-detect-realvideo
 
 
 Utilities
