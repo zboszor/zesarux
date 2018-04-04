@@ -6,25 +6,18 @@ luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu 
 
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
-
 TBBLUE:
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 revisar los que hayan cambiado.
 Faltan 2 solo, creo , y habría que eliminar los que ya no están. tanto en codpred como en disassemble
+Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar en grupo desarrollo
 
-
-
--tbblue:
-*seguir nuevos opcodes next https://dailly.blogspot.com.es/2017/08/version-04-of-cspect.html?m=1  ,  https://github.com/z88dk/z88dk/issues/312
-*probar que pasa cuando llega a mas de 12 sprites en linea tbblue
 *eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
 *y otras novedades * New machine type: Pentagon 128K.. Ver registros 3, 7, 21
 *Desactivar puertos viejos de establecer paleta sprites get/set
-*next opcodes. acesos memoria (para parametros) son 3 o 4 t estados. revisar y actualizar doc
 * update a ultima version nextos rom, sd, etc
 
--ulaplus no debe aparecer en caso maquina tbblue
 
 -Formato zsf: completar para mas maquinas
 ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo y desactivo setting de divmmc paging, ya aparece:
@@ -54,7 +47,6 @@ O quizá setting configurable
 
 -backspace no lo lee en curses?? parece que tanto en mac como linux
 
-
 -licencia tipo letra man soft
 
 -teclas F11-F15 para fbdev
@@ -63,7 +55,6 @@ Creo que ya esta
 
 -revisar mezclado ay+beeper . posiblemente set_value_beeper acaba sacando algun valor beeper 50*2 y se sale todo de rango?
 o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el test de 6/9 canales turbosound?
-
 
 --- Fin cosas para version 6.1
 
@@ -529,8 +520,9 @@ Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
 
 -------------
 
---- TBBLUE ---
+--- TBBlue ---
 
+-probar que pasa cuando llega a mas de 12 sprites en linea tbblue
 -Multiface rom en tbblue debería leer la de tbblue
 -sid commodore para tbbue. ver ReSID
 -snapshot .zsf para tbblue
