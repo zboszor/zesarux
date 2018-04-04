@@ -1516,7 +1516,15 @@ void instruccion_ed_148 ()
 
 void instruccion_ed_149 ()
 {
-        invalid_opcode_ed("237 149");
+        if (MACHINE_IS_TBBLUE) {
+                //ED 95   DE holding the Y,X. Bits 0-2 of X (E) map to BIT 7 to 0 and store in A
+                //SETAE : A = 2^(7 - E&0x7)  The bottom 3 bits of E is a bit number and 7-that_bit is the bit set in A.  
+                z80_byte numero_bit=reg_e & 7;
+                z80_byte resultado=1;
+                if (numero_bit>0) resultado=resultado<<numero_bit;
+                reg_a=resultado;
+        }
+        else invalid_opcode_ed("237 149");
 }
 
 void instruccion_ed_150 ()

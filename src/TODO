@@ -11,7 +11,8 @@ TBBLUE:
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
 revisar los que hayan cambiado.
-Faltan 3 solo, creo , y habría que eliminar los que ya no están. tanto en codpred como en disassemble
+Faltan 2 solo, creo , y habría que eliminar los que ya no están. tanto en codpred como en disassemble
+
 
 
 -tbblue:
