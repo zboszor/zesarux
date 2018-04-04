@@ -83,6 +83,7 @@
 #define ZSF_ULAPLUS 9
 #define ZSF_ZXUNO_RAMBLOCK 10
 #define ZSF_ZXUNO_CONF 11
+#define ZSF_ZX8081_CONF 12
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -121,7 +122,7 @@ Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where 
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
 1,2: Block start address
-3,4: Block lenght (if 0, means 65536. Currently onlu used on Inves)
+3,4: Block lenght (if 0, means 65536. Value 0 only used on Inves)
 5 and next bytes: data bytes
 
 
@@ -188,6 +189,21 @@ Byte fields:
 266-273: 8 byte with spi bus contents
 
 
+-Block ID 12: ZSF_ZX8081_CONF
+Internal configuration and state of ZX80/81 machine
+Byte fields:
+0: Ram assigned to ZX80/81 (1..16), not counting ram packs on 2000H, 8000H or C000H 
+1: Flags1: Bits:
+
+*7-5: Reserved for future use
+*4: if 16k RAM block in C000H 
+*3: if 16k RAM block in 8000H 
+*2: if 8k RAM block in 2000H 
+*1: if hsync generator is active 
+*0: if nmi generator is active
+
+2: Flags2: Reserved for future use
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -199,7 +215,7 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 11
+#define MAX_ZSF_BLOCK_ID_NAMES 12
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -214,6 +230,7 @@ char *zsf_block_id_names[]={
   "ZSF_ULAPLUS",
   "ZSF_ZXUNO_RAMBLOCK",
   "ZSF_ZXUNO_CONF",
+  "ZSF_ZX8081_CONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -540,6 +557,35 @@ Byte fields:
         for (i=0;i<64;i++) ulaplus_palette_table[i]=header[3+i];
 }
 
+void load_zsf_zx8081_conf(z80_byte *header)
+{
+/*
+0: Ram assigned to ZX80/81 (1..16), not counting ram packs on 2000H, 8000H or C000H 
+1: Flags1: Bits:
+
+*7-5: Reserved for future use
+*4: if 16k RAM block in C000H 
+*3: if 16k RAM block in 8000H 
+*2: if 8k RAM block in 2000H 
+*1: if hsync generator is active 
+*0: if nmi generator is active
+
+2: Flags2: Reserved for future use
+
+*/
+
+  z80_int zx8081ram=header[0];
+  set_zx8081_ramtop(zx8081ram);
+
+  ram_in_49152.v=(header[1]>>4)&1;
+  ram_in_32768.v=(header[1]>>3)&1;
+  ram_in_8192.v=(header[1]>>2)&1;
+  hsync_generator_active.v=(header[1]>>1)&1;
+  nmi_generator_active.v=header[1]&1;
+
+
+}
+
 
 void load_zsf_zxuno_conf(z80_byte *header)
 {
@@ -717,6 +763,10 @@ void load_zsf_snapshot(char *filename)
         load_zsf_zxuno_conf(block_data);
       break;
 
+      case ZSF_ZX8081_CONF:
+        load_zsf_zx8081_conf(block_data);
+      break;      
+
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
       break;
@@ -871,64 +921,83 @@ Byte fields:
      zsf_write_block(ptr_zsf_file, ulaplusblock,ZSF_ULAPLUS, 67);
   }
 
+  //Algunos flags zx80/81
+  if (MACHINE_IS_ZX8081) {
+    z80_byte zx8081confblock[3];
 
-    //TODO: estado ula: puerto 254, etc
+    z80_byte ram_zx8081=(ramtop_zx8081-16383)/1024;
+    zx8081confblock[0]=ram_zx8081;
 
+    z80_byte flags1;
+    z80_byte flags2=0;
 
-  //Maquinas Spectrum de 48kb
-  if (MACHINE_IS_SPECTRUM_16_48) {
+    flags1=(ram_in_49152.v<<4)|(ram_in_32768.v<<3)|(ram_in_8192.v<<2)|(hsync_generator_active.v<<1)|nmi_generator_active.v;
 
-	int inicio_ram=16384;
-	int longitud_ram=49152;
-	if (MACHINE_IS_SPECTRUM_16) longitud_ram=16384;
+    zx8081confblock[1]=flags1;
+    zx8081confblock[2]=flags2;
 
-	if (MACHINE_IS_INVES) {
-		//Grabar tambien la ram oculta de inves (0-16383). Por tanto, grabar todos los 64kb de ram
-		longitud_ram=65536; //65536
-		inicio_ram=0;
-	}
-
-  //Test. Save 48kb block
-  //Allocate 5+48kb bytes
-  /*z80_byte *ramblock=malloc(longitud_ram+5);
-  if (ramblock==NULL) {
-    debug_printf (VERBOSE_ERR,"Error allocating memory");
-    return;
-  }*/
+    zsf_write_block(ptr_zsf_file, zx8081confblock,ZSF_ZX8081_CONF, 3);
 
 
-  //Para el bloque comprimido
-   z80_byte *compressed_ramblock=malloc(longitud_ram*2);
-  if (compressed_ramblock==NULL) {
-    debug_printf (VERBOSE_ERR,"Error allocating memory");
-    return;
   }
 
-  /*
-  0: Flags. Currently: bit 0: if compressed
-  1,2: Block start
-  3,4: Block lenght
-  5 and next bytes: data bytes
-  */
 
-  compressed_ramblock[0]=0;
-  compressed_ramblock[1]=value_16_to_8l(inicio_ram);
-  compressed_ramblock[2]=value_16_to_8h(inicio_ram);
-  compressed_ramblock[3]=value_16_to_8l(longitud_ram);
-  compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+  //Maquinas Spectrum de 48kb y zx80/81
+  if (MACHINE_IS_SPECTRUM_16_48 || MACHINE_IS_ZX8081) {
 
-  //Copy spectrum memory to ramblock
-  //int i;
-  //for (i=0;i<longitud_ram;i++) ramblock[5+i]=peek_byte_no_time(inicio_ram+i);
+	  int inicio_ram=16384;
+	  int longitud_ram=49152;
+	  if (MACHINE_IS_SPECTRUM_16) longitud_ram=16384;
 
-  int si_comprimido;
-  int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[inicio_ram],&compressed_ramblock[5],longitud_ram,&si_comprimido);
-  if (si_comprimido) compressed_ramblock[0]|=1;
+	  if (MACHINE_IS_INVES) {
+  		//Grabar tambien la ram oculta de inves (0-16383). Por tanto, grabar todos los 64kb de ram
+	  	longitud_ram=65536; //65536
+		  inicio_ram=0;
+	  }
 
-  //Store block to file
-  zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_RAMBLOCK, longitud_bloque+5);
+    if (MACHINE_IS_ZX8081) {
+      int final_ram=get_ramtop_with_rampacks()+1;
+      if (ram_in_8192.v) inicio_ram=8192;
+      longitud_ram=final_ram-inicio_ram;
+    }
 
-  free(compressed_ramblock);
+    //Test. Save 48kb block
+    //Allocate 5+48kb bytes
+    /*z80_byte *ramblock=malloc(longitud_ram+5);
+    if (ramblock==NULL) {
+      debug_printf (VERBOSE_ERR,"Error allocating memory");
+      return;
+    }*/
+
+
+    //Para el bloque comprimido
+    z80_byte *compressed_ramblock=malloc(longitud_ram*2);
+    if (compressed_ramblock==NULL) {
+      debug_printf (VERBOSE_ERR,"Error allocating memory");
+      return;
+    } 
+
+    /*
+    0: Flags. Currently: bit 0: if compressed
+    1,2: Block start
+    3,4: Block lenght
+    5 and next bytes: data bytes
+    */
+
+    compressed_ramblock[0]=0;
+    compressed_ramblock[1]=value_16_to_8l(inicio_ram);
+    compressed_ramblock[2]=value_16_to_8h(inicio_ram);
+    compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+    compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+
+    int si_comprimido;
+    int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[inicio_ram],&compressed_ramblock[5],longitud_ram,&si_comprimido);
+    if (si_comprimido) compressed_ramblock[0]|=1;
+
+    //Store block to file
+    zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_RAMBLOCK, longitud_bloque+5);
+
+    free(compressed_ramblock);
 
   }
 
