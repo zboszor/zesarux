@@ -1,158 +1,223 @@
-This file tells how to install ZEsarUX on Unix systems: Linux, Mac OS X, Raspberry.
-Windows related information is on file INSTALLWINDOWS
-Other versions provided by 3rd party:
+ZEsarUX Installation Instructions
+---------------------------------
+
+This file explains how to install ZEsarUX on Unix systems: Linux, Mac OS X, Raspberry.
+
+For Windows specific instructions please see the INSTALLWINDOWS file.
+
+
+# Other versions provided by 3rd parties:
+
 Arch Linux:
 https://aur.archlinux.org/packages/zesarux/
 
-Retropie/EmulationStation
+Retropie/EmulationStation:
 http://emulationstation.org/
 
-Open Pandora
+Open Pandora:
 https://repo.openpandora.org/?page=detail&app=zesarux
 
-PocketCHIP
+PocketCHIP:
 https://bbs.nextthing.co/t/tutorial-zesarux-8-bit-computer-emulator/8532
 
-MorhpOS: can be compiled using a provided patch
-
----
-
-* Requirements
-
-gcc compiler
-unix compatible operating system
-
-The minimum features I recommend:
-
-On Linux:
-
-* x11
-* libpthreads
-* alsa 
-* pulse 
-
-On Mac OS X:
-
-* gcc, which can be installed with XCode. libpthreads is also included with XCode
-* video support is provided by Cocoa driver, but you can also try to compile using X11 or another video driver
-
-On Raspberry:
-* libpthreads
-* alsa
-* video support is provided by Framebuffer driver (fbdev), but you can also try to compile using X11, SDL or another video driver
-* sdl 1.2 is recommended, to use sdl audio. SDL audio works better than alsa. You can install sdl libraries with: apt-get install libsdl1.2-dev
-SDL2 is experimental
-
-I recommend minimum Raspberry Pi 2. Raspberri Pi 1 is a bit slow for ZEsarUX, but you can run at normal Spectrum speed by setting overclock on the Pi and 
-having Real Video setting disabled
+MorhpOS: can be compiled using the provided patch.
 
 
-The rest is optional. Complete list of features:
 
--Video drivers
-* x11 (on Linux/Raspberry): needs x11libs, x11extlibs, xf86vidmode, xxf86vm
-* x11 (on Mac OS X): needs XQuartz
-* cocoa (on Mac OS X): Compiling supported using XCode.
-* sdl 1.2 (on Linux/Raspberry): needs sdllib-1.2. SDL2 is experimental
-* caca: cacalib
-* aa: aalib
-* curses: curses-dev
-* stdout: termios includes
+Core Requirements
+-----------------
 
--Audio drivers
-* OSS (dsp) (on Linux/Raspberry): needs soundcard includes. Usually included on Linux systems
-* alsa (on Linux/Raspberry): needs alsalibs
-* pulse (on Linux/Raspberry): needs pulselibs
-* sdl 1.2 (on Linux/Raspberry): needs sdllib. SDL2 is experimental
-* coreaudio (on Mac OS X): Compiling supported using XCode. 
-
--Audio output to file
-* libsndfile to output audio to wav files
-* raw audio is always supported
+- gcc compiler.
+- unix compatible operating system.
 
 
--Other enhancements:
-
-*pthreads: pthread includes. Usually included on all Unix systems
-*realtime: sched includes. Usually included on Linux systems
-*autodetect snapshots and tape files by its contents: libssl
+The following is a list of recommended minimum features for each operating system.
 
 
--------------
+# Linux
+
+- x11
+- libpthreads
+- alsa
+- pulse
 
 
-* Compiling
+# macOS
 
-./configure 
-
-
-(You may also enable the features:
-./configure --enable-memptr --enable-visualmem --enable-cpustats
-It makes the emulator use a bit more CPU power)
+- gcc, which can be installed with XCode. libpthreads is also included with XCode.
+- Video support is provided by Cocoa driver, but you can also try to compile using X11 or another video driver.
 
 
-(On raspberry-raspbian, I recommend:
-export CFLAGS=-O2
-export LDFLAGS=-O2
+# Raspberry Pi
 
-./configure --enable-raspberry 
-So you are not enabling memptr, visualmem or cpustats
+A Raspberry Pi 2 is recommended a minimum. The Raspberry Pi 1 is a bit too slow for ZEsarUX, but you can run at normal Spectrum speed by setting overclock on the Pi and
+having Real Video setting disabled.
 
-Even more, if you have a slow device, like Raspberry Pi 1 or Zero, I recommend:
+- libpthreads
+- alsa
+- SDL
+- fbdev
 
-./configure --enable-raspberry --spectrum-reduced-core
-So you are not enabling memptr, visualmem or cpustats and using the reduced core by default, which uses less cpu.
-You can also switch it from command line or runtime.
-Using the reduced core, the following features will NOT be available or will NOT be properly emulated:
-Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, Audio DAC, Video out to file
+Video support is provided by Framebuffer driver (fbdev), but you can also try to compile using X11, SDL or another video driver.
 
-)
+SDL 1.2 is recommended, to use SDL audio. SDL audio works better than alsa. You can install SDL libraries with:
 
-
-(On Mac OS X, I recommend:
-export CFLAGS=-O2
-export LDFLAGS=-O2
-./configure ... with the options you want
-)
+    $ apt-get install libsdl1.2-dev
 
 
-make clean
-make
-
-You may try to run from the current dir, without installing, with:
-./zesarux
-
-On raspberry the recommended way is:
-./zesarux --disableborder --zoom 1 --fullscreen --vo fbdev --ao sdl --no-detect-realvideo
+NOTE: SDL2 support is experimental.
 
 
----------------
+
+Options Features
+----------------
+
+The following is a list of complete features, all of which are optional.
 
 
-* Installing ZEsarUX:
+# Video Drivers
 
-- On MacOS systems, run:
-make macapp
-You will get the ZEsarUX app on the folder macos/. You may want to move to the "Applications" folder on your Mac
-You will also get the ZEsarUX compressed image app on the folder macos/
-
-
-- On Linux and other Unix systems:
-
--If installing from source code:
-make
-su root
-make install
-
--If installing from binary:
-su root
-./install.sh
+- x11 (on Linux/Raspberry): needs x11libs, x11extlibs, xf86vidmode, xxf86vm
+- x11 (on Mac OS X): needs XQuartz
+- cocoa (on Mac OS X): Compiling supported using XCode.
+- SDL 1.2 (on Linux/Raspberry): needs sdllib-1.2. SDL2 is experimental
+- caca: cacalib
+- aa: aalib
+- curses: curses-dev
+- stdout: termios includes
 
 
----------------
+# Audio Drivers
+
+- OSS (dsp) (on Linux/Raspberry): needs soundcard includes. Usually included on Linux systems.
+- alsa (on Linux/Raspberry): needs alsalibs.
+- pulse (on Linux/Raspberry): needs pulselibs.
+- SDL 1.2 (on Linux/Raspberry): needs sdllib. SDL2 is experimental.
+- coreaudio (on Mac OS X): Compiling supported using XCode.
 
 
-* Utilities
-You can compile them with
-make utilities
+# Audio Output to a File
 
+- libsndfile to output audio to wav files.
+- Raw audio is always supported.
+
+
+# Other Enhancements
+
+- pthreads: pthread includes. Usually included on all Unix systems.
+- realtime: sched includes. Usually included on Linux systems.
+- autodetect snapshots and tape files by its contents: libssl.
+
+
+
+Compiling ZEsarUX
+-----------------
+
+Navigate to the `src` directory and type:
+
+    $ ./configure
+
+
+Optionally you may wish to enable these features:
+
+    $ ./configure --enable-memptr --enable-visualmem --enable-cpustats
+
+
+NOTE: these options make the emulator use a bit more CPU power.
+
+
+
+# Compiling for raspberry-raspbian
+
+I recommend you set these flags:
+
+    $ export CFLAGS=-O2
+    $ export LDFLAGS=-O2
+
+    $ ./configure --enable-raspberry
+
+This will ensure that memptr, visualmem, and cpustats are not enabled.
+
+Even more, if you have a slow device like the Raspberry Pi 1 or Zero, I recommend:
+
+    $ ./configure --enable-raspberry --spectrum-reduced-core
+
+This will also ensure that the "reduced core" is on by default, which uses less cpu, although you can also switch it from command line, or at runtime.
+
+
+NOTE: by using the reduced core the following features will NOT be available, or will NOT be properly emulated:
+
+- Debug t-states
+- Char detection
+- +3 Disk
+- Save to tape
+- Divide
+- Divmmc
+- RZX
+- Raster interrupts
+- Audio DAC
+- Video out to file
+
+
+
+# Compiling for macOS
+
+    $ export CFLAGS=-O2
+    $ export LDFLAGS=-O2
+
+    $ ./configure         # ... with any options you want
+
+    $ make clean
+    $ make
+
+
+It is possible to run the emulator from the current directory without installing:
+
+    $ ./zesarux
+
+
+
+Install and Run ZEsarUX
+-----------------------
+
+
+# Raspberry Pi
+
+The recommended way to start the emulator is with:
+
+    $ ./zesarux --disableborder --zoom 1 --fullscreen --vo fbdev --ao sdl --no-detect-realvideo
+
+
+
+# macOS
+
+    $ make macapp
+
+This will create a `macos` folder, which contains the `ZEsarUX.app` along with a compressed `.dmg` file.
+
+You may wish to move this to your "Applications" folder.
+
+
+
+# Linux and other Unix systems
+
+If installing from source code:
+
+    $ make
+    $ su root
+    $ make install
+
+
+If installing from binary:
+
+    $ su root
+    $ ./install.sh
+
+
+
+Utilities
+---------
+
+These can be compiled with:
+
+    $ make utilities
