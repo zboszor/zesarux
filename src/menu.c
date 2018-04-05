@@ -30312,13 +30312,13 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings,"Accessibility settings");
 		menu_add_item_menu_ayuda(array_menu_settings,"Accessibility settings, to use text-to-speech facilities on ZEsarUX menu and games");
 
-		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_settings_audio,NULL,"~~Audio");
-		menu_add_item_menu_shortcut(array_menu_settings,'a');
+		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_settings_audio,NULL,"A~~udio");
+		menu_add_item_menu_shortcut(array_menu_settings,'u');
 		menu_add_item_menu_tooltip(array_menu_settings,"Audio settings");
 		menu_add_item_menu_ayuda(array_menu_settings,"Audio settings");
 
-		menu_add_item_menu(array_menu_settings,"~~Configuration file",MENU_OPCION_NORMAL,menu_settings_config_file,NULL);
-		menu_add_item_menu_shortcut(array_menu_settings,'c');
+		menu_add_item_menu(array_menu_settings,"C~~onfiguration file",MENU_OPCION_NORMAL,menu_settings_config_file,NULL);
+		menu_add_item_menu_shortcut(array_menu_settings,'o');
 		menu_add_item_menu_tooltip(array_menu_settings,"Configuration file");
 		menu_add_item_menu_ayuda(array_menu_settings,"Configuration file");
 
