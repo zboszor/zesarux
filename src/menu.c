@@ -24873,14 +24873,6 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"Colour settings");
 
-		//Con driver cocoa, no permitimos cambiar a otro driver
-		if (strcmp(scr_driver_name,"cocoa")) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_change_video_driver,menu_change_video_driver_cond,"Change Video Driver");
-		}
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_external_tools_config,NULL,"External tools paths");
-
-
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_change_gui_style,NULL,"GUI ~~style: %s",
 						definiciones_estilos_gui[estilo_gui_activo].nombre_estilo);
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'s');
@@ -24891,6 +24883,15 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 					"ZX80/81: ZX80&81 style\n"
 					"CPC: Amstrad CPC style\n"
 					);
+
+		//Con driver cocoa, no permitimos cambiar a otro driver
+		if (strcmp(scr_driver_name,"cocoa")) {
+			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_change_video_driver,menu_change_video_driver_cond,"Change Video Driver");
+		}
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_external_tools_config,NULL,"External tools paths");
+
+
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_limit_menu_open,NULL,"Limit menu opening: %s",
 			(menu_limit_menu_open.v ? "Yes" : "No") );
