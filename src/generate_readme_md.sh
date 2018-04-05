@@ -21,6 +21,9 @@ Other by 3rd party:
 * MorhpOS
 
 
+ZEsarUX has won the "Best Emulator" award from Retrogaming Total blog on 2015 and 2017
+
+
 _EOF
 
 
