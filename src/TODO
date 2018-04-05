@@ -15,25 +15,6 @@ Tiene sentido eliminar los que ya no están? Volverán en el futuro? Preguntar e
 * update a ultima version nextos rom, sd, etc
 
 
--Formato zsf: completar para mas maquinas
-ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo y desactivo setting de divmmc paging, ya aparece:
-porque no habilita el nested_function de divmmc. Sera tan facil como guardar el setting de diviface-paged-enabled y si es asi, 
-activar ese nested (por defecto tenerlo desactivado). En caso de zxuno, divmmc en zsf no debe guardar/grabar su memoria ram ya que es 
-la propia memoria de zxuno quien lo tiene, lo mismo para tbblue, y prism
--seguir formato zsf:
--Opción para poder cargar snapshot pero sin cambiar la rom actual... útil por si grabamos un snapshot por ejemplo en máquina 128kb pero la rom era la del opense
-->esto ya esta para .sna, hacer para zsf
--Opcion para forzar siempre snap grabar zsf de 48k
-
-
--quiza en set_machine, cuando hace:
-  //Si estaba divmmc o divide activo, desactivarlos
-  //if (divmmc_enabled.v) divmmc_disable();
-  //if (divide_enabled.v) divide_disable();
-  if (diviface_enabled.v) diviface_disable();
-Igual deberia desactivar tambien setting divmmc_enabled y divide_enabled.v, porque sino, desactiva el setting diviface pero los otros 
-pueden quedarse activos. Esto en load snapshot zsf de zxuno lo hace aparte
-
 Speech:
 -enter le envia siempre speech pending. normal?
 -probar speech, stdout driver con menu tabulado
@@ -558,8 +539,6 @@ Parece que tambien mejora si al lanzar im2 se restan estados... hasta 30 o asi
 
 -probar que pasa cuando llega a mas de 12 sprites en linea tbblue
 -Multiface rom en tbblue debería leer la de tbblue
--sid commodore para tbbue. ver ReSID
--snapshot .zsf para tbblue
 -Sincronizar bits de joystick de puerto config2
 -no dejar aumentar memoria divmmc mas de 128kb, pues tbblue no tiene mas que eso. sino, se accederia a memoria mas alla del divmmc
 
@@ -617,6 +596,43 @@ night hunter. aunque luego no carga la cara b
 
 -------------
 
+--- ZSF ---
+
+-Incluir campo para numero de versión?
+ZSF: con zxuno y divmmc, al cargar snapshot, esxdos no está presente. Si activo y desactivo setting de divmmc paging, ya aparece:
+porque no habilita el nested_function de divmmc. Sera tan facil como guardar el setting de diviface-paged-enabled y si es asi, 
+activar ese nested (por defecto tenerlo desactivado). En caso de zxuno, divmmc en zsf no debe guardar/grabar su memoria ram ya que es 
+la propia memoria de zxuno quien lo tiene, lo mismo para tbblue, y prism
+-seguir formato zsf:
+-Opción para poder cargar snapshot pero sin cambiar la rom actual... útil por si grabamos un snapshot por ejemplo en máquina 128kb pero la rom era la del opense
+->esto ya esta para .sna, hacer para zsf
+-Opcion para forzar siempre snap grabar zsf de 48k
+
+
+-quiza en set_machine, cuando hace:
+  //Si estaba divmmc o divide activo, desactivarlos
+  //if (divmmc_enabled.v) divmmc_disable();
+  //if (divide_enabled.v) divide_disable();
+  if (diviface_enabled.v) diviface_disable();
+Igual deberia desactivar tambien setting divmmc_enabled y divide_enabled.v, porque sino, desactiva el setting diviface pero los otros 
+pueden quedarse activos. Esto en load snapshot zsf de zxuno lo hace aparte
+
+-Formato zsf: completar para mas maquinas
+*tbblue: no hasta que no este mas estable la plataforma
+*MK14: falta incluso funcion de grabar registros de la cpu      
+*QL: falta incluso funcion de grabar registros de la cpu        
+*TS2068   
+*Z88      
+*Sam      
+*Chloe140 
+*Chloe280 
+*Chrome   
+*Prism    
+*TSConf   
+*ACE      
+*CPC464  
+
+-----------------------
 
 --- SAM coupe ---
 
