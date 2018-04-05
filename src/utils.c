@@ -9076,7 +9076,7 @@ int util_parse_commands_argvc(char *texto, char *parm_argv[], int maximo)
 }
 
 //Retorna 0 si ok. No 0 si error. Ancho expresado en pixeles. Alto expresado en pixeles
-//Source es en crudo bytes monocromos
+//Source es en crudo bytes monocromos. ppb sera 8 siempre
 int util_write_pbm_file(char *archivo, int ancho, int alto, int ppb, z80_byte *source)
 {
 

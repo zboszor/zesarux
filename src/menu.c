@@ -30313,10 +30313,10 @@ void menu_settings_config_file(MENU_ITEM_PARAMETERS)
 
 
                 menu_add_item_menu(array_menu_settings_config_file,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_settings_config_file,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                
 		menu_add_ESC_item(array_menu_settings_config_file);
 
-                retorno_menu=menu_dibuja_menu(&settings_config_file_opcion_seleccionada,&item_seleccionado,array_menu_settings_config_file,"Configuration File" );
+                retorno_menu=menu_dibuja_menu(&settings_config_file_opcion_seleccionada,&item_seleccionado,array_menu_settings_config_file,"Configuration file" );
 
                 cls_menu_overlay();
 
@@ -30503,42 +30503,30 @@ void menu_inicio_bucle(void)
 		menu_add_item_menu_tooltip(array_menu_principal,"Change active machine");
 		menu_add_item_menu_ayuda(array_menu_principal,"You can switch to another machine. It also resets the machine");
 
+		menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,menu_storage_settings,NULL,"S~~torage");
+		menu_add_item_menu_shortcut(array_menu_principal,'t');
+		menu_add_item_menu_tooltip(array_menu_principal,"Select storage mediums, like tape, MMC, IDE, etc");
+		menu_add_item_menu_ayuda(array_menu_principal,"Select storage mediums, like tape, MMC, IDE, etc");		
+
 		menu_add_item_menu(array_menu_principal,"S~~napshot",MENU_OPCION_NORMAL,menu_snapshot,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'n');
 		menu_add_item_menu_tooltip(array_menu_principal,"Load or save snapshots");
 		menu_add_item_menu_ayuda(array_menu_principal,"Load or save different snapshot images. Snapshot images are loaded or saved at once");
 
-		menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,menu_storage_settings,NULL,"S~~torage");
-		menu_add_item_menu_shortcut(array_menu_principal,'t');
-		menu_add_item_menu_tooltip(array_menu_principal,"Select storage mediums, like tape, MMC, IDE, etc");
-		menu_add_item_menu_ayuda(array_menu_principal,"Select storage mediums, like tape, MMC, IDE, etc");
-
-		/*menu_add_item_menu(array_menu_principal,"~~Hardware Settings",MENU_OPCION_NORMAL,menu_hardware_settings,NULL);
-		menu_add_item_menu_shortcut(array_menu_principal,'h');
-		menu_add_item_menu_tooltip(array_menu_principal,"Hardware options for the running machine");
-		menu_add_item_menu_ayuda(array_menu_principal,"Select different options for the machine and change its behaviour");*/
-
-		//menu_add_item_menu(array_menu_principal,"~~Audio Settings",MENU_OPCION_NORMAL,menu_audio_settings,NULL);
 		menu_add_item_menu(array_menu_principal,"~~Audio",MENU_OPCION_NORMAL,menu_audio_settings,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'a');
 		menu_add_item_menu_tooltip(array_menu_principal,"Audio related actions");
 		menu_add_item_menu_ayuda(array_menu_principal,"Audio related actions");
-
-
-		menu_add_item_menu(array_menu_principal,"~~Display",MENU_OPCION_NORMAL,menu_display_settings,NULL);
-		menu_add_item_menu_shortcut(array_menu_principal,'d');
-		menu_add_item_menu_tooltip(array_menu_principal,"Display related actions");
-		menu_add_item_menu_ayuda(array_menu_principal,"Display related actions");
 
 		menu_add_item_menu(array_menu_principal,"D~~ebug",MENU_OPCION_NORMAL,menu_debug_settings,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'e');
 		menu_add_item_menu_tooltip(array_menu_principal,"Debug tools");
 		menu_add_item_menu_ayuda(array_menu_principal,"Tools to debug the machine");
 
-		/*menu_add_item_menu(array_menu_principal,"~~GUI Settings",MENU_OPCION_NORMAL,menu_interface_settings,NULL);
-		menu_add_item_menu_shortcut(array_menu_principal,'g');
-		menu_add_item_menu_tooltip(array_menu_principal,"Settings for the GUI");
-		menu_add_item_menu_ayuda(array_menu_principal,"These settings are related to the GUI interface");*/
+		menu_add_item_menu(array_menu_principal,"~~Display",MENU_OPCION_NORMAL,menu_display_settings,NULL);
+		menu_add_item_menu_shortcut(array_menu_principal,'d');
+		menu_add_item_menu_tooltip(array_menu_principal,"Display related actions");
+		menu_add_item_menu_ayuda(array_menu_principal,"Display related actions");
 
 
 		menu_add_item_menu(array_menu_principal,"Sett~~ings",MENU_OPCION_NORMAL,menu_settings,NULL);
@@ -30546,19 +30534,7 @@ void menu_inicio_bucle(void)
 		menu_add_item_menu_tooltip(array_menu_principal,"General Settings");
 		menu_add_item_menu_ayuda(array_menu_principal,"General Settings");
 
-		//menu_add_item_menu(array_menu_principal,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-		/*menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,NULL,NULL,"M~~ultitask menu: %s", (menu_multitarea==1 ? "On" : "Off"));
-		menu_add_item_menu_shortcut(array_menu_principal,'u');
-		menu_add_item_menu_tooltip(array_menu_principal,"Enable menu with multitask");
-		menu_add_item_menu_ayuda(array_menu_principal,"Setting multitask on makes the emulation does not stop when the menu is active");*/
-
-                /*menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,menu_cpu_speed,NULL,"Emulator S~~peed: %d%%",porcentaje_velocidad_emulador);
-		menu_add_item_menu_shortcut(array_menu_principal,'p');
-		menu_add_item_menu_tooltip(array_menu_principal,"Change the emulator Speed");
-		menu_add_item_menu_ayuda(array_menu_principal,"Changes the emulator speed by setting a different interval between display frames. "
-								"Also changes audio frequency");*/
-
+		
 
 		menu_add_item_menu(array_menu_principal,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 		menu_add_item_menu(array_menu_principal,"He~~lp...",MENU_OPCION_NORMAL,menu_about,NULL);
@@ -30567,15 +30543,7 @@ void menu_inicio_bucle(void)
 		menu_add_item_menu_ayuda(array_menu_principal,"Some help and related files");
 
 
-
-
-		//menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,NULL,NULL,"%sBack to the emulator",(f_functions==1 ? "F2  ": "") );
-
 		menu_add_ESC_item(array_menu_principal);
-
-		//menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,NULL,NULL,"%sBack to the emulator",(f_functions==1 ? "F2  ": "") );
-		//menu_add_item_menu_tooltip(array_menu_principal,"Back to the emulator");
-		//menu_add_item_menu_ayuda(array_menu_principal,"Close menu and go back to the emulator");
 
 		menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,NULL,NULL,"%sExit emulator",(f_functions==1 ? "F10 ": "") );
 		menu_add_item_menu_tooltip(array_menu_principal,"Exit emulator");
