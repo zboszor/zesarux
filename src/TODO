@@ -1381,8 +1381,6 @@ para lightgun la mayoria de puertos son teclado o kempston, en que ya se control
 
 -Para acelerar fbdev, al refrescar pantalla, no calcular cada vez el offset en pantalla multiplicando sino que ir incrementando
 
--Poder guardar pantalla como formato pbm
-
 -Si modo interlaced activo, al redimensionar ventana con raton y hacerla zoom=1, se deberia desactivar opcion interlaced (y scanlines)
 
 -Quizá función putpixel z88 debería estar inicializada desde el principio con algo, por si acaso
