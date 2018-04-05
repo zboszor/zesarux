@@ -43,8 +43,6 @@ O quizá setting configurable
 
 -backspace no lo lee en curses?? parece que tanto en mac como linux
 
--licencia tipo letra man soft
-
 -teclas F11-F15 para fbdev
 teclas F en general en fbdev driver no raw
 Creo que ya esta
