@@ -2,10 +2,6 @@
 
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
--menu accessibilidad aparte (print char traps, text to speech)
-
--tecla para accessibilidad, para poder escuchar contenido de una ventana de menu
-
 TBBLUE:
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
@@ -53,7 +49,6 @@ O quizá setting configurable
 teclas F en general en fbdev driver no raw
 Creo que ya esta
 
-
 --- Fin cosas para version 6.1
 
 
@@ -74,6 +69,8 @@ luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu 
         }
 
 que sea un "if" tipo "if pulsado tecla openmenu"
+
+-tecla para accessibilidad, para poder escuchar contenido de una ventana de menu: quiza misma tecla asociada a OCR
 
 -mayusculas + tecla de menu file utils, cuando esta en zx80/81 no va 
 
