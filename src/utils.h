@@ -635,5 +635,6 @@ extern int util_if_open_just_menu_times;
 extern unsigned int util_if_open_just_menu_counter;
 
 extern unsigned int util_if_open_just_menu_initial_counter;
+extern void util_convert_scr_sprite(z80_byte *origen,z80_byte *destino);
 
 #endif

@@ -25331,10 +25331,11 @@ void menu_display_save_screen(MENU_ITEM_PARAMETERS)
 
 char screen_save_file[PATH_MAX];
 
-  char *filtros[2];
+  char *filtros[3];
 
         filtros[0]="scr";
-        filtros[1]=0;
+        filtros[1]="pbm";
+        filtros[2]=0;
 
 
         if (menu_filesel("Select Screen File",filtros,screen_save_file)==1) {
@@ -25349,7 +25350,41 @@ char screen_save_file[PATH_MAX];
                 }
 
 
-                save_screen(screen_save_file);
+		if (!util_compare_file_extension(screen_save_file,"scr")) {
+	                save_screen(screen_save_file);
+		}
+
+		else if (!util_compare_file_extension(screen_save_file,"pbm")) {
+
+			//void util_convert_scr_sprite(z80_byte *origen,z80_byte *destino)
+
+
+
+                                //Asignar buffer temporal
+                                int longitud=6144;
+                                z80_byte *buf_temp=malloc(longitud);
+                                if (buf_temp==NULL) {
+                                        debug_printf(VERBOSE_ERR,"Error allocating temporary buffer");
+                                }
+
+                                //Convertir pantalla a sprite ahi
+				z80_byte *origen;
+				origen=get_base_mem_pantalla();
+				util_convert_scr_sprite(origen,buf_temp);
+
+                                util_write_pbm_file(screen_save_file,256,192,8,buf_temp);
+
+                                free(buf_temp);
+
+
+		}
+
+		else {
+	                debug_printf(VERBOSE_ERR,"Unsuported file type");
+        	        return;
+		} 
+
+
                 //Y salimos de todos los menus
                 salir_todos_menus=1;
 

@@ -13,6 +13,7 @@ Added actions to file utilities menu: Copy, Move, Rename
 Added setting to disable persistent writes on IDE and MMC
 Added setting to add a watermark on the display
 Added setting to reduce display to a factor of 0.75. Used on RunZX event
+Added setting to save spectrum screen to pbm file (black&white)
 Added a setting to dump ram contents to file when exiting ZEsarUX, ideal to run automatic tests
 Added setting to exit emulator after a number of seconds (--exit-after)
 Added second Easter Egg ;)

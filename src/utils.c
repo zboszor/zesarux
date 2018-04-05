@@ -10216,3 +10216,21 @@ void util_spectrumscreen_get_xy(z80_int dir,int *xdest,int *ydest)
         }
 
 }
+
+
+//Convierte una pantalla de tipo spectrum (con sus particulares direcciones) a un sprite
+void util_convert_scr_sprite(z80_byte *origen,z80_byte *destino)
+{
+	int x,y;
+	z80_byte *linea_origen;
+
+	for (y=0;y<192;y++) {
+		int offset_origen=screen_addr_table[y*32] & 8191;
+		linea_origen=&origen[offset_origen];
+		for (x=0;x<32;x++) {
+			*destino=*linea_origen;
+			destino++;
+			linea_origen++;
+		}
+	}
+}
