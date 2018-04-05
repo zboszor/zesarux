@@ -30307,20 +30307,30 @@ void menu_settings(MENU_ITEM_PARAMETERS)
         do {
 
 
-		menu_add_item_menu_inicial_format(&array_menu_settings,MENU_OPCION_NORMAL,menu_settings_snapshot,NULL,"~~Snapshot");
-		menu_add_item_menu_shortcut(array_menu_settings,'s');
-		menu_add_item_menu_tooltip(array_menu_settings,"Snapshot settings");
-		menu_add_item_menu_ayuda(array_menu_settings,"Snapshot settings");
-
-		menu_add_item_menu(array_menu_settings,"S~~torage",MENU_OPCION_NORMAL,menu_settings_storage,NULL);
-		menu_add_item_menu_shortcut(array_menu_settings,'t');
-		menu_add_item_menu_tooltip(array_menu_settings,"Storage settings");
-		menu_add_item_menu_ayuda(array_menu_settings,"Storage settings");
+		menu_add_item_menu_inicial(&array_menu_settings,"~~Accessibility",MENU_OPCION_NORMAL,menu_accessibility_settings,NULL);
+		menu_add_item_menu_shortcut(array_menu_settings,'a');
+		menu_add_item_menu_tooltip(array_menu_settings,"Accessibility settings");
+		menu_add_item_menu_ayuda(array_menu_settings,"Accessibility settings, to use text-to-speech facilities on ZEsarUX menu and games");
 
 		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_settings_audio,NULL,"~~Audio");
 		menu_add_item_menu_shortcut(array_menu_settings,'a');
 		menu_add_item_menu_tooltip(array_menu_settings,"Audio settings");
 		menu_add_item_menu_ayuda(array_menu_settings,"Audio settings");
+
+		menu_add_item_menu(array_menu_settings,"~~Configuration file",MENU_OPCION_NORMAL,menu_settings_config_file,NULL);
+		menu_add_item_menu_shortcut(array_menu_settings,'c');
+		menu_add_item_menu_tooltip(array_menu_settings,"Configuration file");
+		menu_add_item_menu_ayuda(array_menu_settings,"Configuration file");
+
+		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_cpu_settings,NULL,"~~CPU");
+		menu_add_item_menu_shortcut(array_menu_settings,'c');
+	    	menu_add_item_menu_tooltip(array_menu_settings,"Change some CPU settings");
+		menu_add_item_menu_ayuda(array_menu_settings,"Change some CPU settings");		
+
+		menu_add_item_menu(array_menu_settings,"D~~ebug",MENU_OPCION_NORMAL,menu_settings_debug,NULL);
+		menu_add_item_menu_shortcut(array_menu_settings,'e');
+		menu_add_item_menu_tooltip(array_menu_settings,"Debug settings");
+		menu_add_item_menu_ayuda(array_menu_settings,"Debug settings");
 
 		menu_add_item_menu(array_menu_settings,"~~Display",MENU_OPCION_NORMAL,menu_settings_display,NULL);
 		menu_add_item_menu_shortcut(array_menu_settings,'d');
@@ -30332,10 +30342,20 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings,"Settings for the GUI");
 		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the GUI interface");
 
-		menu_add_item_menu(array_menu_settings,"~~Accessibility",MENU_OPCION_NORMAL,menu_accessibility_settings,NULL);
-		menu_add_item_menu_shortcut(array_menu_settings,'a');
-		menu_add_item_menu_tooltip(array_menu_settings,"Accessibility settings");
-		menu_add_item_menu_ayuda(array_menu_settings,"Accessibility settings, to use text-to-speech facilities on ZEsarUX menu and games");
+		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_hardware_settings,NULL,"~~Hardware");
+		menu_add_item_menu_shortcut(array_menu_settings,'h');
+		menu_add_item_menu_tooltip(array_menu_settings,"Other hardware settings for the running machine (not CPU or ULA)");
+		menu_add_item_menu_ayuda(array_menu_settings,"Select different settings for the machine and change its behaviour (not CPU or ULA)");
+
+		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_settings_snapshot,NULL,"~~Snapshot");
+		menu_add_item_menu_shortcut(array_menu_settings,'s');
+		menu_add_item_menu_tooltip(array_menu_settings,"Snapshot settings");
+		menu_add_item_menu_ayuda(array_menu_settings,"Snapshot settings");
+
+		menu_add_item_menu(array_menu_settings,"S~~torage",MENU_OPCION_NORMAL,menu_settings_storage,NULL);
+		menu_add_item_menu_shortcut(array_menu_settings,'t');
+		menu_add_item_menu_tooltip(array_menu_settings,"Storage settings");
+		menu_add_item_menu_ayuda(array_menu_settings,"Storage settings");
 
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_ula_settings,NULL,"~~ULA");
@@ -30346,28 +30366,6 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 
 		}	
 
-
-		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_cpu_settings,NULL,"~~CPU");
-		menu_add_item_menu_shortcut(array_menu_settings,'c');
-	    menu_add_item_menu_tooltip(array_menu_settings,"Change some CPU settings");
-	    menu_add_item_menu_ayuda(array_menu_settings,"Change some CPU settings");		
-
-		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_hardware_settings,NULL,"~~Hardware");
-		menu_add_item_menu_shortcut(array_menu_settings,'h');
-		menu_add_item_menu_tooltip(array_menu_settings,"Other hardware settings for the running machine (not CPU or ULA)");
-		menu_add_item_menu_ayuda(array_menu_settings,"Select different settings for the machine and change its behaviour (not CPU or ULA)");
-
-	
-
-		menu_add_item_menu(array_menu_settings,"D~~ebug",MENU_OPCION_NORMAL,menu_settings_debug,NULL);
-		menu_add_item_menu_shortcut(array_menu_settings,'e');
-		menu_add_item_menu_tooltip(array_menu_settings,"Debug settings");
-		menu_add_item_menu_ayuda(array_menu_settings,"Debug settings");
-
-		menu_add_item_menu(array_menu_settings,"~~Configuration file",MENU_OPCION_NORMAL,menu_settings_config_file,NULL);
-		menu_add_item_menu_shortcut(array_menu_settings,'c');
-		menu_add_item_menu_tooltip(array_menu_settings,"Configuration file");
-		menu_add_item_menu_ayuda(array_menu_settings,"Configuration file");
 
 
 
