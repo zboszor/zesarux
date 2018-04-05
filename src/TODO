@@ -2,7 +2,6 @@
 
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
--mayusculas + tecla de menu file utils, cuando esta en zx80/81 no va 
 
 TBBLUE:
 -tbblue extended opcodes
@@ -73,6 +72,7 @@ luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu 
 
 que sea un "if" tipo "if pulsado tecla openmenu"
 
+-mayusculas + tecla de menu file utils, cuando esta en zx80/81 no va 
 
 -al cargar un .zsf de zx8081 que contiene un .zsf.config,con parametros de wrx, se resetean despues:
 Info: Parsing custom configuration file /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/pruebahero.zsf.config
