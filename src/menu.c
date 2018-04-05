@@ -704,6 +704,8 @@ int textdrivers_settings_opcion_seleccionada=0;
 int debug_tsconf_dma_opcion_seleccionada=0;
 int debug_tsconf_opcion_seleccionada;
 
+int accessibility_settings_opcion_seleccionada=0;
+
 //Indica que esta el splash activo o cualquier otro texto de splash, como el de cambio de modo de video
 z80_bit menu_splash_text_active;
 
@@ -24748,6 +24750,60 @@ void menu_setting_quickexit(MENU_ITEM_PARAMETERS)
 	quickexit.v ^=1;
 }
 
+
+void menu_accessibility_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_accessibility_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+
+                menu_add_item_menu_inicial_format(&array_menu_accessibility_settings,MENU_OPCION_NORMAL,menu_chardetection_settings,NULL,"~~Print char traps");
+                        menu_add_item_menu_shortcut(array_menu_accessibility_settings,'p');
+                        menu_add_item_menu_tooltip(array_menu_accessibility_settings,"Settings on capture print character routines");
+                        menu_add_item_menu_ayuda(array_menu_accessibility_settings,"Settings on capture print character routines");
+
+
+                        menu_add_item_menu_format(array_menu_accessibility_settings,MENU_OPCION_NORMAL,menu_textspeech,NULL,"~~Text to speech");
+                        menu_add_item_menu_shortcut(array_menu_accessibility_settings,'t');
+                        menu_add_item_menu_tooltip(array_menu_accessibility_settings,"Specify a script or program to send all text generated, "
+                                                "from Spectrum display or emulator menu, "
+                                                "usually used on text to speech");
+                        menu_add_item_menu_ayuda(array_menu_accessibility_settings,"Specify a script or program to send all text generated, "
+                                                "from Spectrum display or emulator menu, "
+                                                "usually used on text to speech. "
+                                                "When running the script: \n"
+                                                "ESC means abort next executions on queue.\n"
+                                                "Enter means run pending execution.\n");
+
+
+
+
+
+   menu_add_item_menu(array_menu_accessibility_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_accessibility_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                menu_add_ESC_item(array_menu_accessibility_settings);
+
+                retorno_menu=menu_dibuja_menu(&accessibility_settings_opcion_seleccionada,&item_seleccionado,array_menu_accessibility_settings,"Accessibility Settings");
+
+                cls_menu_overlay();
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                cls_menu_overlay();
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
+
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_interface_settings;
@@ -24792,6 +24848,9 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_tooltip(array_menu_interface_settings,"Let ZEsarUX decide when to skip frames");
 			menu_add_item_menu_ayuda(array_menu_interface_settings,"ZEsarUX skips frames when the host cpu use is too high. Then skiping frames the cpu use decreases");
 
+
+
+		/*
 			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_chardetection_settings,NULL,"~~Print char traps");
 			menu_add_item_menu_shortcut(array_menu_interface_settings,'p');
 			menu_add_item_menu_tooltip(array_menu_interface_settings,"Settings on capture print character routines");
@@ -24810,6 +24869,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 						"ESC means abort next executions on queue.\n"
 						"Enter means run pending execution.\n");
 
+		*/
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"Colour settings");
 
@@ -30271,6 +30331,11 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_settings,'g');
 		menu_add_item_menu_tooltip(array_menu_settings,"Settings for the GUI");
 		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the GUI interface");
+
+		menu_add_item_menu(array_menu_settings,"~~Accessibility",MENU_OPCION_NORMAL,menu_accessibility_settings,NULL);
+		menu_add_item_menu_shortcut(array_menu_settings,'a');
+		menu_add_item_menu_tooltip(array_menu_settings,"Accessibility settings");
+		menu_add_item_menu_ayuda(array_menu_settings,"Accessibility settings, to use text-to-speech facilities on ZEsarUX menu and games");
 
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_ula_settings,NULL,"~~ULA");

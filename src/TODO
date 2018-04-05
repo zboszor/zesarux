@@ -2,6 +2,9 @@
 
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
+-menu accessibilidad aparte (print char traps, text to speech)
+
+-tecla para accessibilidad, para poder escuchar contenido de una ventana de menu
 
 TBBLUE:
 -tbblue extended opcodes
