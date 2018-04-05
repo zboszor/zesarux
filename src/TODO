@@ -8,20 +8,6 @@ luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu 
 
 -mayusculas + tecla de menu file utils, cuando esta en zx80/81 no va 
 
--al cargar un .zsf de zx8081 que contiene un .zsf.config,con parametros de wrx, se resetean despues:
-Info: Parsing custom configuration file /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/pruebahero.zsf.config
-Info: Enabling RealVideo
-Info: Enabling WRX video mode
-Info: Block id: 1 (ZSF_MACHINEID) Lenght: 1
-Info: Setting timer_sleep_machine to 20000 us
-Info: Setting ZX80/81 CPU core
-Info: Disabling WRX video mode
-Info: Loading keymap
-Info: Emulating ZX81 with 16 KB (ramtop=32767)
-
-->pasa casi lo mismo con un .zx pero en estos, hay parametro de si esta wrx activo (y aunque se pierda desde el config se lee desde el .zx),
-pero con el --vsync-minimum-length se pierde y no esta en el .zx ...
-
 TBBLUE:
 -tbblue extended opcodes
 https://docs.google.com/spreadsheets/d/1CFjp6sRIPRTShESC_1I5-pR6v7kTymk0hhUC1TN9sgc/edit#gid=0
@@ -69,12 +55,35 @@ O quizá setting configurable
 teclas F en general en fbdev driver no raw
 Creo que ya esta
 
--revisar mezclado ay+beeper . posiblemente set_value_beeper acaba sacando algun valor beeper 50*2 y se sale todo de rango?
-o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el test de 6/9 canales turbosound?
 
 --- Fin cosas para version 6.1
 
 
+
+
+--- Cosas para la siguiente version
+
+-al cargar un .zsf de zx8081 que contiene un .zsf.config,con parametros de wrx, se resetean despues:
+Info: Parsing custom configuration file /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/pruebahero.zsf.config
+Info: Enabling RealVideo
+Info: Enabling WRX video mode
+Info: Block id: 1 (ZSF_MACHINEID) Lenght: 1
+Info: Setting timer_sleep_machine to 20000 us
+Info: Setting ZX80/81 CPU core
+Info: Disabling WRX video mode
+Info: Loading keymap
+Info: Emulating ZX81 with 16 KB (ramtop=32767)
+
+->pasa casi lo mismo con un .zx pero en estos, hay parametro de si esta wrx activo (y aunque se pierda desde el config se lee desde el .zx),
+pero con el --vsync-minimum-length se pierde y no esta en el .zx ...
+->el config se carga primero. Luego el snapshot, y al meter core de zx80/81 se desactiva wrx y otros settings.
+Quiza habria que parsear algunos parametros del .config tambien despues de cargar el snapshot. Cuales? por ejemplo --realvideo, --wrx, --vsync-minimum-length
+
+-revisar mezclado ay+beeper . posiblemente set_value_beeper acaba sacando algun valor beeper 50*2 y se sale todo de rango?
+o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el test de 6/9 canales turbosound?
+
+
+--- Fin cosas para la siguiente version
 
 
 
