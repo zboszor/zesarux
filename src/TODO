@@ -1,9 +1,5 @@
 --- Cosas para la version 6.1
 
--breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
-si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5.
-luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
-
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
 -mayusculas + tecla de menu file utils, cuando esta en zx80/81 no va 
@@ -62,6 +58,21 @@ Creo que ya esta
 
 
 --- Cosas para la siguiente version
+
+-breakpoints con "printe" que siempre saltan, no dejan abrir el menu con F5
+si se pone una accion que siempre se dispare continuamente, no deja abrir menu con F5.
+luego ademas, con menu abierto no se disparan acciones, excepto si se va a menu debug cpu
+->habria que cambiar todos los "else if " de menu_inicio por if a secas. Y el ultimo else que hace abrir el menu:
+        else {
+
+                osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
+                //Cualquier otra cosa abrir menu normal
+                menu_inicio_bucle();
+
+        }
+
+que sea un "if" tipo "if pulsado tecla openmenu"
+
 
 -al cargar un .zsf de zx8081 que contiene un .zsf.config,con parametros de wrx, se resetean despues:
 Info: Parsing custom configuration file /Users/cesarhernandez/Documents/ZEsarUX/zesarux/src/pruebahero.zsf.config
