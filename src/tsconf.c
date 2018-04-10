@@ -45,7 +45,7 @@ void tsconf_generate_im1_im2(z80_byte vector);
 
 z80_byte tsconf_af_ports[256];
 
-//Si se usa vdac con full 15 bits, o sin vdac: en ese caso, cada componente de 5 bits son diferentes hasta valor 24, a partir de ahi son iguales a 255:
+//Si se usa vdac con full 15 bits, o con pwm: en ese caso, cada componente de 5 bits son diferentes hasta valor 24, a partir de ahi son iguales a 255:
 /*
 0  1   2    3   4  5   6   7   8   9   10   11    12  13   14   15   16   17   18   19   20   21   22   23   24
 0, 10, 21, 31, 42, 53, 63, 74, 85, 95, 106, 117, 127, 138, 149, 159, 170, 181, 191, 202, 213, 223, 234, 245, 255,
@@ -53,8 +53,20 @@ z80_byte tsconf_af_ports[256];
 Y a partir de 24 todos son 255
 */
 
-//Por defecto desactivado. Unreal emulator lo tendra asi (los colores son iguales que sin vdac), por lo que entiendo que es lo normal
-z80_bit tsconf_with_vdac={0};
+//Por defecto con pwm. Unreal emulator lo tendra asi (los colores son iguales que sin vdac), por lo que entiendo que es lo normal
+z80_bit tsconf_vdac_with_pwm={1};
+
+/*
+Poner 3 modos de color:
+Rgb 6 (2 bits por componente)
+O 
+Con vdac, rango de 0-31 por componente o 0-24 (el mismo setting que hasta ahora)
+256 color cells, 16 bit each.
+bit 15 (0x8000) is used to distinct the old 0-24 PWM and linear RGB5.
+When bit15=0 then values 0-24 are linear grayscale and values 24-31 are reproduced as 255 on output.
+When bit15=1 then values 0-31 are linear grayscale.
+RGB5 to RGB8 is a tricky convertion, but formulas used are as simple as possible.
+*/
 
 
 z80_byte tsconf_fmaps[TSCONF_FMAPS_SIZE];
@@ -878,7 +890,7 @@ mis opciones:
 
         */
 
-        if (tsconf_with_vdac.v) return 7;
+        if (tsconf_vdac_with_pwm.v) return 7;
         else return 0;
 
       break;
@@ -1260,11 +1272,11 @@ void tsconf_hard_reset(void)
 z80_byte tsconf_rgb_5_to_8(z80_byte color)
 {
 
-	//Con vdac
-	if (tsconf_with_vdac.v) return color*8;  //5 bits: 0..31. max valor 31*8=248
+	//Con pwm
+	if (tsconf_vdac_with_pwm.v==0) return color*8;  //5 bits: 0..31. max valor 31*8=248
 
 
-	//Sin vdac
+	//con pwm
 //Si se usa vdac con full 15 bits, o sin vdac: en ese caso, cada componente de 5 bits son diferentes hasta valor 24, a partir de ahi son iguales a 255:
 /*
 0  1   2    3   4  5   6   7   8   9   10   11    12  13   14   15   16   17   18   19   20   21   22   23   24

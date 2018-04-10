@@ -26037,9 +26037,9 @@ cls_menu_overlay();
 }
 
 
-void menu_display_tsconf_dac(MENU_ITEM_PARAMETERS)
+void menu_display_tsconf_vdac(MENU_ITEM_PARAMETERS)
 {
-	tsconf_with_vdac.v ^=1;
+	tsconf_vdac_with_pwm.v ^=1;
 
 	menu_interface_rgb_inverse_common();
 }
@@ -29406,12 +29406,12 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 					);
 
                 if (MACHINE_IS_TSCONF) {
-                        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tsconf_dac,NULL,"TSConf VDAC: %s",
-                        (tsconf_with_vdac.v ? "Yes" : "No")     );
+                        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tsconf_vdac,NULL,"TSConf VDAC PWM: %s",
+                        (tsconf_vdac_with_pwm.v ? "Yes" : "No")     );
 
-                        menu_add_item_menu_tooltip(array_menu_settings_display,"Enables full vdac colour palette");
+                        menu_add_item_menu_tooltip(array_menu_settings_display,"Enables full vdac colour palette or PWM style");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Full vdac colour palette gives you different colour levels for every 5 bit colour component.\n"
-					"Disabling it, gives you 5 bit values different from 0..23, but from 24 to 31 are all set to value 255");
+					"With PWM mode it gives you 5 bit values different from 0..23, but from 24 to 31 are all set to value 255");
 
 
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tsconf_fast_render,NULL,"TSConf Fast Render: %s",
