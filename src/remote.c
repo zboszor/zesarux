@@ -47,6 +47,7 @@
 #include "operaciones.h"
 #include "snap.h"
 #include "kartusho.h"
+#include "zxevo.h"
 
 
 
@@ -818,13 +819,14 @@ struct s_items_ayuda items_ayuda[]={
 
 
  {"tsconf-get-af-port",NULL,"index","Get TSConf XXAF port value"},
- {"tsconf-get-nvram",NULL,"index","Get TSConf NVRAM value at index"},
+
  {"tsconf-set-af-port",NULL,"index value","Set TSConf XXAF port value"},
 
 	{"view-basic",NULL,NULL,"Gets Basic program listing"},
 	{"write-memory","|wm","address value","Writes a sequence of bytes starting at desired address on memory. Bytes must be separed by one space each one"},
 	{"write-memory-raw",NULL,"address values","Writes a sequence of bytes starting at desired address on memory. Bytes must be in hexadecimal and not separed"},
 
+ {"zxevo-get-nvram",NULL,"index","Get ZX-Evo NVRAM value at index"},
 
   {NULL,NULL,NULL,NULL}
 };
@@ -4394,23 +4396,7 @@ else if (!strcmp(comando_sin_parametros,"set-memory-zone") || !strcmp(comando_si
 
 				}
 
-				else if (!strcmp(comando_sin_parametros,"tsconf-get-nvram") ) {
-
-			  	if (!MACHINE_IS_TSCONF) escribir_socket(misocket,"ERROR. Machine is not TSConf");
-					else {
-						if (parametros[0]==0) escribir_socket(misocket,"ERROR. No parameter set");
-						else {
-
-							 int index=parse_string_to_number(parametros);
-							 if (index<0 || index>255) escribir_socket(misocket,"ERROR. Out of range");
-							 else {
-								 z80_byte value=tsconf_nvram[index];
-								 escribir_socket_format(misocket,"%02X",value);
-							 }
-						}
-					}
-
-				}
+		
 
 				else if (!strcmp(comando_sin_parametros,"tsconf-set-af-port") ) {
 
@@ -4538,6 +4524,24 @@ else if (!strcmp(comando_sin_parametros,"write-memory-raw") ) {
 	}
 
 }
+
+		else if (!strcmp(comando_sin_parametros,"zxevo-get-nvram") ) {
+
+			  	if (!MACHINE_IS_ZXEVO) escribir_socket(misocket,"ERROR. Machine is not ZX-Evo");
+					else {
+						if (parametros[0]==0) escribir_socket(misocket,"ERROR. No parameter set");
+						else {
+
+							 int index=parse_string_to_number(parametros);
+							 if (index<0 || index>255) escribir_socket(misocket,"ERROR. Out of range");
+							 else {
+								 z80_byte value=zxevo_nvram[index];
+								 escribir_socket_format(misocket,"%02X",value);
+							 }
+						}
+					}
+
+				}
 
 	else {
 		escribir_socket (misocket,"Unknown command");

@@ -69,6 +69,7 @@
 #include "mk14.h"
 #include "betadisk.h"
 #include "baseconf.h"
+#include "zxevo.h"
 
 
 void (*poke_byte)(z80_int dir,z80_byte valor);
@@ -6028,7 +6029,7 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 		//Puertos nvram
 		if (puerto==0xeff7) return tsconf_last_port_eff7;
 		if (puerto==0xdff7) return tsconf_last_port_dff7;
-		if (puerto==0xbff7) return tsconf_nvram[tsconf_last_port_dff7];
+		if (puerto==0xbff7) return zxevo_nvram[tsconf_last_port_dff7];
 		if (puerto_l==0xaf) return tsconf_get_af_port(puerto_h);
 
 		//Otros puertos
@@ -7072,7 +7073,7 @@ acts as expected unless this registe is explicitly changed by the user/software.
 
 					if (puerto==0xbff7) {
 						//Si esta permitida la escritura
-						if (tsconf_last_port_eff7&128) tsconf_nvram[tsconf_last_port_dff7]=value;
+						if (tsconf_last_port_eff7&128) zxevo_nvram[tsconf_last_port_dff7]=value;
 					}
 
 					if (puerto_l==0xaf) tsconf_write_af_port(puerto_h,value);

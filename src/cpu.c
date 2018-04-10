@@ -2924,20 +2924,11 @@ You don't need timings for H/V sync =)
 
 				 			ula_contend_port_early=ula_contend_port_early_baseconf;
 				 			ula_contend_port_late=ula_contend_port_late_baseconf;
-					        screen_testados_linea=224;
 
-
-		
-							screen_invisible_borde_superior	=32; //para que sumen 320
-							screen_borde_superior=48;
-
-							screen_total_borde_inferior=48;
-
-							
-                        	//los timings son realmente estos :
-                        	screen_total_borde_izquierdo=64;
-                        	screen_total_borde_derecho=64;
-                        	screen_invisible_borde_derecho=64;
+                                        //Temp timings 128k
+                        screen_testados_linea=228;
+                        screen_invisible_borde_superior=7;
+                        screen_invisible_borde_derecho=104;
 
 
 							

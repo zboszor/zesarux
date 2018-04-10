@@ -40,7 +40,7 @@ void tsconf_generate_im1_im2(z80_byte vector);
 
 z80_byte tsconf_last_port_eff7;
 z80_byte tsconf_last_port_dff7;
-z80_byte tsconf_nvram[256];
+//z80_byte tsconf_nvram[256];
 
 z80_byte tsconf_af_ports[256];
 

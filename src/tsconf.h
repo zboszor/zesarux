@@ -42,7 +42,7 @@
 
 extern z80_byte tsconf_last_port_eff7;
 extern z80_byte tsconf_last_port_dff7;
-extern z80_byte tsconf_nvram[];
+//extern z80_byte tsconf_nvram[];
 
 extern void tsconf_write_af_port(z80_byte puerto_h,z80_byte value);
 extern z80_byte tsconf_get_af_port(z80_byte index);

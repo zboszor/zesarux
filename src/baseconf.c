@@ -194,8 +194,8 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
         }
 
         if (puerto==0x7ffd) {
-                //mapeamos ram en c000h, habilitando memory manager
-                baseconf_shadow_ports |=1;
+                //mapeamos ram y rom , pero sin habilitando memory manager
+                //baseconf_shadow_ports |=1;
 
                 //ram
                 baseconf_memory_segments[3]=valor%7;
