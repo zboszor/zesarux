@@ -316,6 +316,8 @@ void betadisk_alloc_memory(void)
 
 int betadisk_load_rom(void)
 {
+	//si es tsconf, tiene rom propia
+	if (MACHINE_IS_TSCONF) return 0;
 
         FILE *ptr_betadisk_romfile;
         int leidos=0;
