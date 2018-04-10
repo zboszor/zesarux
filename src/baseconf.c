@@ -58,6 +58,8 @@ z80_byte baseconf_shadow_mode_port_77;
 
 z80_byte baseconf_last_port_bf;
 
+z80_byte baseconf_last_port_eff7;
+
 int baseconf_shadow_ports_available(void)
 {
 
@@ -126,6 +128,18 @@ void baseconf_set_memory_pages(void)
                         pagina_es_ram=0;
                 }
 
+                if (baseconf_last_port_eff7&8) {
+                        /* 3: When placing a 1 in box # 0000 .. # 3FFF forces the zero page RAM. 
+                        This bit has priority over all other ways to switch the memory page in the window.
+                        Value after reset - 0.
+                        */
+
+                       if (i==0) {
+                               pagina=0;
+                               pagina_es_ram=0;
+                       }
+                }
+
                 //TODO: A9: If 0 then "force" the inclusion of TR-DOS and the shadow ports. 0 after reset.
 
                 if (pagina_es_ram) {
@@ -178,6 +192,7 @@ void baseconf_hard_reset(void)
 baseconf_last_port_77=0;
 baseconf_shadow_mode_port_77=0;
 baseconf_last_port_bf=0;
+baseconf_last_port_eff7=0;
 
         baseconf_set_memory_pages();
 
@@ -190,8 +205,25 @@ page numbers are not inverse bits from port # 7FFD.
 */
 z80_byte baseconf_change_ram_page_7ffd(z80_byte value)
 {
-        value=value&(255-7);
-        value=value | (puerto_32765&7);
+        
+/*
+baseconf_last_port_eff7;
+2: off for a 1 - mode ZX Spectrum 128k, otherwise - mode pentagon 1024k.
+Value after reset - 0.
+*/
+        printf ("adjusting ram to bits port 7ffdh\n");
+
+        if (baseconf_last_port_eff7&4) {
+                //paginacion 128k
+                value=value&(255-7);
+                value=value | (puerto_32765&7);
+        }
+        else {
+                //paginacion pentagon 1024k. 6 bits
+                z80_byte ram_entra=(puerto_32765&7) | ((puerto_32765>>2)&(8+16+32));
+                value=value&(255-63);
+                value=value|ram_entra;
+        }
 
         return value;
 }
@@ -236,30 +268,36 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
                baseconf_set_memory_pages();
         }
 
+        else if (puerto==0xEFF7) {
+                baseconf_last_port_eff7=valor;
+        }
 
 
         //xFF7H
         //The memory manager pages.
         else if ( (puerto&0x0FFF)==0xFF7 && baseconf_shadow_ports_available() ) {
-                z80_byte pagina=valor ^ 255;
-                z80_byte es_ram=valor & 64;
+               
 
-                z80_byte segmento=puerto_h>>6;
-                if (es_ram==0) {
-                        pagina=pagina&31;
-                        if (valor&128) pagina=baseconf_change_rom_page_trdos(pagina);
-                }
+                
+                  z80_byte pagina=valor ^ 255;
+                         z80_byte es_ram=valor & 64;
 
-                else {
-                        pagina=pagina&63;
-                        if (valor&128) pagina=baseconf_change_ram_page_7ffd(pagina);
-                }
 
-                baseconf_memory_segments[segmento]=pagina;  
-                baseconf_memory_segments_type[segmento]=es_ram;
 
-                //TODO: bit 7 de variable valor         
+                      z80_byte segmento=puerto_h>>6;
+                     if (es_ram==0) {
+                           pagina=pagina&31;
+                         if (valor&128) pagina=baseconf_change_rom_page_trdos(pagina);
+                  }
 
+                  else {
+                                pagina=pagina&63;
+                                if (valor&128) pagina=baseconf_change_ram_page_7ffd(pagina);
+                 }
+
+                 baseconf_memory_segments[segmento]=pagina;  
+                 baseconf_memory_segments_type[segmento]=es_ram;
+                
 
                baseconf_set_memory_pages();
         }
@@ -294,8 +332,6 @@ segmento 0 pagina 0
 
                 z80_byte segmento=puerto_h>>6;
 
-                //temp
-                //pagina=pagina & 63;
 
                 if (valor&128) pagina=baseconf_change_ram_page_7ffd(pagina);
 
