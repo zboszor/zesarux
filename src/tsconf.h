@@ -83,6 +83,8 @@ extern z80_byte tsconf_get_rom_bank(void);
 
 extern z80_bit tsconf_vdac_with_pwm;
 
+extern z80_byte tsconf_palette_depth;
+
 extern z80_byte tsconf_rgb_5_to_8(z80_byte color);
 
 extern void screen_store_scanline_rainbow_solo_display_tsconf(void);

@@ -68,6 +68,7 @@ When bit15=1 then values 0-31 are linear grayscale.
 RGB5 to RGB8 is a tricky convertion, but formulas used are as simple as possible.
 */
 
+z80_byte tsconf_palette_depth=5;
 
 z80_byte tsconf_fmaps[TSCONF_FMAPS_SIZE];
 /*
@@ -1271,6 +1272,12 @@ void tsconf_hard_reset(void)
 //Tiene en cuenta parametro vdac de tsconf , si esta disponible o no
 z80_byte tsconf_rgb_5_to_8(z80_byte color)
 {
+
+	//Si tsconf usa paletas inferiores de 2,3 o 4 bits, quitar bits
+	//tsconf_palette_depth (default 5)
+	if (tsconf_palette_depth==2) color=color&(255-1-2-4); //quitamos los 3 bits inferiores
+	if (tsconf_palette_depth==3) color=color&(255-1-2);   //quitamos los 2 bits inferiores
+	if (tsconf_palette_depth==4) color=color&(255-1);     //quitamos el 1 bit inferior
 
 	//Con pwm
 	if (tsconf_vdac_with_pwm.v==0) return color*8;  //5 bits: 0..31. max valor 31*8=248

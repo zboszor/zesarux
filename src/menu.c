@@ -29334,6 +29334,15 @@ if (menu_display_aa_cond() ) {
 
 }
 
+void menu_display_tsconf_pal_depth(MENU_ITEM_PARAMETERS)
+{
+	tsconf_palette_depth--;
+	if (tsconf_palette_depth<2) tsconf_palette_depth=5;
+
+	menu_interface_rgb_inverse_common();
+
+}
+
 
 //menu display settings
 void menu_settings_display(MENU_ITEM_PARAMETERS)
@@ -29414,6 +29423,10 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 					"With PWM mode it gives you 5 bit values different from 0..23, but from 24 to 31 are all set to value 255");
 
 
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tsconf_pal_depth,NULL,
+					 "TSConf palette depth: %d",tsconf_palette_depth);
+
+
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tsconf_fast_render,NULL,"TSConf Fast Render: %s",
 				(tsconf_si_render_spritetile_rapido.v ? "Yes" : "No") );
 
@@ -29422,6 +29435,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Enables fast render of Tiles and Sprites for TSConf. Uses less host cpu but it's less "
 				"realistic: doesn't do scanline render but full frame render");
 					
+
+					 
 
 
                 }
