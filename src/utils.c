@@ -8042,6 +8042,9 @@ case MACHINE_ID_TSCONF:
 strcpy(machine_name,"TSConf");
 break;
 
+case MACHINE_ID_BASECONF:
+strcpy(machine_name,"BaseConf");
+break;
 
 case MACHINE_ID_SPECTRUM_P3_40:
 strcpy(machine_name,"P340");
@@ -9184,6 +9187,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         size=TSCONF_RAM_PAGES*16384;
       }
 
+        if (MACHINE_IS_BASECONF) {
+        size=BASECONF_RAM_PAGES*16384;
+      }
+
       if (MACHINE_IS_QL) {
         size=QL_MEM_LIMIT+1-131072;
       }
@@ -9235,6 +9242,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 
       if (MACHINE_IS_TSCONF) {
         size=TSCONF_ROM_PAGES*16384;
+      }
+
+      if (MACHINE_IS_BASECONF) {
+        size=BASECONF_ROM_PAGES*16384;
       }
 
       if (MACHINE_IS_QL) {
@@ -9416,6 +9427,11 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
 
       if (MACHINE_IS_TSCONF) {
         z80_byte *start=tsconf_ram_mem_table[0];
+        p=&start[address];
+      }
+
+      if (MACHINE_IS_BASECONF) {
+        z80_byte *start=baseconf_ram_mem_table[0];
         p=&start[address];
       }
 
