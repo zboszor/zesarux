@@ -67,7 +67,7 @@ int baseconf_shadow_ports_available(void)
                 //0: if 1 then enable shadow ports. 0 after reset.
                 return 1;
         }
-        if (baseconf_shadow_mode_port_77&2) {
+        if ((baseconf_shadow_mode_port_77&2)==0) {
                 //Enable shadow mode ports of the memory manager's permission.
                 return 1;
         }
@@ -238,9 +238,12 @@ z80_byte baseconf_change_rom_page_trdos(z80_byte value)
 {
         value=value&254;
         if ((baseconf_shadow_mode_port_77&2)==0) {
-                /* TODO
+                //printf ("TODO: If 0 then -force- the inclusion of TR-DOS and the shadow ports. 0 after reset\n");
+                /* 
                 A9: If 0 then "force" the inclusion of TR-DOS and the shadow ports. 0 after reset.
                 */
+
+               value=value|1; // no estoy seguro de esto
         }
         return value;
 }
@@ -269,7 +272,9 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
         }
 
         else if (puerto==0xEFF7) {
+                printf ("setting port EFF7 value\n");
                 baseconf_last_port_eff7=valor;
+                baseconf_set_memory_pages();
         }
 
 
@@ -380,7 +385,7 @@ segmento 0 pagina 0
 
         else {
                 printf ("unhandled out port %04XH value %02XH\n",puerto,valor);
-                sleep(1);
+                //sleep(1);
         }
 }
 

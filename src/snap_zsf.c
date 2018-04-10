@@ -63,6 +63,9 @@
 #include "diviface.h"
 #include "snap_rzx.h"
 #include "divmmc.h"
+#include "zxevo.h"
+#include "tsconf.h"
+#include "baseconf.h"
 
 
 #include "autoselectoptions.h"
@@ -84,6 +87,8 @@
 #define ZSF_ZXUNO_RAMBLOCK 10
 #define ZSF_ZXUNO_CONF 11
 #define ZSF_ZX8081_CONF 12
+#define ZSF_ZXEVO_NVRAM 13
+#define ZSF_TSCONF_RAMBLOCK 14
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -204,6 +209,21 @@ Byte fields:
 
 2: Flags2: Reserved for future use
 
+-Block ID 13: ZSF_ZXEVO_NVRAM
+Contents of nvram for ZX-Evolution machines (Baseconf, TSConf)
+Byte fields:
+0-255: NVRAM contents
+
+-Block ID 14: ZSF_TSCONF_RAMBLOCK
+A ram binary block for a tsconf
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: ram block id 
+6 and next bytes: data bytes
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -215,7 +235,7 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 12
+#define MAX_ZSF_BLOCK_ID_NAMES 14
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -231,6 +251,8 @@ char *zsf_block_id_names[]={
   "ZSF_ZXUNO_RAMBLOCK",
   "ZSF_ZXUNO_CONF",
   "ZSF_ZX8081_CONF",
+  "ZSF_ZXEVO_NVRAM",
+  "ZSF_TSCONF_RAMBLOCK",
 
   "Unknown"  //Este siempre al final
 };
@@ -470,6 +492,34 @@ void load_zsf_zxuno_snapshot_block_data(z80_byte *block_data,int longitud_origin
 
 }
 
+void load_zsf_tsconf_snapshot_block_data(z80_byte *block_data,int longitud_original)
+{
+
+
+
+  int i=0;
+  z80_byte block_flags=block_data[i];
+
+  //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 5 bytes
+
+  i++;
+  z80_int block_start=value_8_to_16(block_data[i+1],block_data[i]);
+  i +=2;
+  z80_int block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
+  i+=2;
+
+  z80_byte ram_page=block_data[i];
+  i++;
+
+  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Lenght: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+
+
+  longitud_original -=6;
+
+
+  load_zsf_snapshot_block_data_addr(&block_data[i],tsconf_ram_mem_table[ram_page],block_lenght,longitud_original,block_flags&1);
+
+}
 
 void load_zsf_aychip(z80_byte *header)
 {
@@ -583,6 +633,14 @@ void load_zsf_zx8081_conf(z80_byte *header)
   hsync_generator_active.v=(header[1]>>1)&1;
   nmi_generator_active.v=header[1]&1;
 
+
+}
+
+void load_zsf_zxevo_nvram(z80_byte *header)
+{
+
+  int i;
+  for (i=0;i<256;i++) zxevo_nvram[i]=header[i];
 
 }
 
@@ -765,7 +823,15 @@ void load_zsf_snapshot(char *filename)
 
       case ZSF_ZX8081_CONF:
         load_zsf_zx8081_conf(block_data);
-      break;      
+      break;    
+
+      case ZSF_ZXEVO_NVRAM:
+        load_zsf_zxevo_nvram(block_data);
+      break;  
+
+      case ZSF_TSCONF_RAMBLOCK:
+        load_zsf_tsconf_snapshot_block_data(block_data,block_lenght);
+      break;
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -1020,7 +1086,8 @@ Byte fields:
 
 
 */
-  if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3 || MACHINE_IS_ZXUNO || MACHINE_IS_CHLOE || MACHINE_IS_PRISM || MACHINE_IS_TBBLUE || MACHINE_IS_PENTAGON || MACHINE_IS_CHROME || MACHINE_IS_ZXEVO) {
+  if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3 || MACHINE_IS_ZXUNO || MACHINE_IS_CHLOE || MACHINE_IS_PRISM || 
+  MACHINE_IS_TBBLUE || MACHINE_IS_PENTAGON || MACHINE_IS_CHROME || MACHINE_IS_ZXEVO) {
 /*
 -Block ID 5: ZSF_SPEC128_MEMCONF
 Byte Fields:
@@ -1034,6 +1101,14 @@ Byte Fields:
 	memconf[2]=mem128_multiplicador;
 
   	zsf_write_block(ptr_zsf_file, memconf,ZSF_SPEC128_MEMCONF, 3);
+
+}
+
+if (MACHINE_IS_ZXEVO) {
+  //Grabar nvram
+
+    zsf_write_block(ptr_zsf_file, zxevo_nvram,ZSF_ZXEVO_NVRAM, 256);
+
 
 }
 
@@ -1181,6 +1256,98 @@ Byte Fields:
 
     //Store block to file
     zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_ZXUNO_RAMBLOCK, longitud_bloque+6);
+
+  }
+
+  free(compressed_ramblock);
+
+
+  }
+
+if (MACHINE_IS_TSCONF) {
+
+//    z80_byte zxunoconfblock[274];
+
+/*
+-Block ID 11: ZSF_ZXUNO_CONF
+Ports and internal registers of ZXUNO machine
+Byte fields:
+0: Last out to port FC3B
+1-256: 256 internal ZXUNO registers
+257: Flash SPI bus index
+258: Flash SPI next read byte   
+259: Flash SPI status register
+260-262: 24 bit value with last spi write address
+263-265: 24 bit value with last spi read address
+266-273: 8 byte with spi bus contents
+*/    
+/*
+    zxunoconfblock[0]=last_port_FC3B;
+    int i;
+    for (i=0;i<256;i++) zxunoconfblock[1+i]=zxuno_ports[i];
+
+    zxunoconfblock[257]=zxuno_spi_bus_index;
+    zxunoconfblock[258]=next_spi_read_byte;  
+    zxunoconfblock[259]=zxuno_spi_status_register;  
+
+
+    zxunoconfblock[260]=last_spi_write_address & 0xFF;
+    zxunoconfblock[261]=(last_spi_write_address>>8) & 0xFF;
+    zxunoconfblock[262]=(last_spi_write_address>>16) & 0xFF;
+
+    zxunoconfblock[263]=last_spi_read_address & 0xFF;
+    zxunoconfblock[264]=(last_spi_read_address>>8) & 0xFF;
+    zxunoconfblock[265]=(last_spi_read_address>>16) & 0xFF;
+
+    for (i=0;i<8;i++) zxunoconfblock[266+i]=zxuno_spi_bus[i];
+
+    zsf_write_block(ptr_zsf_file, zxunoconfblock,ZSF_ZXUNO_CONF, 274);
+
+
+*/
+   int longitud_ram=16384;
+
+  
+   //Para el bloque comprimido
+   z80_byte *compressed_ramblock=malloc(longitud_ram*2);
+  if (compressed_ramblock==NULL) {
+    debug_printf (VERBOSE_ERR,"Error allocating memory");
+    return;
+  }
+
+  /*
+
+-ZSF_TSCONF_RAMBLOCK
+A ram binary block for a tsconf
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: ram block id 
+6 and next bytes: data bytes
+  */
+
+  int paginas=TSCONF_RAM_PAGES;
+  z80_int ram_page; //porque pagina puede ir de 0 a 255, y cuando llega a 256 acabamos el bucle for
+
+  for (ram_page=0;ram_page<paginas;ram_page++) {
+
+    compressed_ramblock[0]=0;
+    compressed_ramblock[1]=value_16_to_8l(16384);
+    compressed_ramblock[2]=value_16_to_8h(16384);
+    compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+    compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+    compressed_ramblock[5]=ram_page;
+
+    int si_comprimido;
+    int longitud_bloque=save_zsf_copyblock_compress_uncompres(tsconf_ram_mem_table[ram_page],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+    if (si_comprimido) compressed_ramblock[0]|=1;
+
+    debug_printf(VERBOSE_DEBUG,"Saving ZSF_TSCONF_RAMBLOCK ram page: %d length: %d",ram_page,longitud_bloque);
+
+    //Store block to file
+    zsf_write_block(ptr_zsf_file, compressed_ramblock,ZSF_TSCONF_RAMBLOCK, longitud_bloque+6);
 
   }
 
