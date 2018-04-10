@@ -176,6 +176,23 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
                baseconf_set_memory_pages();
         }
 
+        //The memory manager pages.
+        if ( (puerto&0x0FFF)==0xFF7 ) {
+                z80_byte pagina=valor ^ 255;
+                z80_byte es_ram=valor & 64;
+
+                z80_byte segmento=puerto_h>>6;
+                if (es_ram==0) pagina=pagina&31;
+
+                baseconf_memory_segments[segmento]=pagina;  
+                baseconf_memory_segments_type[segmento]=es_ram;
+
+                //TODO: bit 7 de variable valor         
+
+
+               baseconf_set_memory_pages();
+        }
+
         if (puerto==0x7ffd) {
                 //mapeamos ram en c000h, habilitando memory manager
                 baseconf_shadow_ports |=1;
