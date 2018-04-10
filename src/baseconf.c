@@ -55,6 +55,8 @@ z80_byte baseconf_last_port_77;
 
 z80_byte baseconf_shadow_ports;
 
+z80_byte baseconf_last_port_bf;
+
 void baseconf_reset_cpu(void)
 {
 
@@ -159,6 +161,7 @@ void baseconf_hard_reset(void)
         }
 baseconf_last_port_77=0;
 baseconf_shadow_ports=0;
+baseconf_last_port_bf=0;
 
         baseconf_set_memory_pages();
 
@@ -169,20 +172,38 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
 
         z80_byte puerto_h=puerto>>8;
 
-        if ( (puerto&0x00FF)==0x77 ) {
+        //xxBFH
+        //Enable shadow mode ports write permission in ROM.
+        if ( (puerto&0x00FF)==0xBF ) {
+               baseconf_last_port_bf=valor; 
+
+               baseconf_set_memory_pages();
+        }        
+
+        //xx77H
+        else if ( (puerto&0x00FF)==0x77 ) {
                 baseconf_shadow_ports=puerto_h;
                baseconf_last_port_77=valor; 
 
                baseconf_set_memory_pages();
         }
 
+
+
+        //xFF7H
         //The memory manager pages.
-        if ( (puerto&0x0FFF)==0xFF7 ) {
+        else if ( (puerto&0x0FFF)==0xFF7 ) {
                 z80_byte pagina=valor ^ 255;
                 z80_byte es_ram=valor & 64;
 
                 z80_byte segmento=puerto_h>>6;
-                if (es_ram==0) pagina=pagina&31;
+                if (es_ram==0) {
+                        pagina=pagina&31;
+                }
+
+                else {
+                        pagina=pagina&63;
+                }
 
                 baseconf_memory_segments[segmento]=pagina;  
                 baseconf_memory_segments_type[segmento]=es_ram;
@@ -193,7 +214,22 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
                baseconf_set_memory_pages();
         }
 
-        if (puerto==0x7ffd) {
+        //x7F7H
+        //The memory manager pages. All ram access. Port not in ATM2
+        else if ( (puerto&0x0FFF)==0x7F7 ) {
+                z80_byte pagina=valor ^ 255;
+                z80_byte es_ram=1;
+
+                z80_byte segmento=puerto_h>>6;
+
+                baseconf_memory_segments[segmento]=pagina;  
+                baseconf_memory_segments_type[segmento]=es_ram;      
+
+
+               baseconf_set_memory_pages();
+        }        
+
+        else if (puerto==0x7ffd) {
                 //mapeamos ram y rom , pero sin habilitando memory manager
                 //baseconf_shadow_ports |=1;
 
@@ -208,6 +244,10 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
 
 
                 puerto_32765=valor;
+        }
+
+        else {
+                sleep(1);
         }
 }
 
