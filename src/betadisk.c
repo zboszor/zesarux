@@ -36,6 +36,7 @@
 #include "ula.h"
 #include "mem128.h"
 #include "screen.h"
+#include "tsconf.h"
 
 
 z80_bit betadisk_enabled={0};
@@ -84,6 +85,13 @@ int betadisk_check_if_rom_area(z80_int dir)
 		if (!(puerto_32765&16)) return 0;
 	}
 
+	if (MACHINE_IS_TSCONF) {
+		//Si no es rom 3, volver
+		if (tsconf_get_rom_bank()!=3) return 0; //Esto puede fallar si se gestiona "dos_signal" desde esa funcion de tsconf
+		//en ese caso retornaria la rom de trdos (1) y no la 3, y aqui no saltaria nunca
+		//if (tsconf_af_ports[0x10]!=3) return 0;
+	}
+
 	if (dir<16384) return 1;
 	else return 0;
 }
@@ -91,6 +99,11 @@ int betadisk_check_if_rom_area(z80_int dir)
 z80_byte betadisk_read_byte(z80_int dir)
 {
 	//printf ("Returning betadisk data address %d\n",dir);
+	if (MACHINE_IS_TSCONF) {
+		z80_byte *puntero=tsconf_rom_mem_table[1]; //Rom 1 es la de tr-dos
+		//printf ("retornando byte de tr-dos rom dir %04XH\n",dir);
+		return puntero[dir];
+	}
 	return betadisk_memory_pointer[dir];
 }
 

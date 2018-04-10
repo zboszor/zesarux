@@ -614,6 +614,9 @@ void cpu_set_turbo_speed(void)
 	z80_bit antes_debug_breakpoints_enabled;
 	antes_debug_breakpoints_enabled.v=debug_breakpoints_enabled.v;
 
+	z80_bit antes_betadisk_enabled;
+	antes_betadisk_enabled.v=betadisk_enabled.v;
+
 	if (cpu_turbo_speed>MAX_CPU_TURBO_SPEED) {
 		debug_printf (VERBOSE_INFO,"Turbo mode higher than maximum. Setting to %d",MAX_CPU_TURBO_SPEED);
 		cpu_turbo_speed=MAX_CPU_TURBO_SPEED;
@@ -667,6 +670,8 @@ void cpu_set_turbo_speed(void)
 		debug_breakpoints_enabled.v=1;
 		breakpoints_enable();
 	}
+
+	if (antes_betadisk_enabled.v) betadisk_enable();
 
 	cpu_turbo_speed_antes=cpu_turbo_speed;
 

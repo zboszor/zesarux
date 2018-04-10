@@ -1045,7 +1045,9 @@ bit1/0
 
 
           else {
-            if (tsconf_dos_signal.v) banco=1;
+            //if (tsconf_dos_signal.v) banco=1;
+			if (0) banco=1; //mejor no miramos dos_signal y gestionamos el salto de rom mediante el core_nested de betadisk,
+			//de tal manera que alli se comprueba si salta a tr-dos cuando esta en rom 3 llamando a esta funcion
             else {
 				//printf ("32765 %d memconfig %d\n",puerto_32765&16,tsconf_af_ports[0x21] &1);
 				banco=((puerto_32765>>4)&1) | 2;

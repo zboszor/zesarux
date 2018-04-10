@@ -47,6 +47,7 @@ Improved TSConf emulation:
 * added TSConf DMA, line interrupt, sprites layers
 * TSConf rendering: now tiles and sprites are drawn per scanline. Border drawing. Handling of scroll registers
 * TSConf debugging: debug for DMA, Video registers, Video layers, Sprites, Tiles
+* added TR-DOS emulation support
 
 Improved text mode drivers (aalib, stdout, simpletext, curses): text settings are in different submenu, setting to set stdout/simpletext fps
 Improved messages windows. You can now have an internal clipboard, press key c to copy to it. Press P on file utils to paste contents to a file
