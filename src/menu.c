@@ -29480,7 +29480,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 
-				if (menu_cond_spectrum()) {
+				if (menu_cond_spectrum() && !MACHINE_IS_ZXEVO)  {
+
 					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_snow_effect,NULL,"Snow effect support: %s", (snow_effect_enabled.v==1 ? "On" : "Off"));
 					menu_add_item_menu_tooltip(array_menu_settings_display,"Enable snow effect on Spectrum");
 					menu_add_item_menu_ayuda(array_menu_settings_display,"Snow effect is a bug on some Spectrum models "
@@ -29644,17 +29645,19 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 
+			if (!MACHINE_IS_ZXEVO) {
 
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_spectra,NULL,"Sp~~ectra support: %s",(spectra_enabled.v ? "Yes" : "No"));
-			menu_add_item_menu_shortcut(array_menu_settings_display,'e');
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Enables Spectra video modes");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Enables Spectra video modes. All video modes are fully emulated");
+				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_spectra,NULL,"Sp~~ectra support: %s",(spectra_enabled.v ? "Yes" : "No"));
+				menu_add_item_menu_shortcut(array_menu_settings_display,'e');
+				menu_add_item_menu_tooltip(array_menu_settings_display,"Enables Spectra video modes");
+				menu_add_item_menu_ayuda(array_menu_settings_display,"Enables Spectra video modes. All video modes are fully emulated");
 
 
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_spritechip,NULL,"~~ZGX Sprite Chip: %s",(spritechip_enabled.v ? "Yes" : "No") );
-			menu_add_item_menu_shortcut(array_menu_settings_display,'z');
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Enables ZGX Sprite Chip");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Enables ZGX Sprite Chip");
+				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_spritechip,NULL,"~~ZGX Sprite Chip: %s",(spritechip_enabled.v ? "Yes" : "No") );
+				menu_add_item_menu_shortcut(array_menu_settings_display,'z');
+				menu_add_item_menu_tooltip(array_menu_settings_display,"Enables ZGX Sprite Chip");
+				menu_add_item_menu_ayuda(array_menu_settings_display,"Enables ZGX Sprite Chip");
+			}
 
 
 		}
