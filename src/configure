@@ -1265,10 +1265,10 @@ chrome.o: chrome.c chrome.h cpu.h mem128.h debug.h contend.h
 zxevo.o: zxevo.c zxevo.h cpu.h mem128.h debug.h contend.h menu.h screen.h ula.h operaciones.h
 	\$(CC) \$(CFLAGS) -c zxevo.c
 
-tsconf.o: tsconf.c tsconf.h cpu.h mem128.h debug.h contend.h menu.h screen.h ula.h operaciones.h
+tsconf.o: tsconf.c tsconf.h cpu.h mem128.h debug.h contend.h menu.h screen.h ula.h operaciones.h zxevo.h
 	\$(CC) \$(CFLAGS) -c tsconf.c
 
-baseconf.o: baseconf.c baseconf.h cpu.h mem128.h debug.h contend.h menu.h screen.h ula.h operaciones.h
+baseconf.o: baseconf.c baseconf.h cpu.h mem128.h debug.h contend.h menu.h screen.h ula.h operaciones.h zxevo.h
 	\$(CC) \$(CFLAGS) -c baseconf.c
 
 prism.o: prism.c prism.h cpu.h timex.h mem128.h debug.h contend.h zxuno.h timex.h utils.h menu.h

@@ -31,6 +31,7 @@
 #include "screen.h"
 #include "ula.h"
 #include "operaciones.h"
+#include "zxevo.h"
 
 
 //Direcciones donde estan cada pagina de rom. 32 paginas de 16 kb
@@ -56,6 +57,11 @@ z80_byte baseconf_last_port_77;
 z80_byte baseconf_shadow_ports;
 
 z80_byte baseconf_last_port_bf;
+
+int baseconf_shadow_ports_available(void)
+{
+        return baseconf_last_port_bf&1;
+}
 
 void baseconf_reset_cpu(void)
 {
@@ -172,6 +178,8 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
 
         z80_byte puerto_h=puerto>>8;
 
+      
+
         //xxBFH
         //Enable shadow mode ports write permission in ROM.
         if ( (puerto&0x00FF)==0xBF ) {
@@ -181,7 +189,7 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
         }        
 
         //xx77H
-        else if ( (puerto&0x00FF)==0x77 ) {
+        else if ( (puerto&0x00FF)==0x77 && baseconf_shadow_ports_available() ) {
                 baseconf_shadow_ports=puerto_h;
                baseconf_last_port_77=valor; 
 
@@ -192,7 +200,7 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
 
         //xFF7H
         //The memory manager pages.
-        else if ( (puerto&0x0FFF)==0xFF7 ) {
+        else if ( (puerto&0x0FFF)==0xFF7 && baseconf_shadow_ports_available() ) {
                 z80_byte pagina=valor ^ 255;
                 z80_byte es_ram=valor & 64;
 
@@ -216,7 +224,7 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
 
         //x7F7H
         //The memory manager pages. All ram access. Port not in ATM2
-        else if ( (puerto&0x0FFF)==0x7F7 ) {
+        else if ( (puerto&0x0FFF)==0x7F7 && baseconf_shadow_ports_available() ) {
                 z80_byte pagina=valor ^ 255;
                 z80_byte es_ram=1;
 
@@ -245,6 +253,22 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
 
                 puerto_32765=valor;
         }
+
+        //Puertos NVRAM. 
+	else if (puerto==0xeff7 && !baseconf_shadow_ports_available() ) zxevo_last_port_eff7=valor;
+	else if (puerto==0xdff7 && !baseconf_shadow_ports_available() ) zxevo_last_port_dff7=valor;
+        else if (puerto==0xdef7 && baseconf_shadow_ports_available() ) zxevo_last_port_dff7=valor;
+
+
+	else if (puerto==0xbff7 && !baseconf_shadow_ports_available() ) {
+						//Si esta permitida la escritura
+						if (zxevo_last_port_eff7&128) zxevo_nvram[zxevo_last_port_dff7]=valor;
+	}
+
+        else if (puerto==0xbef7 && baseconf_shadow_ports_available() ) {
+                        //Note: In the shadow mode port # BEF7 available regardless of bit 7 port # EFF7.
+		 zxevo_nvram[zxevo_last_port_dff7]=valor;
+					}
 
         else {
                 sleep(1);

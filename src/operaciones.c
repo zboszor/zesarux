@@ -6027,13 +6027,27 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 	if (MACHINE_IS_TSCONF) {
 
 		//Puertos nvram
-		if (puerto==0xeff7) return tsconf_last_port_eff7;
-		if (puerto==0xdff7) return tsconf_last_port_dff7;
-		if (puerto==0xbff7) return zxevo_nvram[tsconf_last_port_dff7];
+		if (puerto==0xeff7) return zxevo_last_port_eff7;
+		if (puerto==0xdff7) return zxevo_last_port_dff7;
+		if (puerto==0xbff7) return zxevo_nvram[zxevo_last_port_dff7];
 		if (puerto_l==0xaf) return tsconf_get_af_port(puerto_h);
 
 		//Otros puertos
 		//printf ("Leyendo puerto %04XH\n",puerto);
+
+	}
+
+	if (MACHINE_IS_BASECONF) {
+		printf ("Baseconf reading port %04XH\n",puerto);
+
+		//Puertos nvram. TODO gestion puertos shadow
+		if (puerto==0xeff7 && !baseconf_shadow_ports_available() ) return zxevo_last_port_eff7;
+
+		if (puerto==0xdff7 && !baseconf_shadow_ports_available() ) return zxevo_last_port_dff7;
+		if (puerto==0xdef7 && baseconf_shadow_ports_available() ) return zxevo_last_port_dff7;
+
+		if (puerto==0xbff7 && !baseconf_shadow_ports_available() ) return zxevo_nvram[zxevo_last_port_dff7];
+		if (puerto==0xbef7 && baseconf_shadow_ports_available() ) return zxevo_nvram[zxevo_last_port_dff7];
 
 	}
 
@@ -7067,13 +7081,13 @@ acts as expected unless this registe is explicitly changed by the user/software.
 			    }
 
 					//Puertos NVRAM
-					if (puerto==0xeff7) tsconf_last_port_eff7=value;
-					if (puerto==0xdff7) tsconf_last_port_dff7=value;
+					if (puerto==0xeff7) zxevo_last_port_eff7=value;
+					if (puerto==0xdff7) zxevo_last_port_dff7=value;
 
 
 					if (puerto==0xbff7) {
 						//Si esta permitida la escritura
-						if (tsconf_last_port_eff7&128) zxevo_nvram[tsconf_last_port_dff7]=value;
+						if (zxevo_last_port_eff7&128) zxevo_nvram[zxevo_last_port_dff7]=value;
 					}
 
 					if (puerto_l==0xaf) tsconf_write_af_port(puerto_h,value);
@@ -7092,10 +7106,13 @@ acts as expected unless this registe is explicitly changed by the user/software.
 				}
 
 	if (MACHINE_IS_BASECONF) {
-		if (puerto_l==0xBF || puerto_l==0x77 || (puerto&0x0FFF)==0xff7 || (puerto&0x0FFF)==0x7f7 || puerto==0x7ffd || puerto==0xeff7) {
+		if (puerto_l==0xBF || puerto_l==0x77 || (puerto&0x0FFF)==0xff7 || (puerto&0x0FFF)==0x7f7 || puerto==0x7ffd || puerto==0xeff7
+			|| puerto==0xEFF7 || puerto==0xDFF7 || puerto==0xDEF7 || puerto==0xBFF7 || puerto==0xBEF7)
+		{
 			printf ("Out port baseconf port %04XH value %02XH\n",puerto,value);
 			baseconf_out_port(puerto,value);
 		}
+
 		else {
 			if (puerto_l!=0xFE) {
 				printf ("Unhandled Out port baseconf port %04XH value %02XH\n",puerto,value);
