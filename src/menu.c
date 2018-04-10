@@ -134,6 +134,8 @@ int menu_overlay_activo=0;
 //indica si el menu hace zoom. valores validos: 1 en adelante
 int menu_gui_zoom=1;
 
+//Tamanyo del array de char asignado para el browser de file utils
+#define MAX_TEXTO_BROWSER 65536
 
 //Ancho de caracter de menu
 int menu_char_width=8;
@@ -17882,7 +17884,7 @@ void menu_file_p_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -17935,7 +17937,7 @@ void menu_file_o_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -17994,7 +17996,7 @@ void menu_file_sp_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -18116,7 +18118,7 @@ void menu_file_mmc_browser_show(char *filename,char *tipo_imagen)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -18311,7 +18313,7 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -18469,7 +18471,7 @@ void menu_file_dsk_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -18612,7 +18614,7 @@ void menu_file_zsf_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -18742,7 +18744,7 @@ void menu_file_zxuno_flash_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -18871,7 +18873,7 @@ void menu_file_superupgrade_flash_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -19139,7 +19141,7 @@ void menu_file_sna_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -19218,7 +19220,7 @@ void menu_file_spg_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -19313,7 +19315,7 @@ void menu_file_zx_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -19407,7 +19409,7 @@ void menu_file_z80_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -19502,7 +19504,7 @@ void menu_file_tzx_browser_show(char *filename)
 	//int longitud_bloque;
 
 	//int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
@@ -19722,7 +19724,7 @@ void menu_tape_browser_show(char *filename)
 	int longitud_bloque;
 
 	int longitud_texto;
-#define MAX_TEXTO_BROWSER 8192
+
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 

@@ -19,6 +19,7 @@ And also:
 * Chrome
 * Prism
 * ZX-Uno
+* ZX-Evolution BaseConf
 * ZX-Evolution TS-Conf
 * TBBlue/ZX Spectrum Next
 * Jupiter Ace
@@ -96,6 +97,7 @@ __FEATURES__
 * Chrome
 * Prism
 * ZX-Uno
+* ZX-Evolution BaseConf
 * ZX-Evolution TS-Conf
 * TBBlue/ZX Spectrum Next
 * Jupiter Ace

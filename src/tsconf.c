@@ -3110,3 +3110,12 @@ void tsconf_set_default_basic_palette(void)
 		tsconf_fmaps[index+i]=tsconf_default_basic_palette[i];
 	}
 }
+
+
+void tsconf_set_emulador_settings(void)
+{
+	//Sincronizar settings de emulador con los valores de puertos de tsconf
+  tsconf_set_emulator_setting_turbo();
+  
+  
+}

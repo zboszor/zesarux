@@ -164,4 +164,6 @@ extern void tsconf_handle_line_interrupts(void);
 
 extern void tsconf_set_default_basic_palette(void);
 
+extern void tsconf_set_emulador_settings(void);
+
 #endif

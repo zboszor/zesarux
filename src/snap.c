@@ -168,7 +168,7 @@ char *z80file_machines_id[]={
 
 
 
-#define AUTOSAVE_NAME "zesarux_autosave.zx"
+#define AUTOSAVE_NAME "zesarux_autosave.zsf"
 
 void autosave_snapshot(void)
 {

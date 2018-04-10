@@ -89,6 +89,7 @@
 #define ZSF_ZX8081_CONF 12
 #define ZSF_ZXEVO_NVRAM 13
 #define ZSF_TSCONF_RAMBLOCK 14
+#define ZSF_TSCONF_CONF 15
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -212,7 +213,9 @@ Byte fields:
 -Block ID 13: ZSF_ZXEVO_NVRAM
 Contents of nvram for ZX-Evolution machines (Baseconf, TSConf)
 Byte fields:
-0-255: NVRAM contents
+0: NVRam access control byte (last value sent to port eff7)
+1: Last NVRam selected register (last value sent to port dff7)
+2-257: NVRAM contents
 
 -Block ID 14: ZSF_TSCONF_RAMBLOCK
 A ram binary block for a tsconf
@@ -225,6 +228,15 @@ Byte Fields:
 6 and next bytes: data bytes
 
 
+-Block ID 15: ZSF_TSCONF_CONF
+Ports and internal registers of TSCONF machine
+Byte fields:
+
+0:255: tsconf_af_ports[256];
+256-1279: tsconf_fmaps
+
+
+
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
 Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
@@ -235,7 +247,7 @@ Quizá numero de bloque y parametro que diga tamaño, para tener un block id com
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 14
+#define MAX_ZSF_BLOCK_ID_NAMES 16
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -253,6 +265,7 @@ char *zsf_block_id_names[]={
   "ZSF_ZX8081_CONF",
   "ZSF_ZXEVO_NVRAM",
   "ZSF_TSCONF_RAMBLOCK",
+  "ZSF_TSCONF_CONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -640,7 +653,14 @@ void load_zsf_zxevo_nvram(z80_byte *header)
 {
 
   int i;
-  for (i=0;i<256;i++) zxevo_nvram[i]=header[i];
+
+  //Control de acceso a celdas nvram
+  zxevo_last_port_eff7=header[0];
+
+  //celda nvram seleccionada
+  zxevo_last_port_dff7=header[1];
+
+  for (i=0;i<256;i++) zxevo_nvram[i]=header[i+2];
 
 }
 
@@ -688,6 +708,37 @@ Byte fields:
 
 
   ulaplus_set_extended_mode(zxuno_ports[0x40]);
+}
+
+void load_zsf_tsconf_conf(z80_byte *header)
+{
+/*
+-Block ID 15: ZSF_TSCONF_CONF
+Ports and internal registers of TSCONF machine
+Byte fields:
+
+0:255: tsconf_af_ports[256];
+256-1279: tsconf_fmaps
+*/
+
+  last_port_FC3B=header[0];
+  int i;
+  for (i=0;i<256;i++) tsconf_af_ports[i]=header[i];
+
+  for (i=0;i<1024;i++) tsconf_fmaps[i]=header[i+256];
+
+  
+  tsconf_set_memory_pages();    
+
+  //Sincronizar settings de emulador con los valores de puertos de tsconf
+  tsconf_set_emulador_settings();
+
+    tsconf_set_sizes_display();
+    modificado_border.v=1;
+
+
+
+  //ulaplus_set_extended_mode(zxuno_ports[0x40]);
 }
 
 void load_zsf_snapshot(char *filename)
@@ -831,6 +882,10 @@ void load_zsf_snapshot(char *filename)
 
       case ZSF_TSCONF_RAMBLOCK:
         load_zsf_tsconf_snapshot_block_data(block_data,block_lenght);
+      break;
+
+      case ZSF_TSCONF_CONF:
+        load_zsf_tsconf_conf(block_data);
       break;
 
       default:
@@ -1106,8 +1161,15 @@ Byte Fields:
 
 if (MACHINE_IS_ZXEVO) {
   //Grabar nvram
+  z80_byte nvramblock[258];
 
-    zsf_write_block(ptr_zsf_file, zxevo_nvram,ZSF_ZXEVO_NVRAM, 256);
+  nvramblock[0]=zxevo_last_port_eff7;
+  nvramblock[1]=zxevo_last_port_dff7;
+
+  int i;
+  for (i=0;i<256;i++) nvramblock[i+2]=zxevo_nvram[i];
+
+  zsf_write_block(ptr_zsf_file, nvramblock,ZSF_ZXEVO_NVRAM, 258);
 
 
 }
@@ -1266,45 +1328,26 @@ Byte Fields:
 
 if (MACHINE_IS_TSCONF) {
 
-//    z80_byte zxunoconfblock[274];
+    z80_byte tsconfconfblock[256+1024];
 
 /*
--Block ID 11: ZSF_ZXUNO_CONF
-Ports and internal registers of ZXUNO machine
+-Block ID 15: ZSF_TSCONF_CONF
+Ports and internal registers of TSCONF machine
 Byte fields:
-0: Last out to port FC3B
-1-256: 256 internal ZXUNO registers
-257: Flash SPI bus index
-258: Flash SPI next read byte   
-259: Flash SPI status register
-260-262: 24 bit value with last spi write address
-263-265: 24 bit value with last spi read address
-266-273: 8 byte with spi bus contents
+
+0:255: tsconf_af_ports[256];
+256-1279: tsconf_fmaps
+
 */    
-/*
-    zxunoconfblock[0]=last_port_FC3B;
+
     int i;
-    for (i=0;i<256;i++) zxunoconfblock[1+i]=zxuno_ports[i];
+    for (i=0;i<256;i++) tsconfconfblock[i]=tsconf_af_ports[i];
+    for (i=0;i<1024;i++) tsconfconfblock[i+256]=tsconf_fmaps[i];
 
-    zxunoconfblock[257]=zxuno_spi_bus_index;
-    zxunoconfblock[258]=next_spi_read_byte;  
-    zxunoconfblock[259]=zxuno_spi_status_register;  
-
-
-    zxunoconfblock[260]=last_spi_write_address & 0xFF;
-    zxunoconfblock[261]=(last_spi_write_address>>8) & 0xFF;
-    zxunoconfblock[262]=(last_spi_write_address>>16) & 0xFF;
-
-    zxunoconfblock[263]=last_spi_read_address & 0xFF;
-    zxunoconfblock[264]=(last_spi_read_address>>8) & 0xFF;
-    zxunoconfblock[265]=(last_spi_read_address>>16) & 0xFF;
-
-    for (i=0;i<8;i++) zxunoconfblock[266+i]=zxuno_spi_bus[i];
-
-    zsf_write_block(ptr_zsf_file, zxunoconfblock,ZSF_ZXUNO_CONF, 274);
+    zsf_write_block(ptr_zsf_file, tsconfconfblock,ZSF_TSCONF_CONF, 256+1024);
 
 
-*/
+
    int longitud_ram=16384;
 
   
