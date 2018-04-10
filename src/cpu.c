@@ -104,6 +104,7 @@
 #include "codetests.h"
 #include "pd765.h"
 #include "core_reduced_spectrum.h"
+#include "baseconf.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -764,6 +765,11 @@ void cold_start_cpu_registers(void)
 		tsconf_hard_reset();
 		tsconf_set_default_basic_palette();
 	}
+
+	if (MACHINE_IS_BASECONF) {
+		baseconf_hard_reset();
+		//baseconf_set_default_basic_palette();
+	}
 }
 
 
@@ -793,6 +799,11 @@ void hard_reset_cpu(void)
 
 	else if (MACHINE_IS_TSCONF) {
 		tsconf_hard_reset();
+
+	}
+
+	else if (MACHINE_IS_BASECONF) {
+		baseconf_hard_reset();
 
 	}
 
@@ -964,11 +975,11 @@ util_stats_init();
 	}
 
 	if (MACHINE_IS_TSCONF) {
-		
-
-
 		tsconf_reset_cpu();
+	}
 
+	if (MACHINE_IS_BASECONF) {
+		baseconf_reset_cpu();
 	}
 
 	if (MACHINE_IS_TBBLUE) {
@@ -1079,6 +1090,8 @@ char *string_machines_list_description=
 							" Prism    Prism\n"
 
 							" ZXUNO    ZX-Uno\n"
+
+							" BaseConf ZX-Evolution BaseConf\n"
 
 							" TSConf   ZX-Evolution TS-Conf\n"
 
@@ -2111,6 +2124,7 @@ struct s_machine_names machine_names[]={
 					    {"Pentagon",		21},
 							{"Chrome", MACHINE_ID_CHROME},
 							{"ZX-Evolution TS-Conf", MACHINE_ID_TSCONF},
+							{"ZX-Evolution BaseConf", MACHINE_ID_BASECONF},
 
 
                                             {"Spectrum +3 (ROM v4.0)",		MACHINE_ID_SPECTRUM_P3_40},
@@ -2416,6 +2430,18 @@ void malloc_mem_machine(void) {
 
 				tsconf_init_memory_tables();
 				tsconf_set_memory_pages();
+
+
+		        }
+
+					else if (MACHINE_IS_BASECONF) {
+
+		                //512 kb rom, 4096 ram
+		                malloc_machine((512+4096)*1024);
+		                //temp de momento nada de random random_ram(memoria_spectrum+512*1024,4096*1024);
+
+				baseconf_init_memory_tables();
+				baseconf_set_memory_pages();
 
 
 		        }
@@ -2891,6 +2917,32 @@ You don't need timings for H/V sync =)
 							
 				}
 
+					else if (MACHINE_IS_BASECONF) {
+							contend_read=contend_read_baseconf;
+							contend_read_no_mreq=contend_read_no_mreq_baseconf;
+					        contend_write_no_mreq=contend_write_no_mreq_baseconf;
+
+				 			ula_contend_port_early=ula_contend_port_early_baseconf;
+				 			ula_contend_port_late=ula_contend_port_late_baseconf;
+					        screen_testados_linea=224;
+
+
+		
+							screen_invisible_borde_superior	=32; //para que sumen 320
+							screen_borde_superior=48;
+
+							screen_total_borde_inferior=48;
+
+							
+                        	//los timings son realmente estos :
+                        	screen_total_borde_izquierdo=64;
+                        	screen_total_borde_derecho=64;
+                        	screen_invisible_borde_derecho=64;
+
+
+							
+				}
+
                else if (MACHINE_IS_TIMEX_TS2068) {
                         contend_read=contend_read_timex;
                         contend_read_no_mreq=contend_read_no_mreq_timex;
@@ -3191,6 +3243,20 @@ You don't need timings for H/V sync =)
 								//TSConf hacemos que active siempre realvideo (siempre que setting de autoactivar este yes)
 								//por conveniencia, dado que se verá todo mejor asi que no con real video off
 								if (autodetect_rainbow.v) enable_rainbow();
+
+								break;
+
+									case MACHINE_ID_BASECONF:
+								poke_byte=poke_byte_baseconf;
+								peek_byte=peek_byte_baseconf;
+								peek_byte_no_time=peek_byte_no_time_baseconf;
+								poke_byte_no_time=poke_byte_no_time_baseconf;
+								lee_puerto=lee_puerto_spectrum;
+								ay_chip_present.v=1;
+
+								//baseConf hacemos que active siempre realvideo (siempre que setting de autoactivar este yes)
+								//por conveniencia, dado que se verá todo mejor asi que no con real video off
+								//if (autodetect_rainbow.v) enable_rainbow();
 
 								break;
 
@@ -3727,6 +3793,10 @@ void rom_load(char *romfilename)
 								romfilename="zxevo_tsconf.rom";
 								break;
 
+								case MACHINE_ID_BASECONF:
+								romfilename="zxevo_baseconf.rom";
+								break;
+
                 case 120:
                 romfilename="zx80.rom";
 
@@ -3928,7 +3998,13 @@ Total 20 pages=320 Kb
 
 								}
 
+			else if (MACHINE_IS_BASECONF) {
+									leidos=fread(baseconf_rom_mem_table[0],1,512*1024,ptr_romfile);
+									if (leidos!=512*1024) {
+											cpu_panic("Error loading ROM");
+									}
 
+								}
 
 
               else if (MACHINE_IS_TIMEX_TS2068) {

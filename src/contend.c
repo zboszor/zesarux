@@ -783,6 +783,52 @@ z80_int segmento;
 
 }
 
+//baseconf
+
+void contend_read_baseconf(z80_int direccion GCC_UNUSED,int time)
+{
+        //Y sumamos estados normales
+        t_estados += time;
+
+}
+
+void contend_read_no_mreq_baseconf(z80_int direccion GCC_UNUSED,int time)
+{
+
+        //Y sumamos estados normales
+        t_estados += time;
+
+}
+
+void contend_write_no_mreq_baseconf(z80_int direccion GCC_UNUSED,int time)
+{
+
+        //Y sumamos estados normales
+        t_estados += time;
+
+}
+
+
+void ula_contend_port_early_baseconf( z80_int port GCC_UNUSED)
+{
+ 
+
+  t_estados++;
+}
+
+void ula_contend_port_late_baseconf( z80_int port GCC_UNUSED)
+{
+
+
+        t_estados += 2;
+
+
+}
+
+
+
+
+
 //tsconf
 
 void contend_read_tsconf(z80_int direccion GCC_UNUSED,int time)
@@ -1084,6 +1130,11 @@ void inicializa_tabla_contend(void)
 
 
   }
+
+    if (MACHINE_IS_BASECONF) {
+                //no tiene memoria contended
+                return;
+    }
 
         if (MACHINE_IS_CHLOE) {
                 //Como 48k

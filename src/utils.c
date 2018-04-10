@@ -92,6 +92,7 @@
 #include "betadisk.h"
 #include "multiface.h"
 #include "pd765.h"
+#include "baseconf.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -393,9 +394,11 @@ char *array_fabricantes[]={
   "Mario Prato",
   "Jeff Braine",
 	"ZXUno Team",
+        "NedoPC",
   "TS Labs",
 	"VTrucco/FB Labs",
 	"Jupiter Cantab"
+        
 };
 
 char *array_fabricantes_hotkey[]={
@@ -412,15 +415,17 @@ char *array_fabricantes_hotkey[]={
         "Ma~~rio Prato",
         "~~Jeff Braine",
         "~~ZXUno Team",
+        "N~~edoPC",
         "TS ~~Labs",
         "~~VTrucco/FB Labs",
         "J~~upiter Cantab"
+        
 
 
 };
 
 //Si letra es espacio->no hay letra
-char array_fabricantes_hotkey_letra[]="nsatimbgpcrjzlvu";
+char array_fabricantes_hotkey_letra[]="nsatimbgpcrjzelvu";
 
 
 
@@ -484,6 +489,10 @@ int array_maquinas_marioprato[]={
 
 int array_maquinas_tslabs[]={
 	MACHINE_ID_TSCONF,255
+};
+
+int array_maquinas_nedopc[]={
+	MACHINE_ID_BASECONF,255
 };
 
 int array_maquinas_science_of_cambridge[]={
@@ -552,6 +561,10 @@ int *return_maquinas_fabricante(int fabricante)
 
     case FABRICANTE_TSLABS:
       return array_maquinas_tslabs;
+    break;
+
+        case FABRICANTE_NEDOPC:
+      return array_maquinas_nedopc;
     break;
 
     case FABRICANTE_SCIENCE_OF_CAMBRIDGE:
@@ -649,6 +662,10 @@ int return_fabricante_maquina(int maquina)
 
     case MACHINE_ID_TSCONF:
       return FABRICANTE_TSLABS;
+    break;
+
+        case MACHINE_ID_BASECONF:
+      return FABRICANTE_NEDOPC;
     break;
 
     case MACHINE_ID_MK14_STANDARD:
@@ -7887,6 +7904,7 @@ int get_machine_id_by_name(char *machine_name)
                                 else if (!strcasecmp(machine_name,"TBBlue")) return_machine=19;
                                 else if (!strcasecmp(machine_name,"Pentagon")) return_machine=21;
                                 else if (!strcasecmp(machine_name,"Chrome")) return_machine=MACHINE_ID_CHROME;
+                                else if (!strcasecmp(machine_name,"BaseConf")) return_machine=MACHINE_ID_BASECONF;
                                 else if (!strcasecmp(machine_name,"TSConf")) return_machine=MACHINE_ID_TSCONF;
                                 else if (!strcasecmp(machine_name,"P340")) return_machine=MACHINE_ID_SPECTRUM_P3_40;
                                 else if (!strcasecmp(machine_name,"P341")) return_machine=MACHINE_ID_SPECTRUM_P3_41;

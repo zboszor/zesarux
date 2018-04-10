@@ -68,6 +68,7 @@
 #include "tsconf.h"
 #include "mk14.h"
 #include "betadisk.h"
+#include "baseconf.h"
 
 
 void (*poke_byte)(z80_int dir,z80_byte valor);
@@ -2045,6 +2046,97 @@ z80_byte peek_byte_chrome(z80_int dir)
         return peek_byte_no_time_chrome(dir);
 
 }
+
+
+z80_byte *baseconf_return_segment_memory(z80_int dir)
+{
+	int segmento;
+
+	segmento=dir/16384;
+
+	return baseconf_memory_paged[segmento];
+
+}
+
+
+void poke_byte_no_time_baseconf(z80_int dir,z80_byte valor)
+{
+
+#ifdef EMULATE_VISUALMEM
+	set_visualmembuffer(dir);
+#endif
+
+		z80_byte *puntero;
+		puntero=baseconf_return_segment_memory(dir);
+
+
+		if (dir<16384) {
+
+
+			//if ((baseconf_get_memconfig()&8)==0) return; //si no ram en rom
+		}
+
+		dir = dir & 16383;
+		puntero=puntero+dir;
+
+		*puntero=valor;
+
+}
+
+void poke_byte_baseconf(z80_int dir,z80_byte valor)
+{
+int segmento;
+                segmento=dir / 16384;
+
+#ifdef EMULATE_CONTEND
+                if (contend_pages_actual[segmento]) {
+                        t_estados += contend_table[ t_estados ];
+                }
+#endif
+
+
+                t_estados += 3;
+
+        poke_byte_no_time_baseconf(dir,valor);
+}
+
+
+
+z80_byte peek_byte_no_time_baseconf(z80_int dir)
+{
+	#ifdef EMULATE_VISUALMEM
+		set_visualmemreadbuffer(dir);
+	#endif
+
+		z80_byte *puntero;
+		puntero=baseconf_return_segment_memory(dir);
+
+		dir = dir & 16383;
+		puntero=puntero+dir;
+
+		return *puntero;
+}
+
+
+z80_byte peek_byte_baseconf(z80_int dir)
+{
+        int segmento;
+        segmento=dir / 16384;
+
+#ifdef EMULATE_CONTEND
+                if (contend_pages_actual[segmento]) {
+                        t_estados += contend_table[ t_estados ];
+                }
+#endif
+
+                t_estados += 3;
+
+        return peek_byte_no_time_baseconf(dir);
+
+}
+
+
+
 
 
 

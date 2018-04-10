@@ -37,6 +37,7 @@
 #include "superupgrade.h"
 #include "chrome.h"
 #include "tsconf.h"
+#include "baseconf.h"
 
 //Direcciones donde estan cada pagina de ram
 //Antes habian 8 solo (8 paginas de 16kb cada una)
@@ -216,6 +217,16 @@ z80_byte *get_base_mem_pantalla_continue(void)
                 }
                 else return chrome_ram_mem_table[5];
         }
+			if (MACHINE_IS_BASECONF) {
+
+					
+
+					if (puerto_32765 & 8) {
+						return baseconf_ram_mem_table[7];
+					}
+					else return baseconf_ram_mem_table[5];	
+					
+				}
 
 				if (MACHINE_IS_TSCONF) {
 

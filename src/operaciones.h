@@ -290,6 +290,11 @@ extern void poke_byte_no_time_tsconf(z80_int dir,z80_byte valor);
 extern z80_byte peek_byte_tsconf(z80_int dir);
 extern z80_byte peek_byte_no_time_tsconf(z80_int dir);
 
+extern void poke_byte_baseconf(z80_int dir,z80_byte valor);
+extern void poke_byte_no_time_baseconf(z80_int dir,z80_byte valor);
+extern z80_byte peek_byte_baseconf(z80_int dir);
+extern z80_byte peek_byte_no_time_baseconf(z80_int dir);
+
 extern void poke_byte_mk14(z80_int dir,z80_byte valor);
 extern void poke_byte_no_time_mk14(z80_int dir,z80_byte valor);
 extern z80_byte peek_byte_mk14(z80_int dir);
