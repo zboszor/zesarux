@@ -269,8 +269,12 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
                         //Note: In the shadow mode port # BEF7 available regardless of bit 7 port # EFF7.
 		 zxevo_nvram[zxevo_last_port_dff7]=valor;
 					}
+        else if ( (puerto&0x00FF)==0x77 ) {
+                printf ("Record: control signal CS to SD-card unemulated\n");
+        }
 
         else {
+                printf ("unhandled out port %04XH value %02XH\n",puerto,valor);
                 sleep(1);
         }
 }
