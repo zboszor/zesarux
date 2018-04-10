@@ -25,7 +25,11 @@ Improved debugging:
 * added function to write byte to file on ZEsarUX hardware debug ports
 
 Improved frameskip: now realvideo buffer is not updated when frameskip
-Improved ZRCP: run command is stopped by default when pressing a key (or sending data to the socket)
+
+Improved ZRCP: 
+* run command is stopped by default when pressing a key (or sending data to the socket)
+* when a breakpoint is fired on cpu-step-mode, the breakpoint condition is shown on ZRCP
+
 Improved joystick support: 
 * added joystick test menu
 * buttons to events and buttons to joystick configuration are saved on configuration file

@@ -1581,6 +1581,13 @@ void remote_cpu_run_loop(int misocket,int verbose,int limite,int datos_vuelve)
 	#endif
 	}
 
+	//Si se ha saltado un breakpoint, decirlo
+	if (menu_breakpoint_exception.v) {
+		if (debug_if_breakpoint_action_menu(catch_breakpoint_index)) {
+			escribir_socket_format(misocket,"Breakpoint fired: %s\n",catch_breakpoint_message);
+			}
+	}
+
 
 }
 
