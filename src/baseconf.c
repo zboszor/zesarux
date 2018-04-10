@@ -54,17 +54,23 @@ z80_byte baseconf_memory_segments_type[4];
 
 z80_byte baseconf_last_port_77;
 
-z80_byte baseconf_shadow_ports;
+z80_byte baseconf_shadow_mode_port_77;
 
 z80_byte baseconf_last_port_bf;
 
 int baseconf_shadow_ports_available(void)
 {
-        //temp
-        //siempre disponibles
-        //return 1;
 
-        return baseconf_last_port_bf&1;
+        if (baseconf_last_port_bf&1) {
+                //0: if 1 then enable shadow ports. 0 after reset.
+                return 1;
+        }
+        if (baseconf_shadow_mode_port_77&2) {
+                //Enable shadow mode ports of the memory manager's permission.
+                return 1;
+        }
+
+        return 0;
 }
 
 void baseconf_reset_cpu(void)
@@ -114,7 +120,7 @@ void baseconf_set_memory_pages(void)
                 z80_byte pagina=baseconf_memory_segments[i];
                 z80_byte pagina_es_ram=baseconf_memory_segments_type[i];
 
-                if ((baseconf_shadow_ports&1)==0) {
+                if ((baseconf_shadow_mode_port_77&1)==0) {
                         //A8: if 0, then disable the memory manager. In each window processor is installed the last page of ROM. 0 after reset.
                         pagina=255;
                         pagina_es_ram=0;
@@ -170,7 +176,7 @@ void baseconf_hard_reset(void)
                 }
         }
 baseconf_last_port_77=0;
-baseconf_shadow_ports=0;
+baseconf_shadow_mode_port_77=0;
 baseconf_last_port_bf=0;
 
         baseconf_set_memory_pages();
@@ -192,12 +198,18 @@ z80_byte baseconf_change_ram_page_7ffd(z80_byte value)
 
 //Cambia el valor de entrada de numero de pagina rom segun:
 /*
-For ROM - there is a substitution LSB page numbers signal the inclusion of TR-DOS (1 if the TR-DOS included). In addition, there is the inclusion of the shadow of ports and TR-DOS («log in TR-DOS »), if in this box will code execution with the offset # 3Dxx.
+For ROM - there is a substitution LSB page numbers signal the inclusion of TR-DOS (1 if the TR-DOS included).
+In addition, there is the inclusion of the shadow of ports and TR-DOS («log in TR-DOS »), if in this box will code execution with the offset # 3Dxx.
 */
 
-//TODO: no lo entiendo. retorno tal cual
 z80_byte baseconf_change_rom_page_trdos(z80_byte value)
 {
+        value=value&254;
+        if ((baseconf_shadow_mode_port_77&2)==0) {
+                /* TODO
+                A9: If 0 then "force" the inclusion of TR-DOS and the shadow ports. 0 after reset.
+                */
+        }
         return value;
 }
 
@@ -218,7 +230,7 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
 
         //xx77H
         else if ( (puerto&0x00FF)==0x77 && baseconf_shadow_ports_available() ) {
-                baseconf_shadow_ports=puerto_h;
+                baseconf_shadow_mode_port_77=puerto_h;
                baseconf_last_port_77=valor; 
 
                baseconf_set_memory_pages();
