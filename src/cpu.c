@@ -3724,7 +3724,7 @@ void rom_load(char *romfilename)
 								break;
 
 								case MACHINE_ID_TSCONF:
-								romfilename="ts-bios.rom";
+								romfilename="zxevo_tsconf.rom";
 								break;
 
                 case 120:
@@ -3921,8 +3921,8 @@ Total 20 pages=320 Kb
 								}
 
 								else if (MACHINE_IS_TSCONF) {
-									leidos=fread(tsconf_rom_mem_table[0],1,65536,ptr_romfile);
-									if (leidos!=65536) {
+									leidos=fread(tsconf_rom_mem_table[0],1,512*1024,ptr_romfile);
+									if (leidos!=512*1024) {
 											cpu_panic("Error loading ROM");
 									}
 

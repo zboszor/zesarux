@@ -382,7 +382,7 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 #define MACHINE_IS_TSCONF (current_machine_type==MACHINE_ID_TSCONF)
 #define MACHINE_IS_BASECONF (current_machine_type==MACHINE_ID_BASECONF)
 
-#define MACHINE_IS_EVO (MACHINE_IS_TSCONF || MACHINE_IS_BASECONF)
+#define MACHINE_IS_ZXEVO (MACHINE_IS_TSCONF || MACHINE_IS_BASECONF)
 
 #define MACHINE_IS_ZX80 (current_machine_type==MACHINE_ID_ZX80)
 #define MACHINE_IS_ZX81 (current_machine_type==MACHINE_ID_ZX81)
