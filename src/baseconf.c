@@ -60,6 +60,10 @@ z80_byte baseconf_last_port_bf;
 
 int baseconf_shadow_ports_available(void)
 {
+        //temp
+        //siempre disponibles
+        //return 1;
+
         return baseconf_last_port_bf&1;
 }
 
@@ -173,6 +177,30 @@ baseconf_last_port_bf=0;
 
 }
 
+//Cambia el valor de entrada de numero de pagina ram segun :
+/*
+for RAM - in the window there is a substitution under 3 or 6 bits (depending on the mode of ZX Spectrum 128k or pentagon 1024k) 
+page numbers are not inverse bits from port # 7FFD.
+*/
+z80_byte baseconf_change_ram_page_7ffd(z80_byte value)
+{
+        value=value&(255-7);
+        value=value | (puerto_32765&7);
+
+        return value;
+}
+
+//Cambia el valor de entrada de numero de pagina rom segun:
+/*
+For ROM - there is a substitution LSB page numbers signal the inclusion of TR-DOS (1 if the TR-DOS included). In addition, there is the inclusion of the shadow of ports and TR-DOS («log in TR-DOS »), if in this box will code execution with the offset # 3Dxx.
+*/
+
+//TODO: no lo entiendo. retorno tal cual
+z80_byte baseconf_change_rom_page_trdos(z80_byte value)
+{
+        return value;
+}
+
 void baseconf_out_port(z80_int puerto,z80_byte valor)
 {
 
@@ -207,10 +235,12 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
                 z80_byte segmento=puerto_h>>6;
                 if (es_ram==0) {
                         pagina=pagina&31;
+                        if (valor&128) pagina=baseconf_change_rom_page_trdos(pagina);
                 }
 
                 else {
                         pagina=pagina&63;
+                        if (valor&128) pagina=baseconf_change_ram_page_7ffd(pagina);
                 }
 
                 baseconf_memory_segments[segmento]=pagina;  
@@ -221,6 +251,28 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
 
                baseconf_set_memory_pages();
         }
+        /*Out port baseconf port FFF7H value 40H. PC=03AAH
+segmento 0 pagina 24
+segmento 1 pagina 64
+segmento 2 pagina 255
+segmento 3 pagina 63
+Out port baseconf port F7F7H value BFH. PC=03AFH  -> BF=10 111111 -> pagina invertida=64... o sea que solo hay que pillar bits inferiores?
+segmento 0 pagina 24
+segmento 1 pagina 64
+segmento 2 pagina 255
+segmento 3 pagina 64
+Out port baseconf port 3FF7H value 06H. PC=84C0H
+segmento 0 pagina 25
+segmento 1 pagina 64
+segmento 2 pagina 255
+segmento 3 pagina 64
+Out port baseconf port DEF7H value EFH. PC=31BCH
+Baseconf reading port BEF7H
+baseconf reading nvram register EFH
+Out port baseconf port 3FF7H value 3FH. PC=84D7H
+segmento 0 pagina 0
+
+*/
 
         //x7F7H
         //The memory manager pages. All ram access. Port not in ATM2
@@ -229,6 +281,11 @@ void baseconf_out_port(z80_int puerto,z80_byte valor)
                 z80_byte es_ram=1;
 
                 z80_byte segmento=puerto_h>>6;
+
+                //temp
+                //pagina=pagina & 63;
+
+                if (valor&128) pagina=baseconf_change_ram_page_7ffd(pagina);
 
                 baseconf_memory_segments[segmento]=pagina;  
                 baseconf_memory_segments_type[segmento]=es_ram;      
