@@ -44,6 +44,16 @@ z80_byte *baseconf_ram_mem_table[256];
 z80_byte *baseconf_memory_paged[4];
 
 
+//Numeros de bloques de memoria asignados
+z80_byte baseconf_memory_segments[4];
+
+//Tipos de bloques de memoria asignados
+//0: rom. otra cosa: ram
+z80_byte baseconf_memory_segments_type[4];
+
+z80_byte baseconf_last_port_77;
+
+z80_byte baseconf_shadow_ports;
 
 void baseconf_reset_cpu(void)
 {
@@ -85,29 +95,35 @@ void baseconf_init_memory_tables(void)
 
 void baseconf_set_memory_pages(void)
 {
+
+        int i=0;
+
+        for (i=0;i<4;i++) {
+                z80_byte pagina=baseconf_memory_segments[i];
+                z80_byte pagina_es_ram=baseconf_memory_segments_type[i];
+
+                if ((baseconf_shadow_ports&1)==0) {
+                        //A8: if 0, then disable the memory manager. In each window processor is installed the last page of ROM. 0 after reset.
+                        pagina=255;
+                        pagina_es_ram=0;
+                }
+
+                //TODO: A9: If 0 then "force" the inclusion of TR-DOS and the shadow ports. 0 after reset.
+
+                if (pagina_es_ram) {
+                        baseconf_memory_paged[i]=baseconf_ram_mem_table[pagina];
+                        debug_paginas_memoria_mapeadas[i]=pagina;
+                }
+                else {
+                        pagina=pagina & 31;
+                        baseconf_memory_paged[i]=baseconf_rom_mem_table[pagina];
+                        debug_paginas_memoria_mapeadas[i]=DEBUG_PAGINA_MAP_ES_ROM+pagina;
+                }
+
+                printf ("segmento %d pagina %d\n",i,pagina);
+        }
 	
-	z80_byte rom_page=31;
 
-  
-
-  z80_byte ram_page_40=5;
-  z80_byte ram_page_80=2;
-  z80_byte ram_page_c0=0;
-
-
-
-    debug_paginas_memoria_mapeadas[0]=DEBUG_PAGINA_MAP_ES_ROM+rom_page;
-    baseconf_memory_paged[0]=baseconf_rom_mem_table[rom_page];
-  
-
-	baseconf_memory_paged[1]=baseconf_ram_mem_table[ram_page_40];
-	baseconf_memory_paged[2]=baseconf_ram_mem_table[ram_page_80];
-	baseconf_memory_paged[3]=baseconf_ram_mem_table[ram_page_c0];
-
-
-	debug_paginas_memoria_mapeadas[1]=ram_page_40;
-	debug_paginas_memoria_mapeadas[2]=ram_page_80;
-	debug_paginas_memoria_mapeadas[3]=ram_page_c0;
 
   //printf ("32765: %02XH rom %d ram1 %d ram2 %d ram3 %d\n",puerto_32765,rom_page,ram_page_40,ram_page_80,ram_page_c0);
 
@@ -119,6 +135,11 @@ void baseconf_hard_reset(void)
 {
 
   debug_printf(VERBOSE_DEBUG,"BaseConf Hard reset cpu");
+
+  //Asignar bloques memoria
+  baseconf_memory_segments[0]=baseconf_memory_segments[1]=baseconf_memory_segments[2]=baseconf_memory_segments[3]=255;
+  baseconf_memory_segments_type[0]=baseconf_memory_segments_type[1]=baseconf_memory_segments_type[2]=baseconf_memory_segments_type[3]=0;
+
  
   reset_cpu();
 
@@ -136,13 +157,42 @@ void baseconf_hard_reset(void)
                         *puntero=0;
                 }
         }
+baseconf_last_port_77=0;
+baseconf_shadow_ports=0;
 
-
- 
+        baseconf_set_memory_pages();
 
 }
 
+void baseconf_out_port(z80_int puerto,z80_byte valor)
+{
 
+        z80_byte puerto_h=puerto>>8;
+
+        if ( (puerto&0x00FF)==0x77 ) {
+                baseconf_shadow_ports=puerto_h;
+               baseconf_last_port_77=valor; 
+
+               baseconf_set_memory_pages();
+        }
+
+        if (puerto==0x7ffd) {
+                //mapeamos ram en c000h, habilitando memory manager
+                baseconf_shadow_ports |=1;
+
+                //ram
+                baseconf_memory_segments[3]=valor%7;
+                baseconf_memory_segments_type[3]=1;
+
+                //rom
+                baseconf_memory_segments[0] &=254;
+                if (valor&16) baseconf_memory_segments[0] |= 1;
+                baseconf_memory_segments_type[0]=0;       
+
+
+                puerto_32765=valor;
+        }
+}
 
 
 void screen_baseconf_refresca_pantalla(void)

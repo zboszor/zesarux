@@ -2072,8 +2072,10 @@ void poke_byte_no_time_baseconf(z80_int dir,z80_byte valor)
 
 		if (dir<16384) {
 
-
-			//if ((baseconf_get_memconfig()&8)==0) return; //si no ram en rom
+			if (baseconf_memory_segments_type[dir/16384]==0) {
+				//0 rom
+				return;
+			}
 		}
 
 		dir = dir & 16383;
@@ -7087,6 +7089,18 @@ acts as expected unless this registe is explicitly changed by the user/software.
 						//printf ("Writing TSConf port %04XH value %02XH\n",puerto,value);
 					}
 				}
+
+	if (MACHINE_IS_BASECONF) {
+		if (puerto_l==0xBF || puerto_l==0x77 || (puerto&0x0FFF)==0xff7 || (puerto&0x0FFF)==0x7f7 || puerto==0x7ffd || puerto==0xeff7) {
+			printf ("Out port baseconf port %04XH value %02XH\n",puerto,value);
+			baseconf_out_port(puerto,value);
+		}
+		else {
+			if (puerto_l!=0xFE) {
+				printf ("Unhandled Out port baseconf port %04XH value %02XH\n",puerto,value);
+			}
+		}
+	}
 
 	//Puertos especiales de TBBLUE y de paginacion 128kb
 	if (MACHINE_IS_TBBLUE) {

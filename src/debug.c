@@ -3806,6 +3806,22 @@ void debug_registers_get_mem_page_tsconf_extended(z80_byte segmento,char *texto_
 
 }
 
+//Retorna la pagina mapeada para el segmento en baseconf
+void debug_registers_get_mem_page_baseconf_extended(z80_byte segmento,char *texto_pagina,char *texto_pagina_short)
+{
+        if (debug_paginas_memoria_mapeadas[segmento] & DEBUG_PAGINA_MAP_ES_ROM) {
+                //ROM.
+                sprintf (texto_pagina_short,"O%d",debug_paginas_memoria_mapeadas[segmento] & DEBUG_PAGINA_MAP_MASK);
+                sprintf (texto_pagina,"ROM %d",debug_paginas_memoria_mapeadas[segmento] & DEBUG_PAGINA_MAP_MASK);
+        }
+
+        else {
+                //RAM
+                sprintf (texto_pagina_short,"A%d",debug_paginas_memoria_mapeadas[segmento]);
+                sprintf (texto_pagina,"RAM %d",debug_paginas_memoria_mapeadas[segmento]);
+        }
+
+}
 
 //Retorna numero de segmentos en uso
 int debug_get_memory_pages_extended(debug_memory_segment *segmentos)
@@ -3860,7 +3876,7 @@ typedef struct s_debug_memory_segment debug_memory_segment;
 
 
    //Paginas memoria
-      if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3 ||  superupgrade_enabled.v || MACHINE_IS_CHROME || MACHINE_IS_TSCONF) {
+      if (MACHINE_IS_SPECTRUM_128_P2_P2A_P3 ||  superupgrade_enabled.v || MACHINE_IS_CHROME) {
 		segmentos_totales=4;
                                   int pagina;
 
@@ -4302,6 +4318,22 @@ typedef struct s_debug_memory_segment debug_memory_segment;
 
       			}
 
+          if (MACHINE_IS_BASECONF) {
+                                                      int pagina;
+                                                      //4 paginas, texto 5 caracteres max
+				segmentos_totales=4;
+
+                            	for (pagina=0;pagina<4;pagina++) {
+
+                                   debug_registers_get_mem_page_baseconf_extended(pagina,segmentos[pagina].longname,segmentos[pagina].shortname);
+                              
+
+					segmentos[pagina].length=16384;
+                                	segmentos[pagina].start=16384*pagina;
+                           	 }
+
+
+      			}
 
 
   			//Fin paginas ram

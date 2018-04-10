@@ -60,5 +60,9 @@ extern z80_byte *baseconf_ram_mem_table[];
 extern void baseconf_reset_cpu(void);
 extern void baseconf_hard_reset(void);
 
+extern z80_byte baseconf_memory_segments[];
+extern z80_byte baseconf_memory_segments_type[];
+
+extern void baseconf_out_port(z80_int puerto,z80_byte valor);
 
 #endif
