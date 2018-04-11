@@ -35,6 +35,7 @@
 
 #include "timex.h"
 #include "ula.h"
+#include "audio.h"
 
 #define TBBLUE_MAX_SRAM_8KB_BLOCKS 224
 
@@ -2397,6 +2398,26 @@ void tbblue_set_value_port(z80_byte value)
 			if (value&1) clip_window_layer2_index=0;
 			if (value&2) clip_window_sprites_index=0;
 			if (value&4) clip_window_ula_index=0;
+
+		break;
+
+/*
+(W) 0x2D (45) => SoundDrive (SpecDrum) port 0xDF mirror
+ bits 7-0 = Data to be written at Soundrive
+ this port cand be used to send data to the SoundDrive using the Copper co-processor
+*/
+
+		case 45:
+
+/*
+        //DAC Audio
+        if (audiodac_enabled.v && puerto_l==audiodac_types[audiodac_selected_type].port) {
+                audiodac_last_value_data=value;
+                silence_detection_counter=0;
+        }
+*/
+
+		if (audiodac_enabled.v) audiodac_last_value_data=value;
 
 		break;
 
