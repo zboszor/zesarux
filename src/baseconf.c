@@ -60,6 +60,8 @@ z80_byte baseconf_last_port_bf;
 
 z80_byte baseconf_last_port_eff7;
 
+//ver Xpeccy - http://github.com/samstyle/Xpeccy Baseconf ports and memory maping is in ./src/libxpeccy/hardware/pentevo.c
+
 int baseconf_shadow_ports_available(void)
 {
 
@@ -136,7 +138,7 @@ void baseconf_set_memory_pages(void)
 
                        if (i==0) {
                                pagina=0;
-                               pagina_es_ram=0;
+                               pagina_es_ram=1;
                        }
                 }
 
