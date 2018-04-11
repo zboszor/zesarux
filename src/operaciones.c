@@ -6095,13 +6095,13 @@ if (MACHINE_IS_SPECTRUM_128_P2)
 		//Puertos SD
 		if (mmc_enabled.v && puerto_l==0x77) {
 			//Read: always 0 (the card is inserted in the regime R / W - in accordance with the interpretation of the Z-controller). The actual presence of maps should attempt to verify its initialization time an out.
-			printf ("Returning SD port %04XH value 0\n",puerto);
+			//printf ("Returning SD port %04XH value 0\n",puerto);
 			return 0;
 		}
 
 		 if (mmc_enabled.v && puerto_l==0x57) {
                         z80_byte valor_leido=mmc_read();
-			printf ("Returning SD port %04XH value %02XH\n",puerto,valor_leido);
+			//printf ("Returning SD port %04XH value %02XH\n",puerto,valor_leido);
 			return valor_leido;
 		}
 
@@ -7130,7 +7130,7 @@ acts as expected unless this registe is explicitly changed by the user/software.
 					//if (puerto_l==0x57 || puerto_l==0x77) printf ("Writing SD port %04XH value %02XH\n",puerto,value);
 
 					if (puerto_l==0x77 && mmc_enabled.v) {
-						printf ("Writing SD port %04Xh value %02XH\n",puerto,value);
+						//printf ("Writing SD port %04Xh value %02XH\n",puerto,value);
 /*
 Bits 7 .. 2: set to 0 for compatibility
 
@@ -7143,7 +7143,23 @@ Bit 0: Set to 1 for compatibility with Z-controller
 					}
 
 					if (puerto_l==0x57 && mmc_enabled.v) {
-						printf ("Writing SD port %04XH 57h value %02XH\n",puerto,value);
+						//printf ("Writing SD port %04XH 57h value %02XH\n",puerto,value);
+						//Si valor FF, descartar??
+						//if (value!=0xFF)
+
+/* Envia valores FF y no se porque. Quien entienda esto que me lo explique...
+
+Note: in the cycle of exchange on the SPI, initiated by writing or reading port # xx57, occurs simultaneously sending bytes to the SD-card and receive bytes from it. Sending byte is the same as that recorded in the port (if the cycle is initiated by the exchange of records), or # FF, if the cycle of exchange initiated by reading the port.
+Received bytes is stored in an internal buffer and is available for the reading from the same port. This reading of the re-initiates the cycle of exchange, etc.
+Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the sector:
+
+	LD	C,#57
+	LD	B,0
+	INIR
+	INIR
+
+*/
+
 						mmc_write(value);
 					}
 
