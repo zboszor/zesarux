@@ -380,12 +380,13 @@ void cpu_core_loop_spectrum(void)
 					//Si esta activo copper
 					z80_byte copper_control_bits=tbblue_copper_get_control_bits();
 					if (copper_control_bits != 0) {
-						//printf ("running copper\n");
+						//printf ("running copper %d\n",tbblue_copper_pc);
 						tbblue_copper_run_opcodes();
 						if (tbblue_copper_is_opcode_wait() ) {
 						if (tbblue_copper_is_wait_cond () ) {
-							printf ("cumplido wait\n");
+							printf ("cumplido wait %d\n",tbblue_copper_pc);
 							tbblue_copper_next_opcode();
+							printf ("cumplido wait after %d\n",tbblue_copper_pc);
 							//tbblue_copper_run_opcodes();
 
 							/* 
@@ -405,11 +406,13 @@ void cpu_core_loop_spectrum(void)
 									case 2:
 										//loop
 										tbblue_copper_pc=0;
+										printf ("Reset copper on control bit 2\n");
 									break;
 
 									case 3:
 										//loop??
 										tbblue_copper_pc=0;
+										printf ("Reset copper on control bit 3\n");
 									break;
 							   }
 						   }
@@ -756,7 +759,21 @@ si tbblue_copper_is_wait_cond(), saltar 2 posiciones pc tbblue_copper_next_opcod
 					if (1==1) {
 					//else {
 
-				
+				if (MACHINE_IS_TBBLUE) {
+								z80_byte copper_control_bits=tbblue_copper_get_control_bits();
+								if (copper_control_bits==3) {
+									tbblue_copper_reset_pc();
+									//printf ("Reset copper on control bit 3 on vsync\n");
+								}
+								
+													/* 
+							modos
+							       01 = Copper start, execute the list, then stop at last adress
+       10 = Copper start, execute the list, then loop the list from start
+       11 = Copper start, execute the list and restart the list at each frame
+	   						*/
+								
+						}
 
 
 					//justo despues de EI no debe generar interrupcion
@@ -785,18 +802,7 @@ si tbblue_copper_is_wait_cond(), saltar 2 posiciones pc tbblue_copper_next_opcod
 
 						reg_r++;
 
-						if (MACHINE_IS_TBBLUE) {
-								z80_byte copper_control_bits=tbblue_copper_get_control_bits();
-								if (copper_control_bits==3) tbblue_copper_reset_pc();
-								
-													/* 
-							modos
-							       01 = Copper start, execute the list, then stop at last adress
-       10 = Copper start, execute the list, then loop the list from start
-       11 = Copper start, execute the list and restart the list at each frame
-	   						*/
-								
-						}
+						
 
 						//Caso Inves. Hacer poke (I*256+R) con 255
 						if (MACHINE_IS_INVES) {

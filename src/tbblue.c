@@ -165,7 +165,7 @@ void tbblue_copper_run_opcodes(void)
 
 	while (!salir) {
 		byte_leido=tbblue_copper_get_byte_pc();
-		if ( (byte_leido&128) ) {
+		if ( (byte_leido&128)==0) {
 			//Es un move
 			z80_byte indice_registro=byte_leido&127;
 			tbblue_copper_pc++;
@@ -178,7 +178,7 @@ void tbblue_copper_run_opcodes(void)
 		else {
 			z80_int linea, horiz;
 			tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
-			printf ("Waiting until scanline %d horiz %d\n",linea,horiz);
+			//printf ("Waiting until scanline %d horiz %d\n",linea,horiz);
 			salir=1;
 		}
 	}
@@ -204,7 +204,7 @@ void tbblue_copper_set_stop(void)
 int tbblue_copper_is_opcode_wait(void)
 {
 	z80_byte byte_leido=tbblue_copper_get_byte_pc();
-	if ( (byte_leido&128)==0) return 1;
+	if ( (byte_leido&128) ) return 1;
 	return 0;
 }
 
@@ -219,6 +219,8 @@ int tbblue_copper_is_wait_cond(void)
 	//Obtener parametros de instruccion wait
 	z80_int linea, horiz;
 	tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
+
+	//printf ("Waiting until scanline %d horiz %d. actual %d\n",linea,horiz,scanline_actual);
 
 	//TODO. de momento solo comparar vertical
 	if (linea==scanline_actual) return 1;
@@ -2659,6 +2661,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 		//printf ("0x61 (97) => Copper control LO bit value %02XH\n",value);
 
 		//tbblue_copper_increment_write_position();
+		//sleep(1);
 
 		break;
 
@@ -2674,7 +2677,8 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 */
 
 		//printf ("0x62 (98) => Copper control HI bit value %02XH\n",value);
-		tbblue_copper_increment_write_position();
+		//tbblue_copper_increment_write_position();
+		//sleep(1);
 
 		break;
 
