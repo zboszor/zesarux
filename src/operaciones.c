@@ -6095,14 +6095,16 @@ if (MACHINE_IS_SPECTRUM_128_P2)
 		//Puertos SD
 		if (mmc_enabled.v && puerto_l==0x77) {
 			//Read: always 0 (the card is inserted in the regime R / W - in accordance with the interpretation of the Z-controller). The actual presence of maps should attempt to verify its initialization time an out.
-			printf ("Returning SD port %04XH value 1\n",puerto);
+			//printf ("Returning SD port %04XH value 1\n",puerto);
 			return 1; //1=inserted
 		}
 
+		//if (!sdc->image || !sdc->on || sdc->cs) return 0xff;    // no image or OFF or !CS
+
 		 if (mmc_enabled.v && puerto_l==0x57) {
-			if (!baseconf_sd_enabled) return 0xFF;
+			if (!baseconf_sd_enabled || baseconf_sd_cs) return 0xFF;
                         z80_byte valor_leido=mmc_read();
-			printf ("Returning SD port %04XH value %02XH\n",puerto,valor_leido);
+			//printf ("Returning SD port %04XH value %02XH\n",puerto,valor_leido);
 			return valor_leido;
 		}
 
@@ -7131,7 +7133,7 @@ acts as expected unless this registe is explicitly changed by the user/software.
 					//if (puerto_l==0x57 || puerto_l==0x77) printf ("Writing SD port %04XH value %02XH\n",puerto,value);
 
 					if (puerto_l==0x77 && mmc_enabled.v) {
-						printf ("Writing SD port %04Xh value %02XH\n",puerto,value);
+						//printf ("Writing SD port %04Xh value %02XH\n",puerto,value);
 /*
 Bits 7 .. 2: set to 0 for compatibility
 
@@ -7146,11 +7148,13 @@ Bit 0: Set to 1 for compatibility with Z-controller
 */
 
 						baseconf_sd_enabled=value&1;
-						mmc_cs(0xFE);
+						baseconf_sd_cs=(value & 2) ? 1 : 0;
+
+						mmc_cs(0xFE);  //TODO. Este valor FE deberia depender de baseconf_sd_cs...
 					}
 
 					if (puerto_l==0x57 && mmc_enabled.v) {
-						printf ("Writing SD port %04XH 57h value %02XH\n",puerto,value);
+						//printf ("Writing SD port %04XH 57h value %02XH\n",puerto,value);
 						//Si valor FF, descartar??
 						//if (value!=0xFF)
 
@@ -7166,7 +7170,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 	INIR
 
 */
-					if (!baseconf_sd_enabled) return;
+					if (!baseconf_sd_enabled || baseconf_sd_cs) return;
 
 						mmc_write(value);
 					}

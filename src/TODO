@@ -385,6 +385,8 @@ Conversión de tap a wav en ace. Requiere rutina diferente que la de spectrum
 
 -tsconf y tr-dos no deberia hacer nested_core, solo detectar cuando se esta en core trdos
 
+-mmc. Esto tambien para baseconf. Parece que envia un comando FF invalido y luego se queda en un bucle
+
 con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos se alteran! :(
 gestion interrupciones (dma, linea, frame) a la vez. cosa poco probable?
 truco para que las demos vayan mas fluidas: poner turbo x1, en algunas no se ralentiza el cambio de turbo y van perfectas a 50 fps
