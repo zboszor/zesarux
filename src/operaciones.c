@@ -6108,15 +6108,21 @@ if (MACHINE_IS_SPECTRUM_128_P2)
 		 if (mmc_enabled.v && puerto_l==0x57) {
 			if (!baseconf_sd_enabled || baseconf_sd_cs) return 0xFF;
                         z80_byte valor_leido=mmc_read();
-			//printf ("Returning SD port %04XH value %02XH\n",puerto,valor_leido);
+			//printf ("Returning SD port %04XH value %02XH PC=%04XH\n",puerto,valor_leido,reg_pc);
 
 			//algunos  0 , lo convertimos en FF. chapuza muy fea para probar
-			if (valor_leido==0) {
+			/*if (valor_leido==0) {
 				if (temp_tsconf_first_sd_0) {
 					//printf ("Changing return value to ff\n");
 					valor_leido=0xFF;
 				}
 				temp_tsconf_first_sd_0--;
+			}*/
+
+			//otro parche feo
+			if (reg_pc==0x06B3 || reg_pc==0x695) {
+				//printf ("Changing return value to ff\n");
+				return 0xff; //Parche
 			}
 
 			return valor_leido;
