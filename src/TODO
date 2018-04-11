@@ -2,7 +2,6 @@
  
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
 
--tsconf y tr-dos no deberia hacer nested_core, solo detectar cuando se esta en core trdos. no funciona tr-dos en tsconf
 
 TBBLUE:
 -tbblue extended opcodes
@@ -384,31 +383,23 @@ Conversión de tap a wav en ace. Requiere rutina diferente que la de spectrum
 
 --- TSConf ---
 
-demo twist de fast.spg, deformacion se ve perfecta con fast render pero no con normal
-color border registro 0xf
+-tsconf y tr-dos no deberia hacer nested_core, solo detectar cuando se esta en core trdos
+
 con gigascreen activo, al pulsar teclas en el menu (cursores?) las demos se alteran! :(
 gestion interrupciones (dma, linea, frame) a la vez. cosa poco probable?
 truco para que las demos vayan mas fluidas: poner turbo x1, en algunas no se ralentiza el cambio de turbo y van perfectas a 50 fps
-sir ababol a veces se ven bien los colores
 
 -ideas por que tsconf va lento algunas demos: porque basicamente usan modo turbo X4
 hay rutinas, como gestion de sprites y tiles, que se podrian mejorar ligeramente, cacheando algunas cosas.... pero aun asi, aunque desactive los sprites o tiles del todo, el uso de cpu no baja significativamente, apenas 1 o 2 % en un uso total de 75%..... la solución seria que el core de Z80 usase menos cpu fisica, asi el modo turbo x4 funcionaria mas ligero
 
 -factor compresion tsconf a texto en drivers curses, stdout, simpletext que sea configurable
 
--Ocr también de tsconf
-
 -Tsconf: escritura dma en fmaps. No he encontrado ningun juego que lo haga
-
 
 -tsconf:
 *tsconf: 
 -limite sprites en scanline
--revisar mapeo rom mediante 32765 porque parece que no hay manera de iniciar la rom del 128kb. creo que ahora mismo el puerto 32765 esta totalmente desactivado
-*parece que cuando se ha entrado una vez en la bios ya no se puede volver a entrar mas (usando el hard reset temporal) -> si deniego la escritura en nvram luego si que vuelve a entrar
-->Parece que es porque intenta boot de SD (lee puerto xx57) y tiene que hacer timeout
-*quiza tsbios no va en modo p2a porque necesita bus idle -> efectivamente
--En tsconf que cargue la rom de trdos incluida en el tsconf
+-revisar mapeo rom mediante 32765, parece que a veces no va fina
 
 -Cuando se interpreta solo vram y cuando bit shadow de 128k?
 
@@ -427,10 +418,7 @@ con mirror_x en sprite, xorig debe decrementarse y detectar cuando xorig<0 tiene
 mirror x,y en tiles: hnk2015, merhaba_fixed usa los dos tipos de mirror
 probar capas de sprites tsconf: 200, , sirababol, mustang, alterego, fast, fishbone, uwol, soco
 
-
-
 -synchronization demo .trd es para tsconfig
-
 
 -cargar scl:
 http://www.zx-modules.de/fileformats/sclformat.html
