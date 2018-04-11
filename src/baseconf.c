@@ -34,6 +34,9 @@
 #include "zxevo.h"
 
 
+//Si la sd esta activa o no
+int baseconf_sd_enabled=1;
+
 //Direcciones donde estan cada pagina de rom. 32 paginas de 16 kb
 z80_byte *baseconf_rom_mem_table[32];
 

@@ -65,4 +65,6 @@ extern z80_byte baseconf_memory_segments_type[];
 
 extern void baseconf_out_port(z80_int puerto,z80_byte valor);
 
+extern int baseconf_sd_enabled;
+
 #endif
