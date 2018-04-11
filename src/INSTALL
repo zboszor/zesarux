@@ -154,6 +154,7 @@ NOTE: by using the reduced core the following features will NOT be available, or
 - Divmmc
 - RZX
 - Raster interrupts
+- TBBlue Copper
 - Audio DAC
 - Video out to file
 

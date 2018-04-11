@@ -174,6 +174,7 @@ extern z80_byte clip_window_ula[];
 
 extern z80_bit tbblue_fast_boot_mode;
 
-extern int tbblue_initial_123b_port;
+
+extern z80_byte tbblue_copper_get_control_bits(void);
 
 #endif

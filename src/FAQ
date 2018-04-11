@@ -661,7 +661,7 @@ Finally, if you want to remove also the configuration file:
 Q: The emulator runs slower than a real Spectrum. I'm using a Raspberry Pi One (or another slow cpu)
 A: You can use the Spectrum reduced core, which can be set on compile time but also switchable from menu or command line setting.
 Using that core, the following features will NOT be available or will NOT be properly emulated:
-Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, Audio DAC, Video out to file, Last core frame statistics.
+Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, TBBlue Copper, Audio DAC, Video out to file, Last core frame statistics.
 Some of these features should not have any effect on cpu performance if you don't enable them, like Divide or Raster interrupts, but this afirmation is only true on Intel cpu and
 cpu with Speculative Execution. Raspberri Pi One (or Zero) does not have Speculative Execution on the cpu, so using the reduced core will use less real cpu and the emulator
 will run fine.

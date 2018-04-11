@@ -374,7 +374,23 @@ void cpu_core_loop_spectrum(void)
 				//Soporte interrupciones raster zxuno
 				if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE) zxuno_tbblue_handle_raster_interrupts();
 
-
+				//Soporte copper
+				if (MACHINE_IS_TSCONF) {
+					//Si esta activo copper
+					if (tbblue_copper_get_control_bits() != 0) {
+						printf ("running copper\n");
+						tbblue_copper_run_opcodes();
+						if (tbblue_copper_is_wait_cond () ) {
+							tbblue_copper_next_opcode();
+							//tbblue_copper_run_opcodes();
+						}
+					}
+					/*
+Logica del copper:
+ejecutar hasta wait: tbblue_copper_run_opcodes()
+si tbblue_copper_is_wait_cond(), saltar 2 posiciones pc tbblue_copper_next_opcode()  y ejecutar de nuevo tbblue_copper_run_opcodes()
+*/
+				}
 
 
                         }

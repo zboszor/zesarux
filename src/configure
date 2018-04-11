@@ -2302,7 +2302,7 @@ fi
 
 #	echo "!!!!!WARNING!!!!!"
 #	echo "You are using the fast Spectrum Core, but the following features will NOT be available or will NOT be properly emulated:"
-#	echo "Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, Audio DAC, Video out to file"
+#	echo "Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, TBBlue Copper, Audio DAC, Video out to file"
 #	echo
 #	echo "--spectrum-fast-core         Use a faster (and REDUCED) Spectrum core, useful on slow devices (Raspberry Pi One/Zero) and machines without Speculative Execution on the CPU"
 

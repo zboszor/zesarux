@@ -152,7 +152,7 @@ void tbblue_copper_get_wait_opcode_parameters(z80_int *line, z80_int *horiz)
 	*horiz=((byte_a>>1)&63)*8;
 }
 
-//Ejecuta opcodes del copper hasta que se encuentra un wait
+//Ejecuta opcodes del copper // hasta que se encuentra un wait
 void tbblue_copper_run_opcodes(void)
 {
 	z80_byte byte_leido=0;
@@ -168,6 +168,7 @@ void tbblue_copper_run_opcodes(void)
 			tbblue_copper_pc++;
 			printf ("Executing MOVE register %02XH value %02XH\n",indice_registro,valor_registro);
 			tbblue_set_value_port_position(indice_registro,valor_registro);
+			salir=1;  //ejecutar 1 solo
 		}
 		else {
 			z80_int linea, horiz;
@@ -177,6 +178,47 @@ void tbblue_copper_run_opcodes(void)
 		}
 	}
 }
+
+z80_byte tbblue_copper_get_control_bits(void)
+{
+	z80_byte control=(tbblue_registers[98]>>6)&3;
+	/*
+	       00 = Copper fully stoped
+       01 = Copper start, execute the list, then stop at last adress
+       10 = Copper start, execute the list, then loop the list from start
+       11 = Copper start, execute the list and restart the list at each frame
+	*/
+	return control;
+}
+
+//Si scanline y posicion actual corresponde con instruccion wait
+int tbblue_copper_is_wait_cond(void)
+{
+	int scanline_actual=t_scanline;
+
+	 int estados_en_linea=t_estados & screen_testados_linea;
+	int horizontal_actual=estados_en_linea;
+
+	//Obtener parametros de instruccion wait
+	z80_int linea, horiz;
+	tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
+
+	//TODO. de momento solo comparar vertical
+	if (linea==scanline_actual) return 1;
+	else return 0;
+}
+
+void tbblue_copper_next_opcode(void)
+{
+	//Incrementar en 2. Usado sobretodo cuando se ha cumplido instruccion wait
+	tbblue_copper_pc +=2;
+}
+
+/*
+Logica del copper:
+ejecutar hasta wait: tbblue_copper_run_opcodes()
+si tbblue_copper_is_wait_cond(), saltar 2 posiciones pc tbblue_copper_next_opcode()  y ejecutar de nuevo tbblue_copper_run_opcodes()
+*/
 
 //Fin copper
 

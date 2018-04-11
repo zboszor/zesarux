@@ -1732,7 +1732,7 @@ void set_cpu_core_loop(void)
 	                        cpu_core_loop=cpu_core_loop_spectrum;
 			}
 			else {
-				debug_printf(VERBOSE_WARN,"Setting REDUCED Spectrum CPU core, the following features will NOT be available or will NOT be properly emulated: Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, Audio DAC, Video out to file");
+				debug_printf(VERBOSE_WARN,"Setting REDUCED Spectrum CPU core, the following features will NOT be available or will NOT be properly emulated: Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, TBBlue Copper, Audio DAC, Video out to file");
 				cpu_core_loop=cpu_core_loop_reduced_spectrum;
 			}
                         cpu_core_loop_name="Spectrum";

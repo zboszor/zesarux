@@ -1564,7 +1564,7 @@ printf (
 		"--enablekempstonmouse      Enable kempston mouse emulation\n"
 		"--spectrum-reduced-core    Use Spectrum reduced core. It uses less cpu, ideal for slow devices like Raspberry Pi One and Zero\n"
 		"                           The following features will NOT be available or will NOT be properly emulated when using this core:\n"
-		"                           Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, Audio DAC, Video out to file\n"
+		"                           Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, RZX, Raster interrupts, TBBlue Copper, Audio DAC, Video out to file\n"
 		"--no-spectrum-reduced-core Do not use Spectrum reduced core\n"
                 "\n"
                 "Memory Settings\n"
