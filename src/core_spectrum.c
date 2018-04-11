@@ -380,7 +380,7 @@ void cpu_core_loop_spectrum(void)
 					//Si esta activo copper
 					z80_byte copper_control_bits=tbblue_copper_get_control_bits();
 					if (copper_control_bits != 0) {
-						//printf ("running copper %d\n",tbblue_copper_pc);
+						printf ("running copper %d\n",tbblue_copper_pc);
 						tbblue_copper_run_opcodes();
 						if (tbblue_copper_is_opcode_wait() ) {
 						if (tbblue_copper_is_wait_cond () ) {
@@ -538,6 +538,23 @@ si tbblue_copper_is_wait_cond(), saltar 2 posiciones pc tbblue_copper_next_opcod
 				core_cpu_timer_frame_media=(core_cpu_timer_frame_media+core_cpu_timer_frame_difftime)/2;
 				//printf ("tiempo medio transcurrido: %ld microsec\n",core_cpu_timer_frame_media);
 
+
+
+	if (MACHINE_IS_TBBLUE) {
+								z80_byte copper_control_bits=tbblue_copper_get_control_bits();
+								if (copper_control_bits==3) {
+									tbblue_copper_reset_pc();
+									printf ("Reset copper on control bit 3 on vsync\n");
+								}
+								
+													/* 
+							modos
+							       01 = Copper start, execute the list, then stop at last adress
+       10 = Copper start, execute the list, then loop the list from start
+       11 = Copper start, execute the list and restart the list at each frame
+	   						*/
+								
+						}
 
 
 				//tsconf_last_frame_y=-1;
@@ -759,21 +776,7 @@ si tbblue_copper_is_wait_cond(), saltar 2 posiciones pc tbblue_copper_next_opcod
 					if (1==1) {
 					//else {
 
-				if (MACHINE_IS_TBBLUE) {
-								z80_byte copper_control_bits=tbblue_copper_get_control_bits();
-								if (copper_control_bits==3) {
-									tbblue_copper_reset_pc();
-									//printf ("Reset copper on control bit 3 on vsync\n");
-								}
-								
-													/* 
-							modos
-							       01 = Copper start, execute the list, then stop at last adress
-       10 = Copper start, execute the list, then loop the list from start
-       11 = Copper start, execute the list and restart the list at each frame
-	   						*/
-								
-						}
+			
 
 
 					//justo despues de EI no debe generar interrupcion

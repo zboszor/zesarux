@@ -220,7 +220,7 @@ int tbblue_copper_is_wait_cond(void)
 	z80_int linea, horiz;
 	tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
 
-	//printf ("Waiting until scanline %d horiz %d. actual %d\n",linea,horiz,scanline_actual);
+	printf ("Waiting until scanline %d horiz %d. actual %d\n",linea,horiz,scanline_actual);
 
 	//TODO. de momento solo comparar vertical
 	if (linea==scanline_actual) return 1;
