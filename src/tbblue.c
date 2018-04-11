@@ -120,7 +120,7 @@ void tbblue_copper_write_data(z80_byte value)
 	posicion &=(TBBLUE_COPPER_MEMORY-1);
 
 
-	printf ("Writing copper data index %d data %02XH\n",posicion,value);
+	//printf ("Writing copper data index %d data %02XH\n",posicion,value);
 
 	tbblue_copper_memory[posicion]=value;
 
@@ -178,7 +178,7 @@ void tbblue_copper_run_opcodes(void)
 		else {
 			z80_int linea, horiz;
 			tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
-			//printf ("Waiting until scanline %d horiz %d\n",linea,horiz);
+			printf ("Waiting until scanline %d horiz %d\n",linea,horiz);
 			salir=1;
 		}
 	}
@@ -199,6 +199,13 @@ z80_byte tbblue_copper_get_control_bits(void)
 void tbblue_copper_set_stop(void)
 {
 	tbblue_registers[98] &=63;
+}
+
+int tbblue_copper_is_opcode_wait(void)
+{
+	z80_byte byte_leido=tbblue_copper_get_byte_pc();
+	if ( (byte_leido&128)==0) return 1;
+	return 0;
 }
 
 //Si scanline y posicion actual corresponde con instruccion wait
@@ -2635,7 +2642,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
   Note that each copper instruction is composed by two bytes (16 bits).
 */
 
-		printf ("0x60 (96) => Copper data value %02XH\n",value);
+		//printf ("0x60 (96) => Copper data value %02XH\n",value);
 
 		tbblue_copper_write_data(value);
 
@@ -2649,7 +2656,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
   (Index is set to 0 after a reset)
 */
 
-		printf ("0x61 (97) => Copper control LO bit value %02XH\n",value);
+		//printf ("0x61 (97) => Copper control LO bit value %02XH\n",value);
 
 		//tbblue_copper_increment_write_position();
 
@@ -2666,7 +2673,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
    bits 2-0 = Copper list index address MSB
 */
 
-		printf ("0x62 (98) => Copper control HI bit value %02XH\n",value);
+		//printf ("0x62 (98) => Copper control HI bit value %02XH\n",value);
 		tbblue_copper_increment_write_position();
 
 		break;

@@ -382,7 +382,9 @@ void cpu_core_loop_spectrum(void)
 					if (copper_control_bits != 0) {
 						//printf ("running copper\n");
 						tbblue_copper_run_opcodes();
+						if (tbblue_copper_is_opcode_wait() ) {
 						if (tbblue_copper_is_wait_cond () ) {
+							printf ("cumplido wait\n");
 							tbblue_copper_next_opcode();
 							//tbblue_copper_run_opcodes();
 
@@ -411,6 +413,7 @@ void cpu_core_loop_spectrum(void)
 									break;
 							   }
 						   }
+						}
 						}
 					}
 					/*
