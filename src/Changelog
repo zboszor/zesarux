@@ -5,7 +5,6 @@ Added BetaDisk and TR-DOS emulation
 Added Spectrum +3 emulation
 Added Spectrum keyboard ghosting error feature
 Added ZX Spectrum Recreated keyboard support
-Added a setting to start TBBlue directly to a 48 rom but with all the Next features enabled, useful for fast snapshot loading
 Added improved Spectrum 16/48/+ colour palette
 Added a fast spectrum core (with some features disabled) just for slow devices, like Raspberry Pi 1/Zero. Now ZEsarUX is playable on RPi1/Zero again!
 Added setting to write protect IDE, MMC, ZX-Uno Flash
@@ -72,7 +71,13 @@ Improved sprite viewer:
 Improved sound: Silence detector activated by default but can be disabled
 Improved default configuration: when the configuration file doesn't exist, the new one has the autosave configuration setting enabled
 Improved configuration parsing: if unknown setting found on configuration file, ZEsarUX will open but warns about the error, and the autosave feature is not enabled
-Improved TBBlue emulation: Added clip window registers
+Improved TBBlue emulation: 
+
+* Added clip window registers
+* Added copper
+* Added almost all next extended opcodes
+* Added a setting to start TBBlue directly to a 48 rom but with all the Next features enabled, useful for fast snapshot loading
+
 Improved rendering on text mode drivers: now realvideo mode can render directly to black&white text. Try TSConf with --vo stdout --realvideo --autoredrawstdout
 Improved Linux library dependencies: libssl is not enabled by default on compilation
 

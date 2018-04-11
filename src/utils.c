@@ -9377,7 +9377,14 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       if (memory_zone_by_file_size>0) {
         size=memory_zone_by_file_size;
       }
-    break;        
+    break;     
+
+    //tbblue copper
+    case 17:
+      if (MACHINE_IS_TBBLUE) {
+        size=TBBLUE_COPPER_MEMORY;
+      }
+    break;          
 
 
 
@@ -9592,6 +9599,14 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
 		}
 	break;
 
+    //tbblue copper
+    case 17:
+      if (MACHINE_IS_TBBLUE) {
+        p=tbblue_copper_memory;
+        p=p+address;
+      }
+    break;      
+
 
   }
 
@@ -9742,6 +9757,14 @@ void machine_get_memory_zone_name(int zone, char *name)
 		strcpy(name,"File zone");   
 		}
 	break;
+
+    //tbblue copper
+    case 17:
+      if (MACHINE_IS_TBBLUE) {
+          		   //123456789012345
+		strcpy(name,"TBBlue copper");   
+      }
+    break;         
 
   }
 

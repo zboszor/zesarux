@@ -1436,8 +1436,10 @@ void instruccion_ed_145 ()
 		z80_byte registro=lee_byte_pc();
 		z80_byte valor=lee_byte_pc();
 
-		tbblue_set_register_port(registro);
-		tbblue_set_value_port(valor);
+		//tbblue_set_register_port(registro);
+		//tbblue_set_value_port(valor);
+
+                tbblue_set_value_port_position(registro,valor);
                 //if (puerto==TBBLUE_REGISTER_PORT) tbblue_set_register_port(value);
                 //if (puerto==TBBLUE_VALUE_PORT) tbblue_set_value_port(value);
         }
@@ -1450,8 +1452,9 @@ void instruccion_ed_146 ()
                 //nextreg reg,a     ED 92 reg       Set a NEXT register using A (like doing out($243b),reg then out($253b),A )
 		z80_byte registro=lee_byte_pc();
 
-                tbblue_set_register_port(registro);
-                tbblue_set_value_port(reg_a);
+                //tbblue_set_register_port(registro);
+                //tbblue_set_value_port(reg_a);
+                tbblue_set_value_port_position(registro,reg_a);
         }
         else invalid_opcode_ed("237 146");
 }

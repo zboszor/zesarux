@@ -82,6 +82,13 @@ extern void tbblue_set_timing_48k(void);
 #define MAX_X_SPRITE_LINE (TBBLUE_SPRITE_BORDER+256+TBBLUE_SPRITE_BORDER)
 
 
+#define TBBLUE_COPPER_MEMORY 2048
+
+extern z80_byte tbblue_copper_memory[];
+
+extern void tbblue_set_value_port_position(z80_byte index_position,z80_byte value);
+
+
 extern z80_byte tbblue_registers[];
 
 extern z80_byte tbblue_last_register;

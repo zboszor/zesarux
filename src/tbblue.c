@@ -72,6 +72,115 @@ z80_byte *tbblue_memory_paged[8];
 //Si arranca rapido sin pasar por el proceso de boot. Va directamente a rom 48k
 z80_bit tbblue_fast_boot_mode={0};
 
+
+//Copper
+z80_byte tbblue_copper_memory[TBBLUE_COPPER_MEMORY];
+
+//Indice a la posicion de 16 bits a escribir
+//z80_int tbblue_copper_index_write=0;
+
+//Indice al opcode copper a ejecutar
+z80_int tbblue_copper_pc=0;
+
+//Obtiene posicion de escritura del copper
+z80_int tbblue_copper_get_write_position(void)
+{
+	z80_int posicion;
+	posicion=tbblue_registers[97] | ((tbblue_registers[98]&7)<<8);
+	return posicion;
+}
+
+//Establece posicion de escritura del copper
+void tbblue_copper_set_write_position(z80_int posicion)
+{
+	tbblue_registers[97]=posicion%0xFF;
+
+	z80_byte msb=(posicion>>8)&7; //3 bits bajos
+
+	z80_byte reg98=tbblue_registers[98];
+	reg98 &=(255-7);
+	reg98 |=msb;
+	tbblue_registers[98]=reg98;
+}
+
+void tbblue_copper_increment_write_position(void)
+{
+	z80_int posicion=tbblue_copper_get_write_position();
+
+	posicion++;
+	tbblue_copper_set_write_position(posicion);
+}
+
+
+//Escribe dato copper en posicion de escritura
+void tbblue_copper_write_data(z80_byte value)
+{
+	z80_int posicion=tbblue_copper_get_write_position();
+
+	posicion &=(TBBLUE_COPPER_MEMORY-1);
+
+
+	printf ("Writing copper data index %d data %02XH\n",posicion,value);
+
+	tbblue_copper_memory[posicion]=value;
+
+	posicion++;
+	tbblue_copper_set_write_position(posicion);
+
+}
+
+//Devuelve el byte donde apunta indice
+z80_byte tbblue_copper_get_byte(z80_int posicion)
+{
+	posicion &=(TBBLUE_COPPER_MEMORY-1);
+	return tbblue_copper_memory[posicion];
+}
+
+//Devuelve el byte donde apunta pc
+z80_byte tbblue_copper_get_byte_pc(void)
+{
+	return tbblue_copper_get_byte(tbblue_copper_pc);
+
+}
+
+void tbblue_copper_get_wait_opcode_parameters(z80_int *line, z80_int *horiz)
+{
+	z80_byte byte_a=tbblue_copper_get_byte(tbblue_copper_pc);
+	z80_byte byte_b=tbblue_copper_get_byte(tbblue_copper_pc+1);
+
+	*line=byte_b|((byte_a&1)<<8);
+	*horiz=((byte_a>>1)&63)*8;
+}
+
+//Ejecuta opcodes del copper hasta que se encuentra un wait
+void tbblue_copper_run_opcodes(void)
+{
+	z80_byte byte_leido=0;
+	int salir=0;
+
+	while (!salir) {
+		byte_leido=tbblue_copper_get_byte_pc();
+		if ( (byte_leido&128) ) {
+			//Es un move
+			z80_byte indice_registro=byte_leido&127;
+			tbblue_copper_pc++;
+			z80_byte valor_registro=tbblue_copper_get_byte_pc();
+			tbblue_copper_pc++;
+			printf ("Executing MOVE register %02XH value %02XH\n",indice_registro,valor_registro);
+			tbblue_set_value_port_position(indice_registro,valor_registro);
+		}
+		else {
+			z80_int linea, horiz;
+			tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
+			printf ("Waiting until scanline %d horiz %d\n",linea,horiz);
+			salir=1;
+		}
+	}
+}
+
+//Fin copper
+
+
 //Sprites
 
 //Paleta de 256 colores formato RGB9 RRRGGGBBB
@@ -1917,6 +2026,7 @@ void tbblue_reset_common(void)
 	tbblue_registers[67]=0;
 	tbblue_registers[74]=0;
 	tbblue_registers[97]=0;
+	tbblue_registers[98]=0;
 
 
 	clip_window_layer2[0]=0;
@@ -1939,7 +2049,7 @@ void tbblue_reset_common(void)
 
 
 
-
+	tbblue_copper_pc=0;
 	
 	tbblue_set_mmu_128k_default();
 
@@ -2205,8 +2315,9 @@ void tbblue_splash_palette_format(void)
 }
 
 	
-
-void tbblue_set_value_port(z80_byte value)
+//tbblue_last_register
+//void tbblue_set_value_port(z80_byte value)
+void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 {
 
 
@@ -2219,7 +2330,7 @@ void tbblue_set_value_port(z80_byte value)
 	z80_byte last_register_67=tbblue_registers[67];
 	
 
-	if (tbblue_last_register==3) {
+	if (index_position==3) {
 		//Controlar caso especial
 		//(W) 0x03 (03) => Set machine type, only in IPL or config mode
 		//   		bits 2-0 = Machine type:
@@ -2232,9 +2343,9 @@ void tbblue_set_value_port(z80_byte value)
 		}
 	}
 
-	tbblue_registers[tbblue_last_register]=value;
+	tbblue_registers[index_position]=value;
 
-	switch(tbblue_last_register)
+	switch(index_position)
 	{
 
 		case 2:
@@ -2453,7 +2564,6 @@ void tbblue_set_value_port(z80_byte value)
 		//MMU
 		case 80:
 		case 81:
-			//tbblue_set_rom_page_no_255(tbblue_last_register-80);
 			tbblue_set_memory_pages();
 		break;
 
@@ -2463,7 +2573,6 @@ void tbblue_set_value_port(z80_byte value)
 		case 85:
 		case 86:
 		case 87:
-			//tbblue_set_ram_page(tbblue_last_register-80);
 			tbblue_set_memory_pages();
 		break;
 
@@ -2476,6 +2585,8 @@ void tbblue_set_value_port(z80_byte value)
 
 		printf ("0x60 (96) => Copper data value %02XH\n",value);
 
+		tbblue_copper_write_data(value);
+
 		break;
 
 		case 97:
@@ -2487,6 +2598,8 @@ void tbblue_set_value_port(z80_byte value)
 */
 
 		printf ("0x61 (97) => Copper control LO bit value %02XH\n",value);
+
+		//tbblue_copper_increment_write_position();
 
 		break;
 
@@ -2502,12 +2615,20 @@ void tbblue_set_value_port(z80_byte value)
 */
 
 		printf ("0x62 (98) => Copper control HI bit value %02XH\n",value);
+		tbblue_copper_increment_write_position();
 
 		break;
 
 	}
 
 
+}
+
+
+//tbblue_last_register
+void tbblue_set_value_port(z80_byte value)
+{
+	tbblue_set_value_port_position(tbblue_last_register,value);
 }
 
 int tbblue_get_raster_line(void)
