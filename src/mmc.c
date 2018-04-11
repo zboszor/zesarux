@@ -457,7 +457,7 @@ void mmc_cs(z80_byte value)
 	else mmc_card_selected=1;
 
 	//TSConf selecciona tarjeta 1. Lo cambiamos a 0
-	if (MACHINE_IS_TSCONF && mmc_card_selected==1) mmc_card_selected=0;
+	//if (MACHINE_IS_TSCONF && mmc_card_selected==1) mmc_card_selected=0;
 
 	//if (value==0xFE) mmc_card_selected=0;
 	//if (value==0xFD) mmc_card_selected=1;
