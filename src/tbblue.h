@@ -177,4 +177,6 @@ extern z80_bit tbblue_fast_boot_mode;
 
 extern z80_byte tbblue_copper_get_control_bits(void);
 
+extern z80_int tbblue_copper_pc;
+
 #endif

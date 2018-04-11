@@ -51,6 +51,7 @@
 #include "superupgrade.h"
 #include "pd765.h"
 #include "tsconf.h"
+#include "tbblue.h"
 
 #include "scrstdout.h"
 
@@ -375,14 +376,41 @@ void cpu_core_loop_spectrum(void)
 				if (MACHINE_IS_ZXUNO || MACHINE_IS_TBBLUE) zxuno_tbblue_handle_raster_interrupts();
 
 				//Soporte copper
-				if (MACHINE_IS_TSCONF) {
+				if (MACHINE_IS_TBBLUE) {
 					//Si esta activo copper
-					if (tbblue_copper_get_control_bits() != 0) {
-						printf ("running copper\n");
+					z80_byte copper_control_bits=tbblue_copper_get_control_bits();
+					if (copper_control_bits != 0) {
+						//printf ("running copper\n");
 						tbblue_copper_run_opcodes();
 						if (tbblue_copper_is_wait_cond () ) {
 							tbblue_copper_next_opcode();
 							//tbblue_copper_run_opcodes();
+
+							/* 
+							modos
+							       01 = Copper start, execute the list, then stop at last adress
+       10 = Copper start, execute the list, then loop the list from start
+       11 = Copper start, execute the list and restart the list at each frame
+	   						*/
+
+						   //Si ha ido a posicion 0
+						   if (tbblue_copper_pc==TBBLUE_COPPER_MEMORY) {
+							   switch (copper_control_bits) {
+								   	case 1:
+									   tbblue_copper_set_stop();
+									break;
+
+									case 2:
+										//loop
+										tbblue_copper_pc=0;
+									break;
+
+									case 3:
+										//loop??
+										tbblue_copper_pc=0;
+									break;
+							   }
+						   }
 						}
 					}
 					/*
@@ -753,6 +781,19 @@ si tbblue_copper_is_wait_cond(), saltar 2 posiciones pc tbblue_copper_next_opcod
                                                 poke_byte(--reg_sp,reg_pc_l);
 
 						reg_r++;
+
+						if (MACHINE_IS_TBBLUE) {
+								z80_byte copper_control_bits=tbblue_copper_get_control_bits();
+								if (copper_control_bits==3) tbblue_copper_reset_pc();
+								
+													/* 
+							modos
+							       01 = Copper start, execute the list, then stop at last adress
+       10 = Copper start, execute the list, then loop the list from start
+       11 = Copper start, execute the list and restart the list at each frame
+	   						*/
+								
+						}
 
 						//Caso Inves. Hacer poke (I*256+R) con 255
 						if (MACHINE_IS_INVES) {

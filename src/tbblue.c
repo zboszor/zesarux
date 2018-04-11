@@ -152,6 +152,11 @@ void tbblue_copper_get_wait_opcode_parameters(z80_int *line, z80_int *horiz)
 	*horiz=((byte_a>>1)&63)*8;
 }
 
+void tbblue_copper_reset_pc(void)
+{
+	tbblue_copper_pc=0;
+}
+
 //Ejecuta opcodes del copper // hasta que se encuentra un wait
 void tbblue_copper_run_opcodes(void)
 {
@@ -173,7 +178,7 @@ void tbblue_copper_run_opcodes(void)
 		else {
 			z80_int linea, horiz;
 			tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
-			printf ("Waiting until scanline %d horiz %d\n",linea,horiz);
+			//printf ("Waiting until scanline %d horiz %d\n",linea,horiz);
 			salir=1;
 		}
 	}
@@ -189,6 +194,11 @@ z80_byte tbblue_copper_get_control_bits(void)
        11 = Copper start, execute the list and restart the list at each frame
 	*/
 	return control;
+}
+
+void tbblue_copper_set_stop(void)
+{
+	tbblue_registers[98] &=63;
 }
 
 //Si scanline y posicion actual corresponde con instruccion wait
