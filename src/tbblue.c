@@ -2464,6 +2464,44 @@ void tbblue_set_value_port(z80_byte value)
 			tbblue_set_memory_pages();
 		break;
 
+		case 96:
+/*
+(W) 0x60 (96) => Copper data
+  bits 7-0 = Byte to write at "Copper list"
+  Note that each copper instruction is composed by two bytes (16 bits).
+*/
+
+		printf ("0x60 (96) => Copper data value %02XH\n",value);
+
+		break;
+
+		case 97:
+/*
+(W) 0x61 (97) => Copper control LO bit
+  bits 7-0 = Copper list index address LSB.
+  After the write, the index is auto-incremented to the next memory position.
+  (Index is set to 0 after a reset)
+*/
+
+		printf ("0x61 (97) => Copper control LO bit value %02XH\n",value);
+
+		break;
+
+		case 98:
+/*
+(W) 0x62 (98) => Copper control HI bit
+   bits 7-6 = Start control
+       00 = Copper fully stoped
+       01 = Copper start, execute the list, then stop at last adress
+       10 = Copper start, execute the list, then loop the list from start
+       11 = Copper start, execute the list and restart the list at each frame
+   bits 2-0 = Copper list index address MSB
+*/
+
+		printf ("0x62 (98) => Copper control HI bit value %02XH\n",value);
+
+		break;
+
 	}
 
 
