@@ -6091,6 +6091,17 @@ if (MACHINE_IS_SPECTRUM_128_P2)
 		//In Port fbdf unknown asked, PC after=0xe292
 		//In Port ffdf unknown asked, PC after=0xe2a2
 
+
+		//Puertos SD
+		if (puerto_l==0x77) printf ("Reading unhandled SD port %04XH\n",puerto);
+
+		 if (mmc_enabled.v && puerto_l==0x57) {
+                        z80_byte valor_leido=mmc_read();
+			//printf ("Returning SD port 57H value %02XH\n",valor_leido);
+			return valor_leido;
+		}
+
+
 	}
 
 
@@ -7109,6 +7120,22 @@ acts as expected unless this registe is explicitly changed by the user/software.
 						printf ("Escritura puerto 0xbf valor: %02XH\n",value);
 						sleep(1);
 					}*/
+
+
+					//Puertos SD
+					//if (puerto_l==0x57 || puerto_l==0x77) printf ("Writing SD port %04XH value %02XH\n",puerto,value);
+
+					if (puerto_l==0x77 && mmc_enabled.v) {
+						//printf ("Writing SD port 77h value %02XH\n",value);
+						mmc_cs(value);
+					}
+
+					if (puerto_l==0x57 && mmc_enabled.v) {
+						//printf ("Writing SD port 57h value %02XH\n",value);
+						mmc_write(value);
+					}
+
+
 
 
 					//Otros puertos en escritura, hacer debug
