@@ -351,9 +351,15 @@ void tbblue_copper_write_control_hi_byte(z80_byte value)
 	switch (action) {
 		//Estos dos casos, resetean el puntero de instruccion
 		case TBBLUE_RCCH_COPPER_RUN_LOOP_RESET:
-		case TBBLUE_RCCH_COPPER_RUN_VBI:
+			printf ("Reset copper PC when writing TBBLUE_RCCH_COPPER_RUN_LOOP_RESET to control hi byte\n");
 			tbblue_copper_reset_pc();
 		break;
+
+		case TBBLUE_RCCH_COPPER_RUN_VBI:
+			printf ("Reset copper PC when writing TBBLUE_RCCH_COPPER_RUN_VBI to control hi byte\n");
+			tbblue_copper_reset_pc();
+		break;
+
 	}
 
 }

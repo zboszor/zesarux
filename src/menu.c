@@ -6166,6 +6166,12 @@ int menu_debug_registers_print_registers(void)
 				int limite=15;
 				if (menu_debug_registers_mostrando==1) limite=9;
 				copia_reg_pc=get_pc_register();
+
+				//Si se esta mirando zona copper
+				if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
+					copia_reg_pc=tbblue_copper_pc;
+				}
+
 				for (i=0;i<limite;i++) {
 					//debugger_disassemble(dumpassembler,32,&longitud_opcode,copia_reg_pc);
 					menu_debug_dissassemble_una_instruccion(dumpassembler,copia_reg_pc,&longitud_op);
@@ -6330,6 +6336,11 @@ if (menu_debug_registers_mostrando==0 || menu_debug_registers_mostrando==1 || me
 	                        sprintf (textoregistros,"FPS: %03d SCANLINE: %03d",ultimo_fps,t_scanline_draw);
 			}
                         menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+
+			if (MACHINE_IS_TBBLUE) {
+				sprintf (textoregistros,"COPPER PC: %04XH CTRL: %02XH",tbblue_copper_pc,tbblue_copper_get_control_bits() );
+				menu_escribe_linea_opcion(linea++,-1,1,textoregistros);
+			}
 
 
 			//Video zx80/81
@@ -8460,6 +8471,7 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
         z80_byte tecla=0;
 
         menu_z80_moto_int direccion=get_pc_register();
+		
 
         int salir=0;
 

@@ -34,6 +34,7 @@
 #include "utils.h"
 #include "scmp.h"
 #include "menu.h"
+#include "tbblue.h"
 
 //Indica 1 al desensamblador que el peek_byte debe usar direcciones de memoria de spectrum. modo normal
 //Indica 0 al desensamblador que debe usar direcciones del array de desensamblaje, usado en cpu statistics
@@ -211,7 +212,7 @@ debugger_disassemble( char *buffer, size_t buflen, size_t *length,
 	}
 
 	//Caso para copper
-	if (menu_debug_memory_zone==17) {
+	if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
 		//Casos WAIT y MOVE
 
 		z80_byte op=disassemble_peek_byte(address);
