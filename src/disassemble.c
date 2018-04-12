@@ -210,6 +210,26 @@ debugger_disassemble( char *buffer, size_t buflen, size_t *length,
 		return;
 	}
 
+	//Caso para copper
+	if (menu_debug_memory_zone==17) {
+		//Casos WAIT y MOVE
+
+		z80_byte op=disassemble_peek_byte(address);
+		z80_byte arg=disassemble_peek_byte(address+1);
+
+		if (op&128) {
+			//wait
+			sprintf (buffer,"WAIT");
+		}
+		else {
+			//move
+			sprintf (buffer,"MOVE");
+		}
+
+		*length=2;
+		return;
+	}
+
 	disassemble_main( address, buffer, buflen, length, USE_HL );
 
 	//gestionar casos de opcodes extendidos de Next
