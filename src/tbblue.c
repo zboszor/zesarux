@@ -222,7 +222,7 @@ int tbblue_copper_is_wait_cond(void)
 
 	int current_raster=tbblue_get_current_raster_position();
 
-	printf ("Waiting until raster %d horiz %d. current %d\n",linea,horiz,current_raster);
+	//printf ("Waiting until raster %d horiz %d. current %d\n",linea,horiz,current_raster);
 
 	//TODO. de momento solo comparar vertical
 	if (linea==current_raster ) return 1;
@@ -357,7 +357,7 @@ int tbblue_get_current_raster_position(void)
 		//Sumamos offset de la zona raster
 		
 		raster +=192+screen_total_borde_inferior;
-		printf ("scanline: %d raster: %d\n",t_scanline,raster);
+		//printf ("scanline: %d raster: %d\n",t_scanline,raster);
 		return raster;
 	}
 
@@ -369,7 +369,7 @@ int tbblue_get_current_raster_position(void)
 		//Sumamos offset de la zona raster
 		raster +=192+screen_total_borde_inferior+screen_invisible_borde_superior;
 
-		printf ("scanline: %d raster: %d\n",t_scanline,raster);
+		//printf ("scanline: %d raster: %d\n",t_scanline,raster);
 		return raster;
 	}
 
@@ -381,7 +381,7 @@ int tbblue_get_current_raster_position(void)
 		//Sumamos offset de la zona raster
                 raster +=0  ; //solo para que quede mas claro
 
-		printf ("scanline: %d raster: %d\n",t_scanline,raster);
+		//printf ("scanline: %d raster: %d\n",t_scanline,raster);
                 return raster;
         }
 
@@ -391,7 +391,7 @@ int tbblue_get_current_raster_position(void)
 
 		//Sumamos offset de la zona raster
                 raster +=192;
-		printf ("scanline: %d raster: %d\n",t_scanline,raster);
+		//printf ("scanline: %d raster: %d\n",t_scanline,raster);
                 return raster;
 
 }
