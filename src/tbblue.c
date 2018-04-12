@@ -250,9 +250,9 @@ void tbblue_copper_handle_next_opcode(void)
                                                 tbblue_copper_run_opcodes();
                                                 if (tbblue_copper_is_opcode_wait() ) {
                                                 if (tbblue_copper_is_wait_cond () ) {
-                                                        printf ("cumplido wait %d\n",tbblue_copper_pc);
+                                                        printf ("Wait condition positive at copper_pc %02XH scanline %d raster %d\n",tbblue_copper_pc,t_scanline,tbblue_get_current_raster_position() );
                                                         tbblue_copper_next_opcode();
-                                                        printf ("cumplido wait after %d\n",tbblue_copper_pc);
+                                                        printf ("Wait condition positive, after incrementing copper_pc %02XH\n",tbblue_copper_pc);
                                                         //tbblue_copper_run_opcodes();
 
                                                         /*
@@ -290,11 +290,30 @@ void tbblue_copper_handle_next_opcode(void)
 
 }
 
+
+
 /*
 Logica del copper:
 ejecutar hasta wait: tbblue_copper_run_opcodes()
 si tbblue_copper_is_wait_cond(), saltar 2 posiciones pc tbblue_copper_next_opcode()  y ejecutar de nuevo tbblue_copper_run_opcodes()
 */
+
+void tbblue_copper_handle_vsync(void)
+{
+                                                                z80_byte copper_control_bits=tbblue_copper_get_control_bits();
+                                                                if (copper_control_bits==3) {
+                                                                        tbblue_copper_reset_pc();
+                                                                        printf ("Reset copper on control bit 3 on vsync\n");
+                                                                }
+
+                                                                                                        /*
+                                                        modos
+                                                               01 = Copper start, execute the list, then stop at last adress
+       10 = Copper start, execute the list, then loop the list from start
+       11 = Copper start, execute the list and restart the list at each frame
+                                                        */
+
+}
 
 //Fin copper
 

@@ -496,18 +496,7 @@ void cpu_core_loop_spectrum(void)
 
 
 	if (MACHINE_IS_TBBLUE) {
-								z80_byte copper_control_bits=tbblue_copper_get_control_bits();
-								if (copper_control_bits==3) {
-									tbblue_copper_reset_pc();
-									printf ("Reset copper on control bit 3 on vsync\n");
-								}
-								
-													/* 
-							modos
-							       01 = Copper start, execute the list, then stop at last adress
-       10 = Copper start, execute the list, then loop the list from start
-       11 = Copper start, execute the list and restart the list at each frame
-	   						*/
+		tbblue_copper_handle_vsync();
 								
 						}
 
