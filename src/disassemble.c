@@ -226,8 +226,8 @@ debugger_disassemble( char *buffer, size_t buflen, size_t *length,
 		}
 		else {
 			//move
-			int registro=arg&127;
-			int value=op;
+			int registro=op&127;
+			int value=arg;
 			sprintf (buffer,"MOVE %d,%d",registro,value);
 		}
 
