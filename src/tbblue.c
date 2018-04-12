@@ -220,10 +220,12 @@ int tbblue_copper_is_wait_cond(void)
 	z80_int linea, horiz;
 	tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
 
-	printf ("Waiting until scanline %d horiz %d. actual %d\n",linea,horiz,scanline_actual);
+	int current_raster=tbblue_get_current_raster_position();
+
+	printf ("Waiting until raster %d horiz %d. current %d\n",linea,horiz,current_raster);
 
 	//TODO. de momento solo comparar vertical
-	if (linea==scanline_actual) return 1;
+	if (linea==current_raster ) return 1;
 	else return 0;
 }
 
