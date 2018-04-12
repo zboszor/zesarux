@@ -179,4 +179,10 @@ extern z80_byte tbblue_copper_get_control_bits(void);
 
 extern z80_int tbblue_copper_pc;
 
+
+#define TBBLUE_RCCH_COPPER_STOP             0x00
+#define TBBLUE_RCCH_COPPER_RUN_LOOP_RESET   0x40
+#define TBBLUE_RCCH_COPPER_RUN_LOOP         0x80
+#define TBBLUE_RCCH_COPPER_RUN_VBI          0xc0
+
 #endif

@@ -178,20 +178,27 @@ void tbblue_copper_next_opcode(void)
                                                    if (tbblue_copper_pc==TBBLUE_COPPER_MEMORY) {
 													   z80_byte copper_control_bits=tbblue_copper_get_control_bits();
                                                            switch (copper_control_bits) {
-                                                                        case 1:
+                                                                        case TBBLUE_RCCH_COPPER_STOP:
+																			//Se supone que nunca se estara ejecutando cuando el mode sea stop
                                                                            tbblue_copper_set_stop();
                                                                         break;
 
-                                                                        case 2:
+                                                                        case TBBLUE_RCCH_COPPER_RUN_LOOP:
                                                                                 //loop
                                                                                 tbblue_copper_pc=0;
-                                                                                printf ("Reset copper on control bit 2\n");
+                                                                                printf ("Reset copper on mode TBBLUE_RCCH_COPPER_RUN_LOOP\n");
                                                                         break;
 
-                                                                        case 3:
+																		case TBBLUE_RCCH_COPPER_RUN_LOOP_RESET:
+                                                                                //loop
+                                                                                tbblue_copper_pc=0;
+                                                                                printf ("Reset copper on mode TBBLUE_RCCH_COPPER_RUN_LOOP_RESET\n");
+                                                                        break;
+
+                                                                        case TBBLUE_RCCH_COPPER_RUN_VBI:
                                                                                 //loop??
                                                                                 tbblue_copper_pc=0;
-                                                                                printf ("Reset copper on control bit 3\n");
+                                                                                printf ("Reset copper on mode RUN_VBI\n");
                                                                         break;
                                                            }
 												   }
@@ -202,9 +209,7 @@ void tbblue_copper_next_opcode(void)
 void tbblue_copper_run_opcodes(void)
 {
 	z80_byte byte_leido=0;
-	int salir=0;
 
-	while (!salir) {
 		byte_leido=tbblue_copper_get_byte_pc();
 		if ( (byte_leido&128)==0) {
 			//Es un move
@@ -217,7 +222,6 @@ void tbblue_copper_run_opcodes(void)
 
 			tbblue_copper_next_opcode();
 
-			salir=1;  //ejecutar 1 solo
 		}
 		else {
 			//Es un wait
@@ -230,19 +234,22 @@ void tbblue_copper_run_opcodes(void)
                                                         printf ("Wait condition positive, after incrementing copper_pc %02XH\n",tbblue_copper_pc);
 			}
 			//printf ("Waiting until scanline %d horiz %d\n",linea,horiz);
-			salir=1;
+			
 		}
-	}
+	
 }
 
 z80_byte tbblue_copper_get_control_bits(void)
 {
-	z80_byte control=(tbblue_registers[98]>>6)&3;
+	//z80_byte control=(tbblue_registers[98]>>6)&3;
+	z80_byte control=(tbblue_registers[98])&(128+64);
 	/*
-	       00 = Copper fully stoped
-       01 = Copper start, execute the list, then stop at last adress
-       10 = Copper start, execute the list, then loop the list from start
-       11 = Copper start, execute the list and restart the list at each frame
+
+# define(`__RCCH_COPPER_STOP', 0x00)
+# define(`__RCCH_COPPER_RUN_LOOP_RESET', 0x40)
+# define(`__RCCH_COPPER_RUN_LOOP', 0x80)
+# define(`__RCCH_COPPER_RUN_VBI', 0xc0)
+
 	*/
 	return control;
 }
@@ -284,7 +291,7 @@ void tbblue_copper_handle_next_opcode(void)
 
 	//Si esta activo copper
     z80_byte copper_control_bits=tbblue_copper_get_control_bits();
-    if (copper_control_bits != 0) {
+    if (copper_control_bits != TBBLUE_RCCH_COPPER_STOP) {
         //printf ("running copper %d\n",tbblue_copper_pc);
         tbblue_copper_run_opcodes();
 	}
@@ -292,27 +299,62 @@ void tbblue_copper_handle_next_opcode(void)
 
  
 
-
-/*
-Logica del copper:
-ejecutar hasta wait: tbblue_copper_run_opcodes()
-si tbblue_copper_wait_cond_fired(), saltar 2 posiciones pc tbblue_copper_next_opcode()  y ejecutar de nuevo tbblue_copper_run_opcodes()
-*/
-
 void tbblue_copper_handle_vsync(void)
 {
-                                                                z80_byte copper_control_bits=tbblue_copper_get_control_bits();
-                                                                if (copper_control_bits==3) {
-                                                                        tbblue_copper_reset_pc();
-                                                                        printf ("Reset copper on control bit 3 on vsync\n");
-                                                                }
+	z80_byte copper_control_bits=tbblue_copper_get_control_bits();
+    if (copper_control_bits==TBBLUE_RCCH_COPPER_RUN_VBI) {
+    	tbblue_copper_reset_pc();
+        printf ("Reset copper on control bit 3 on vsync\n");
+    }
+                                                   
+}
 
-                                                                                                        /*
-                                                        modos
-                                                               01 = Copper start, execute the list, then stop at last adress
-       10 = Copper start, execute the list, then loop the list from start
-       11 = Copper start, execute the list and restart the list at each frame
-                                                        */
+
+void tbblue_copper_write_control_hi_byte(z80_byte value)
+{
+	/*
+
+# define(`__RCCH_COPPER_STOP', 0x00)
+# define(`__RCCH_COPPER_RUN_LOOP_RESET', 0x40)
+# define(`__RCCH_COPPER_RUN_LOOP', 0x80)
+# define(`__RCCH_COPPER_RUN_VBI', 0xc0)
+
+# STOP causes the copper to stop executing instructions
+# and hold the instruction pointer at its current position.
+#
+# RUN_LOOP_RESET causes the copper to reset its instruction
+# pointer to 0 and run in LOOP mode (see next).
+#
+# RUN_LOOP causes the copper to restart with the instruction
+# pointer at its current position.  Once the end of the instruction
+# list is reached, the copper loops back to the beginning.
+#
+# RUN_VBI causes the copper to reset its instruction
+# pointer to 0 and run in VBI mode.  On vsync interrupt,
+# the copper restarts the instruction list from the beginning.
+
+# Note that modes RUN_LOOP_RESET and RUN_VBI will only reset
+# the instruction pointer to zero if the mode actually changes
+# to RUN_LOOP_RESET or RUN_VBI.  Writing the same mode in a
+# second write will not cause the instruction pointer to zero.
+
+# It is possible to write values into the copper's instruction
+# space while it is running and since the copper constantly
+# refetches a wait instruction it is executing, you can cause
+# the wait instruction to end prematurely by changing it to
+# something else.
+
+*/
+
+	z80_byte action=value&(128+64);
+
+	switch (action) {
+		//Estos dos casos, resetean el puntero de instruccion
+		case TBBLUE_RCCH_COPPER_RUN_LOOP_RESET:
+		case TBBLUE_RCCH_COPPER_RUN_VBI:
+			tbblue_copper_reset_pc();
+		break;
+	}
 
 }
 
@@ -2854,6 +2896,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 		//printf ("0x62 (98) => Copper control HI bit value %02XH\n",value);
 		//tbblue_copper_increment_write_position();
 		//sleep(1);
+		tbblue_copper_write_control_hi_byte(value);
 
 		break;
 
