@@ -242,6 +242,80 @@ si tbblue_copper_is_wait_cond(), saltar 2 posiciones pc tbblue_copper_next_opcod
 //Fin copper
 
 
+/*
+   //es zona de vsync y borde superior
+                                                                //Aqui el contador raster tiene valor (192+56 en adelante)
+                                                                //contador de scanlines del core, entre 0 y screen_indice_inicio_pant ,
+                                                                if (t_scanline<screen_indice_inicio_pant) {
+                                                                        if (t_scanline==linea_raster-192-screen_total_borde_inferior) disparada_raster=1;
+                                                                }
+
+                                                                //Esto es zona de paper o borde inferior
+                                                                //Aqui el contador raster tiene valor 0 .. <(192+56)
+                                                                //contador de scanlines del core, entre screen_indice_inicio_pant y screen_testados_total
+                                                                else {
+                                                                        if (t_scanline-screen_indice_inicio_pant==linea_raster) disparada_raster=1;
+                                                                }
+
+# 50Hz                          60Hz
+# Lines                         Lines
+#
+#   0-191  Display                0-191  Display
+# 192-247  Bottom Border        192-223  Bottom Border
+# 248-255  Vsync (interrupt)    224-231  Vsync (interrupt)
+# 256-311 Top Border 232-261 Top Border
+
+
+int screen_invisible_borde_superior;
+//normalmente a 56.
+int screen_borde_superior;
+
+//estos dos anteriores se suman aqui. es 64 en 48k, y 63 en 128k. por tanto, uno de los dos valores vale 1 menos
+int screen_indice_inicio_pant;
+
+//suma del anterior+192
+int screen_indice_fin_pant;
+
+//normalmente a 56
+int screen_total_borde_inferior;
+
+zona borde invisible: 0 .. screen_invisible_borde_superior;
+zona borde visible: screen_invisible_borde_superior .. screen_invisible_borde_superior+screen_borde_superior
+zona visible pantalla: screen_indice_inicio_pant .. screen_indice_inicio_pant+192
+zona inferior: screen_indice_fin_pant .. screen_indice_fin_pant+screen_total_borde_inferior 
+
+
+
+*/
+
+int tbblue_get_current_raster_position(void)
+{
+	int raster;
+
+	if (t_scanline<screen_invisible_borde_superior) {
+		//En zona borde superior invisible (vsync)
+		raster=192+screen_total_borde_inferior+t_scanline;
+		printf ("scanline: %d raster: %d\n",t_scaline,raster);
+		return raster;
+	}
+
+	if (t_scanline<screen_indice_inicio_pant) {
+		//En zona borde superior visible
+		raster=192+screen_total_borde_inferior+t_scanline;
+
+		raster=raster-screen_invisible_borde_superior;
+
+		printf ("scanline: %d raster: %d\n",t_scaline,raster);
+		return raster;
+	}
+
+	if (t_scanline<screen_indice_fin_pant) {
+		//En zona visible pantalla
+		raster=t_scanline;
+
+		raster=raster-screen_invisible_borde_superior-screen_borde_superior;
+
+
 //Sprites
 
 //Paleta de 256 colores formato RGB9 RRRGGGBBB
