@@ -378,52 +378,7 @@ void cpu_core_loop_spectrum(void)
 				//Soporte copper
 				if (MACHINE_IS_TBBLUE) {
 					//Si esta activo copper
-					z80_byte copper_control_bits=tbblue_copper_get_control_bits();
-					if (copper_control_bits != 0) {
-						printf ("running copper %d\n",tbblue_copper_pc);
-						tbblue_copper_run_opcodes();
-						if (tbblue_copper_is_opcode_wait() ) {
-						if (tbblue_copper_is_wait_cond () ) {
-							printf ("cumplido wait %d\n",tbblue_copper_pc);
-							tbblue_copper_next_opcode();
-							printf ("cumplido wait after %d\n",tbblue_copper_pc);
-							//tbblue_copper_run_opcodes();
-
-							/* 
-							modos
-							       01 = Copper start, execute the list, then stop at last adress
-       10 = Copper start, execute the list, then loop the list from start
-       11 = Copper start, execute the list and restart the list at each frame
-	   						*/
-
-						   //Si ha ido a posicion 0
-						   if (tbblue_copper_pc==TBBLUE_COPPER_MEMORY) {
-							   switch (copper_control_bits) {
-								   	case 1:
-									   tbblue_copper_set_stop();
-									break;
-
-									case 2:
-										//loop
-										tbblue_copper_pc=0;
-										printf ("Reset copper on control bit 2\n");
-									break;
-
-									case 3:
-										//loop??
-										tbblue_copper_pc=0;
-										printf ("Reset copper on control bit 3\n");
-									break;
-							   }
-						   }
-						}
-						}
-					}
-					/*
-Logica del copper:
-ejecutar hasta wait: tbblue_copper_run_opcodes()
-si tbblue_copper_is_wait_cond(), saltar 2 posiciones pc tbblue_copper_next_opcode()  y ejecutar de nuevo tbblue_copper_run_opcodes()
-*/
+					tbblue_copper_handle_next_opcode();
 				}
 
 
