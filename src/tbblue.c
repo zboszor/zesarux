@@ -246,7 +246,7 @@ void tbblue_copper_handle_next_opcode(void)
 //Si esta activo copper
                                         z80_byte copper_control_bits=tbblue_copper_get_control_bits();
                                         if (copper_control_bits != 0) {
-                                                printf ("running copper %d\n",tbblue_copper_pc);
+                                                //printf ("running copper %d\n",tbblue_copper_pc);
                                                 tbblue_copper_run_opcodes();
                                                 if (tbblue_copper_is_opcode_wait() ) {
                                                 if (tbblue_copper_is_wait_cond () ) {
