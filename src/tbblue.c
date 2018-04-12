@@ -157,6 +157,47 @@ void tbblue_copper_reset_pc(void)
 	tbblue_copper_pc=0;
 }
 
+void tbblue_copper_set_stop(void)
+{
+	tbblue_registers[98] &=63;
+}
+
+void tbblue_copper_next_opcode(void)
+{
+	//Incrementar en 2. 
+	tbblue_copper_pc +=2;
+
+  /*
+                                                        modos
+                                                               01 = Copper start, execute the list, then stop at last adress
+       10 = Copper start, execute the list, then loop the list from start
+       11 = Copper start, execute the list and restart the list at each frame
+                                                        */
+
+                                                   //Si ha ido a posicion 0
+                                                   if (tbblue_copper_pc==TBBLUE_COPPER_MEMORY) {
+													   z80_byte copper_control_bits=tbblue_copper_get_control_bits();
+                                                           switch (copper_control_bits) {
+                                                                        case 1:
+                                                                           tbblue_copper_set_stop();
+                                                                        break;
+
+                                                                        case 2:
+                                                                                //loop
+                                                                                tbblue_copper_pc=0;
+                                                                                printf ("Reset copper on control bit 2\n");
+                                                                        break;
+
+                                                                        case 3:
+                                                                                //loop??
+                                                                                tbblue_copper_pc=0;
+                                                                                printf ("Reset copper on control bit 3\n");
+                                                                        break;
+                                                           }
+												   }
+
+}
+
 //Ejecuta opcodes del copper // hasta que se encuentra un wait
 void tbblue_copper_run_opcodes(void)
 {
@@ -168,16 +209,26 @@ void tbblue_copper_run_opcodes(void)
 		if ( (byte_leido&128)==0) {
 			//Es un move
 			z80_byte indice_registro=byte_leido&127;
-			tbblue_copper_pc++;
-			z80_byte valor_registro=tbblue_copper_get_byte_pc();
-			tbblue_copper_pc++;
+			//tbblue_copper_pc++;
+			z80_byte valor_registro=tbblue_copper_get_byte(tbblue_copper_pc+1);
+			//tbblue_copper_pc++;
 			printf ("Executing MOVE register %02XH value %02XH\n",indice_registro,valor_registro);
 			tbblue_set_value_port_position(indice_registro,valor_registro);
+
+			tbblue_copper_next_opcode();
+
 			salir=1;  //ejecutar 1 solo
 		}
 		else {
+			//Es un wait
+			//Si se cumple, saltar siguiente posicion
 			z80_int linea, horiz;
-			tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
+			//tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
+			if (tbblue_copper_wait_cond_fired () ) {
+                                                        printf ("Wait condition positive at copper_pc %02XH scanline %d raster %d\n",tbblue_copper_pc,t_scanline,tbblue_get_current_raster_position() );
+                                                        tbblue_copper_next_opcode();
+                                                        printf ("Wait condition positive, after incrementing copper_pc %02XH\n",tbblue_copper_pc);
+			}
 			//printf ("Waiting until scanline %d horiz %d\n",linea,horiz);
 			salir=1;
 		}
@@ -196,20 +247,17 @@ z80_byte tbblue_copper_get_control_bits(void)
 	return control;
 }
 
-void tbblue_copper_set_stop(void)
-{
-	tbblue_registers[98] &=63;
-}
 
-int tbblue_copper_is_opcode_wait(void)
+
+/*int tbblue_copper_is_opcode_wait(void)
 {
 	z80_byte byte_leido=tbblue_copper_get_byte_pc();
 	if ( (byte_leido&128) ) return 1;
 	return 0;
-}
+}*/
 
 //Si scanline y posicion actual corresponde con instruccion wait
-int tbblue_copper_is_wait_cond(void)
+int tbblue_copper_wait_cond_fired(void)
 {
 	int scanline_actual=t_scanline;
 
@@ -229,73 +277,26 @@ int tbblue_copper_is_wait_cond(void)
 	else return 0;
 }
 
-void tbblue_copper_next_opcode(void)
-{
-	//Incrementar en 2. Usado sobretodo cuando se ha cumplido instruccion wait
-	tbblue_copper_pc +=2;
-}
+
 
 void tbblue_copper_handle_next_opcode(void)
 {
 
-//temp
-//tbblue_get_current_raster_position();
+	//Si esta activo copper
+    z80_byte copper_control_bits=tbblue_copper_get_control_bits();
+    if (copper_control_bits != 0) {
+        //printf ("running copper %d\n",tbblue_copper_pc);
+        tbblue_copper_run_opcodes();
+	}
+}                                           
 
-
-
-//Si esta activo copper
-                                        z80_byte copper_control_bits=tbblue_copper_get_control_bits();
-                                        if (copper_control_bits != 0) {
-                                                //printf ("running copper %d\n",tbblue_copper_pc);
-                                                tbblue_copper_run_opcodes();
-                                                if (tbblue_copper_is_opcode_wait() ) {
-                                                if (tbblue_copper_is_wait_cond () ) {
-                                                        printf ("Wait condition positive at copper_pc %02XH scanline %d raster %d\n",tbblue_copper_pc,t_scanline,tbblue_get_current_raster_position() );
-                                                        tbblue_copper_next_opcode();
-                                                        printf ("Wait condition positive, after incrementing copper_pc %02XH\n",tbblue_copper_pc);
-                                                        //tbblue_copper_run_opcodes();
-
-                                                        /*
-                                                        modos
-                                                               01 = Copper start, execute the list, then stop at last adress
-       10 = Copper start, execute the list, then loop the list from start
-       11 = Copper start, execute the list and restart the list at each frame
-                                                        */
-
-                                                   //Si ha ido a posicion 0
-                                                   if (tbblue_copper_pc==TBBLUE_COPPER_MEMORY) {
-                                                           switch (copper_control_bits) {
-                                                                        case 1:
-                                                                           tbblue_copper_set_stop();
-                                                                        break;
-
-                                                                        case 2:
-                                                                                //loop
-                                                                                tbblue_copper_pc=0;
-                                                                                printf ("Reset copper on control bit 2\n");
-                                                                        break;
-
-                                                                        case 3:
-                                                                                //loop??
-                                                                                tbblue_copper_pc=0;
-                                                                                printf ("Reset copper on control bit 3\n");
-                                                                        break;
-                                                           }
-                                                   }
-                                                }
-                                                }
-                                        }
-                                        /*
-*/
-
-}
-
+ 
 
 
 /*
 Logica del copper:
 ejecutar hasta wait: tbblue_copper_run_opcodes()
-si tbblue_copper_is_wait_cond(), saltar 2 posiciones pc tbblue_copper_next_opcode()  y ejecutar de nuevo tbblue_copper_run_opcodes()
+si tbblue_copper_wait_cond_fired(), saltar 2 posiciones pc tbblue_copper_next_opcode()  y ejecutar de nuevo tbblue_copper_run_opcodes()
 */
 
 void tbblue_copper_handle_vsync(void)
