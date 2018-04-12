@@ -186,19 +186,19 @@ void tbblue_copper_next_opcode(void)
                                                                         case TBBLUE_RCCH_COPPER_RUN_LOOP:
                                                                                 //loop
                                                                                 tbblue_copper_pc=0;
-                                                                                printf ("Reset copper on mode TBBLUE_RCCH_COPPER_RUN_LOOP\n");
+                                                                                //printf ("Reset copper on mode TBBLUE_RCCH_COPPER_RUN_LOOP\n");
                                                                         break;
 
 																		case TBBLUE_RCCH_COPPER_RUN_LOOP_RESET:
                                                                                 //loop
                                                                                 tbblue_copper_pc=0;
-                                                                                printf ("Reset copper on mode TBBLUE_RCCH_COPPER_RUN_LOOP_RESET\n");
+                                                                                //printf ("Reset copper on mode TBBLUE_RCCH_COPPER_RUN_LOOP_RESET\n");
                                                                         break;
 
                                                                         case TBBLUE_RCCH_COPPER_RUN_VBI:
                                                                                 //loop??
                                                                                 tbblue_copper_pc=0;
-                                                                                printf ("Reset copper on mode RUN_VBI\n");
+                                                                                //printf ("Reset copper on mode RUN_VBI\n");
                                                                         break;
                                                            }
 												   }
@@ -217,7 +217,7 @@ void tbblue_copper_run_opcodes(void)
 			//tbblue_copper_pc++;
 			z80_byte valor_registro=tbblue_copper_get_byte(tbblue_copper_pc+1);
 			//tbblue_copper_pc++;
-			printf ("Executing MOVE register %02XH value %02XH\n",indice_registro,valor_registro);
+			//printf ("Executing MOVE register %02XH value %02XH\n",indice_registro,valor_registro);
 			tbblue_set_value_port_position(indice_registro,valor_registro);
 
 			tbblue_copper_next_opcode();
@@ -229,9 +229,9 @@ void tbblue_copper_run_opcodes(void)
 			z80_int linea, horiz;
 			//tbblue_copper_get_wait_opcode_parameters(&linea,&horiz);
 			if (tbblue_copper_wait_cond_fired () ) {
-                                                        printf ("Wait condition positive at copper_pc %02XH scanline %d raster %d\n",tbblue_copper_pc,t_scanline,tbblue_get_current_raster_position() );
+                                                        //printf ("Wait condition positive at copper_pc %02XH scanline %d raster %d\n",tbblue_copper_pc,t_scanline,tbblue_get_current_raster_position() );
                                                         tbblue_copper_next_opcode();
-                                                        printf ("Wait condition positive, after incrementing copper_pc %02XH\n",tbblue_copper_pc);
+                                                        //printf ("Wait condition positive, after incrementing copper_pc %02XH\n",tbblue_copper_pc);
 			}
 			//printf ("Waiting until scanline %d horiz %d\n",linea,horiz);
 			
@@ -304,7 +304,7 @@ void tbblue_copper_handle_vsync(void)
 	z80_byte copper_control_bits=tbblue_copper_get_control_bits();
     if (copper_control_bits==TBBLUE_RCCH_COPPER_RUN_VBI) {
     	tbblue_copper_reset_pc();
-        printf ("Reset copper on control bit 3 on vsync\n");
+        //printf ("Reset copper on control bit 3 on vsync\n");
     }
                                                    
 }
@@ -351,12 +351,12 @@ void tbblue_copper_write_control_hi_byte(z80_byte value)
 	switch (action) {
 		//Estos dos casos, resetean el puntero de instruccion
 		case TBBLUE_RCCH_COPPER_RUN_LOOP_RESET:
-			printf ("Reset copper PC when writing TBBLUE_RCCH_COPPER_RUN_LOOP_RESET to control hi byte\n");
+			//printf ("Reset copper PC when writing TBBLUE_RCCH_COPPER_RUN_LOOP_RESET to control hi byte\n");
 			tbblue_copper_reset_pc();
 		break;
 
 		case TBBLUE_RCCH_COPPER_RUN_VBI:
-			printf ("Reset copper PC when writing TBBLUE_RCCH_COPPER_RUN_VBI to control hi byte\n");
+			//printf ("Reset copper PC when writing TBBLUE_RCCH_COPPER_RUN_VBI to control hi byte\n");
 			tbblue_copper_reset_pc();
 		break;
 

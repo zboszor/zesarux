@@ -6025,7 +6025,16 @@ int menu_debug_registers_print_registers(void)
 
 		if (menu_debug_registers_mostrando==0) {
 
-			debugger_disassemble(dumpassembler,32,&longitud_opcode,get_pc_register() );
+			//debugger_disassemble(dumpassembler,32,&longitud_opcode,get_pc_register() );
+
+				copia_reg_pc=get_pc_register();
+
+				//Si se esta mirando zona copper
+				if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
+					copia_reg_pc=tbblue_copper_pc;
+				}
+			debugger_disassemble(dumpassembler,32,&longitud_opcode,copia_reg_pc );
+
 			menu_escribe_linea_opcion(linea++,-1,1,dumpassembler);
 
 			if (CPU_IS_SCMP) {
@@ -6191,6 +6200,11 @@ int menu_debug_registers_print_registers(void)
 			int longitud_linea=8;
 			if (menu_debug_registers_mostrando==3) limite=9;
 			copia_reg_pc=get_pc_register();
+				//Si se esta mirando zona copper
+				if (menu_debug_memory_zone==TBBLUE_COPPER_MEMORY_ZONE_NUM) {
+					copia_reg_pc=tbblue_copper_pc;
+				}
+
 			for (i=0;i<limite;i++) {
 					menu_debug_hexdump_with_ascii(dumpassembler,copia_reg_pc,longitud_linea);
 					//menu_debug_registers_dump_hex(dumpassembler,copia_reg_pc,longitud_linea);
