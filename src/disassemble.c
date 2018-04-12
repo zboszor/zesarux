@@ -219,11 +219,15 @@ debugger_disassemble( char *buffer, size_t buflen, size_t *length,
 
 		if (op&128) {
 			//wait
-			sprintf (buffer,"WAIT");
+			int raster=arg|((op&1)<<8);
+			int horiz=((op>>1)&63);
+			sprintf (buffer,"WAIT %d,%d",raster,horiz);
 		}
 		else {
 			//move
-			sprintf (buffer,"MOVE");
+			int registro=arg&127;
+			int value=op;
+			sprintf (buffer,"MOVE %d,%d",registro,value);
 		}
 
 		*length=2;
