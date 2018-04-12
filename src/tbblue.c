@@ -294,26 +294,50 @@ int tbblue_get_current_raster_position(void)
 
 	if (t_scanline<screen_invisible_borde_superior) {
 		//En zona borde superior invisible (vsync)
-		raster=192+screen_total_borde_inferior+t_scanline;
-		printf ("scanline: %d raster: %d\n",t_scaline,raster);
+		//Ajustamos primero a desplazamiento entre 0 y esa zona
+		raster=t_scanline;
+
+		//Sumamos offset de la zona raster
+		
+		raster +=192+screen_total_borde_inferior;
+		printf ("scanline: %d raster: %d\n",t_scanline,raster);
 		return raster;
 	}
 
 	if (t_scanline<screen_indice_inicio_pant) {
 		//En zona borde superior visible
-		raster=192+screen_total_borde_inferior+t_scanline;
+		//Ajustamos primero a desplazamiento entre 0 y esa zona
+		raster=t_scanline-screen_invisible_borde_superior;
 
-		raster=raster-screen_invisible_borde_superior;
+		//Sumamos offset de la zona raster
+		raster +=192+screen_total_borde_inferior+screen_invisible_borde_superior;
 
-		printf ("scanline: %d raster: %d\n",t_scaline,raster);
+		printf ("scanline: %d raster: %d\n",t_scanline,raster);
 		return raster;
 	}
 
 	if (t_scanline<screen_indice_fin_pant) {
 		//En zona visible pantalla
-		raster=t_scanline;
+		//Ajustamos primero a desplazamiento entre 0 y esa zona
+		raster=t_scanline-screen_indice_inicio_pant;
 
-		raster=raster-screen_invisible_borde_superior-screen_borde_superior;
+		//Sumamos offset de la zona raster
+                raster +=0  ; //solo para que quede mas claro
+
+		printf ("scanline: %d raster: %d\n",t_scanline,raster);
+                return raster;
+        }
+
+	//Caso final. Zona borde inferior
+		//Ajustamos primero a desplazamiento entre 0 y esa zona
+                raster=t_scanline-screen_indice_fin_pant;
+
+		//Sumamos offset de la zona raster
+                raster +=192;
+		printf ("scanline: %d raster: %d\n",t_scanline,raster);
+                return raster;
+
+}
 
 
 //Sprites
