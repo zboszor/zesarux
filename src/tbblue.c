@@ -268,8 +268,8 @@ int tbblue_copper_wait_cond_fired(void)
 {
 	int scanline_actual=t_scanline;
 
-	 int estados_en_linea=t_estados & screen_testados_linea;
-	int horizontal_actual=estados_en_linea;
+
+	int horizontal_actual=tbblue_get_current_raster_horiz_position();
 
 	//Obtener parametros de instruccion wait
 	z80_int linea, horiz;
@@ -279,9 +279,16 @@ int tbblue_copper_wait_cond_fired(void)
 
 	//printf ("Waiting until raster %d horiz %d. current %d\n",linea,horiz,current_raster);
 
-	//TODO. de momento solo comparar vertical
-	if (linea==current_raster ) return 1;
-	else return 0;
+	//comparar vertical
+	if (linea==current_raster ) {
+		//comparar horizontal
+		if (horiz>=horizontal_actual) {
+			printf ("Fired wait condition %d,%d at %d,%d\n",linea,horiz,current_raster,horizontal_actual);
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 
@@ -382,6 +389,8 @@ void tbblue_copper_write_control_hi_byte(z80_byte value)
                                                                         if (t_scanline-screen_indice_inicio_pant==linea_raster) disparada_raster=1;
                                                                 }
 
+https://github.com/z88dk/z88dk/blob/master/libsrc/_DEVELOPMENT/target/zxn/config/config_zxn_copper.m4#L74
+
 # 50Hz                          60Hz
 # Lines                         Lines
 #
@@ -390,6 +399,26 @@ void tbblue_copper_write_control_hi_byte(z80_byte value)
 # 248-255  Vsync (interrupt)    224-231  Vsync (interrupt)
 # 256-311 Top Border 232-261 Top Border
 
+
+# Horizontally the display is the same in 50Hz or 60Hz mode but it
+# varies by model.  It consists of 448 pixels (0-447) in 48k mode
+# and 456 pixels (0-455) in 128k mode.  Grouped in eight pixels
+# that's screen bytes 0-55 in 48k mode and 0-56 in 128k mode.
+#
+# 48k mode                      128k mode
+# Bytes  Pixels                 Bytes  Pixels
+#
+#  0-31    0-255  Display        0-31    0-255  Display
+# 32-39  256-319  Right Border  32-39  256-319  Right Border
+# 40-51  320-415  HBlank        40-51  320-415  HBlank
+# 52-55  416-447  Left Border   52-56  416-455  Left Border
+#
+# The ZXN Copper understands two operations:
+#
+# (1) Wait for a particular line (0-311 @ 50Hz or 0-261 @ 60Hz)
+#     and a horizontal character position (0-55 or 0-56)
+#
+# (2) Write a value to a nextreg.
 
 int screen_invisible_borde_superior;
 //normalmente a 56.
@@ -461,6 +490,36 @@ int tbblue_get_current_raster_position(void)
                 raster +=192;
 		//printf ("scanline: %d raster: %d\n",t_scanline,raster);
                 return raster;
+
+}
+
+
+int tbblue_get_current_raster_horiz_position(void)
+{
+/*
+# Horizontally the display is the same in 50Hz or 60Hz mode but it
+# varies by model.  It consists of 448 pixels (0-447) in 48k mode
+# and 456 pixels (0-455) in 128k mode.  Grouped in eight pixels
+# that's screen bytes 0-55 in 48k mode and 0-56 in 128k mode.
+#
+# 48k mode                      128k mode
+# Bytes  Pixels                 Bytes  Pixels
+#
+#  0-31    0-255  Display        0-31    0-255  Display
+# 32-39  256-319  Right Border  32-39  256-319  Right Border
+# 40-51  320-415  HBlank        40-51  320-415  HBlank
+# 52-55  416-447  Left Border   52-56  416-455  Left Border
+*/
+	 int estados_en_linea=t_estados & screen_testados_linea;
+	int horizontal_actual=estados_en_linea;
+
+	//Dividir por la velocidad turbo
+	horizontal_actual /=cpu_turbo_speed;
+
+	//Con esto tendremos rango entre 0 y 223. Multiplicar por dos para ajustar a rango 0-448
+	horizontal_actual *=2;
+
+	return horizontal_actual;
 
 }
 
