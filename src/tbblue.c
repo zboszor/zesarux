@@ -149,7 +149,7 @@ void tbblue_copper_get_wait_opcode_parameters(z80_int *line, z80_int *horiz)
 	z80_byte byte_b=tbblue_copper_get_byte(tbblue_copper_pc+1);
 
 	*line=byte_b|((byte_a&1)<<8);
-	*horiz=((byte_a>>1)&63)*8;
+	*horiz=((byte_a>>1)&63);
 }
 
 void tbblue_copper_reset_pc(void)
@@ -282,10 +282,10 @@ int tbblue_copper_wait_cond_fired(void)
 	//comparar vertical
 	if (current_raster==linea) {
 		//comparar horizontal
-		printf ("Comparing current %d to %d\n",current_horizontal,horiz);
+		//printf ("Comparing current %d to %d\n",current_horizontal,horiz);
 		if (current_horizontal>=horiz) {
-			printf ("Fired wait condition %d,%d at %d,%d (t-states %d)\n",linea,horiz,current_raster,current_horizontal,
-					t_estados % screen_testados_linea);
+			//printf ("Fired wait condition %d,%d at %d,%d (t-states %d)\n",linea,horiz,current_raster,current_horizontal,
+			//		t_estados % screen_testados_linea);
 			return 1;
 		}
 	}
