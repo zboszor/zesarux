@@ -1,7 +1,7 @@
 --- Cosas para la version 6.1
  
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
-
+-texto inverso en zx-80/81 con extension ansi y drivers de texto
 
 TBBLUE:
 
