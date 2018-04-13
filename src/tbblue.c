@@ -286,7 +286,7 @@ int tbblue_copper_wait_cond_fired(void)
 		if (current_horizontal>=horiz) {
 			printf ("Fired wait condition %d,%d at %d,%d (t-states %d)\n",linea,horiz,current_raster,current_horizontal,
 					t_estados % screen_testados_linea);
-			//return 1;
+			return 1;
 		}
 	}
 
