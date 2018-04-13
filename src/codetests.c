@@ -303,6 +303,27 @@ void coretests_compress_uncompress_repetitions(char *archivo)
 	coretests_compress_uncompress_repetitions_aux(archivo);
 }
 
+void codetests_tbblue_get_horizontal_raster(void)
+{
+
+
+	screen_testados_linea=224;
+
+	int i;
+	for (i=0;i<69888;i++) {
+		t_estados=i;
+		int estados_en_linea=t_estados % screen_testados_linea;
+		int linea=t_estados/screen_testados_linea;
+		int horiz=tbblue_get_current_raster_horiz_position();
+
+		printf ("t-total %5d line %3d t_states %3d. horiz: %3d\n",i,linea,estados_en_linea,horiz );
+		if (horiz!=estados_en_linea/4) {
+			printf ("Error\n");
+			exit(1);
+		}
+	}
+}
+
 void codetests_main(int main_argc GCC_UNUSED,char *main_argv[])
 {
 
@@ -314,8 +335,13 @@ void codetests_main(int main_argc GCC_UNUSED,char *main_argv[])
 	printf ("\nRunning compress repetitions code\n");
 	coretests_compress_repetitions();
 
-	printf ("\nRunning compress/uncompress repetitions code\n");
-	coretests_compress_uncompress_repetitions(main_argv[2]);
+	if (main_argc>2) {
+		printf ("\nRunning compress/uncompress repetitions code\n");
+		coretests_compress_uncompress_repetitions(main_argv[2]);
+	}
+
+	printf ("\nRunning get raster tbblue horizontal\n");
+	codetests_tbblue_get_horizontal_raster();
 
 	exit(0);
 }

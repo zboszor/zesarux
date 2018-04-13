@@ -12995,7 +12995,7 @@ TBBLUE:
 
 
 						//Ver si estamos entre estado 128 y 128+32
-						int estados_en_linea=t_estados & screen_testados_linea;
+						int estados_en_linea=t_estados % screen_testados_linea;
 
 						if (estados_en_linea>=128 && estados_en_linea<128+32) {
 							//Si no se ha disparado la interrupcion

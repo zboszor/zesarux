@@ -266,10 +266,10 @@ z80_byte tbblue_copper_get_control_bits(void)
 //Si scanline y posicion actual corresponde con instruccion wait
 int tbblue_copper_wait_cond_fired(void)
 {
-	int scanline_actual=t_scanline;
+	//int scanline_actual=t_scanline;
 
 
-	int horizontal_actual=tbblue_get_current_raster_horiz_position();
+	int current_horizontal=tbblue_get_current_raster_horiz_position();
 
 	//Obtener parametros de instruccion wait
 	z80_int linea, horiz;
@@ -280,11 +280,13 @@ int tbblue_copper_wait_cond_fired(void)
 	//printf ("Waiting until raster %d horiz %d. current %d\n",linea,horiz,current_raster);
 
 	//comparar vertical
-	if (linea==current_raster ) {
+	if (current_raster==linea) {
 		//comparar horizontal
-		if (horiz>=horizontal_actual) {
-			printf ("Fired wait condition %d,%d at %d,%d\n",linea,horiz,current_raster,horizontal_actual);
-			return 1;
+		printf ("Comparing current %d to %d\n",current_horizontal,horiz);
+		if (current_horizontal>=horiz) {
+			printf ("Fired wait condition %d,%d at %d,%d (t-states %d)\n",linea,horiz,current_raster,current_horizontal,
+					t_estados % screen_testados_linea);
+			//return 1;
 		}
 	}
 
@@ -510,7 +512,7 @@ int tbblue_get_current_raster_horiz_position(void)
 # 40-51  320-415  HBlank        40-51  320-415  HBlank
 # 52-55  416-447  Left Border   52-56  416-455  Left Border
 */
-	 int estados_en_linea=t_estados & screen_testados_linea;
+	int estados_en_linea=t_estados % screen_testados_linea;
 	int horizontal_actual=estados_en_linea;
 
 	//Dividir por la velocidad turbo
@@ -518,6 +520,9 @@ int tbblue_get_current_raster_horiz_position(void)
 
 	//Con esto tendremos rango entre 0 y 223. Multiplicar por dos para ajustar a rango 0-448
 	horizontal_actual *=2;
+
+	//Dividir entre 8 para ajustar  rango 0-56
+	horizontal_actual /=8;
 
 	return horizontal_actual;
 

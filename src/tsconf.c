@@ -3056,7 +3056,7 @@ void tsconf_handle_frame_interrupts(void)
 	//printf ("tsconf raster set to %d %d\n",int_raster_x,int_raster_y);
 	//Ver en que posicion de t-estados por linea estamos
 
-	int estados_en_linea=t_estados & screen_testados_linea;
+	int estados_en_linea=t_estados % screen_testados_linea;
 
 	//Dividir por turbo
 	//estados_en_linea /=cpu_turbo_speed;
