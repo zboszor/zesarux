@@ -703,6 +703,9 @@ void trd_insert_disk(char *nombre)
 		reset_cpu();
 	}
 
+	//Quitar si había alguno
+	trd_disable();
+
 	strcpy(trd_file_name,nombre);
     trd_enable();
 }
