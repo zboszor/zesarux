@@ -1622,6 +1622,12 @@ no gestiona bien nombres con espacios
 
 *** Debug ***
 
+
+Menu debugger:
+1) imposibilidad de abrir el debugger y usar el teclado para spectrum
+2) ventana de debug con poca información (y no cabe mas en 32x24)
+3) poder mover el puntero del cursor. y poder , por ejemplo, meter un breakpoint donde apunte cursor. ahora mismo la vista del debugger siempre sigue el registro PC
+
 -Agregar cambiar valor registros en menú debug 
 
 -Uso el debugger del Spectaculator y el del SpecEmu. Echo de menos es algo que he visto en el emulador SimCoupé y es una 
