@@ -1,7 +1,6 @@
 --- Cosas para la version 6.1
  
 -revisar si hay parpadeo con tsconf y fbdev pero no deberia
--texto inverso en zx-80/81 con extension ansi y drivers de texto
 
 TBBLUE:
 
@@ -1185,6 +1184,13 @@ Quizá demo raster zxuno falla porque la interrupción tarda demasiado...
 
 -Divide en zxuno no debería permitir. Porque sino intentaría tener el firmware que lleva zxuno de divmmc? Esto no es realmente un fallo
 
+-------------
+
+
+--- Mejoras especificos de zx80/81: ---
+
+
+-texto inverso en zx-80/81 con extension ansi y drivers de texto
 
 -------------
 
