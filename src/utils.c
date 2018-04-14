@@ -4338,7 +4338,7 @@ int quickload_continue(char *nombre) {
 		!util_compare_file_extension(nombre,"trd")
 	) {
 		//Aqui el autoload da igual. cambiamos siempre a Pentagon si conviene
-		if (!MACHINE_IS_PENTAGON) {
+		if (!MACHINE_IS_SPECTRUM) {
 			current_machine_type=MACHINE_ID_PENTAGON;
 			set_machine(NULL);
 
@@ -4346,10 +4346,8 @@ int quickload_continue(char *nombre) {
                         set_machine_params();
                         reset_cpu();
                       
-
-                        
+                       
                 }
-
                                
                 betadisk_enable();
                 trd_insert_disk(nombre);
