@@ -62,4 +62,6 @@ extern z80_bit trd_write_protection;
 
 extern z80_bit trd_persistent_writes;
 
+extern void trd_insert_disk(char *nombre);
+
 #endif

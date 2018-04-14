@@ -1391,7 +1391,7 @@ zxpand.o: zxpand.c zxpand.h mmc.h cpu.h debug.h utils.h menu.h screen.h zx8081.h
 dandanator.o: dandanator.c dandanator.h cpu.h debug.h utils.h operaciones.h ula.h audio.h
 	\$(CC) \$(CFLAGS) -c dandanator.c
 
-betadisk.o: betadisk.c betadisk.h cpu.h debug.h utils.h operaciones.h ula.h mem128.h screen.h tsconf.h
+betadisk.o: betadisk.c betadisk.h cpu.h debug.h utils.h operaciones.h ula.h mem128.h screen.h tsconf.h tape.h
 	\$(CC) \$(CFLAGS) -c betadisk.c
 
 codetests.o: codetests.c codetests.h cpu.h debug.h utils.h operaciones.h ula.h mem128.h screen.h

@@ -37,6 +37,7 @@
 #include "mem128.h"
 #include "screen.h"
 #include "tsconf.h"
+#include "tape.h"
 
 
 z80_bit betadisk_enabled={0};
@@ -688,4 +689,20 @@ void trd_flush_contents_to_disk(void)
                 debug_printf (VERBOSE_ERR,"Error writing to TRD file");
         }
 
+}
+
+void trd_insert_disk(char *nombre)
+{
+
+  if (!MACHINE_IS_SPECTRUM) {
+    debug_printf(VERBOSE_INFO,"Can not enable insert trd betadisk on non Spectrum machine");
+    return;
+  }
+
+	if (noautoload.v==0) {
+		reset_cpu();
+	}
+
+	strcpy(trd_file_name,nombre);
+    trd_enable();
 }

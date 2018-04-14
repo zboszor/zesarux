@@ -3999,6 +3999,7 @@ int quickload_valid_extension(char *nombre) {
                 || !util_compare_file_extension(nombre,"sp")
                 || !util_compare_file_extension(nombre,"zsf")
                 || !util_compare_file_extension(nombre,"spg")
+                || !util_compare_file_extension(nombre,"trd")
                 || !util_compare_file_extension(nombre,"z80")
                 || !util_compare_file_extension(nombre,"tzx")
                 || !util_compare_file_extension(nombre,"sna")
@@ -4331,6 +4332,32 @@ int quickload_continue(char *nombre) {
 		return 0;
 
 	}
+
+	//TRD
+	else if (
+		!util_compare_file_extension(nombre,"trd")
+	) {
+		//Aqui el autoload da igual. cambiamos siempre a Pentagon si conviene
+		if (!MACHINE_IS_PENTAGON) {
+			current_machine_type=MACHINE_ID_PENTAGON;
+			set_machine(NULL);
+
+                        //establecer parametros por defecto. Incluido quitar slots de memoria
+                        set_machine_params();
+                        reset_cpu();
+                      
+
+                        
+                }
+
+                               
+                betadisk_enable();
+                trd_insert_disk(nombre);
+
+
+		return 0;
+
+	}        
 
 
   //Archivos ay
