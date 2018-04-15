@@ -18047,10 +18047,9 @@ void menu_file_mmc_browser_show_file(z80_byte *origen,char *destino,int sipuntoe
 	int i;
 	int salir=0;
 	for (i=0;i<longitud && !salir;i++) {
-		char caracter;
+		z80_byte caracter;
 		caracter=*origen;
 
-		
 			origen++;
 			if (caracter<32 || caracter>127) {
 				//Si detectamos final de texto y siempre que no este en primer caracter

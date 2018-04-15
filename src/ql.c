@@ -2778,7 +2778,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	if (longitud>32) longitud=32;
 
           	int i=0;
-          	char byte_leido;
+            z80_byte byte_leido;
 
           	while (longitud) {
           		byte_leido=ql_readbyte(puntero_origen);
