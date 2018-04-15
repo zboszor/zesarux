@@ -834,6 +834,9 @@ z80_byte compare_char_tabla_step(z80_byte *origen,z80_byte *inverse,z80_byte *ta
         z80_byte caracter=32;
 
         for (;caracter<128;caracter++) {
+                int numero_byte;
+                z80_byte comparar;
+
                 //printf ("%d\n",caracter);
                 //tabla_leemos apunta siempre al primer byte de la tabla del caracter que leemos
                 tabla_comparar=tabla_leemos;
@@ -842,8 +845,6 @@ z80_byte compare_char_tabla_step(z80_byte *origen,z80_byte *inverse,z80_byte *ta
                 //tabla_comparar : puntero sobre la tabla de caracteres
                 //copia_origen: puntero sobre la pantalla
 
-                //
-                int numero_byte=0;
                 for (numero_byte=0; (numero_byte<8) && (*copia_origen == *tabla_comparar) ;numero_byte++,copia_origen+=step,tabla_comparar++) {
                 }
 
@@ -852,18 +853,15 @@ z80_byte compare_char_tabla_step(z80_byte *origen,z80_byte *inverse,z80_byte *ta
                         return caracter;
                 }
 
-
                 //probar con texto inverso
 
-                numero_byte=0;
-                for (numero_byte=0; (numero_byte<8) && (*copia_origen == (*tabla_comparar ^ 255 )) ;numero_byte++,copia_origen+=step,tabla_comparar++) {
+                for (numero_byte=0; (numero_byte<8) && (comparar = ~(*tabla_comparar), *copia_origen == comparar) ;numero_byte++, copia_origen+=step, tabla_comparar++) {
                 }
 
                 if (numero_byte == 8) {
                         *inverse=1;
                         return caracter;
                 }
-
 
                 tabla_leemos +=8;
         }
@@ -885,6 +883,7 @@ z80_byte compare_char_tabla(z80_byte *origen,z80_byte *inverse,z80_byte *tabla_l
 z80_byte compare_char_tabla_rainbow(z80_byte *origen,z80_byte *inverse,z80_byte *tabla_leemos) {
 
         z80_byte *tabla_comparar;
+        z80_byte comparar;
 
 
         z80_byte caracter=0;
@@ -892,6 +891,7 @@ z80_byte compare_char_tabla_rainbow(z80_byte *origen,z80_byte *inverse,z80_byte 
 
 
         for (;caracter<64;caracter++) {
+                int numero_byte;
                 //printf ("%d\n",caracter);
                 //tabla_leemos apunta siempre al primer byte de la tabla del caracter que leemos
                 tabla_comparar=tabla_leemos;
@@ -901,7 +901,6 @@ z80_byte compare_char_tabla_rainbow(z80_byte *origen,z80_byte *inverse,z80_byte 
                 //copia_origen: puntero sobre la pantalla
 
                 //
-                int numero_byte=0;
                 for (numero_byte=0; (numero_byte<8) && (origen[numero_byte] == *tabla_comparar) ;numero_byte++,tabla_comparar++) {
                 }
 
@@ -912,8 +911,7 @@ z80_byte compare_char_tabla_rainbow(z80_byte *origen,z80_byte *inverse,z80_byte 
 
 
                 //probar con texto inverso
-               	numero_byte=0;
-                for (numero_byte=0; (numero_byte<8) && (origen[numero_byte] == (*tabla_comparar ^ 255 )) ;numero_byte++,tabla_comparar++) {
+                for (numero_byte=0; (numero_byte<8) && (comparar = ~(*tabla_comparar), origen[numero_byte] == comparar) ;numero_byte++,tabla_comparar++) {
        	        }
 
                	if (numero_byte == 8) {
