@@ -179,6 +179,8 @@ extern z80_byte tbblue_copper_get_control_bits(void);
 
 extern z80_int tbblue_copper_pc;
 
+extern void tbblue_copper_handle_next_opcode(void);
+extern void tbblue_copper_handle_vsync(void);
 
 #define TBBLUE_RCCH_COPPER_STOP             0x00
 #define TBBLUE_RCCH_COPPER_RUN_LOOP_RESET   0x40
