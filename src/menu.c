@@ -4918,6 +4918,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				if (m->es_menu_tabulado==0) break;
 
 				//Si es tabulado, seguira hasta la opcion '6'
+				/* fall-through */
 			case '6':
 				linea_seleccionada=menu_dibuja_menu_cursor_abajo(linea_seleccionada,max_opciones,m);
 
@@ -4931,6 +4932,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
                                 if (m->es_menu_tabulado==0) break;
 
                                 //Si es tabulado, seguira hasta la opcion '7'
+                                /* fall-through */
 			case '7':
 				linea_seleccionada=menu_dibuja_menu_cursor_arriba(linea_seleccionada,max_opciones,m);
 
