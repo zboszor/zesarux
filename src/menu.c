@@ -31580,7 +31580,7 @@ void menu_print_dir(int inicial)
 	//escribir en ventana directorio de archivos
 
 	//Para speech
-	char texto_opcion_activa[100];
+	char texto_opcion_activa[PATH_MAX + 32];
 	//Asumimos por si acaso que no hay ninguna activa
 	texto_opcion_activa[0]=0;
 
