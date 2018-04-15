@@ -1995,7 +1995,7 @@ int scrfbdev_init (void){
 			     MAP_SHARED,
 			     fbdev_filedescriptor, 0);
 
-	if (fbdev_pointer == -1) {
+	if (fbdev_pointer == (z80_byte *)-1) {
 		debug_printf(VERBOSE_ERR,"Failed to mmap.\n");
 		return 1;
 	}
