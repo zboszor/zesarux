@@ -13347,7 +13347,7 @@ void scr_refresca_pantalla_tsconf_text_textmode (void (*fun_color) (z80_byte col
 
         z80_byte font_page=tsconf_get_text_font_page();
 
-        z80_byte *puntero_fuente;
+        z80_byte UNUSED(*puntero_fuente);
         puntero_fuente=tsconf_ram_mem_table[font_page];
 
         z80_int puntero_orig=puntero;
@@ -13358,11 +13358,11 @@ void scr_refresca_pantalla_tsconf_text_textmode (void (*fun_color) (z80_byte col
 
 
 
-        z80_bit inverse;
+        z80_bit UNUSED(inverse);
 
         inverse.v=0;
 
-        z80_int offset_caracter;
+        z80_int UNUSED(offset_caracter);
 
         z80_byte tinta,papel;
 
