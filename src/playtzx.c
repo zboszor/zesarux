@@ -229,7 +229,7 @@ char vochead[0x20] = {'C', 'r', 'e', 'a', 't', 'i', 'v', 'e', ' ', 'V', 'o', 'i'
 	0x1A, 0x1A, 0x00, 0x0A, 0x01, 0x29, 0x11};
 	char *vocbuf;			/* Buffer for .VOC block */
 	int vocbuflen = 0xFFFF;		/* Length of .VOC block (and buffer) */
-	char vocstart[4] = {0x02, 0xFF, 0xFF, 0x00};
+	unsigned char vocstart[4] = {0x02, 0xFF, 0xFF, 0x00};
 	int vocpos;			/* Length of current .VOC block */
 	
 	int nfreq = 0;			/* Did we choose new frequency with /freq switch ? */
