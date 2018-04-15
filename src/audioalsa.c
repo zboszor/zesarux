@@ -652,5 +652,5 @@ void *audioalsa_enviar_audio(void *nada)
 
 void audioalsa_send_frame(char *buffer)
 {
-        return new_audioalsa_send_frame(buffer);
+        new_audioalsa_send_frame(buffer);
 }
