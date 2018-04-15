@@ -592,6 +592,8 @@ z80_bit set_machine_empties_audio_buffer={1};
 //Si se muestra por verbose debug los opcodes incorrectos
 z80_bit debug_shows_invalid_opcode={0};
 
+#define DEBUG 0
+
 void cpu_set_turbo_speed(void)
 {
 
@@ -600,9 +602,11 @@ void cpu_set_turbo_speed(void)
 	//Ajustes previos de t_estados. En estos ajustes, solo las variables t_estados, antes_t_estados se usan. Las t_estados_en_linea, t_estados_percx son para debug
 	//printf ("Turbo was %d, setting turbo %d\n",cpu_turbo_speed_antes,cpu_turbo_speed);
 
+#if DEBUG
 	int t_estados_en_linea=t_estados % screen_testados_linea;
 
 	int t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
+#endif
 
 	//printf ("Before changing turbo, t-scanline: %d, t-states: %d, t-states in line: %d, percentaje column: %d%%\n",t_scanline,t_estados,t_estados_en_linea,t_estados_percx);
 
@@ -650,13 +654,14 @@ void cpu_set_turbo_speed(void)
 	t_estados=antes_t_estados * cpu_turbo_speed;
 
 
+#if DEBUG
 	t_estados_en_linea=t_estados % screen_testados_linea;
 
 	t_estados_percx=(t_estados_en_linea*100)/screen_testados_linea;
 
-	//printf ("After changing turbo, t-states: %d, t-states in line: %d, percentaje column: %d%%\n",t_estados,t_estados_en_linea,t_estados_percx);
-	//printf ("Calculated t-scanline according to t-states: %d\n",t_estados / screen_testados_linea);
-
+	printf ("After changing turbo, t-states: %d, t-states in line: %d, percentaje column: %d%%\n",t_estados,t_estados_en_linea,t_estados_percx);
+	printf ("Calculated t-scanline according to t-states: %d\n",t_estados / screen_testados_linea);
+#endif
 
 
         init_rainbow();
