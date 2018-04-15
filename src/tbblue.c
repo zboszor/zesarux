@@ -50,7 +50,6 @@ z80_byte *tbblue_ram_memory_pages[TBBLUE_MAX_SRAM_8KB_BLOCKS];
 z80_byte tbblue_extra_512kb_blocks=3;
 
 static int tbblue_copper_wait_cond_fired(void);
-static int tbblue_get_current_raster_horiz_position(void);
 static int tbblue_get_current_raster_position(void);
 
 z80_byte tbblue_return_max_extra_blocks(void)
@@ -500,7 +499,7 @@ static int tbblue_get_current_raster_position(void)
 }
 
 
-static int tbblue_get_current_raster_horiz_position(void)
+int tbblue_get_current_raster_horiz_position(void)
 {
 /*
 # Horizontally the display is the same in 50Hz or 60Hz mode but it
