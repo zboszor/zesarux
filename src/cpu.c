@@ -6301,13 +6301,10 @@ void emulator_main_loop(void)
 }
 
 #ifdef USE_PTHREADS
-void *thread_main_loop_function(void *nada)
+void *thread_main_loop_function(void * UNUSED(nada))
 {
         emulator_main_loop();
 
-	//aqui no llega nunca, lo hacemos solo para que no se queje el compilador
-        nada=0;
-        nada++;
 	return NULL;
 }
 #endif
