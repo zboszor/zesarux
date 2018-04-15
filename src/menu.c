@@ -857,23 +857,17 @@ z80_byte menu_debug_get_mapped_byte(int direccion)
 //Escribe byte mapeado de ram normal o de zona de menu mapeada
 void menu_debug_write_mapped_byte(int direccion,z80_byte valor)
 {
-
-
-
 	//Mostrar memoria normal
 	if (menu_debug_show_memory_zones==0) {
-		return poke_byte_z80_moto(direccion,valor);
+		poke_byte_z80_moto(direccion,valor);
+		return;
 	}
-
 
 	//Mostrar zonas mapeadas
 	menu_debug_set_memory_zone_attr();
 
 	direccion=direccion % menu_debug_memory_zone_size;
 	*(machine_get_memory_zone_pointer(menu_debug_memory_zone,direccion))=valor;
-
-
-
 }
 
 
@@ -10792,13 +10786,13 @@ char textoplayer[40];
 				
 
 
-				int valor_contador_segundo_anterior;
+				int UNUSED(valor_contador_segundo_anterior);
 
 				valor_contador_segundo_anterior=contador_segundo;
 
-int mostrar_player;
+int UNUSED(mostrar_player);
 
-int mostrar_antes_player=-1;
+int UNUSED(mostrar_antes_player) = -1;
 
 	mostrar_player=menu_audio_new_ayplayer_si_mostrar();
 
