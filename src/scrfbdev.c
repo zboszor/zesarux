@@ -1989,7 +1989,7 @@ int scrfbdev_init (void){
 
 
 
-	fbdev_pointer = (char*)mmap(0,
+	fbdev_pointer = (z80_byte *)mmap(0,
 				    fbdev_screensize,
 			     PROT_READ | PROT_WRITE,
 			     MAP_SHARED,
